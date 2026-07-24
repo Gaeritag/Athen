@@ -1,35 +1,20 @@
-/*
- * Original work by [CyanQT](https://github.com/cyanqt) and contributors (Unknown License).
- *
- * Modifications:
- *   Copyright (c) 2025 skies-starred
- *   Licensed under the BSD 3-Clause License.
- *
- * The original (unknown) license applies to the portions derived from CyanQT.
- * Please reach out to @skies.starred on discord if you have any information about the license.
- */
-
 @file:Suppress("ObjectPropertyName")
 
 package xyz.aerii.athen.api.dungeon.terminals
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.protocol.game.*
-import net.minecraft.world.entity.decoration.ArmorStand
 import xyz.aerii.athen.annotations.Priority
 import xyz.aerii.athen.api.dungeon.DungeonAPI
 import xyz.aerii.athen.events.DungeonEvent
 import xyz.aerii.athen.events.PacketEvent
-import xyz.aerii.athen.events.TickEvent
 import xyz.aerii.athen.events.core.on
 import xyz.aerii.athen.events.core.runWhen
 import xyz.aerii.athen.handlers.Chronos
 import xyz.aerii.athen.handlers.Typo.devMessage
-import xyz.aerii.athen.mixin.accessors.ServerboundInteractPacketAccessor
 import xyz.aerii.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
 import xyz.aerii.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import xyz.aerii.library.api.client
-import xyz.aerii.library.api.level
 import xyz.aerii.library.handlers.Observable
 import xyz.aerii.library.handlers.Observable.Companion.and
 import xyz.aerii.library.handlers.Observable.Companion.or
@@ -39,7 +24,6 @@ import xyz.aerii.library.utils.stripped
 @Priority
 object TerminalAPI {
     private var i = 0
-    private var cd = 0
 
     val opened: Observable<Boolean> = Observable(false)
 
@@ -114,17 +98,6 @@ object TerminalAPI {
         on<PacketEvent.Send, ServerboundContainerClosePacket> {
             reset()
         }.runWhen(state1)
-
-        on<PacketEvent.Send, ServerboundInteractPacket> {
-            val entity = level?.getEntity((this as ServerboundInteractPacketAccessor).entityId()) as? ArmorStand ?: return@on
-            if (entity.displayName?.stripped() != "Inactive Terminal") return@on
-
-            if (cd > 0 || id != -1) it.cancel() else cd = 15
-        }.runWhen(state0)
-
-        on<TickEvent.Server> {
-            if (cd > 0) cd--
-        }.runWhen(state0)
     }
 
     private fun reset() {
