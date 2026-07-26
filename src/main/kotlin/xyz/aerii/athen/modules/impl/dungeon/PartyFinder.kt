@@ -18,6 +18,8 @@ import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 import xyz.aerii.athen.annotations.Load
 import xyz.aerii.athen.annotations.OnlyIn
 import xyz.aerii.athen.api.location.SkyBlockIsland
+import xyz.aerii.athen.api.profile.ProfileAPI
+import xyz.aerii.athen.api.profile.data.PlayerProfileStats
 import xyz.aerii.athen.api.rendering.ui.shapes.rectangle.rectangle
 import xyz.aerii.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import xyz.aerii.athen.config.Category
@@ -30,11 +32,7 @@ import xyz.aerii.athen.handlers.Notifier.notify
 import xyz.aerii.athen.handlers.Texter.onHover
 import xyz.aerii.athen.modules.Module
 import xyz.aerii.athen.ui.themes.Catppuccin
-import xyz.aerii.athen.utils.PlayerStats
-import xyz.aerii.athen.utils.calculateMP
 import xyz.aerii.athen.utils.command
-import xyz.aerii.athen.utils.fetchPlayerStats
-import xyz.aerii.athen.utils.parseItem
 import xyz.aerii.library.api.*
 import xyz.aerii.library.handlers.parser.parse
 import xyz.aerii.library.handlers.time.server
@@ -107,7 +105,7 @@ object PartyFinder : Module(
         get() = autoKick && (PartyAPI.leader?.name ?: name) == name
 
     private data class CachedStats(
-        val stats: PlayerStats,
+        val stats: PlayerProfileStats,
         val storedAt: Long = System.currentTimeMillis()
     )
 
@@ -150,7 +148,7 @@ object PartyFinder : Module(
                 val cached = statsCache[username]
                 if (cached != null && !cached.stats.loading) return@word cached.stats.stats(username)
 
-                fetchPlayerStats(username, setOf("armor_data", "talisman_bag_data"), onSuccess = { stats ->
+                ProfileAPI.get(username, true, onSuccess = { stats ->
                     statsCache[username] = CachedStats(stats)
                     stats.stats(username)
                 })
@@ -170,7 +168,7 @@ object PartyFinder : Module(
                 return@on
             }
 
-            fetchPlayerStats(username, setOf("armor_data", "talisman_bag_data"), onSuccess = { stats ->
+            ProfileAPI.get(username, true, onSuccess = { stats ->
                 statsCache[username] = CachedStats(stats)
 
                 if (joinStats) stats.stats(username)
@@ -306,7 +304,7 @@ object PartyFinder : Module(
             if (all.isEmpty()) return@on
 
             val names = all.filter { pfCache[it] == null }.takeIf { it.isNotEmpty() } ?: return@on lore()
-            fetchPlayerStats(names, onSuccess = { results ->
+            ProfileAPI.get(names, onSuccess = { results ->
                 for ((u, s) in results) pfCache[u] = CachedStats(s)
                 mainThread { lore() }
             })
@@ -329,21 +327,21 @@ object PartyFinder : Module(
         }
     }
 
-    private fun PlayerStats.kick(username: String) {
+    private fun PlayerProfileStats.kick(username: String) {
         val floor = PartyFinderAPI.queuedDungeonFloor
 
         val pb =
             if (detectKickFloor && floor != null) {
                 val master = "Master Mode" in floor.longName
-                (if (master) masterPB else normalPB)?.get(floor.floorNumber)
+                (if (master) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(floor.floorNumber)
             } else {
                 val master = kickFloor > 0
-                (if (master) masterPB else normalPB)?.get(if (master) kickFloor + 3 else 7)
+                (if (master) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(if (master) kickFloor + 3 else 7)
             }
 
-        val secrets = secrets ?: 0
-        val avg = secretAvg ?: 0.0
-        val mp = bagData?.calculateMP(abiphoneContacts, consumedPrism) ?: 0
+        val secrets = dungeons?.secrets ?: 0
+        val avg = dungeons?.`secrets$average` ?: 0.0
+        val mp = inventory?.mp ?: 0
 
         val pbReqStr = requiredPB.takeIf(String::isNotBlank)
         val pbReq = pbReqStr?.fromHMS()?.toLong()
@@ -383,7 +381,7 @@ object PartyFinder : Module(
         }
     }
 
-    private fun PlayerStats.stats(username: String) {
+    private fun PlayerProfileStats.stats(username: String) {
         val floor = PartyFinderAPI.queuedDungeonFloor
         var floorDisplay: String
         var pb: Long?
@@ -391,17 +389,17 @@ object PartyFinder : Module(
         if (detectFloor && floor != null) {
             val isMaster = floor.longName.contains("Master Mode")
             floorDisplay = if (isMaster) "M${floor.floorNumber}" else "F${floor.floorNumber}"
-            pb = (if (isMaster) masterPB else normalPB)?.get(floor.floorNumber)
+            pb = (if (isMaster) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(floor.floorNumber)
         } else {
             val floor = selectedFloor + 1
             floorDisplay = if (masterMode) "M$floor" else "F$floor"
-            pb = (if (masterMode) masterPB else normalPB)?.get(floor)
+            pb = (if (masterMode) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(floor)
         }
 
-        val cat = "§eC${catLevel ?: "?"}"
-        val secretsStr = "§a${secrets ?: "?"}"
-        val avgStr = secretAvg?.let { "§b%.1f".format(it) } ?: "§7?"
-        val mpStr = bagData?.calculateMP(abiphoneContacts, consumedPrism)?.let { "§d$it" } ?: "§7?"
+        val cat = "§eC${dungeons?.catacombs ?: "?"}"
+        val secretsStr = "§a${dungeons?.secrets ?: "?"}"
+        val avgStr = dungeons?.`secrets$average`?.let { "§b%.1f".format(it) } ?: "§7?"
+        val mpStr = inventory?.mp?.let { "§d$it" } ?: "§7?"
 
         "§8§m${"-".repeat()}".lie()
         "§6Stats for §b$username §8[$cat§8] §8[§5MP: $mpStr§8]".lie()
@@ -409,48 +407,44 @@ object PartyFinder : Module(
 
         val pbHover = buildString {
             for (f in 1..7) {
-                append("§7F$f§8: §9${normalPB?.get(f).time()} §8| " + "§7M$f§8: §9${masterPB?.get(f).time()}")
+                append("§7F$f§8: §9${dungeons?.`pbs$normal`?.get(f).time()} §8| " + "§7M$f§8: §9${dungeons?.`pbs$master`?.get(f).time()}")
                 if (f < 7) append('\n')
             }
         }
 
         "  §7$floorDisplay PB§8: §9${pb.time()}".literal().onHover(pbHover).lie()
 
-        armor
-            ?.parseItem()
-            ?.reversed()
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { pieces ->
-                "  §7Armor:".lie()
+        inventory?.armor?.reversed()?.takeIf { it.isNotEmpty() }?.let { pieces ->
+            "  §7Armor:".lie()
 
-                for (p in pieces) {
-                    val lore = p.lore ?: continue
-                    val hover = p.name + "\n" + lore.joinToString("\n")
-                    val str = when (p.index) {
-                        3 -> "⛑"
-                        2 -> "👕"
-                        1 -> "👖"
-                        else -> "👢"
-                    }
-
-                    "    §8[$str§8] ${p.name}".literal().onHover(hover).lie()
+            for (p in pieces) {
+                val lore = p.lore ?: continue
+                val hover = p.name + "\n" + lore.joinToString("\n")
+                val str = when (p.i) {
+                    3 -> "⛑"
+                    2 -> "👕"
+                    1 -> "👖"
+                    else -> "👢"
                 }
+
+                "    §8[$str§8] ${p.name}".literal().onHover(hover).lie()
             }
+        }
 
         "§8§m${"-".repeat()}".lie()
     }
 
-    private fun PlayerStats.buildLine(floor: Int, master: Boolean, username: String, usernameColor: Int?, className: String, classLevel: Int): Component {
-        val pb = (if (master) masterPB else normalPB)?.get(floor)
+    private fun PlayerProfileStats.buildLine(floor: Int, master: Boolean, username: String, usernameColor: Int?, className: String, classLevel: Int): Component {
+        val pb = (if (master) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(floor)
         val pbStr = pb?.let {
             val m = it / 60000
             val s = (it / 1000) % 60
             "$m:${s.toString().padStart(2, '0')}"
         } ?: "No S+"
 
-        val level = catLevel ?: "?"
-        val secretsFound = secrets ?: "?"
-        val secretAvg = secretAvg?.let { "%.1f".format(it) } ?: "?"
+        val level = dungeons?.catacombs ?: "?"
+        val secretsFound = dungeons?.secrets ?: "?"
+        val secretAvg = dungeons?.`secrets$average`?.let { "%.1f".format(it) } ?: "?"
         val klass = ClassType.fromName(className) ?: ClassType.entries.random()
 
         val showClass = 0 in statsToShow

@@ -178,8 +178,8 @@ object IRC : Module(
 
                     val ch = runCatching {
                         JsonParser.parseString(body).asJsonArray.map {
-                            val arr = it.asJsonArray
-                            "${arr[0].asString} (${arr[1].asInt})"
+                            val obj = it.asJsonObject
+                            "${obj.get("first").asString} (${obj.get("second").asInt})"
                         }.sortedWith(compareBy({ if (it.startsWith("general ")) 0 else 1 }, { it }))
                     }.getOrNull() ?: return@on
 

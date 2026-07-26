@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import net.fabricmc.api.ClientModInitializer
-import net.minecraft.SharedConstants
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import xyz.aerii.athen.annotations.AnnotationLoader
@@ -20,12 +19,10 @@ import xyz.aerii.athen.handlers.Typo.devMessage
 import xyz.aerii.athen.handlers.Typo.modMessage
 import xyz.aerii.athen.modules.impl.Dev
 import xyz.aerii.athen.ui.themes.Catppuccin.Mocha
-import xyz.aerii.athen.utils.api
 import xyz.aerii.athen.utils.data
 import xyz.aerii.library.api.*
 import xyz.aerii.library.handlers.parser.parse
 import xyz.aerii.library.handlers.time.client
-import xyz.aerii.library.utils.Request
 import xyz.aerii.library.utils.literal
 import kotlin.time.Duration.Companion.hours
 
@@ -46,7 +43,6 @@ object Athen : ClientModInitializer {
 
     override fun onInitializeClient() {
         AnnotationLoader.load()
-        ping()
 
         on<LocationEvent.Server.Connect> {
             Chronos.schedule(20.client) { li() }
@@ -79,19 +75,7 @@ object Athen : ClientModInitializer {
         divider.lie()
     }
 
-    private fun ping() {
-        "ping".api.request(type = Request.POST) {
-            body(mapOf(
-                "uuid" to (client.user.profileId),
-                "mod_version" to modVersion,
-                "game_version" to SharedConstants.getCurrentVersion().name()
-            ))
 
-            onError {
-                LOGGER.error("Failed to send ping: ${it.message}")
-            }
-        }
-    }
 
     private fun broadcast() {
         "broadcast.txt".data.request {

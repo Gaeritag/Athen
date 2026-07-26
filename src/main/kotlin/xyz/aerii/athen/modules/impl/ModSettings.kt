@@ -27,12 +27,7 @@ object ModSettings : Module(
     val priceFetch = config.slider("Price re-fetch", 10, 5, 60, "minutes").custom("priceFetch")
 
     @JvmStatic
-    val oldApi by config.switch("Use old API")
-
-    @JvmStatic
     val hideGuis by config.switch("Hide GUIs in F1", true)
-
-    private val _oldApiText by config.textParagraph("Some features may not work with the old api.")
 
     @JvmStatic
     val calculator by config.switch("Enable \"/calc\"", true)

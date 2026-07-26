@@ -20,7 +20,6 @@ import kotlin.time.Duration.Companion.minutes
 object PriceAPI {
     private val auctions = Int2ObjectOpenHashMap<Auction>(8192)
     private val bazaar = Int2ObjectOpenHashMap<Bazaar>(2048)
-    private val url = "prices?gzip=true".api
 
     private var task: Task? = null
 
@@ -48,7 +47,7 @@ object PriceAPI {
     }
 
     private fun fn() {
-        url.request(log = false) {
+        "prices".api.request(log = false) {
             onSuccess<JsonObject> {
                 val ah = it["auction_house"].asJsonObjectOrNull ?: return@onSuccess
                 val bz = it["bazaar"].asJsonObjectOrNull ?: return@onSuccess

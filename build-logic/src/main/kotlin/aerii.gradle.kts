@@ -96,6 +96,9 @@ dependencies {
 
     shadow("classgraph".global)
     shadow("autoupdate".global)
+    shadow("ktor-client-core".global)
+    shadow("ktor-client-cio".global)
+    shadow("ktor-client-websockets".global)
     shadow("library".versioned)
     shadow("lwjgl-nanovg".versioned)
     for (p in listOf("windows", "linux", "macos", "macos-arm64")) shadow("lwjgl-nanovg".versioned.get().toString() + ":natives-$p")
