@@ -75,7 +75,7 @@ object ColoredEnchants : Module(
     private val enchants = mutableMapOf<String, Enchant>()
 
     init {
-        "enchants/sba.json".data.request {
+        "enchants.json".data.request {
             onSuccess<Map<String, Any>> { str ->
                 for ((a, b) in str) {
                     val c = b as? Map<String, Map<String, Any?>> ?: continue

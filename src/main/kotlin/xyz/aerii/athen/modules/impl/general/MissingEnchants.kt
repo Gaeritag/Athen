@@ -37,27 +37,34 @@ object MissingEnchants : Module(
     private val typeRegex = Regex("""\b(?:COMMON|UNCOMMON|RARE|EPIC|LEGENDARY|MYTHIC|DIVINE|SPECIAL|VERY SPECIAL)\b\s+(?:DUNGEON\s+)?([A-Z]+(?: [A-Z]+)*)""") // https://regex101.com/r/MOQHMf/1
     private val romans = setOf("I","II","III","IV","V","VI","VII","VIII","IX","X")
 
-    private var allEnchants: Map<String, List<String>>? = null
-    private var enchantPools: List<List<String>>? = null
+    private var all: Map<String, List<String>>? = null
+    private var pools: List<List<String>>? = null
 
     init {
-        "enchants/neu.json".data.request {
+        "enchants.json".data.request {
             onSuccess<JsonObject> { json ->
-                allEnchants = json["enchants"]?.asJsonObject?.entrySet()?.associate { (key, value) ->
-                    key to value.asJsonArray.map { it.asString.lowercase() }
+                val map = HashMap<String, MutableList<String>>()
+
+                for (category in listOf("NORMAL", "STACKING", "ULTIMATE")) {
+                    json[category]?.asJsonObject?.entrySet()?.forEach { (_, v) ->
+                        val obj = v.asJsonObject
+                        val nbt = obj["nbtName"].asString.lowercase()
+                        obj["appliedTo"]?.asJsonArray?.forEach { type ->
+                            map.getOrPut(type.asString) { mutableListOf() }.add(nbt)
+                        }
+                    }
                 }
 
-                enchantPools = json["enchant_pools"]?.asJsonArray?.map { pool ->
-                    pool.asJsonArray.map { it.asString.lowercase() }
-                }
+                all = map
+                pools = json["ENCHANT_POOLS"]?.asJsonArray?.map { pool -> pool.asJsonArray.map { it.asString.lowercase() } }
             }
         }
 
         on<GuiEvent.Tooltip.Update> {
             if (keybind.bound && !keybind.pressed) return@on
 
-            val a = allEnchants ?: return@on
-            val b = enchantPools ?: return@on
+            val a = all ?: return@on
+            val b = pools ?: return@on
 
             val rawLore = tooltip.asReversed()
             var i: String? = null
@@ -98,7 +105,7 @@ object MissingEnchants : Module(
                     if ("◆" in s) continue
                     if (!s.r()) continue
 
-                    val ls = l.siblings?.lastOrNull() ?: continue
+                    val ls = l.siblings.lastOrNull() ?: continue
                     if ((ls.color == 11184810  || ls.color == 0) && !ls.bold) continue
 
                     se = true
