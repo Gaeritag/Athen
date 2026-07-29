@@ -31,6 +31,7 @@ import xyz.aerii.athen.modules.Module
 import xyz.aerii.athen.modules.impl.ModSettings
 import xyz.aerii.athen.modules.impl.slayer.carry.data.SlayerCarryHistory
 import xyz.aerii.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer
+import xyz.aerii.athen.modules.impl.slayer.carry.ui.SlayerCarryGUI
 import xyz.aerii.athen.ui.themes.Catppuccin.Mocha
 import xyz.aerii.athen.utils.command
 import xyz.aerii.athen.utils.render.fcs
@@ -58,6 +59,9 @@ object SlayerCarryTracker : Module(
 ) {
     private val `announce$comp$party` by config.switch("Announce in party", true)
     private val `announce$spawn` by config.switch("Show spawn message", true)
+
+    @Suppress("unused")
+    private val _manager by config.button("Open manager") { client.setScreen(SlayerCarryGUI) }
 
     private val _webhook by config.expandable("Discord webhook")
     private val webhook by config.switch("Send to webhook").childOf { _webhook }
@@ -87,7 +91,7 @@ object SlayerCarryTracker : Module(
     private val deathRegex = Regex("^ ☠ (?<player>\\w+) was killed by (?<killer>.+)\\.$")
 
     private val scribble = Scribble("features/slayerCarryTracker")
-    private val tracked = scribble.mutableList("tracked", SlayerCarryPlayer.CODEC)
+    val tracked = scribble.mutableList("tracked", SlayerCarryPlayer.CODEC)
     private val history = scribble.mutableList("history", SlayerCarryHistory.CODEC)
 
     private val ex0 = listOf("§f§lSlayer Carries:", "§7> §bExample §8[§7Void T4§8]§f: §b3§f/§b10 §7(12.5s | 28/hr)").fcs
@@ -229,7 +233,7 @@ object SlayerCarryTracker : Module(
             }
 
             "carry" {
-                help()
+                SlayerCarryGUI.open()
             }
         }
 
@@ -431,6 +435,25 @@ object SlayerCarryTracker : Module(
 
         tracked.update { add(SlayerCarryPlayer(name, type, tier, count)) }
         "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] x$count!".parse().modMessage()
+    }
+
+    fun update(index: Int, name: String, type: SlayerBoss, tier: SlayerTier?, max: Int, done: Int) {
+        val old = tracked.value.getOrNull(index) ?: return
+        tracked.update {
+            set(index, SlayerCarryPlayer(name, type, tier, max, done, old.first, old.last))
+        }
+    }
+
+    fun remove(index: Int) {
+        if (index !in tracked.value.indices) return
+        tracked.update { removeAt(index) }
+    }
+
+    fun complete(index: Int) {
+        val carry = tracked.value.getOrNull(index) ?: return
+        val duration = if (carry.first > 0 && carry.last > 0) carry.last - carry.first else 0L
+        history.update { add(SlayerCarryHistory(carry.name, carry.type, carry.tier, carry.max, duration)) }
+        tracked.update { removeAt(index) }
     }
 
     private val SlayerBoss.price: Map<SlayerTier, String>?
