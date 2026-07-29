@@ -94,11 +94,20 @@ dependencies {
     impl("hypixel-modapi".global)
     impl("hypixel-modapi-fabric".global)
 
-    shadow("classgraph".global)
-    shadow("autoupdate".global)
     shadow("ktor-client-core".global)
     shadow("ktor-client-cio".global)
     shadow("ktor-client-websockets".global)
+    shadow("ktor-utils".global)
+    shadow("ktor-io".global)
+    shadow("ktor-http".global)
+    shadow("ktor-http-cio".global)
+    shadow("ktor-network".global)
+    shadow("ktor-network-tls".global)
+    shadow("ktor-events".global)
+    shadow("ktor-websockets".global)
+
+    shadow("classgraph".global)
+    shadow("autoupdate".global)
     shadow("library".versioned)
     shadow("lwjgl-nanovg".versioned)
     for (p in listOf("windows", "linux", "macos", "macos-arm64")) shadow("lwjgl-nanovg".versioned.get().toString() + ":natives-$p")
@@ -197,7 +206,7 @@ val String.global: Provider<MinimalExternalModuleDependency>
 val String.versioned: Provider<MinimalExternalModuleDependency>
     get() = extensions.getByType<VersionCatalogsExtension>().named("libs").findLibrary("$this-${ver.replace(".", "_")}").get()
 
-fun DependencyHandlerScope.shadow(dep: Any, config: ExternalModuleDependency.() -> Unit = {}) {
+fun DependencyHandlerScope.shadow(dep: Any, trans: Boolean = false, config: ExternalModuleDependency.() -> Unit = {}) {
     val d = create((dep as? Provider<*>)?.get() ?: dep) as ExternalModuleDependency
     d.config()
     "include"(d)
