@@ -41,6 +41,7 @@ object SlayerInfo : Module(
 
     private val hideOriginal = config.switch("Hide original", true).custom("hideOriginal")
     private val showKillTime by config.switch("Show kill time", true)
+    private val increase by config.switch("Dynamic text size", true)
 
     private val nameStyle by config.textInput("Name style", "<dark_red>#name_short #tier")
     private val _unused0 by config.textParagraph("Variable: <red>#name_short<r>, <red>#name_long<r>, <red>#tier")
@@ -136,7 +137,7 @@ object SlayerInfo : Module(
                 val l = i.renderText
                 val b = e.renderPos.add(0.0, 0.5 + (l.size - 1) * 0.25 / 2, 0.0)
 
-                for (a in l.indices) extractText(l[a], b.add(0.0, -a * 0.25, 0.0), depth = !i.visible)
+                for (a in l.indices) extractText(l[a], b.add(0.0, -a * 0.25, 0.0), depth = !i.visible, increase = increase)
             }
         }
     }
