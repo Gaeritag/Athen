@@ -130,6 +130,7 @@ object WatcherHelper : Module(
             if (!it) return@onChange
             if (`blood$start` == 0L) return@onChange
             if (!spawnedAll) return@onChange
+            if (!enabled) return@onChange
 
             val t = System.currentTimeMillis() - `blood$start`
             val t0 = Chronos.ticks.server - `blood$start$t`
@@ -143,6 +144,7 @@ object WatcherHelper : Module(
         DungeonAPI.bloodKilledAll.onChange {
             if (!it) return@onChange
             if (`blood$start` == 0L) return@onChange
+            if (!enabled) return@onChange
 
             reset()
 
@@ -199,7 +201,7 @@ object WatcherHelper : Module(
             if (System.currentTimeMillis() - `blood$speak` < 2500) return@on
 
             val l = level ?: return@on
-            val e = getEntity(l)?.takeIf { it.displayName?.stripped()?.contains("The Watcher") == true } ?: return@on
+            val e = getEntity(l)?.takeIf { it.customName?.stripped()?.contains("The Watcher") == true } ?: return@on
             val x = `blood$watcher$x` ?: e.x.also { `blood$watcher$x` = it }
             val z = `blood$watcher$z` ?: e.z.also { `blood$watcher$z` = it }
 

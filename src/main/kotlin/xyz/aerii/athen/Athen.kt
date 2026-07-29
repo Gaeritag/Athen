@@ -75,8 +75,6 @@ object Athen : ClientModInitializer {
         divider.lie()
     }
 
-
-
     private fun broadcast() {
         "broadcast.txt".data.request {
             onSuccess<String> {
