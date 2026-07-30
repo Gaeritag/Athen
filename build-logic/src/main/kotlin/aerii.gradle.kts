@@ -41,7 +41,7 @@ plugins {
 val stonecutter = project.extensions.getByName("stonecutter") as dev.kikugie.stonecutter.build.StonecutterBuildExtension
 val new = stonecutter.current.parsed >= "26.1"
 val ver = stonecutter.current.version
-val java = if (new) 25 else 21
+val java = if (new) 25 else 25
 
 val loom = extensions.getByName<net.fabricmc.loom.api.LoomGradleExtensionAPI>("loom")
 val impl = if (new) "implementation" else "modImplementation"
@@ -152,11 +152,22 @@ kotlin {
 }
 
 publishing {
+    repositories {
+        val a = if (Regex("-b[0-9]*$") in modVer) "snapshots" else "releases"
+        maven("https://maven.starred.foo/$a") {
+            name = "starred"
+            credentials {
+                username = (project.findProperty("MAVEN_USER") as? String) ?: System.getenv("MAVEN_USER") ?: ""
+                password = (project.findProperty("MAVEN_PASS") as? String) ?: System.getenv("MAVEN_PASS") ?: ""
+            }
+        }
+    }
+
     publications {
         create<MavenPublication>("maven") {
-            groupId = "xyz.aerii"
-            artifactId = "Athen-$ver"
-            version = modVer
+            groupId = "foo.starred"
+            artifactId = modId
+            version = "$modVer+$ver"
             from(components["java"])
         }
     }
