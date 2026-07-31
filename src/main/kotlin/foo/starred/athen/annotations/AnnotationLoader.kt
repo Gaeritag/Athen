@@ -7,11 +7,11 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.utils.safely
 
 object AnnotationLoader {
-    fun load() {
+    fun load(load: String = "foo.starred.athen") {
         ClassGraph()
             .enableClassInfo()
             .enableAnnotationInfo()
-            .acceptPackages("foo.starred.athen")
+            .acceptPackages(load)
             .scan()
             .use { s ->
                 val a = s.getClassesWithAnnotation(Priority::class.java.name).loadClasses().sortedBy { it.getAnnotation(Priority::class.java)?.value ?: 0 }
