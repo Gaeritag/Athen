@@ -11,7 +11,7 @@ object AnnotationLoader {
         ClassGraph()
             .enableClassInfo()
             .enableAnnotationInfo()
-            .acceptPackages("foo.starred.athen", "xyz.aerii.nebulune")
+            .acceptPackages("foo.starred.athen")
             .scan()
             .use { s ->
                 val a = s.getClassesWithAnnotation(Priority::class.java.name).loadClasses().sortedBy { it.getAnnotation(Priority::class.java)?.value ?: 0 }
