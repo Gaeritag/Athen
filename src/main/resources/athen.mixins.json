@@ -1,6 +1,6 @@
 {
   "required": false,
-  "package": "xyz.aerii.athen.mixin",
+  "package": "foo.starred.athen.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "injectors": {

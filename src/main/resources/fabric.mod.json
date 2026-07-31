@@ -14,13 +14,13 @@
   "entrypoints": {
     "client": [
       {
-        "value": "xyz.aerii.athen.Athen",
+        "value": "foo.starred.athen.Athen",
         "adapter": "kotlin"
       }
     ],
     "modmenu": [
       {
-        "value": "xyz.aerii.athen.config.modMenu.Impl",
+        "value": "foo.starred.athen.config.modMenu.Impl",
         "adapter": "kotlin"
       }
     ]

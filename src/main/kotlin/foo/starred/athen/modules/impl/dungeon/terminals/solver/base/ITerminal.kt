@@ -1,0 +1,131 @@
+﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.base
+
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.item.ItemStack
+import foo.starred.athen.api.dungeon.terminals.TerminalAPI
+import foo.starred.athen.api.dungeon.terminals.TerminalType
+import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
+import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.athen.utils.guiClick
+import foo.starred.athen.utils.nvg.NVGRenderer
+import foo.starred.snowbird.api.client
+import java.util.concurrent.CopyOnWriteArrayList
+
+abstract class ITerminal(val terminalType: TerminalType) {
+    protected val list = CopyOnWriteArrayList<Click>()
+    protected open val int0: Int = 7
+    protected open val int1: Int = 1
+    protected open val float: Float
+        get() = 16f + TerminalSolver.`ui$gap`
+
+    var clicked: Boolean = false
+
+    open fun onOpen() {
+        clicked = false
+    }
+
+    open fun onClose() {
+        clicked = false
+    }
+
+    open fun onResync() {
+    }
+
+    protected abstract fun compute(items: List<ItemStack>)
+
+    protected abstract fun render(ox: Float, oy: Float, headerH: Float, uiScale: Float)
+
+    protected abstract fun valid(click: Click): Boolean
+
+    protected abstract fun forSlot(slot: Int): Click?
+
+    fun main() {
+        val sp = float
+        val pad = TerminalSolver.`ui$padding`
+        val uiScale = 3f * TerminalSolver.`ui$scale`
+        val w = client.window.width / uiScale
+        val h = client.window.height / uiScale
+
+        val gridW = int0 * sp + 2 * pad
+        val gridH = (terminalType.slots / 9 - 2) * sp + 2 * pad
+        val headerH = if (TerminalSolver.`ui$hideHeader`) 0f else 20f
+        val padding = if (TerminalSolver.`ui$hideHeader`) 0f else 6f
+        val totalH = gridH + headerH + padding
+
+        val ox = w / 2 - gridW / 2
+        val oy = h / 2 - totalH / 2
+
+        val inset = (sp - 16f) / 2f
+        NVGRenderer.drawOutlinedRectangle(ox * uiScale, (oy + headerH + padding) * uiScale, gridW * uiScale, gridH * uiScale, TerminalSolver.`ui$bg`.rgb, TerminalSolver.`ui$border`.rgb, uiScale / 2f, TerminalSolver.`ui$roundness` * uiScale)
+        main(ox, oy, gridW, headerH, uiScale)
+        render(ox - int1 * sp + pad + inset - 1f, oy + headerH + padding - sp + pad + inset - 1f, 0f, uiScale)
+    }
+
+    fun click(mx: Float, my: Float, width: Float, height: Float, mouseButton: Int) {
+        val sp = float
+        val pad = TerminalSolver.`ui$padding`
+        val slots = terminalType.slots
+        val gridW = int0 * sp + 2 * pad
+        val gridH = (terminalType.slots / 9 - 2) * sp + 2 * pad
+        val headerH = if (TerminalSolver.`ui$hideHeader`) 0f else 20f
+        val padding = if (TerminalSolver.`ui$hideHeader`) 0f else 6f
+
+        val ox = width / 2 - gridW / 2
+        val oy = height / 2 - (gridH + headerH + padding) / 2
+
+        val x = ((mx - ox - pad) / sp).toInt() + int1
+        val y = ((my - (oy + headerH + padding) - pad) / sp).toInt() + 1
+        if (x !in int1 until int1 + int0 || y < 1) return
+
+        val slot = x + y * 9
+        if (slot >= slots) return
+
+        val c = forSlot(slot) ?: return
+        if (c.button != mouseButton && !(terminalType == TerminalType.RUBIX && TerminalSolver.`rubix$left`)) return
+        c.click()
+    }
+
+    fun update(items: List<ItemStack>) {
+        compute(items)
+    }
+
+    open fun click(slot: Int, button: Int) {
+        if (TerminalSimulator.s.value) {
+            val screen = client.screen as? ITerminalSim ?: return
+            val slot0 = screen.menu.slots.getOrNull(slot) ?: return
+
+            screen.slotClicked(slot0, slot, button, if (button == 0) ClickType.CLONE else ClickType.PICKUP)
+            TerminalSolver.last = System.currentTimeMillis()
+            clicked = true
+
+            return
+        }
+
+        guiClick(TerminalAPI.id, slot, if (button == 0) 2 else button, if (button == 0) ClickType.CLONE else ClickType.PICKUP)
+        TerminalSolver.last = System.currentTimeMillis()
+        clicked = true
+    }
+
+    fun Click.click() {
+        click(slot, button)
+    }
+
+    protected fun drawSlot(x: Float, y: Float, w: Float, h: Float, color: Int, uiScale: Float, radius: Float = TerminalSolver.`ui$slots$roundness` * uiScale) =
+        if (TerminalSolver.`ui$slots$fill`) NVGRenderer.drawRectangle(x, y, w, h, color, radius) else NVGRenderer.drawHollowRectangle(x, y, w, h, uiScale, color, radius)
+
+    private fun main(ox: Float, oy: Float, gridW: Float, headerH: Float, uiScale: Float) {
+        val titleText = terminalType.name.lowercase().replaceFirstChar { it.uppercase() }
+
+        if (TerminalSolver.`ui$hideHeader`) {
+            if (!TerminalSolver.`ui$hideTitle`) NVGRenderer.drawText(titleText, (ox + 1f) * uiScale, (oy + (terminalType.slots / 9 - 2) * float - 8f) * uiScale, 8f * uiScale, TerminalSolver.`ui$titleColor`.rgb)
+            return
+        }
+
+        NVGRenderer.drawOutlinedRectangle(ox * uiScale, oy * uiScale, gridW * uiScale, headerH * uiScale, TerminalSolver.`ui$header`.rgb, TerminalSolver.`ui$border`.rgb, uiScale / 2f, TerminalSolver.`ui$roundness` * uiScale)
+        val titleWidth = NVGRenderer.getTextWidth(titleText, 11f * uiScale, NVGRenderer.defaultFont)
+        val titleX = ox + gridW / 2 - titleWidth / uiScale / 2
+        NVGRenderer.drawText(titleText, titleX * uiScale, (oy + headerH / 2 - 5.5f) * uiScale, 11f * uiScale, Mocha.Text.rgba)
+    }
+}

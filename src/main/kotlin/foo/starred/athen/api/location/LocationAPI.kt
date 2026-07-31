@@ -1,0 +1,156 @@
+﻿/*
+ * Original work by [SkyblockAPI](https://github.com/SkyblockAPI/SkyblockAPI) and contributors (MIT License).
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2025
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Modifications:
+ *   Copyright (c) 2025 skies-starred
+ *   Licensed under the BSD 3-Clause License.
+ *
+ * The original MIT license applies to the portions derived from SkyblockAPI.
+ */
+@file:Suppress("UNUSED")
+
+package foo.starred.athen.api.location
+
+import net.hypixel.data.type.GameType
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.location.area.base.ISkyBlockArea
+import foo.starred.athen.api.location.area.impl.CustomSkyBlockArea
+import foo.starred.athen.events.LocationEvent
+import foo.starred.athen.events.ScoreboardEvent
+import foo.starred.athen.events.TabListEvent
+import foo.starred.athen.events.core.on
+import foo.starred.athen.events.core.runWhen
+import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.utils.stripped
+import kotlin.time.Clock
+import kotlin.time.Instant
+
+@Priority
+object LocationAPI {
+    private val locationRegex = Regex(" *[⏣ф\uE067\uE020] *(?<location>(?:\\s?[^[ൠ\uE018]\\s]+)*)(?: [ൠ\uE018] x\\d)?")
+    private val guestRegex = Regex("^ *\u270C *\\((?<guests>\\d+)/(?<max>\\d+)\\) *$")
+    private val playerCountRegex = Regex(" *(?:players|party) \\((?<count>\\d+)\\) *")
+
+    var forceOnSkyBlock: Boolean = false
+
+    val isOnSkyBlock = Observable(false).onChange { (if (it) LocationEvent.SkyBlock.Connect else LocationEvent.SkyBlock.Disconnect).post() }
+
+    val island = Observable<SkyBlockIsland?>(null)
+
+    val area: Observable<ISkyBlockArea> = Observable(SkyBlockArea.NONE)
+
+    var serverId: String? = null
+        private set
+
+    var isGuest: Boolean = false
+        private set
+
+    var onHypixel: Boolean = false
+        private set
+
+    var onAlpha: Boolean = false
+        private set
+
+    var playerCount: Int = 0
+        get() = field.coerceAtLeast(McClient.players.size)
+        private set
+
+    val maxPlayerCount: Int?
+        get() = when {
+            serverId?.startsWith("mega") == true -> 60
+            else -> when (island.value) {
+                SkyBlockIsland.PRIVATE_ISLAND, SkyBlockIsland.GARDEN -> null
+                SkyBlockIsland.KUUDRA -> 4
+                SkyBlockIsland.MINESHAFT -> 4
+                SkyBlockIsland.THE_CATACOMBS -> 5
+                SkyBlockIsland.BACKWATER_BAYOU -> 16
+                SkyBlockIsland.HUB -> 26
+                SkyBlockIsland.JERRYS_WORKSHOP -> 27
+                SkyBlockIsland.DARK_AUCTION -> 30
+                else -> 24
+            }
+        }
+
+    var lastServerChange: Instant = Instant.DISTANT_PAST
+        private set
+
+    init {
+        on<LocationEvent.Hypixel.Server> {
+            lastServerChange = Clock.System.now()
+            isOnSkyBlock.value = type == GameType.SKYBLOCK
+
+            val newIsland = if (isOnSkyBlock.value && mode != null) SkyBlockIsland.getByKey(mode) else null
+            val oldIsland = island.value
+
+            island.value = newIsland
+            LocationEvent.Hypixel.Island(oldIsland, newIsland).post()
+            serverId = name
+        }
+
+        on<TabListEvent.Change> {
+            val component = new.firstOrNull()?.firstOrNull() ?: return@on
+            playerCount = playerCountRegex.findGroup(component.stripped().lowercase(), "count")?.toIntOrNull() ?: 0
+        }.runWhen(isOnSkyBlock)
+
+        on<ScoreboardEvent.UpdateTitle> {
+            isGuest = new.contains("guest", ignoreCase = true)
+        }.runWhen(isOnSkyBlock)
+
+        on<ScoreboardEvent.Update> {
+            locationRegex.anyMatch(added, "location") { (location) ->
+                val old = area.value
+                area.value = SkyBlockArea.getByKey(location) ?: CustomSkyBlockArea(location)
+                LocationEvent.Hypixel.Area(old, area.value).post()
+            }
+
+            guestRegex.anyMatch(added, "guests") { (current) ->
+                playerCount = current.toIntOrNull() ?: 0
+            }
+        }.runWhen(isOnSkyBlock)
+
+        on<LocationEvent.Server.Disconnect> {
+            reset()
+        }
+    }
+
+    private fun reset() {
+        val oldArea = area.value
+        val oldIsland = island.value
+
+        isOnSkyBlock.value = false
+        area.value = SkyBlockArea.NONE
+        island.value = null
+
+        isGuest = false
+        onHypixel = false
+        onAlpha = false
+        serverId = null
+
+        if (oldArea != SkyBlockArea.NONE) LocationEvent.Hypixel.Area(oldArea, area.value).post()
+        if (oldIsland != null) LocationEvent.Hypixel.Island(oldIsland, island.value).post()
+    }
+}

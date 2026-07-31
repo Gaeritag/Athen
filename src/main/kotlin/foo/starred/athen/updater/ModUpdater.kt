@@ -1,0 +1,108 @@
+﻿package foo.starred.athen.updater
+
+import com.google.gson.JsonElement
+import moe.nea.libautoupdate.CurrentVersion
+import moe.nea.libautoupdate.PotentialUpdate
+import moe.nea.libautoupdate.UpdateContext
+import moe.nea.libautoupdate.UpdateTarget
+import net.minecraft.SharedConstants
+import foo.starred.athen.Athen
+import foo.starred.athen.annotations.Priority
+import foo.starred.athen.events.LocationEvent
+import foo.starred.athen.events.core.on
+import foo.starred.athen.handlers.Chronos
+import foo.starred.athen.handlers.Typo.PrefixType
+import foo.starred.athen.handlers.Typo.modMessage
+import foo.starred.athen.modules.impl.Dev
+import foo.starred.snowbird.api.mainThread
+import foo.starred.snowbird.handlers.time.client
+import java.util.concurrent.CompletableFuture
+
+@Priority(-6)
+object ModUpdater {
+    private var skippedVersion: String by Dev.file.string("version")
+    var trulySkip: String by Dev.file.string("trulySkipVersion")
+
+    private val context = UpdateContext(
+        ModrinthUpdateSource("avbpWn0t", SharedConstants.getCurrentVersion().name()),
+        UpdateTarget.deleteAndSaveInTheSameFolder(Athen::class.java),
+        current(),
+        Athen.modId
+    )
+
+    init {
+        context.cleanup()
+
+        on<LocationEvent.Server.Connect> {
+            Chronos.schedule(60.client) { checkAndNotify() }
+        }.once()
+    }
+
+    fun checkForUpdate(stream: String = "release"): CompletableFuture<PotentialUpdate> {
+        return context.checkUpdate(stream)
+    }
+
+    fun checkAndNotify(stream: String = "release", silent: Boolean = true) {
+        checkForUpdate(stream).thenAccept { update ->
+            if (!silent && !update.isUpdateAvailable) return@thenAccept "No update available!".modMessage()
+            if (!update.isUpdateAvailable) return@thenAccept
+
+            val newVersion = update.update.versionName
+            if (skippedVersion == newVersion && trulySkip == newVersion) return@thenAccept
+
+            "Update available: $newVersion".modMessage()
+            "Run /${Athen.modId} update to install".modMessage()
+
+            if (newVersion == skippedVersion) return@thenAccept
+            mainThread {
+                UpdateGUI(Athen.modVersion, newVersion, onUpdate = { installUpdate(stream) }, onSkip = { skippedVersion = newVersion }, onRemind = {}).open()
+            }
+        }.exceptionally {
+            Athen.LOGGER.error("Failed to check for updates: ${it.message}")
+            null
+        }
+    }
+
+    fun installUpdate(stream: String = "release"): CompletableFuture<Boolean> {
+        return checkForUpdate(stream).thenCompose { update ->
+            if (!update.isUpdateAvailable) {
+                "Already on latest version".modMessage(PrefixType.ERROR)
+                return@thenCompose CompletableFuture.completedFuture(false)
+            }
+
+            "Downloading update: ${update.update.versionName}".modMessage()
+            update.launchUpdate().thenApply {
+                "Update downloaded! Restart to apply.".modMessage(PrefixType.SUCCESS)
+                true
+            }
+        }.exceptionally {
+            "Update failed: ${it.message}".modMessage(PrefixType.ERROR)
+            Athen.LOGGER.error("Failed to install update: ${it.message}")
+            false
+        }
+    }
+
+    private fun current() = object : CurrentVersion {
+        override fun display() = Athen.modVersion
+
+        override fun isOlderThan(element: JsonElement): Boolean {
+            if (!element.isJsonPrimitive) return true
+
+            fun String.parse() = removePrefix("v").split('.', '-').map { it.toIntOrNull() ?: 0 }
+
+            val local = Athen.modVersion.parse()
+            val remote = element.asString.parse()
+
+            val maxLength = maxOf(local.size, remote.size)
+            val l = local + List(maxLength - local.size) { 0 }
+            val r = remote + List(maxLength - remote.size) { 0 }
+
+            for (i in 0 until maxLength) {
+                if (l[i] < r[i]) return true
+                if (l[i] > r[i]) return false
+            }
+
+            return false
+        }
+    }
+}

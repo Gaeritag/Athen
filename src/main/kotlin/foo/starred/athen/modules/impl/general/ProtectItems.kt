@@ -1,0 +1,195 @@
+﻿@file:Suppress("Unused")
+
+package foo.starred.athen.modules.impl.general
+
+import com.mojang.serialization.Codec
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
+import foo.starred.athen.Athen
+import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.dungeon.DungeonAPI
+import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
+import foo.starred.athen.config.Category
+import foo.starred.athen.events.GuiEvent
+import foo.starred.athen.events.PlayerEvent
+import foo.starred.athen.events.core.runWhen
+import foo.starred.athen.handlers.Itemizer.`watch$slot`
+import foo.starred.athen.handlers.Scribble
+import foo.starred.athen.handlers.Typo.modMessage
+import foo.starred.athen.modules.Module
+import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.athen.utils.command
+import foo.starred.snowbird.api.client
+import foo.starred.snowbird.api.held
+import foo.starred.snowbird.api.lie
+import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.repeat
+import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.utils.stripped
+
+@Load
+object ProtectItems : Module(
+    "Protect items",
+    "Protects any item!",
+    Category.GENERAL
+) {
+    private val _unused by config.textParagraph("Use command <red>\"/${Athen.modId} protect [add|remove|list]\"<r> to manage items!")
+    private val move by config.switch("Allowing moving items")
+
+    private val render = config.switch("Render protected").custom("render")
+    private val renderKey by config.switch("Only when key pressed", true).dependsOn { render.value }
+    private val renderKeybind by config.keybind("Keybind", GLFW.GLFW_KEY_P).`watch$slot`().dependsOn { render.value }
+
+    private val scribble = Scribble("features/protectItems")
+    private val uuids = scribble.mutableSet("uuid", Codec.STRING)
+    private val types = scribble.mutableSet("type", Codec.STRING)
+    private val types0 = scribble.mutableSet("type0", Codec.STRING)
+
+    private val trade = Regex("^You\\s+\\w+$")
+    private val p = "<${Catppuccin.Mocha.Mauve.argb}>P".parse().apply { bold = true }.visualOrderText
+
+    init {
+        on<PlayerEvent.Drop> {
+            if (item?.fn() != true) return@on
+            if (!gui && DungeonAPI.started) return@on
+
+            "Prevented dropping item! <gray>[ProtectItems]".parse().modMessage()
+            cancel()
+        }
+
+        on<GuiEvent.Slots.Click> {
+            if (slot?.item?.fn() != true) return@on
+            if (move && clickType != ClickType.THROW && !fn0()) return@on
+
+            "Prevented clicking item! <gray>[ProtectItems]".parse().modMessage()
+            cancel()
+        }
+
+        on<GuiEvent.Slots.Render.Update> {
+            if (!slot.item.fn()) return@on
+            if (renderKey && !renderKeybind.pressed) return@on
+
+            renders.add { graphics, slot ->
+                graphics.extractText(p, slot.x, slot.y)
+            }
+        }.runWhen(render.state)
+
+        command {
+            "protect" / "add" {
+                val item = held?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".modMessage()
+                val uuid = item.getData(DataTypes.UUID)?.toString()
+                if (!enabled) "Please turn on the feature \"ProtectItems\"".modMessage()
+
+                if (uuid != null) {
+                    if (uuid in uuids.value) return@invoke "Item uuid already exists in list!".modMessage()
+                    uuids.update { add(uuid) }
+
+                    "Added item uuid to list!".modMessage()
+                    return@invoke
+                }
+
+                val sid = item.getData(DataTypes.SKYBLOCK_ID)?.skyblockId
+                if (sid != null) {
+                    if (sid in types0.value) return@invoke "Item skyblock id already exists in list!".modMessage()
+                    types0.update { add(sid) }
+
+                    "Added item skyblock id to list!".modMessage()
+                    return@invoke
+                }
+
+                val id = BuiltInRegistries.ITEM.getKey(item.item).toString()
+
+                if (id in types.value) return@invoke "Item id already exists in list!".modMessage()
+                types.update { add(id) }
+
+                "Added item id to list!".modMessage()
+            }
+
+            "protect" / "remove" {
+                val item = held?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".modMessage()
+                val uuid = item.getData(DataTypes.UUID)?.toString()
+                if (!enabled) "Please turn on the feature \"ProtectItems\"".modMessage()
+
+                if (uuid != null) {
+                    if (uuid !in uuids.value) return@invoke "Item uuid does not exist in list!".modMessage()
+                    uuids.update { remove(uuid) }
+
+                    "Removed item uuid from list!".modMessage()
+                    return@invoke
+                }
+
+                val sid = item.getData(DataTypes.SKYBLOCK_ID)?.skyblockId
+                if (sid != null) {
+                    if (sid !in types0.value) return@invoke "Item skyblock id does not exist in list!".modMessage()
+                    types0.update { remove(sid) }
+
+                    "Removed item skyblock id from list!".modMessage()
+                    return@invoke
+                }
+
+                val id = BuiltInRegistries.ITEM.getKey(item.item).toString()
+
+                if (id !in types.value) return@invoke "Item id does not exist in list!".modMessage()
+                types.update { remove(id) }
+
+                "Removed item id from list!".modMessage()
+            }
+
+            "protect" / "list" {
+                val a = ("<gray>" + ("-".repeat())).parse()
+
+                "Protected items list:".modMessage()
+                a.lie()
+
+                "Protected UUIDs:".modMessage()
+                for (u in uuids.value) " <dark_gray>- <gray>$u".parse().lie()
+                a.lie()
+
+                "Protected SkyBlock IDs:".modMessage()
+                for (t in types0.value) " <dark_gray>- <gray>$t".parse().lie()
+                a.lie()
+
+                "Protected IDs:".modMessage()
+                for (t in types.value) " <dark_gray>- <gray>$t".parse().lie()
+                a.lie()
+
+                if (!enabled) "Please turn on the feature \"ProtectItems\"".modMessage()
+            }
+        }
+    }
+
+    private fun ItemStack.fn(): Boolean {
+        val uuid = getData(DataTypes.UUID)?.toString()
+        if (uuid != null) return uuid in uuids.value
+
+        val sid = getData(DataTypes.SKYBLOCK_ID)?.skyblockId
+        if (sid != null) return sid in types0.value
+
+        val id = BuiltInRegistries.ITEM.getKey(item).toString()
+        return id in types.value
+    }
+
+    private fun fn0(): Boolean {
+        val s = client.screen as? AbstractContainerScreen<*> ?: return true
+        val t = s.title.string
+
+        if (t == "Salvage Items") return true
+        if (t == "Create Auction") return true
+        if (t == "Create BIN Auction") return true
+        if (trade.matches(t)) return true
+
+        val t0 = s.menu.slots.getOrNull(49)?.item
+        if (t0?.item == Items.HOPPER && t0.hoverName.stripped() == "Sell Item") return true
+        if (t0?.getLore()?.lastOrNull()?.stripped() == "Click to buyback!") return true
+
+        return false
+    }
+}

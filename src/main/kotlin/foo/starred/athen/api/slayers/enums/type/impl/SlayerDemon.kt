@@ -1,0 +1,8 @@
+﻿package foo.starred.athen.api.slayers.enums.type.impl
+
+import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
+
+enum class SlayerDemon(override val display: String, override val names: Set<String> = setOf(display)) : ISlayerType {
+    Quazii("ⓆⓊⒶⓏⒾⒾ"),
+    Typhoeus("ⓉⓎⓅⒽⓄⒺⓊⓈ")
+}

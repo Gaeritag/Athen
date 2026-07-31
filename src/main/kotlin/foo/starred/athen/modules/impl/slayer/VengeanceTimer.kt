@@ -1,0 +1,77 @@
+﻿package foo.starred.athen.modules.impl.slayer
+
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.slayers.SlayerAPI
+import foo.starred.athen.config.Category
+import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
+import foo.starred.athen.events.EntityEvent
+import foo.starred.athen.events.SlayerEvent
+import foo.starred.athen.events.TickEvent
+import foo.starred.athen.events.core.runWhen
+import foo.starred.athen.modules.Module
+import foo.starred.snowbird.api.held
+import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.utils.toDuration
+
+@Load
+@OnlyIn(islands = [SkyBlockIsland.CRIMSON_ISLE])
+object VengeanceTimer : Module(
+    "Vengeance timer",
+    "Shows the time until your vengeance damage should activate.",
+    Category.SLAYER
+) {
+    private val compact by config.switch("Compact display")
+    private val useTicks by config.switch("Use ticks", true)
+    private val abilityIds = listOf("HEARTFIRE_DAGGER", "BURSTFIRE_DAGGER", "FIREDUST_DAGGER")
+    private var count: Observable<Boolean> = Observable(false)
+    private var countDown: Int = 120
+
+    init {
+        config.hud("Vengeance") {
+            if (!count.value && !it) return@hud null
+
+            val value = when {
+                it && useTicks -> "120"
+                it -> "6s"
+                useTicks -> "$countDown"
+                else -> (countDown / 20.0).toDuration(secondsDecimals = 1)
+            }
+
+            sizedText(if (compact) value else "§cVengeance: §f$value")
+        }
+
+        on<TickEvent.Server> {
+            if (countDown > 0) countDown-- else reset()
+        }.runWhen(count)
+
+        on<EntityEvent.Update.Named> {
+            if (count.value) return@on
+            val entity = entity.parent ?: return@on
+            val slayerInfo = SlayerAPI.bosses[entity] ?: return@on
+
+            if (!slayerInfo.owned) return@on
+            if (!stripped.contains("ASHEN ♨7")) return@on
+            if (held?.getData(DataTypes.SKYBLOCK_ID)?.skyblockId !in abilityIds) return@on
+
+            count.value = true
+        }
+
+        on<SlayerEvent.Boss.Death> {
+            reset()
+        }
+
+        on<SlayerEvent.Reset.Any> {
+            reset()
+        }
+    }
+
+    private fun reset() {
+        count.value = false
+        countDown = 120
+    }
+}
