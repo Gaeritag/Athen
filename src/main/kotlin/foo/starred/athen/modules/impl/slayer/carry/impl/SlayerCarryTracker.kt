@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.entity.LivingEntity
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
@@ -87,7 +86,7 @@ object SlayerCarryTracker : Module(
     private val `highlight$player$width` by config.slider("Player line width", 2f, 0f, 10f).dependsOn { `highlight$player`.value }.childOf { _highlights }
 
     private val tradeCompleteRegex = Regex("^Trade completed with (?:\\[.*?] )?(?<player>\\w+)!$")
-    private val coinsReceivedRegex = Regex("^ \\+ (?<amount>\\d+\\.?\\d*)M coins$")
+    private val coinsReceivedRegex = Regex("^\\+ (?<amount>\\d+\\.?\\d*)M coins$")
     private val deathRegex = Regex("^ ☠ (?<player>\\w+) was killed by (?<killer>.+)\\.$")
 
     private val scribble = Scribble("features/slayerCarryTracker")
@@ -116,19 +115,21 @@ object SlayerCarryTracker : Module(
                 val name = string("player")
                 val amount = int("amount")
                 val slayerType = string("slayerType").lowercase()
-                val tier = string("tier")
+                val t0 = string("tier")
+
+                if (tracked.value.any { it.name.equals(name, true) }) return@word "<red>$name is already being tracked.".parse().modMessage()
 
                 val type = SlayerBoss.entries.find { it.short.lowercase() == slayerType } ?: return@word "Invalid slayer type.".modMessage()
-                val i0 =
-                    if (tier.equals("any", true)) null
-                    else tier.toIntOrNull() ?: return@word "Invalid tier.".modMessage()
+                val i0 = if (t0.equals("any", true)) null else t0.toIntOrNull() ?: return@word "Invalid tier.".modMessage()
 
                 if (i0 != null) {
                     val i1 = type.max.int
                     if (i0 !in 1..i1) return@word "<red>Tier must be 1-$i1 or any for $type.".parse().modMessage()
                 }
 
-                add(name, amount, type, SlayerTier.entries.find { it.int == i0 })
+                val tier = SlayerTier.entries.find { it.int == i0 }
+                tracked.update { add(SlayerCarryPlayer(name, type, tier, amount)) }
+                "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] x$amount!".parse().modMessage()
             }.suggests { listOf("any", "1", "2", "3", "4", "5") }
 
             "carry" / "remove" / word("player") {
@@ -269,11 +270,7 @@ object SlayerCarryTracker : Module(
                     if (list.size == 1) {
                         val (boss, tier, count) = list[0]
 
-                        "Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$last<r>. "
-                            .parse()
-                            .append("Click to add".literal().onClick { add(last, count, boss, tier) })
-                            .modMessage()
-
+                        "<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$last<r>. Click to add!".parse().modMessage()
                         return@schedule
                     }
 
@@ -286,7 +283,7 @@ object SlayerCarryTracker : Module(
                             root.append(" ".literal())
                         }
 
-                        root.append("<aqua>[${count}x ${boss.short} T${tier.int}]".parse().onClick { add(last, count, boss, tier) })
+                        root.append("<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}><aqua>[${count}x ${boss.short} T${tier.int}]".parse())
                     }
 
                     root.modMessage()
@@ -428,20 +425,9 @@ object SlayerCarryTracker : Module(
         c.lie()
     }
 
-    fun add(name: String, count: Int, type: SlayerBoss, tier: SlayerTier?) {
-        if (tracked.value.any { it.name.equals(name, true) }) {
-            return "<red>$name is already being tracked.".parse().modMessage()
-        }
-
-        tracked.update { add(SlayerCarryPlayer(name, type, tier, count)) }
-        "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] x$count!".parse().modMessage()
-    }
-
     fun update(index: Int, name: String, type: SlayerBoss, tier: SlayerTier?, max: Int, done: Int) {
         val old = tracked.value.getOrNull(index) ?: return
-        tracked.update {
-            set(index, SlayerCarryPlayer(name, type, tier, max, done, old.first, old.last))
-        }
+        tracked.update { set(index, SlayerCarryPlayer(name, type, tier, max, done, old.first, old.last)) }
     }
 
     fun remove(index: Int) {
