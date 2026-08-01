@@ -138,8 +138,8 @@ object PartyFinder : Module(
     init {
         Chronos.repeat(1.hours) {
             val now = System.currentTimeMillis()
-            pfCache.entries.removeIf { (_, cached) -> now - cached.storedAt > 1.hours.inWholeMicroseconds }
-            statsCache.entries.removeIf { (_, cached) -> now - cached.storedAt > 1.hours.inWholeMicroseconds }
+            pfCache.entries.removeIf { (_, cached) -> now - cached.storedAt > 1.hours.inWholeMilliseconds }
+            statsCache.entries.removeIf { (_, cached) -> now - cached.storedAt > 1.hours.inWholeMilliseconds }
         }
 
         command {
@@ -305,8 +305,10 @@ object PartyFinder : Module(
 
             val names = all.filter { pfCache[it] == null }.takeIf { it.isNotEmpty() } ?: return@on lore()
             ProfileAPI.get(names, onSuccess = { results ->
-                for ((u, s) in results) pfCache[u] = CachedStats(s)
-                mainThread { lore() }
+                mainThread {
+                    for ((u, s) in results) pfCache[u] = CachedStats(s)
+                    lore()
+                }
             })
         }
     }
