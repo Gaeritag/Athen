@@ -11,17 +11,15 @@ object ProfileAPI {
     fun get(
         username: String,
         inventory: Boolean = false,
-        onSuccess: (PlayerProfileStats) -> Unit,
-        onError: ((Throwable) -> Unit)? = null
+        onSuccess: (PlayerProfileStats) -> Unit
     ) {
-        get(listOf(username), inventory, { onSuccess(it.getValue(username)) }, onError)
+        get(listOf(username), inventory) { onSuccess(it.getValue(username)) }
     }
 
     fun get(
         usernames: Collection<String>,
         inventory: Boolean = false,
-        onSuccess: (Map<String, PlayerProfileStats>) -> Unit,
-        onError: ((Throwable) -> Unit)? = null
+        onSuccess: (Map<String, PlayerProfileStats>) -> Unit
     ) {
         val names = usernames.joinToString(",")
 
@@ -35,14 +33,14 @@ object ProfileAPI {
                         val name = obj.get("first").asString
                         val json = obj.getAsJsonObject("second")
 
-                        put(name, if (json.has("error")) PlayerProfileStats(loading = false) else ProfileParser.get(json))
+                        put(name, if (json.has("error")) PlayerProfileStats(name) else ProfileParser.get(name, json))
                     }
                 })
             }
 
             onError {
                 Athen.LOGGER.error("Failed to batch fetch profile stats for $usernames", it)
-                onError?.invoke(it) ?: onSuccess(usernames.associateWith { PlayerProfileStats(loading = false) })
+                onSuccess(usernames.associateWith { a -> PlayerProfileStats(a) })
             }
         }
     }

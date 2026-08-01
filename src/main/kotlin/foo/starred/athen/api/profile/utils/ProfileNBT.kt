@@ -48,7 +48,6 @@ object ProfileNBT {
                 val id = extra.get("id")?.asString()?.get() ?: continue
 
                 val lore = tag.get("display")?.asCompound()?.get()?.get("Lore")?.asList()?.get()?.mapNotNull { it.asString().getOrNull() }.orEmpty()
-
                 if (lore.any { "§7§4☠ §cRequires" in it }) continue
 
                 val power = lore.firstNotNullOfOrNull { line ->
