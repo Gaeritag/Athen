@@ -37,7 +37,7 @@ public abstract class GuiMixin {
         new GuiEvent.Render.Post(guiGraphics).post();
     }
 
-    //~ if >= 26.1 'renderCrossHair' -> 'extractCrosshair'
+    //~ if >= 26.1 'renderCrosshair' -> 'extractCrosshair'
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     private void athen$renderCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!RadialMenu.INSTANCE.getEnabled()) return;
