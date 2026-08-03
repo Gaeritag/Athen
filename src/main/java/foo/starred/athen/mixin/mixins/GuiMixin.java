@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.modules.impl.render.radial.RadialMenu;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,6 +35,15 @@ public abstract class GuiMixin {
     @Inject(method = "render", at = @At("TAIL"))
     private void athen$render$post(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         new GuiEvent.Render.Post(guiGraphics).post();
+    }
+
+    //~ if >= 26.1 'renderCrossHair' -> 'extractCrosshair'
+    @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
+    private void athen$renderCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (!RadialMenu.INSTANCE.getEnabled()) return;
+        if (!RadialMenu.INSTANCE.getOpen().getValue()) return;
+
+        ci.cancel();
     }
 
     //~ if >= 26.1 'renderSlot' -> 'extractSlot'

@@ -1,6 +1,6 @@
-﻿package foo.starred.athen.modules.impl.render.radial.base.actions
+﻿package foo.starred.athen.modules.impl.render.radial.actions
 
-import foo.starred.athen.modules.impl.render.radial.base.actions.impl.NoAction
+import foo.starred.athen.modules.impl.render.radial.actions.impl.NoAction
 
 interface IAction {
     val id: Int

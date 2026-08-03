@@ -1,0 +1,156 @@
+package foo.starred.athen.modules.impl.render.radial.ui.components
+
+import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.position.FixedPositionConstraint
+import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.size.FillSizeConstraint
+import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.size.FixedSizeConstraint
+import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.ContainerPrimitive
+import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.RectanglePrimitive
+import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.RectanglePrimitive.Companion.rectangle
+import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.RenderStatePrimitive.Companion.renderState
+import foo.starred.athen.api.rendering.ui.dsl.events.impl.MouseEvent
+import foo.starred.athen.modules.impl.render.radial.RadialMenu
+import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
+import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialOverlay
+import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
+import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.snowbird.utils.mouseSX
+import foo.starred.snowbird.utils.mouseSY
+
+class RadialPreview(main: ContainerPrimitive) {
+    var panel: RectanglePrimitive
+        private set
+
+    init {
+        panel = rectangle {
+            size = FixedSizeConstraint(320, 320)
+            position = FixedPositionConstraint(586, 0)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            attach(main)
+
+            on<MouseEvent.Press> {
+                if (button != 0) return@on
+                cancel()
+
+                val s0 = RadialEditor.main
+                val s1 = RadialEditor.sub
+                val list0 = RadialEditor.working
+
+                val x0 = x.toFloat()
+                val y0 = y.toFloat()
+
+                val x1 = self.x + self.width / 2
+                val y1 = self.y + self.height / 2
+
+                val b0 = RadialMenu.type == 0 && s1 >= 0 && s0 in list0.indices
+                val cur0 = if (b0) list0[s0].sub else list0
+                val num0 = maxOf(3, cur0.size)
+
+                val x2 = x0 - x1
+                val y2 = y0 - y1
+                val d0 = x2 * x2 + y2 * y2
+
+                if (d0 < 144f) {
+                    if (b0 || (RadialMenu.type == 2 && s0 in list0.indices && s1 >= 0)) RadialEditor.reload(s0, -1)
+                    return@on
+                }
+
+                val ex0 = if (b0) emptyList() else RadialEditor.extra()
+
+                var h0 = -1
+                var h1 = -1
+
+                if (d0 >= 225f) {
+                    if (!b0 && s0 in list0.indices) {
+                        h1 = when (RadialMenu.type) {
+                            2 -> RadialRenderState.hitRing(x0, y0, x1, y1, num0, RadialMenu.radius2, ex0.map { it.first }, false, RadialMenu.thickness)
+                            1 -> RadialRenderState.hitNested(x0, y0, x1, y1, num0, RadialMenu.radius2, s0, list0[s0].sub.size, false, RadialMenu.thickness)
+                            else -> -1
+                        }
+
+                        if (h1 != -1 && RadialMenu.type == 1) h0 = s0
+                    }
+
+                    if (h0 == -1 && h1 == -1) h0 = RadialRenderState.hit(x0, y0, x1, y1, num0, RadialMenu.radius1, RadialMenu.radius2)
+                }
+
+                RadialEditor.commit()
+
+                if (b0) {
+                    if (h0 != -1) RadialEditor.reload(s0, h0)
+                    return@on
+                }
+
+                if (h1 != -1) {
+                    RadialEditor.reload(s0, h1)
+                    return@on
+                }
+
+                if (h0 == -1) return@on
+
+                if (RadialMenu.type == 0 && list0.getOrNull(h0)?.sub?.isNotEmpty() == true) RadialEditor.reload(h0, 0)
+                else RadialEditor.reload(h0, -1)
+            }
+        }
+
+        renderState {
+            size = FillSizeConstraint()
+            position = FixedPositionConstraint(0, 0)
+            ascend = true
+            provider = provider@{ graphics ->
+                val list0 = RadialEditor.working
+                if (list0.isEmpty()) return@provider null
+
+                val s0 = RadialEditor.main
+                val s1 = RadialEditor.sub
+
+                val x0 = panel.x + 160
+                val y0 = panel.y + 160
+
+                val mx = mouseSX
+                val my = mouseSY
+
+                val b0 = RadialMenu.type == 0 && s1 >= 0 && s0 in list0.indices
+                val cur0 = if (b0) list0[s0].sub else list0
+                val num0 = maxOf(3, cur0.size)
+
+                val x1 = mx - x0.toFloat()
+                val y1 = my - y0.toFloat()
+                val d0 = x1 * x1 + y1 * y1
+
+                val ex0 = if (b0) emptyList() else RadialEditor.extra()
+
+                var h0 = -1
+                var h1 = -1
+
+                if (d0 >= 225f) {
+                    if (!b0 && s0 in list0.indices) {
+                        h1 = when (RadialMenu.type) {
+                            2 -> RadialRenderState.hitRing(mx, my, x0, y0, num0, RadialMenu.radius2, ex0.map { it.first }, false, RadialMenu.thickness)
+                            1 -> RadialRenderState.hitNested(mx, my, x0, y0, num0, RadialMenu.radius2, s0, list0[s0].sub.size, false, RadialMenu.thickness)
+                            else -> -1
+                        }
+
+                        if (h1 != -1 && RadialMenu.type == 1) h0 = s0
+                    }
+
+                    if (h0 == -1 && h1 == -1) h0 = RadialRenderState.hit(mx, my, x0, y0, num0, RadialMenu.radius1, RadialMenu.radius2)
+                }
+
+                val i3 = if (!b0 && RadialMenu.type == 2) ex0.getOrNull(if (h1 != -1) h1 else s1)?.first ?: -1 else -1
+                RadialRenderState(graphics, x0, y0, num0, if (!b0 && RadialMenu.type == 1 && s0 in list0.indices) list0[s0].sub else emptyList(), ex0, if (b0) s1 else h0, if (h1 != -1) h1 else s1, if (b0) -1 else s0, i3)
+            }
+
+            attach(panel)
+        }
+
+        RadialOverlay(panel).apply {
+            size = FillSizeConstraint()
+            position = FixedPositionConstraint(0, 0)
+            interact = false
+
+            attach(panel)
+        }
+    }
+}
