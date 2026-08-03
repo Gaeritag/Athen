@@ -27,7 +27,7 @@ import foo.starred.snowbird.utils.literal
 import kotlin.time.Duration.Companion.hours
 
 object Athen : ClientModInitializer {
-    const val modVersion: String = /*$ mod_version*/ "0.2.0"
+    const val modVersion: String = /*$ mod_version*/ "0.2.1"
     const val modId: String = /*$ mod_id*/ "athen"
     const val modName: String = /*$ mod_name*/ "Athen"
     const val discordUrl: String = "https://discord.gg/DB5S3DjQVa"
@@ -71,7 +71,7 @@ object Athen : ClientModInitializer {
         "<hover:<${Mocha.Lavender.argb}>Click to join!><click:url:$discordUrl><gray>Need help? Click to join our Discord!".parse().lie()
 
         divider.lie()
-        "<hover:<green>Click to open page!><click:url:https://aerii.xyz/donate>Want to help support the development for mods like Athen? Click here :3".parse().lie()
+        "<hover:<green>Click to open page!><click:url:https://patreon.com/starredskies>Want to help support the development for mods like Athen? Click here to open the Patreon :3".parse().lie()
         divider.lie()
     }
 
