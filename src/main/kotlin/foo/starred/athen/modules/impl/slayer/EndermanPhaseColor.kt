@@ -1,0 +1,68 @@
+package foo.starred.athen.modules.impl.slayer
+
+import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
+import foo.starred.athen.config.Category
+import foo.starred.athen.ducks.entity.EntityDuck.Companion.attachedStripped
+import foo.starred.athen.events.SlayerEvent
+import foo.starred.athen.events.TickEvent
+import foo.starred.athen.modules.Module
+import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.snowbird.utils.withAlpha
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
+import net.minecraft.world.entity.Entity
+import java.awt.Color
+
+@Load
+@OnlyIn(islands = [SkyBlockIsland.THE_END])
+object EndermanPhaseColor : Module(
+    "Enderman phase color",
+    "Changes the color of the boss based on it's current phase.",
+    Category.SLAYER,
+) {
+    private val normal by config.colorPicker("Normal", Color(255, 255, 255, 127))
+    private val hits by config.colorPicker("Hit phase", Color(Catppuccin.Mocha.Mauve.argb.withAlpha(0.5f), true))
+
+    private val map: Object2IntOpenHashMap<Entity> = Object2IntOpenHashMap<Entity>().apply {
+        defaultReturnValue(-1)
+    }
+
+    init {
+        on<SlayerEvent.Boss.Spawn> {
+            if (!slayerInfo.owned) return@on
+            if (slayerInfo.type != SlayerBoss.Voidgloom) return@on
+
+            map[entity] = normal.rgb
+        }
+
+        on<SlayerEvent.Boss.Death> {
+            if (!slayerInfo.owned) return@on
+            if (slayerInfo.type != SlayerBoss.Voidgloom) return@on
+
+            map -= entity
+        }
+
+        on<TickEvent.Client.End> {
+            if (ticks % 5 != 0) return@on
+
+            val it = map.iterator()
+            while (it.hasNext()) {
+                val (k, _) = it.next()
+
+                if (!k.isAlive) {
+                    it.remove()
+                    continue
+                }
+
+                map[k] = if (k.attachedStripped.any { "Hits " in it }) hits.rgb else normal.rgb
+            }
+        }
+    }
+
+    @JvmStatic
+    fun Entity.get(): Int? {
+        return map.getInt(this).takeIf { it != -1 }
+    }
+}
