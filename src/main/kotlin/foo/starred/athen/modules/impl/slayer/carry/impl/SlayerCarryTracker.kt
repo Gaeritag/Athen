@@ -2,7 +2,6 @@
 
 package foo.starred.athen.modules.impl.slayer.carry.impl
 
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.entity.LivingEntity
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
@@ -10,7 +9,6 @@ import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
-import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
@@ -24,10 +22,7 @@ import foo.starred.athen.handlers.Scribble
 import foo.starred.athen.handlers.Texter.onHover
 import foo.starred.athen.handlers.Ticking
 import foo.starred.athen.handlers.Typo.modMessage
-import foo.starred.athen.hud.HUDEditor
-import foo.starred.athen.hud.Resolute
 import foo.starred.athen.modules.Module
-import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryHistory
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer
 import foo.starred.athen.modules.impl.slayer.carry.ui.SlayerCarryGUI
@@ -103,8 +98,9 @@ object SlayerCarryTracker : Module(
         }.map { it.visualOrderText }
     }
 
-    private val hud = config.hud("Slayer carry display", outsidePreview = false) {
-        sizedText(ex0)
+    private val hud = config.hud("Slayer carry display") {
+        if (it) return@hud sizedText(ex0)
+        sizedText(display.value ?: return@hud null)
     }
 
     private var trader: String? = null
@@ -294,37 +290,6 @@ object SlayerCarryTracker : Module(
                 val p = tracked.value.find { it.name == player } ?: return@findThenNull
                 if (p.boss != null) p.reset()
             }
-        }
-
-        on<GuiEvent.Render.Main> {
-            if (!hud.enabled) return@on
-            if (client.screen is HUDEditor) return@on
-            if (client.screen is AbstractContainerScreen<*>) return@on
-            if (client.options.hideGui && ModSettings.hideGuis) return@on
-            val texts = display.value ?: return@on
-
-            Resolute.push(graphics)
-            graphics.pose().pushMatrix()
-            graphics.pose().translate(hud.x, hud.y)
-            graphics.pose().scale(hud.scale, hud.scale)
-            graphics.extractText(texts, 0, 0)
-            graphics.pose().popMatrix()
-            Resolute.pop(graphics)
-        }
-
-        on<GuiEvent.Render.Screen.Post> {
-            if (!hud.enabled) return@on
-            if (client.screen !is AbstractContainerScreen<*>) return@on
-
-            val texts = display.value ?: return@on
-
-            Resolute.push(graphics)
-            graphics.pose().pushMatrix()
-            graphics.pose().translate(hud.x, hud.y)
-            graphics.pose().scale(hud.scale, hud.scale)
-            graphics.extractText(texts, 0, 0)
-            graphics.pose().popMatrix()
-            Resolute.pop(graphics)
         }
 
         on<SlayerEvent.Boss.Spawn> {
