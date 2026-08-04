@@ -65,6 +65,15 @@ public abstract class GuiMixin {
         ci.cancel();
     }
 
+    //~ if >= 26.1 'renderSelectedItemName' -> 'extractSelectedItemName'
+    @Inject(method = "renderSelectedItemName", at = @At("HEAD"), cancellable = true)
+    private void athen$renderSelectedItemName$0(GuiGraphics guiGraphics, CallbackInfo ci) {
+        if (!ItemNamePosition.INSTANCE.getEnabled()) return;
+        if (ItemNamePosition.INSTANCE.getHud().getEnabled()) return;
+
+        ci.cancel();
+    }
+
     @ModifyArgs(
             //~ if >= 26.1 'renderSelectedItemName' -> 'extractSelectedItemName'
             method = "renderSelectedItemName",
@@ -74,7 +83,7 @@ public abstract class GuiMixin {
                     target = "Lnet/minecraft/client/gui/GuiGraphics;drawStringWithBackdrop(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIII)V"
             )
     )
-    private void athen$renderSelectedItemName(Args args) {
+    private void athen$renderSelectedItemName$1(Args args) {
         if (!ItemNamePosition.INSTANCE.getEnabled()) return;
 
         int width = args.get(4);
