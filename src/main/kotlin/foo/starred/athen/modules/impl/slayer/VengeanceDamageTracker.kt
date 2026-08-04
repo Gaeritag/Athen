@@ -1,14 +1,13 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.decoration.ArmorStand
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.EntityEvent
-import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -23,28 +22,13 @@ object VengeanceDamageTracker : Module(
     Category.SLAYER
 ) {
     private val abbreviate by config.switch("Abbreviate damage")
-    private val vengeanceRegex: Regex = Regex("""^(?<damage>\d+(?:,\d+)*)ﬗ$""")
-    private var slayerEntity: Entity? = null
+    private val regex: Regex = Regex("""^(?<damage>\d+(?:,\d+)*)ﬗ$""")
 
     init {
-        on<SlayerEvent.Boss.Spawn> {
-            if (!slayerInfo.owned) return@on
-            slayerEntity = entity
-        }
-
-        on<SlayerEvent.Boss.Death> {
-            if (!slayerInfo.owned) return@on
-            slayerEntity = null
-        }
-
-        on<SlayerEvent.Reset.Any> {
-            slayerEntity = null
-        }
-
         on<EntityEvent.Update.Named> {
-            val slayer = slayerEntity ?: return@on
+            val slayer = SlayerAPI.slayer?.entity ?: return@on
             val entity = entity as? ArmorStand ?: return@on
-            val match = vengeanceRegex.findGroup(stripped, "damage") ?: return@on
+            val match = regex.findGroup(stripped, "damage") ?: return@on
 
             if (entity.distanceTo(slayer) > 5) return@on
 
