@@ -85,9 +85,8 @@ object SlayerInfo : Module(
                 var hits: Int? = null
                 var attached: String? = null
 
+                val a = i.slayer.type == SlayerBoss.Voidgloom
                 for (l in e.attachedStripped) {
-                    val a = i.slayer.type == SlayerBoss.Voidgloom
-
                     if (hits == null && a && " Hits" in l) {
                         hits = l.substringBefore(" Hits").substringAfterLast(' ').toIntOrNull()
                         continue
