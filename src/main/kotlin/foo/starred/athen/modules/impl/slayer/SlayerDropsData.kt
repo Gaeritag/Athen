@@ -25,9 +25,11 @@ import foo.starred.athen.handlers.Scribble
 import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.formatted
+import foo.starred.snowbird.utils.stripped
 import kotlin.math.*
 
 @Load
@@ -72,7 +74,9 @@ object SlayerDropsData : Module(
             boss = a
             tier = slayerInfo.tier
 
+            if (slayerInfo.type == SlayerBoss.Tarantula && slayerInfo.tier == SlayerTier.Five && client.level?.getEntity(entity.id + 1)?.customName?.stripped()?.contains("Conjoined Brood") != true) return@on
             if (!sinceLast) return@on
+
             map.update {
                 ISlayerDrop.ALL.filter { it.boss == a }.forEach {
                     val b = it.key()
