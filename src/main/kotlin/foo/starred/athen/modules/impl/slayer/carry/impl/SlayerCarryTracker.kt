@@ -81,7 +81,7 @@ object SlayerCarryTracker : Module(
     private val `highlight$player$width` by config.slider("Player line width", 2f, 0f, 10f).dependsOn { `highlight$player`.value }.childOf { _highlights }
 
     private val tradeCompleteRegex = Regex("^Trade completed with (?:\\[.*?] )?(?<player>\\w+)!$")
-    private val coinsReceivedRegex = Regex("^\\+ (?<amount>\\d+\\.?\\d*)M coins$")
+    private val coinsReceivedRegex = Regex("^ \\+ (?<amount>\\d+\\.?\\d*)M coins$")
     private val deathRegex = Regex("^ ☠ (?<player>\\w+) was killed by (?<killer>.+)\\.$")
 
     private val scribble = Scribble("features/slayerCarryTracker")
