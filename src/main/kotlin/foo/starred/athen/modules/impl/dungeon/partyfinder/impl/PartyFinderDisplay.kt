@@ -58,6 +58,7 @@ object PartyFinderDisplay : Module(
     val `color$vc` by config.colorPicker("VC color", Color(115, 0, 255)).dependsOn { highlight.value }
     val `color$perm` by config.colorPicker("Perm color", Color(0, 255, 255)).dependsOn { highlight.value }
     val `color$carry` by config.colorPicker("Carry color", Color(100, 0, 0)).dependsOn { highlight.value }
+    private val _unused by config.textParagraph("Want to hide a color? You can set it's opacity to 0!").dependsOn { highlight.value }
 
     private val noteRegex = Regex("^Note: (?<note>.+)")
     private val floorRegex = Regex("^Floor: Floor (?<floor>[IV]+)$")
@@ -100,7 +101,7 @@ object PartyFinderDisplay : Module(
 
         on<GuiEvent.Slots.Render.Pre> {
             if (!menu0) return@on
-            val color = data[slot.index]?.status?.color ?: return@on
+            val color = data[slot.index]?.status?.color?.takeIf { it.alpha > 10 } ?: return@on
 
             graphics.rectangle(slot.x, slot.y, 16, 16, color)
         }.runWhen(highlight.state)
@@ -119,7 +120,7 @@ object PartyFinderDisplay : Module(
             val lore0 = it0.get(DataComponents.LORE)?.lines() ?: return@on
 
             if (menu1) {
-                klass = PartyFinderClassType.get(selectedRegex.findGroup(lore0.getOrNull(4)?.stripped() ?: return@on, "class") ?: return@on)
+                klass = PartyFinderClassType.get(selectedRegex.findGroup(lore0.getOrNull(2)?.stripped() ?: return@on, "class") ?: return@on)
                 return@on
             }
 
@@ -163,7 +164,7 @@ object PartyFinderDisplay : Module(
                 }
 
                 val master = "Master Mode" in lore0.first()
-                val blocked = lore0.last().contains("Requires Catacombs Level", "Requires a Class at Level", "Complete previous floor first!")
+                val blocked = lore0.last().contains("Requires Catacombs Level", "Requires a Class at Level", "Complete previous floor first!", "You must complete")
                 val floor = floorRegex.findGroup(lore0[1], "floor")?.parseRomanNumeral() ?: 0
                 val note = noteRegex.findGroup(lore0[2], "note")
 
@@ -249,7 +250,7 @@ object PartyFinderDisplay : Module(
             first = false
 
             val color = if (a == klass) Catppuccin.Mocha.Teal.argb else Catppuccin.Mocha.Red.argb
-            root += "<$color>$a"
+            root += "<$color>${a.full}"
         }
 
         return root.parse().apply { style = style.withItalic(false) }
