@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render
+package foo.starred.athen.modules.impl.render
 
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.client.renderer.entity.state.AvatarRenderState
@@ -17,27 +17,25 @@ object CustomScale : Module(
     "Changes the scale for players!",
     Category.RENDER
 ) {
-    private val self by config.switch("Scale self", true)
-    private val others by config.switch("Scale others", true)
-    private val npc by config.switch("Scale NPCs", true)
-    private val nametags by config.switch("Scale nametags", true)
-    private val shadow by config.switch("Scale shadow", true)
+    private val scales by config.multiCheckbox("Scale", listOf("Self", "Others", "NPCs", "Nametags", "Shadow"), listOf(0, 1, 2, 3, 4))
     val scale by config.slider("Scale", 1f, 0.1f, 5f, showDouble = true)
+    val chibi by config.dropdown("Chibi style", listOf("None", "Big head", "Small head"), 1)
+    val chibiness by config.slider("Chibi factor", 2f, 1f, 5f, showDouble = true)
 
     init {
         on<WorldRenderEvent.Entity.Pre> {
             val r = renderState as? AvatarRenderState ?: return@on
             if (!entity.fn()) return@on
 
-            if (nametags) r.nameTagAttachment = r.nameTagAttachment?.scale(scale.toDouble())
-            if (shadow) r.shadowRadius *= scale
+            if (3 in scales) r.nameTagAttachment = r.nameTagAttachment?.scale(scale.toDouble())
+            if (4 in scales) r.shadowRadius *= scale
         }
     }
 
     @JvmStatic
     fun Entity?.fn(): Boolean = when (this) {
-        is LocalPlayer -> self
-        is Player -> if (uuid.version() == 4) others else npc
+        is LocalPlayer -> 0 in scales
+        is Player -> if (uuid.version() == 4) 1 in scales else 2 in scales
         else -> false
     }
 }

@@ -22,10 +22,12 @@ public class AvatarRendererMixin {
     @Inject(method = "scale(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
     private void athen$scale(AvatarRenderState avatarRenderState, PoseStack poseStack, CallbackInfo ci) {
         if (!CustomScale.INSTANCE.getEnabled()) return;
+
         Entity entity = ((EntityRenderStateDuck) avatarRenderState).athen$getEntity();
         if (entity == null) return;
         if (!CustomScale.fn(entity)) return;
-        float s = CustomScale.INSTANCE.getScale() * 0.9375f;
+
+        final float s = CustomScale.INSTANCE.getScale() * 0.9375f;
         poseStack.scale(s, s, s);
     }
 
