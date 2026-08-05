@@ -103,7 +103,7 @@ class KeybindsPopUp(
         on<MouseEvent.Press> {
             if (!capturing) return@on
 
-            captured.add(-(button + 1))
+            captured.add(button)
             keys()
             cancel()
         }

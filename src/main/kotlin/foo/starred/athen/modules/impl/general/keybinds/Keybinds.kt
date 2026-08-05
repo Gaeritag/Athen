@@ -49,13 +49,12 @@ object Keybinds : Module(
         }
 
         on<InputEvent.Mouse.Press> {
-            val mouseCode = -(buttonInfo.button + 1)
-            buttons.add(mouseCode)
+            buttons.add(buttonInfo.button)
             check()
         }
 
         on<InputEvent.Mouse.Release> {
-            buttons.remove(-(buttonInfo.button + 1))
+            buttons.remove(buttonInfo.button)
             reset()
         }
     }

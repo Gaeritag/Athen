@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.ui.dsl.elements.primitives.base.interfaces
+package foo.starred.athen.api.rendering.ui.dsl.elements.primitives.base.interfaces
 
 import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.base.impl.IPrimitiveElement
 import foo.starred.athen.api.rendering.ui.dsl.events.impl.KeyEvent
@@ -12,9 +12,11 @@ interface IPrimitiveInteractable<T> : IPrimitiveSelf<T> where T : IPrimitiveElem
     var unfocus: Boolean
 
     fun mousePress(x: Double, y: Double, button: Int): Boolean {
-        if (self.root.focused?.unfocus == false) return false
-        val a = self.find(x, y).also { self.root.focused = it } ?: return false
-        return a.post(MouseEvent.Press(x, y, button, a))
+        val a = self.root.focused
+        if (a?.unfocus == false) return a.post(MouseEvent.Press(x, y, button, a))
+
+        val b = self.find(x, y).also { self.root.focused = it } ?: return false
+        return b.post(MouseEvent.Press(x, y, button, b))
     }
 
     fun mouseRelease(x: Double, y: Double, button: Int): Boolean {
