@@ -22,6 +22,7 @@ object EndermanPhaseColor : Module(
     "Changes the color of the boss based on it's current phase.",
     Category.SLAYER,
 ) {
+    private val all by config.switch("Change for all bosses")
     private val normal by config.colorPicker("Normal", Color(255, 255, 255, 127))
     private val hits by config.colorPicker("Hit phase", Color(Catppuccin.Mocha.Mauve.argb.withAlpha(0.5f), true))
 
@@ -31,15 +32,15 @@ object EndermanPhaseColor : Module(
 
     init {
         on<SlayerEvent.Boss.Spawn> {
-            if (!slayerInfo.owned) return@on
             if (slayerInfo.type != SlayerBoss.Voidgloom) return@on
+            if (!slayerInfo.owned && (!all || slayerInfo.owner != null)) return@on
 
             map[entity] = normal.rgb
         }
 
         on<SlayerEvent.Boss.Death> {
-            if (!slayerInfo.owned) return@on
             if (slayerInfo.type != SlayerBoss.Voidgloom) return@on
+            if (!slayerInfo.owned && (!all || slayerInfo.owner != null)) return@on
 
             map -= entity
         }
