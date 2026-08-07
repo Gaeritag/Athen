@@ -77,6 +77,7 @@ class RadialHeader(side: RectanglePrimitive) {
             text = RadialMenu.active.literal()
             color = Mocha.Mauve.argb
             position = CenterPositionConstraint()
+            interact = true
 
             on<MouseEvent.Press> {
                 cancel()
