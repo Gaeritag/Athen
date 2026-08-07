@@ -3,12 +3,6 @@
 package foo.starred.athen
 
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import net.fabricmc.api.ClientModInitializer
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import foo.starred.athen.annotations.AnnotationLoader
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.core.on
@@ -20,10 +14,19 @@ import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.data
-import foo.starred.snowbird.api.*
+import foo.starred.snowbird.api.EMPTY_COMPONENT
+import foo.starred.snowbird.api.center
+import foo.starred.snowbird.api.lie
+import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.handlers.time.client
 import foo.starred.snowbird.utils.literal
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import net.fabricmc.api.ClientModInitializer
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import kotlin.time.Duration.Companion.hours
 
 object Athen : ClientModInitializer {

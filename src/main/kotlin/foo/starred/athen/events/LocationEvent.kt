@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.events
 
-import net.hypixel.data.type.ServerType
 import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.api.location.area.base.ISkyBlockArea
 import foo.starred.athen.events.core.Event
+import net.hypixel.data.type.ServerType
 
 sealed class LocationEvent {
     sealed class Hypixel {

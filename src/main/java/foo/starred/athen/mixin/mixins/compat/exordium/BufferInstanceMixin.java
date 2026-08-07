@@ -1,13 +1,13 @@
 package foo.starred.athen.mixin.mixins.compat.exordium;
 
 import dev.tr7zw.exordium.components.BufferInstance;
+import foo.starred.athen.modules.impl.render.radial.RadialMenu;
 import kotlin.Unit;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import foo.starred.athen.modules.impl.render.radial.RadialMenu;
 
 @Mixin(value = BufferInstance.class, remap = false)
 public class BufferInstanceMixin {

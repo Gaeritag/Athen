@@ -2,7 +2,6 @@
 
 package foo.starred.athen.config.ui.elements
 
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import foo.starred.athen.config.ui.elements.base.IBaseUI
 import foo.starred.athen.config.ui.elements.base.ISwitch
 import foo.starred.athen.hud.HUDEditor
@@ -10,6 +9,7 @@ import foo.starred.athen.hud.HUDElement
 import foo.starred.athen.utils.nvg.NVGRenderer
 import foo.starred.athen.utils.render.animations.springValue
 import foo.starred.snowbird.utils.hovered
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 class HUDElement(
     name: String,

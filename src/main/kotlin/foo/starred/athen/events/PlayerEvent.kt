@@ -1,8 +1,8 @@
 ﻿package foo.starred.athen.events
 
+import foo.starred.athen.events.core.CancellableEvent
 import net.minecraft.core.BlockPos
 import net.minecraft.world.item.ItemStack
-import foo.starred.athen.events.core.CancellableEvent
 
 sealed class PlayerEvent {
     data class Drop(

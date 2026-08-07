@@ -2,16 +2,16 @@
 
 package foo.starred.athen.modules.impl.general
 
-import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.item.BowItem
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.SoundPlayEvent
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.held
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.item.BowItem
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 
 @Load
 @OnlyIn(skyblock = true)

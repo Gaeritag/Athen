@@ -1,14 +1,5 @@
 ﻿package foo.starred.athen.api.kuudra
 
-import net.minecraft.world.entity.monster.Giant
-import net.minecraft.world.entity.monster.MagmaCube
-import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
-import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
-import tech.thatgravyboat.skyblockapi.utils.extentions.serverMaxHealth
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.kuudra.enums.*
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -21,6 +12,15 @@ import foo.starred.snowbird.api.player
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.delegate.Expirable
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.world.entity.monster.Giant
+import net.minecraft.world.entity.monster.MagmaCube
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
+import tech.thatgravyboat.skyblockapi.utils.extentions.serverMaxHealth
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 
 @Priority
 object KuudraAPI {

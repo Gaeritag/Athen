@@ -2,9 +2,9 @@
 
 package foo.starred.athen.api.rendering.level.impl.extensions.impl
 
-import org.joml.Vector3f
 import foo.starred.athen.api.rendering.level.impl.data.impl.ExtractedLine
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
+import org.joml.Vector3f
 
 @JvmOverloads
 fun extractLine(

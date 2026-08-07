@@ -2,7 +2,6 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import net.minecraft.network.chat.Component
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -14,6 +13,7 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.alert
 import foo.starred.snowbird.utils.literal
+import net.minecraft.network.chat.Component
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.KUUDRA])

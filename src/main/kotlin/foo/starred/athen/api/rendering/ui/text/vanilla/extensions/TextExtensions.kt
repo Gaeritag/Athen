@@ -1,11 +1,11 @@
 ﻿package foo.starred.athen.api.rendering.ui.text.vanilla.extensions
 
+import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.util.FormattedCharSequence
-import foo.starred.snowbird.api.client
 
 //~ if >= 26.1 'drawString(' -> 'text(' {
 @JvmOverloads

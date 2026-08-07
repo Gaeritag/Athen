@@ -2,10 +2,10 @@
 
 package foo.starred.athen.hud
 
-import net.minecraft.client.gui.GuiGraphics
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.mouseSX
 import foo.starred.snowbird.utils.mouseSY
+import net.minecraft.client.gui.GuiGraphics
 
 // Defaults to 1080 / 2, intended :eyes:
 object Resolute {

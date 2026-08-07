@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.world.entity.monster.EnderMan
-import net.minecraft.world.entity.monster.Guardian
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -11,6 +9,8 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.modules.Module
+import net.minecraft.world.entity.monster.EnderMan
+import net.minecraft.world.entity.monster.Guardian
 import kotlin.math.abs
 
 @Load

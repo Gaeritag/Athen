@@ -2,15 +2,15 @@
 
 package foo.starred.athen.modules.impl.dungeon
 
-import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.parser.parse
+import net.minecraft.network.chat.Component
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 
 @Load
 @OnlyIn(skyblock = true)

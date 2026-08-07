@@ -1,12 +1,12 @@
 ﻿package foo.starred.athen.events
 
 import com.mojang.blaze3d.vertex.PoseStack
+import foo.starred.athen.events.core.CancellableEvent
+import foo.starred.athen.events.core.Event
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.state.EntityRenderState
 //~ if >= 26.1 'CameraRenderState' -> 'level.CameraRenderState'
 import net.minecraft.client.renderer.state.CameraRenderState
-import foo.starred.athen.events.core.CancellableEvent
-import foo.starred.athen.events.core.Event
 
 sealed class WorldRenderEvent {
     sealed class Entity {

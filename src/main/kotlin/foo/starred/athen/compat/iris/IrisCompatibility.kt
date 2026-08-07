@@ -1,11 +1,11 @@
 ﻿package foo.starred.athen.compat.iris
 
-import net.fabricmc.loader.api.FabricLoader
-import net.irisshaders.iris.api.v0.IrisApi
-import net.irisshaders.iris.api.v0.IrisProgram
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.rendering.level.pipelines.LevelPipelineImpl
+import net.fabricmc.loader.api.FabricLoader
+import net.irisshaders.iris.api.v0.IrisApi
+import net.irisshaders.iris.api.v0.IrisProgram
 
 @Load
 object IrisCompatibility {

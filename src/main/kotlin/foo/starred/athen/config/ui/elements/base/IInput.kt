@@ -33,9 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package foo.starred.athen.config.ui.elements.base
 
-import net.minecraft.util.StringUtil
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGRenderer
 import foo.starred.athen.utils.render.animations.springValue
@@ -43,6 +40,9 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.api.shift
 import foo.starred.snowbird.utils.hovered
+import net.minecraft.util.StringUtil
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import kotlin.math.max
 import kotlin.math.min
 

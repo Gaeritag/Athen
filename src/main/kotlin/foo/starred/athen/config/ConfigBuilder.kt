@@ -1,8 +1,5 @@
 ﻿package foo.starred.athen.config
 
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.resources.Identifier
-import net.minecraft.sounds.SoundEvent
 import foo.starred.athen.Athen
 import foo.starred.athen.hud.HUDElement
 import foo.starred.athen.hud.HUDElementContext
@@ -12,6 +9,9 @@ import foo.starred.snowbird.api.mainThread
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.play
 import foo.starred.snowbird.utils.sound
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvent
 import java.awt.Color
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

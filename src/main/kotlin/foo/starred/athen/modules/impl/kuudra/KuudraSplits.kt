@@ -3,8 +3,6 @@
 package foo.starred.athen.modules.impl.kuudra
 
 import com.mojang.serialization.Codec
-import net.minecraft.network.chat.Component
-import net.minecraft.util.FormattedCharSequence
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -29,6 +27,8 @@ import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.handlers.time.client
 import foo.starred.snowbird.utils.toDuration
 import foo.starred.snowbird.utils.toDurationFromMillis
+import net.minecraft.network.chat.Component
+import net.minecraft.util.FormattedCharSequence
 import kotlin.math.abs
 
 @Load

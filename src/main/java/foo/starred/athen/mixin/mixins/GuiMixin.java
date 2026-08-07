@@ -1,5 +1,8 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.GuiEvent;
+import foo.starred.athen.modules.impl.render.ItemNamePosition;
+import foo.starred.athen.modules.impl.render.RenderOptimiser;
 import foo.starred.athen.modules.impl.render.radial.RadialMenu;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
@@ -12,9 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-import foo.starred.athen.events.GuiEvent;
-import foo.starred.athen.modules.impl.render.ItemNamePosition;
-import foo.starred.athen.modules.impl.render.RenderOptimiser;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {

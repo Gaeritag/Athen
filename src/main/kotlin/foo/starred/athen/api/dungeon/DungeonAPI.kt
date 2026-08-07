@@ -32,9 +32,6 @@
 
 package foo.starred.athen.api.dungeon
 
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.dungeon.enums.DungeonClass
 import foo.starred.athen.api.dungeon.enums.DungeonPlayer
@@ -47,6 +44,9 @@ import foo.starred.snowbird.api.name
 import foo.starred.snowbird.api.player
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.stripped
+import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 
 @Priority
 object DungeonAPI {

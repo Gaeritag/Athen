@@ -2,9 +2,6 @@
 
 package foo.starred.athen.modules.impl.dungeon
 
-import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
-import net.minecraft.resources.Identifier
-import net.minecraft.sounds.SoundEvent
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.dungeon.DungeonAPI
@@ -29,6 +26,9 @@ import foo.starred.snowbird.utils.alert
 import foo.starred.snowbird.utils.stripped
 import foo.starred.snowbird.utils.toDuration
 import foo.starred.snowbird.utils.toDurationFromMillis
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
+import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvent
 import kotlin.math.abs
 
 @Load

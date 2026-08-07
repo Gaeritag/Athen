@@ -1,6 +1,9 @@
 package foo.starred.athen.mixin.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import foo.starred.athen.ducks.entity.EntityRenderStateDuck;
+import foo.starred.athen.ducks.entity.guardian.GuardianDuck;
+import foo.starred.athen.modules.impl.slayer.EndermanLaserHider;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.GuardianRenderer;
 import net.minecraft.client.renderer.entity.state.GuardianRenderState;
@@ -11,9 +14,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import foo.starred.athen.ducks.entity.EntityRenderStateDuck;
-import foo.starred.athen.ducks.entity.guardian.GuardianDuck;
-import foo.starred.athen.modules.impl.slayer.EndermanLaserHider;
 
 @Mixin(GuardianRenderer.class)
 public class GuardianRendererMixin {

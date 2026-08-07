@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.render
 
-import net.minecraft.client.renderer.entity.state.ArrowRenderState
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
 import foo.starred.athen.config.Category
@@ -8,6 +7,7 @@ import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.render.renderBoundingBox
+import net.minecraft.client.renderer.entity.state.ArrowRenderState
 import java.awt.Color
 
 @Load

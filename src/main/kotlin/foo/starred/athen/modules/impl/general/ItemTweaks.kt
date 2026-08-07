@@ -2,15 +2,6 @@
 
 package foo.starred.athen.modules.impl.general
 
-import net.minecraft.core.component.DataComponents
-import net.minecraft.network.chat.Component
-import net.minecraft.world.item.Items
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.utils.extentions.format
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
@@ -26,6 +17,15 @@ import foo.starred.snowbird.utils.colorCoded
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.stripped
 import foo.starred.snowbird.utils.toDurationFromMillis
+import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.Items
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.utils.extentions.format
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import java.awt.Color
 import java.time.Instant
 import java.time.ZoneId

@@ -2,14 +2,6 @@
 
 package foo.starred.athen.modules.impl.render
 
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.resources.Identifier
-import net.minecraft.util.ARGB
-import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
@@ -21,6 +13,14 @@ import foo.starred.athen.handlers.Resourceful
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.Observable.Companion.and
 import foo.starred.snowbird.utils.withAlpha
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.resources.Identifier
+import net.minecraft.util.ARGB
+import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import java.awt.Color
 
 @Load

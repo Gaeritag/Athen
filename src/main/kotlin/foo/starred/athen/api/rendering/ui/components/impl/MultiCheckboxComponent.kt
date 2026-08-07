@@ -1,23 +1,23 @@
-﻿package foo.starred.athen.api.rendering.ui.dsl.elements.components.impl
+﻿package foo.starred.athen.api.rendering.ui.components.impl
 
-import net.minecraft.client.gui.GuiGraphics
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.base.impl.IPrimitiveElement
-import foo.starred.athen.api.rendering.ui.dsl.events.impl.MouseEvent
-import foo.starred.athen.api.rendering.ui.effects.outline.outline
-import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
-import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
+import foo.starred.cascade.vanilla.extensions.shapes.rectangle.outline
+import foo.starred.cascade.vanilla.extensions.shapes.rectangle.rectangle
+import foo.starred.cascade.vanilla.extensions.vanilla.extractText
 import foo.starred.snowbird.api.client
+import net.minecraft.client.gui.GuiGraphics
 import kotlin.math.max
 import kotlin.math.min
 
 open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() {
     private var _height1: Int? = null
 
-    override var x: Int = 0
-    override var y: Int = 0
-    override var width: Int = 0
-    override var height: Int = 0
+    override var x: Float = 0f
+    override var y: Float = 0f
+    override var width: Float = 0f
+    override var height: Float = 0f
     override var color: Int = -1
 
     var label: String = ""
@@ -80,6 +80,11 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
         if (!visible) return
         if (root.focused != this) open = false
         val font = client.font ?: return
+
+        val x = x.toInt()
+        val y = y.toInt()
+        val width = width.toInt()
+        val height = height.toInt()
 
         if (label.isNotEmpty()) graphics.extractText(label, x, y - font.lineHeight - 2, false, Catppuccin.Mocha.Subtext0.argb)
         graphics.rectangle(x, y, width, height, Catppuccin.Mocha.Surface1.argb)

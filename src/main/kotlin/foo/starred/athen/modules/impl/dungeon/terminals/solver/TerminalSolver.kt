@@ -2,10 +2,6 @@
 
 package foo.starred.athen.modules.impl.dungeon.terminals.solver
 
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.network.protocol.game.ClientboundSoundPacket
-import net.minecraft.sounds.SoundEvents
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
@@ -17,13 +13,17 @@ import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.*
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGSpecialRenderer
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.utils.mouseRX
 import foo.starred.snowbird.utils.mouseRY
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.network.protocol.game.ClientboundSoundPacket
+import net.minecraft.sounds.SoundEvents
+import org.lwjgl.glfw.GLFW
 import java.awt.Color
 
 @Load

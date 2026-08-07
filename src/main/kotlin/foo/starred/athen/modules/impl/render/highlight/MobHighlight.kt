@@ -4,11 +4,6 @@ package foo.starred.athen.modules.impl.render.highlight
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.decoration.ArmorStand
-import net.minecraft.world.phys.AABB
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
@@ -33,6 +28,11 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.handlers.parser.parse
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.decoration.ArmorStand
+import net.minecraft.world.phys.AABB
 
 @Load
 @OnlyIn(skyblock = true)

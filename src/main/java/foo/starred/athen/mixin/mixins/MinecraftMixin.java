@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.GuiEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -10,7 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import foo.starred.athen.events.GuiEvent;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {

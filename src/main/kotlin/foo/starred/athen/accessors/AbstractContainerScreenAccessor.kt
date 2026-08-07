@@ -1,8 +1,8 @@
 ﻿package foo.starred.athen.accessors
 
+import foo.starred.athen.mixin.accessors.AbstractContainerScreenAccessor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.Slot
-import foo.starred.athen.mixin.accessors.AbstractContainerScreenAccessor
 
 val AbstractContainerScreen<*>.hovered: Slot?
     get() = (this as AbstractContainerScreenAccessor).hovered()

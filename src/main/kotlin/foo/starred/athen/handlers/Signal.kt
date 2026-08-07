@@ -1,5 +1,11 @@
 ﻿package foo.starred.athen.handlers
 
+import foo.starred.athen.annotations.Priority
+import foo.starred.athen.events.*
+import foo.starred.athen.events.core.on
+import foo.starred.athen.utils.nvg.NVGSpecialRenderer
+import foo.starred.snowbird.api.client
+import foo.starred.snowbird.api.mainThread
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
@@ -11,11 +17,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback
-import net.fabricmc.fabric.api.event.player.UseBlockCallback
-import net.fabricmc.fabric.api.event.player.UseEntityCallback
-import net.fabricmc.fabric.api.event.player.UseItemCallback
+import net.fabricmc.fabric.api.event.player.*
 import net.hypixel.modapi.HypixelModAPI
 import net.hypixel.modapi.fabric.event.HypixelModAPICallback
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
@@ -33,12 +35,6 @@ import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.sounds.SoundPlayedEvent
 import tech.thatgravyboat.skyblockapi.api.events.screen.ItemTooltipEvent
-import foo.starred.athen.annotations.Priority
-import foo.starred.athen.events.*
-import foo.starred.athen.events.core.on
-import foo.starred.athen.utils.nvg.NVGSpecialRenderer
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.mainThread
 import kotlin.jvm.optionals.getOrNull
 
 /**

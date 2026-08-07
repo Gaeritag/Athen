@@ -2,14 +2,6 @@
 
 package foo.starred.athen.modules.impl.render.tooltip.custom
 
-import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category
@@ -23,6 +15,14 @@ import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.pressed
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import java.awt.Color
 
 @Load

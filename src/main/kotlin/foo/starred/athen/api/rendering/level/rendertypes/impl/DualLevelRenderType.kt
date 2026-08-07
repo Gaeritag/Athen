@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.api.rendering.level.rendertypes.impl
 
-import net.minecraft.client.renderer.rendertype.RenderSetup
-import net.minecraft.client.renderer.rendertype.RenderType
 import foo.starred.athen.api.rendering.level.pipelines.base.ILevelPipeline
 import foo.starred.athen.api.rendering.level.rendertypes.base.ILevelRenderType
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import net.minecraft.client.renderer.rendertype.RenderType
 
 class DualLevelRenderType(identifier: String, pipeline: ILevelPipeline) : ILevelRenderType {
     override val depth: RenderType =

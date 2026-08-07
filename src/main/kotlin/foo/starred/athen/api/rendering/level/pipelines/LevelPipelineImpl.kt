@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.api.rendering.level.pipelines
 
 import com.mojang.blaze3d.vertex.VertexFormat
-import net.minecraft.client.renderer.RenderPipelines
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.rendering.level.pipelines.impl.DualLevelPipeline
+import net.minecraft.client.renderer.RenderPipelines
 
 @Load
 object LevelPipelineImpl {

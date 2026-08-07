@@ -33,12 +33,12 @@ package foo.starred.athen.mixin.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import foo.starred.athen.events.PacketEvent;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import foo.starred.athen.events.PacketEvent;
 
 @Mixin(value = ClientPacketListener.class, priority = Integer.MIN_VALUE) // why min value? it's for the features to not break when other mods cancel the packet.
 public class ClientPacketListenerMixin {

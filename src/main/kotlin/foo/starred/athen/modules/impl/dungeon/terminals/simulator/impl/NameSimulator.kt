@@ -1,10 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
-import net.minecraft.core.component.DataComponents
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.world.inventory.Slot
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.handlers.Typo
 import foo.starred.athen.handlers.Typo.modMessage
@@ -13,6 +8,11 @@ import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.Simulator
 import foo.starred.athen.utils.glint
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import kotlin.random.Random
 
 class NameSimulator(

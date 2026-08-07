@@ -1,8 +1,8 @@
 ﻿package foo.starred.athen.events
 
-import net.minecraft.world.entity.Entity
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.events.core.Event
+import net.minecraft.world.entity.Entity
 
 sealed class SlayerEvent {
     sealed class Boss {

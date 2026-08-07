@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.EntityEvent;
 import net.minecraft.network.syncher.SyncedDataHolder;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tech.thatgravyboat.skyblockapi.mixins.accessors.LivingEntityAccessor;
-import foo.starred.athen.events.EntityEvent;
 
 @Mixin(SynchedEntityData.class)
 public class SynchedEntityDataMixin {

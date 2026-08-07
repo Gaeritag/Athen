@@ -3,8 +3,6 @@
 package foo.starred.athen.modules.impl.general.messageactions
 
 import com.google.gson.reflect.TypeToken
-import it.unimi.dsi.fastutil.objects.ObjectArrayList
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import foo.starred.athen.Athen
 import foo.starred.athen.Athen.GSON
 import foo.starred.athen.annotations.Load
@@ -26,6 +24,8 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
+import it.unimi.dsi.fastutil.objects.ObjectArrayList
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 @Load
 object MessageActions : Module(

@@ -3,10 +3,6 @@
 package foo.starred.athen.modules.impl.render
 
 import com.mojang.serialization.Codec
-import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.ComponentSerialization
-import net.minecraft.network.chat.MutableComponent
-import net.minecraft.util.FormattedCharSequence
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category
@@ -21,6 +17,10 @@ import foo.starred.snowbird.api.*
 import foo.starred.snowbird.handlers.minecraft.AbstractWords
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.FormattedCharSequence
 
 @Load
 object VisualWords : Module(

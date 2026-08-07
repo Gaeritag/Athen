@@ -1,15 +1,15 @@
 ﻿package foo.starred.athen.modules.impl.render
 
-import net.minecraft.client.player.LocalPlayer
-import net.minecraft.client.renderer.entity.state.AvatarRenderState
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState
-import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.ItemStack
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
+import net.minecraft.client.player.LocalPlayer
+import net.minecraft.client.renderer.entity.state.AvatarRenderState
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 
 @Load
 object RenderOptimiser :  Module(

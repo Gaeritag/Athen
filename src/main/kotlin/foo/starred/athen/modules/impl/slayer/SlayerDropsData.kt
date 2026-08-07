@@ -3,17 +3,11 @@
 package foo.starred.athen.modules.impl.slayer
 
 import com.mojang.serialization.Codec
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.slayers.enums.drop.base.ISlayerDrop
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropGrade
-import foo.starred.athen.api.slayers.enums.drop.impl.InfernoDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.RevenantDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.SvenDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.TarantulaDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.VoidgloomDrops
+import foo.starred.athen.api.slayers.enums.drop.impl.*
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.config.Category
@@ -30,7 +24,9 @@ import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.formatted
 import foo.starred.snowbird.utils.stripped
-import kotlin.math.*
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
+import kotlin.math.min
 
 @Load
 @OnlyIn(skyblock = true)

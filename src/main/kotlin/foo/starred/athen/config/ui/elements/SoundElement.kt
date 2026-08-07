@@ -2,8 +2,6 @@
 
 package foo.starred.athen.config.ui.elements
 
-import net.minecraft.util.StringUtil
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.config.ui.elements.base.IBaseUI
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGRenderer
@@ -14,6 +12,8 @@ import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.open
 import foo.starred.snowbird.utils.play
 import foo.starred.snowbird.utils.sound
+import net.minecraft.util.StringUtil
+import org.lwjgl.glfw.GLFW
 
 class SoundElement(
     name: String,

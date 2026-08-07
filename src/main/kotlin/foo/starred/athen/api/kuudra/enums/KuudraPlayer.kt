@@ -1,10 +1,10 @@
 ﻿package foo.starred.athen.api.kuudra.enums
 
-import net.minecraft.world.entity.Entity
 import foo.starred.athen.Athen
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.handlers.delegate.Expirable
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.world.entity.Entity
 
 class KuudraPlayer(
     val name: String

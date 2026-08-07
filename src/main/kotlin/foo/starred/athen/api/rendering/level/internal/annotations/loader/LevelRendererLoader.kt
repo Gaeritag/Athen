@@ -1,11 +1,11 @@
 ﻿package foo.starred.athen.api.rendering.level.internal.annotations.loader
 
-import io.github.classgraph.ClassGraph
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
 import foo.starred.athen.api.rendering.level.impl.renderers.base.ILevelRenderer
 import foo.starred.athen.api.rendering.level.internal.annotations.impl.LevelRenderer
 import foo.starred.snowbird.utils.safely
+import io.github.classgraph.ClassGraph
 
 @Priority
 object LevelRendererLoader {

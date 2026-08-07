@@ -99,6 +99,7 @@ dependencies {
     shadow("classgraph".global)
     shadow("autoupdate".global)
     shadow("snowbird".versioned)
+    shadow("cascade".versioned)
     shadow("lwjgl-nanovg".versioned)
     for (p in listOf("windows", "linux", "macos", "macos-arm64")) shadow("lwjgl-nanovg".versioned.get().toString() + ":natives-$p")
 

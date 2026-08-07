@@ -2,7 +2,6 @@
 
 package foo.starred.athen.config.ui
 
-import net.minecraft.client.gui.GuiGraphics
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.config.ConfigManager
@@ -22,6 +21,7 @@ import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.mouseRX
 import foo.starred.snowbird.utils.mouseRY
 import foo.starred.snowbird.utils.open
+import net.minecraft.client.gui.GuiGraphics
 import kotlin.math.sign
 
 @Priority(-3)

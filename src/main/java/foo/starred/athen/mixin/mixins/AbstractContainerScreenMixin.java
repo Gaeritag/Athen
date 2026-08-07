@@ -1,5 +1,7 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.GuiEvent;
+import foo.starred.athen.events.PlayerEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,8 +16,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import foo.starred.athen.events.GuiEvent;
-import foo.starred.athen.events.PlayerEvent;
 
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenMixin {

@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.common.carry
 
-import net.minecraft.client.gui.GuiGraphics
 import foo.starred.athen.handlers.Scram
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGRenderer
@@ -13,6 +12,7 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.plural
+import net.minecraft.client.gui.GuiGraphics
 
 abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : Scram(screenName) {
     private var scrollOffset = 0f

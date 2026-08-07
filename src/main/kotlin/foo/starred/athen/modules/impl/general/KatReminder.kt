@@ -2,7 +2,6 @@
 
 package foo.starred.athen.modules.impl.general
 
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -23,6 +22,7 @@ import foo.starred.snowbird.handlers.time.client
 import foo.starred.snowbird.utils.fromLongDuration
 import foo.starred.snowbird.utils.showTitle
 import foo.starred.snowbird.utils.toDurationFromMillis
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.milliseconds

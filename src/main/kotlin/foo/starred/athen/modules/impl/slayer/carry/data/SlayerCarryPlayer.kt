@@ -2,14 +2,14 @@
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.world.entity.Entity
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.handlers.Ticking
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.utils.toDuration
-import java.util.Optional
+import net.minecraft.world.entity.Entity
+import java.util.*
 
 data class SlayerCarryPlayer(
     val name: String,

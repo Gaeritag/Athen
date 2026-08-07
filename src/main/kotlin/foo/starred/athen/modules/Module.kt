@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules
 
-import net.minecraft.network.protocol.Packet
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.annotations.Redstone
 import foo.starred.athen.api.dungeon.DungeonAPI
@@ -15,6 +14,7 @@ import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.Observable.Companion.and
 import foo.starred.snowbird.handlers.delegate.Deferred
 import foo.starred.snowbird.utils.toCamelCase
+import net.minecraft.network.protocol.Packet
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 

@@ -1,13 +1,13 @@
 ﻿package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl
 
-import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.ITooltipRenderer
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.TooltipContext
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 
 object CombinedTooltip : ITooltipRenderer {
     override fun TooltipContext.render() {

@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.updater
 
-import net.minecraft.client.gui.GuiGraphics
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
@@ -9,6 +8,7 @@ import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
+import net.minecraft.client.gui.GuiGraphics
 
 class UpdateGUI(
     private val currentVersion: String,

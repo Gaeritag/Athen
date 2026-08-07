@@ -32,10 +32,6 @@
 
 package foo.starred.athen.api.location
 
-import net.hypixel.data.type.GameType
-import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.location.area.base.ISkyBlockArea
 import foo.starred.athen.api.location.area.impl.CustomSkyBlockArea
@@ -46,6 +42,10 @@ import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.stripped
+import net.hypixel.data.type.GameType
+import tech.thatgravyboat.skyblockapi.helpers.McClient
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import kotlin.time.Clock
 import kotlin.time.Instant
 

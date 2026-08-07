@@ -3,16 +3,6 @@
 package foo.starred.athen.modules.impl.general
 
 import com.mojang.serialization.Codec
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.world.inventory.ClickType
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.DungeonAPI
@@ -27,13 +17,19 @@ import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.held
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.pressed
-import foo.starred.snowbird.api.repeat
+import foo.starred.snowbird.api.*
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 
 @Load
 object ProtectItems : Module(

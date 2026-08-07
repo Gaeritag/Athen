@@ -3,11 +3,11 @@
 import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.modules.common.carry.ICarryStateTracker
 import foo.starred.athen.modules.common.carry.ICarryStateTracker.HistoryEntry
 import foo.starred.athen.modules.common.carry.ITrackedCarry
+import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 
 private val historyCodec: Codec<HistoryEntry> = RecordCodecBuilder.create { instance ->
     instance.group(

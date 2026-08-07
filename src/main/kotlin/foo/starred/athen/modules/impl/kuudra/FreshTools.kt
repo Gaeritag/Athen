@@ -2,7 +2,6 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -21,6 +20,7 @@ import foo.starred.snowbird.api.command
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.showTitle
 import foo.starred.snowbird.utils.toDurationFromMillis
+import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.KUUDRA])

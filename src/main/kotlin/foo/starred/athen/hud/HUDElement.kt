@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.hud
 
-import net.minecraft.client.gui.GuiGraphics
 import foo.starred.athen.config.ConfigBuilder
 import foo.starred.athen.config.ConfigManager
 import foo.starred.snowbird.api.ZERO_PAIR
+import net.minecraft.client.gui.GuiGraphics
 
 data class HUDElement(
     val id: String,

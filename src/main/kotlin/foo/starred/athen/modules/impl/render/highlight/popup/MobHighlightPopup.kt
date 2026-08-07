@@ -1,9 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.render.highlight.popup
 
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.world.entity.EntityType
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
@@ -15,6 +11,10 @@ import foo.starred.athen.ui.UIZone
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.entity.EntityType
+import org.lwjgl.glfw.GLFW
 
 object MobHighlightPopup : Scram("Add Highlight [Athen]") {
     private val colorField = InputField("Hex color (e.g. ff0000)")

@@ -1,10 +1,10 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.ducks.entity.item.ItemEntityDuck;
+import foo.starred.athen.modules.impl.slayer.BigSlayerDrops;
 import net.minecraft.world.entity.item.ItemEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import foo.starred.athen.ducks.entity.item.ItemEntityDuck;
-import foo.starred.athen.modules.impl.slayer.BigSlayerDrops;
 
 @Mixin(ItemEntity.class)
 public class ItemEntityMixin implements ItemEntityDuck {

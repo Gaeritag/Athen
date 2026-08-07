@@ -1,7 +1,10 @@
 ﻿package foo.starred.athen.api.rendering.ui.shapes.line
 
 import net.minecraft.client.gui.GuiGraphics
-import kotlin.math.*
+import kotlin.math.atan2
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 @JvmOverloads
 fun GuiGraphics.line(x1: Int, y1: Int, x2: Int, y2: Int, color: Int, thickness: Int = 1) {

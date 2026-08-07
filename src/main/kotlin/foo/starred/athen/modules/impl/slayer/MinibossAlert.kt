@@ -2,7 +2,6 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerMini
@@ -16,6 +15,7 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.alert
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 @Load
 @OnlyIn(skyblock = true)

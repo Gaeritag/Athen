@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.api.slayers
 
-import net.minecraft.world.entity.Entity
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
@@ -14,6 +13,7 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.handlers.Typo.devMessage
+import net.minecraft.world.entity.Entity
 import java.util.*
 
 @Priority

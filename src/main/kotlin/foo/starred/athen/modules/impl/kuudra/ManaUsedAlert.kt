@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.kuudra
 
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -12,6 +10,8 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.command
 import foo.starred.snowbird.handlers.parser.parse
+import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.KUUDRA])

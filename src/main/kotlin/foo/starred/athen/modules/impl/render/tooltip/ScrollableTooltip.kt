@@ -2,13 +2,6 @@
 
 package foo.starred.athen.modules.impl.render.tooltip
 
-import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
-import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.resources.Identifier
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
@@ -16,6 +9,13 @@ import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.pressed
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.resources.Identifier
+import org.lwjgl.glfw.GLFW
 
 @Load
 object ScrollableTooltip : Module(

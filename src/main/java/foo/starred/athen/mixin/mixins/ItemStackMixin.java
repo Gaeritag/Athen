@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.ducks.item.ItemStackDuck;
 import kotlin.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -7,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import foo.starred.athen.ducks.item.ItemStackDuck;
 
 import java.util.List;
 

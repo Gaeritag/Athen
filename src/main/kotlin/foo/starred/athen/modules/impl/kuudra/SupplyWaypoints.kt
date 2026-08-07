@@ -2,7 +2,6 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -22,6 +21,7 @@ import foo.starred.athen.utils.markerAABB
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.toDurationFromMillis
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import java.awt.Color
 
 @Load

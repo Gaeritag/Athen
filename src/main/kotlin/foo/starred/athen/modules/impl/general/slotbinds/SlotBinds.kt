@@ -3,11 +3,6 @@
 package foo.starred.athen.modules.impl.general.slotbinds
 
 import com.google.gson.reflect.TypeToken
-import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
-import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.world.inventory.ClickType
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import foo.starred.athen.Athen
 import foo.starred.athen.Athen.GSON
 import foo.starred.athen.annotations.Load
@@ -31,6 +26,11 @@ import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
+import net.minecraft.client.gui.screens.inventory.InventoryScreen
+import net.minecraft.world.inventory.ClickType
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.helpers.McClient
 
 @Load
 object SlotBinds : Module(

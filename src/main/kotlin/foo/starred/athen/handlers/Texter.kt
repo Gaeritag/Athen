@@ -2,13 +2,13 @@
 
 package foo.starred.athen.handlers
 
+import foo.starred.snowbird.handlers.parser.parse
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.command
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.hover
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.suggest
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.url
-import foo.starred.snowbird.handlers.parser.parse
 
 object Texter {
     @JvmStatic

@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.util.FormattedCharSequence
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -14,6 +12,8 @@ import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.utils.literal
+import net.minecraft.util.FormattedCharSequence
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.CRIMSON_ISLE])

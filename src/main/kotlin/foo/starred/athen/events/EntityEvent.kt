@@ -1,13 +1,13 @@
 ﻿package foo.starred.athen.events
 
+import foo.starred.athen.events.core.Event
+import foo.starred.snowbird.utils.stripped
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attribute
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEvent
-import foo.starred.athen.events.core.Event
-import foo.starred.snowbird.utils.stripped
 
 sealed class EntityEvent {
     data class Load(

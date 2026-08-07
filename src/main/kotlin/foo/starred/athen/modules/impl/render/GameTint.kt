@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.render
 
-import net.minecraft.client.gui.GuiGraphics
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.config.Category
@@ -9,6 +8,7 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.Observable.Companion.and
+import net.minecraft.client.gui.GuiGraphics
 import java.awt.Color
 
 @Load

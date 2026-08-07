@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.api.kuudra.enums
 
+import foo.starred.snowbird.api.ZERO_AABB
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.monster.Giant
 import net.minecraft.world.phys.AABB
-import foo.starred.snowbird.api.ZERO_AABB
 import kotlin.math.cos
 import kotlin.math.sin
 

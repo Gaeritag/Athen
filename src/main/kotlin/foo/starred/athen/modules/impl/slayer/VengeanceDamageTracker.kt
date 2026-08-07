@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.world.entity.decoration.ArmorStand
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -13,6 +11,8 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.abbreviate
+import net.minecraft.world.entity.decoration.ArmorStand
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.CRIMSON_ISLE])

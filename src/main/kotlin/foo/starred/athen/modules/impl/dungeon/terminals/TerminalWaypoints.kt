@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals
 
-import net.minecraft.core.BlockPos
-import net.minecraft.world.phys.AABB
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.dungeon.enums.DungeonClass
@@ -14,6 +12,8 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.markerAABB
 import foo.starred.snowbird.handlers.Observable
+import net.minecraft.core.BlockPos
+import net.minecraft.world.phys.AABB
 import java.awt.Color
 
 @Load

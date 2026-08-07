@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.events
 
-import net.minecraft.client.input.KeyEvent
-import net.minecraft.client.input.MouseButtonInfo
 import foo.starred.athen.events.core.CancellableEvent
 import foo.starred.athen.events.core.Event
+import net.minecraft.client.input.KeyEvent
+import net.minecraft.client.input.MouseButtonInfo
 
 sealed class InputEvent {
     sealed class Keyboard {

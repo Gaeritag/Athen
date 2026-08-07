@@ -1,10 +1,10 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.modules.impl.render.RenderOptimiser;
 import net.minecraft.client.renderer.fog.FogRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import foo.starred.athen.modules.impl.render.RenderOptimiser;
 
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {

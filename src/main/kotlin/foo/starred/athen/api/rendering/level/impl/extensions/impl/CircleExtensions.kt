@@ -2,10 +2,10 @@
 
 package foo.starred.athen.api.rendering.level.impl.extensions.impl
 
-import net.minecraft.world.phys.Vec3
 import foo.starred.athen.api.rendering.level.impl.data.impl.ExtractedCircle
 import foo.starred.athen.api.rendering.level.impl.extensions.base.RenderableStyle
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
+import net.minecraft.world.phys.Vec3
 
 val CIRCLE_NORMAL = Vec3(0.0, 1.0, 0.0)
 

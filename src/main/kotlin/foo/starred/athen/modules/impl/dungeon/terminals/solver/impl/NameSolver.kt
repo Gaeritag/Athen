@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
@@ -9,6 +7,8 @@ import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
 import foo.starred.athen.utils.glint
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 
 object NameSolver : ITerminal(TerminalType.NAME) {
     private val i = mutableSetOf<Int>()

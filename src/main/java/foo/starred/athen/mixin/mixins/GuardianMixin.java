@@ -2,14 +2,14 @@ package foo.starred.athen.mixin.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import foo.starred.athen.ducks.entity.guardian.GuardianDuck;
+import foo.starred.athen.modules.impl.slayer.EndermanLaserHider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import foo.starred.athen.ducks.entity.guardian.GuardianDuck;
-import foo.starred.athen.modules.impl.slayer.EndermanLaserHider;
 
 @Mixin(Guardian.class)
 public class GuardianMixin implements GuardianDuck {

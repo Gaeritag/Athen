@@ -2,7 +2,6 @@
 
 package foo.starred.athen.config.ui.elements
 
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.config.ui.elements.base.IBaseUI
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGRenderer
@@ -10,6 +9,7 @@ import foo.starred.athen.utils.render.animations.springValue
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.utils.hovered
+import org.lwjgl.glfw.GLFW
 
 class SliderElement(
     name: String,

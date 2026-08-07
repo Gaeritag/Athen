@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.events
 
-import net.minecraft.world.item.ItemStack
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import foo.starred.athen.api.dungeon.enums.DungeonPlayer
 import foo.starred.athen.events.core.Event
+import net.minecraft.world.item.ItemStack
+import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 
 sealed class DungeonEvent {
     data class Start(

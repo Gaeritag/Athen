@@ -35,13 +35,6 @@
 
 package foo.starred.athen.api.skyblock
 
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.decoration.ArmorStand
-import net.minecraft.world.entity.monster.Creeper
-import net.minecraft.world.entity.monster.spider.CaveSpider
-import net.minecraft.world.entity.monster.spider.Spider
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.ducks.entity.EntityDuck
 import foo.starred.athen.events.EntityEvent
@@ -50,6 +43,13 @@ import foo.starred.athen.handlers.Chronos
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.handlers.time.client
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.decoration.ArmorStand
+import net.minecraft.world.entity.monster.Creeper
+import net.minecraft.world.entity.monster.spider.CaveSpider
+import net.minecraft.world.entity.monster.spider.Spider
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 

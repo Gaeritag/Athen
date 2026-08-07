@@ -2,13 +2,13 @@
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.dungeon.enums.DungeonClass
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.snowbird.api.client
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 
 data class KeybindCondition(
     var workIn: KeybindWorkIn = KeybindWorkIn.OUTSIDE_GUI,

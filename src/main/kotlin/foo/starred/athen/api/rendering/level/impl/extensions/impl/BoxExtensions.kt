@@ -2,10 +2,10 @@
 
 package foo.starred.athen.api.rendering.level.impl.extensions.impl
 
-import net.minecraft.world.phys.AABB
 import foo.starred.athen.api.rendering.level.impl.data.impl.ExtractedBox
 import foo.starred.athen.api.rendering.level.impl.extensions.base.RenderableStyle
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
+import net.minecraft.world.phys.AABB
 
 @JvmOverloads
 fun extractFrameBox(

@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.kuudra
 
-import net.minecraft.world.entity.LivingEntity
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -20,6 +19,7 @@ import foo.starred.athen.utils.render.renderBoundingBox
 import foo.starred.athen.utils.render.renderPos
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.abbreviate
+import net.minecraft.world.entity.LivingEntity
 import java.awt.Color
 import kotlin.math.abs
 

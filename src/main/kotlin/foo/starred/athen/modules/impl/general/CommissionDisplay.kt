@@ -2,10 +2,6 @@
 
 package foo.starred.athen.modules.impl.general
 
-import net.minecraft.util.FormattedCharSequence
-import tech.thatgravyboat.skyblockapi.api.area.mining.Commission
-import tech.thatgravyboat.skyblockapi.api.area.mining.CommissionArea
-import tech.thatgravyboat.skyblockapi.api.area.mining.CommissionsAPI
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -17,6 +13,10 @@ import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.formatted
+import net.minecraft.util.FormattedCharSequence
+import tech.thatgravyboat.skyblockapi.api.area.mining.Commission
+import tech.thatgravyboat.skyblockapi.api.area.mining.CommissionArea
+import tech.thatgravyboat.skyblockapi.api.area.mining.CommissionsAPI
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.DWARVEN_MINES, SkyBlockIsland.MINESHAFT, SkyBlockIsland.CRYSTAL_HOLLOWS])

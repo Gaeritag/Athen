@@ -1,7 +1,7 @@
 ﻿package foo.starred.athen.utils
 
-import net.minecraft.network.chat.Component
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.network.chat.Component
 
 private const val a = "Boomer|Flaming|Fortified|Golden|Healing|Healthy|Speedy|Stealth|Stormy"
 private val b = Regex("""^(?:\[Lv\d+] )?(?:[^\w \-]+ )?(?:\[\w+] )?(?:(?:$a) )?(?<bool>.\s*Corrupted )?(?<name>.+?)(?: ᛤ)? \S*❤""")

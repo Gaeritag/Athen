@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
@@ -17,6 +15,8 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.held
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.toDuration
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.CRIMSON_ISLE])

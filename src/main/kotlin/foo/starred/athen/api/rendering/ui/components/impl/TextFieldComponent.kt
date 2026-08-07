@@ -1,27 +1,27 @@
-﻿package foo.starred.athen.api.rendering.ui.dsl.elements.components.impl
+﻿package foo.starred.athen.api.rendering.ui.components.impl
 
-import net.minecraft.client.gui.GuiGraphics
-import org.lwjgl.glfw.GLFW
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.base.impl.IPrimitiveElement
-import foo.starred.athen.api.rendering.ui.dsl.events.impl.KeyEvent
-import foo.starred.athen.api.rendering.ui.dsl.events.impl.MouseEvent
-import foo.starred.athen.api.rendering.ui.effects.outline.outline
-import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
-import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.cascade.events.impl.KeyEvent
+import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
+import foo.starred.cascade.vanilla.extensions.shapes.rectangle.outline
+import foo.starred.cascade.vanilla.extensions.shapes.rectangle.rectangle
+import foo.starred.cascade.vanilla.extensions.vanilla.extractText
 import foo.starred.snowbird.api.ZERO_PAIR
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.api.shift
+import net.minecraft.client.gui.GuiGraphics
+import org.lwjgl.glfw.GLFW
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
 open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
-    override var x: Int = 0
-    override var y: Int = 0
-    override var width: Int = 0
-    override var height: Int = 0
+    override var x: Float = 0f
+    override var y: Float = 0f
+    override var width: Float = 0f
+    override var height: Float = 0f
     override var color: Int = -1
 
     var placeholder: String = ""
@@ -61,7 +61,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
 
             for (i in 0..value.length) {
                 val a = font.width(value.substring(0, i))
-                val b = abs(a - x).takeIf { it < i1 } ?: continue
+                val b = abs(a - x).takeIf { it < i1 }?.toInt() ?: continue
 
                 i1 = b
                 i0 = i
@@ -225,6 +225,11 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
         val f = client.font ?: return
         val b = root.focused == this
 
+        val x = x.toInt()
+        val y = y.toInt()
+        val width = width.toInt()
+        val height = height.toInt()
+
         graphics.rectangle(x, y, width, height, if (b) Catppuccin.Mocha.Surface2.argb else if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb)
         graphics.outline(x, y, width, height, 1, if (b) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Overlay0.argb)
 
@@ -237,23 +242,23 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
             while (f.width(value.substring(0, cursor)) - scroll < 0) scroll = max(0, scroll - 10)
         }
 
-        val x = x + 3 - scroll
+        val x0 = x + 3 - scroll
 
         if (selected && b) {
             val (s, e) = range
             val s1 = f.width(value.substring(0, s))
             val s2 = f.width(value.substring(0, e))
-            graphics.rectangle(x + s1, y + 2, s2 - s1, height - 4, Catppuccin.Mocha.Mauve.withAlpha(0.5f))
+            graphics.rectangle(x0 + s1, y + 2, s2 - s1, height - 4, Catppuccin.Mocha.Mauve.withAlpha(0.5f))
         }
 
         val c = value.isEmpty() && !b
         val str = if (c) placeholder else value
         val color = if (c) Catppuccin.Mocha.Subtext0.argb else Catppuccin.Mocha.Text.argb
-        graphics.extractText(str, x, y + (height - f.lineHeight) / 2 + 1, false, color)
+        graphics.extractText(str, x0, y + (height - f.lineHeight) / 2 + 1, false, color)
 
         if (b && (System.currentTimeMillis() / 500) % 2 == 0L) {
-            val x0 = client.font.width(value.substring(0, cursor))
-            graphics.rectangle(x + x0, y + 2, 1, height - 4, Catppuccin.Mocha.Mauve.argb)
+            val x1 = client.font.width(value.substring(0, cursor))
+            graphics.rectangle(x0 + x1, y + 2, 1, height - 4, Catppuccin.Mocha.Mauve.argb)
         }
 
         graphics.disableScissor()

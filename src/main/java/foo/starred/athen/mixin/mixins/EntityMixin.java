@@ -35,6 +35,11 @@
 
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.api.skyblock.EntityAPI;
+import foo.starred.athen.ducks.entity.EntityDuck;
+import foo.starred.athen.events.EntityEvent;
+import foo.starred.athen.modules.impl.render.RenderOptimiser;
+import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
@@ -49,11 +54,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import foo.starred.athen.api.skyblock.EntityAPI;
-import foo.starred.athen.ducks.entity.EntityDuck;
-import foo.starred.athen.events.EntityEvent;
-import foo.starred.athen.modules.impl.render.RenderOptimiser;
-import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

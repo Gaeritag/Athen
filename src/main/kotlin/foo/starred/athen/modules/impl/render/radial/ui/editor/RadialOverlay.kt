@@ -1,13 +1,13 @@
 package foo.starred.athen.modules.impl.render.radial.ui.editor
 
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.base.impl.IPrimitiveElement
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.RectanglePrimitive
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
+import foo.starred.cascade.primitives.impl.RectanglePrimitive
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.mouseSX
@@ -15,10 +15,10 @@ import foo.starred.snowbird.utils.mouseSY
 import net.minecraft.client.gui.GuiGraphics
 
 class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<RadialOverlay>() {
-    override var x: Int = 0
-    override var y: Int = 0
-    override var width: Int = 0
-    override var height: Int = 0
+    override var x: Float = 0f
+    override var y: Float = 0f
+    override var width: Float = 0f
+    override var height: Float = 0f
     override var color: Int = -1
 
     override fun render(graphics: GuiGraphics) {
@@ -28,8 +28,8 @@ class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<R
         val i0 = RadialEditor.main
         val i1 = RadialEditor.sub
 
-        val x0 = panel.x + 160
-        val y0 = panel.y + 160
+        val x0 = panel.x.toInt() + 160
+        val y0 = panel.y.toInt() + 160
 
         val mx = mouseSX
         val my = mouseSY
@@ -38,8 +38,8 @@ class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<R
         val current = if (bool) working[i0].sub else working
         val num = maxOf(3, current.size)
 
-        val x1 = mx - x0.toFloat()
-        val y1 = my - y0.toFloat()
+        val x1 = mx - x0
+        val y1 = my - y0
         val hc = x1 * x1 + y1 * y1 < 144f
         val ex = if (!bool) RadialEditor.extra() else emptyList()
 

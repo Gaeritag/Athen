@@ -4,7 +4,6 @@ package foo.starred.athen.config.ui.elements
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.config.ui.elements.base.IBaseUI
 import foo.starred.athen.handlers.Scribble
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -16,6 +15,7 @@ import foo.starred.athen.utils.render.animations.timedValue
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.utils.hovered
+import org.lwjgl.glfw.GLFW
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import java.awt.Color as JavaColor

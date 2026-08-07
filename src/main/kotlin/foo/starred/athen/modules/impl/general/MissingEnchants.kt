@@ -3,11 +3,6 @@
 package foo.starred.athen.modules.impl.general
 
 import com.google.gson.JsonObject
-import net.minecraft.network.chat.Component
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.config.Category
@@ -23,6 +18,11 @@ import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.pressed
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.network.chat.Component
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
 
 @Load
 @OnlyIn(skyblock = true)

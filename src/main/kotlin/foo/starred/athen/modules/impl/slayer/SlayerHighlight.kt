@@ -2,22 +2,18 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.world.entity.Entity
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.config.Category
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
-import foo.starred.athen.events.EntityEvent
-import foo.starred.athen.events.LocationEvent
-import foo.starred.athen.events.SlayerEvent
-import foo.starred.athen.events.TickEvent
-import foo.starred.athen.events.WorldRenderEvent
+import foo.starred.athen.events.*
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.renderBoundingBox
+import net.minecraft.world.entity.Entity
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import java.awt.Color
 import java.util.concurrent.ConcurrentHashMap
 

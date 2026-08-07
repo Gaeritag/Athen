@@ -2,12 +2,12 @@
 
 package foo.starred.athen.api.rendering.level.impl.extensions.impl
 
-import net.minecraft.network.chat.Component
-import net.minecraft.world.phys.Vec3
 import foo.starred.athen.api.rendering.level.impl.data.impl.ExtractedText
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.handlers.parser.parse
+import net.minecraft.network.chat.Component
+import net.minecraft.world.phys.Vec3
 
 @JvmOverloads
 fun extractText(

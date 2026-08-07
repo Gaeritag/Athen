@@ -13,12 +13,7 @@ package foo.starred.athen.api.dungeon.terminals
 
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.ColorsSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.NameSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.NumbersSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.PanesSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.RubixSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.*
 
 enum class TerminalType(val slots: Int, val regex: Regex, val actual: String? = null) {
     COLORS(54, Regex("^Select all the ([\\w ]+) items!$")),

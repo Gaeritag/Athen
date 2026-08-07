@@ -2,8 +2,6 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.util.FormattedCharSequence
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
@@ -25,6 +23,8 @@ import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.formatted
 import foo.starred.snowbird.utils.stripped
 import foo.starred.snowbird.utils.toDuration
+import net.minecraft.util.FormattedCharSequence
+import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 
 @Load
 @OnlyIn(skyblock = true)

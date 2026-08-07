@@ -1,7 +1,7 @@
 ﻿package foo.starred.athen.api.rendering.level.impl.data.impl
 
-import org.joml.Vector3f
 import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
+import org.joml.Vector3f
 
 data class ExtractedLine(
     val start: Vector3f,

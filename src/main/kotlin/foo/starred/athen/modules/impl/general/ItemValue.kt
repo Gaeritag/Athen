@@ -2,10 +2,6 @@
 
 package foo.starred.athen.modules.impl.general
 
-import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.skyblock.PriceAPI.price
@@ -15,6 +11,10 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.abbreviate
 import foo.starred.snowbird.utils.formatted
+import net.minecraft.network.chat.Component
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.api.item.calculator.getItemValue
 
 @Load
 @OnlyIn(skyblock = true)

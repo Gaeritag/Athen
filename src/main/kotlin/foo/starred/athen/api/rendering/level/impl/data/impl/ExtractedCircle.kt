@@ -1,7 +1,7 @@
 ﻿package foo.starred.athen.api.rendering.level.impl.data.impl
 
-import net.minecraft.world.phys.Vec3
 import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
+import net.minecraft.world.phys.Vec3
 
 data class ExtractedCircle(
     val center: Vec3,

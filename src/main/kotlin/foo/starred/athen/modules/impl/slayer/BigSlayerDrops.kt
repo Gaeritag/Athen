@@ -1,25 +1,20 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.item.Item
-import net.minecraft.world.phys.Vec3
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
-import foo.starred.athen.api.slayers.enums.drop.impl.InfernoDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.RevenantDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.SvenDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.TarantulaDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.VampireDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.VoidgloomDrops
+import foo.starred.athen.api.slayers.enums.drop.impl.*
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.enchants0
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.item.Item
+import net.minecraft.world.phys.Vec3
+import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
+import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.seconds
 

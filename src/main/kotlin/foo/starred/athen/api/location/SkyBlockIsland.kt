@@ -30,8 +30,8 @@
  */
 package foo.starred.athen.api.location
 
-import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 import foo.starred.snowbird.handlers.Observable
+import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 enum class SkyBlockIsland(val id: String, displayName: String? = null) {
     PRIVATE_ISLAND("dynamic"),

@@ -1,7 +1,7 @@
 ﻿package foo.starred.athen.events
 
-import net.minecraft.network.chat.Component
 import foo.starred.athen.events.core.Event
+import net.minecraft.network.chat.Component
 
 sealed class TabListEvent {
     data class Change(

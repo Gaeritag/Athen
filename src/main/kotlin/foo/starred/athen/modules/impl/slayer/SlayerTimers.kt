@@ -1,7 +1,6 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
 import com.mojang.serialization.Codec
-import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
@@ -20,6 +19,7 @@ import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.stripped
 import foo.starred.snowbird.utils.toDuration
+import tech.thatgravyboat.skyblockapi.utils.text.TextColor
 
 @Load
 @OnlyIn(skyblock = true)

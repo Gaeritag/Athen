@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.BlockEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,7 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import foo.starred.athen.events.BlockEvent;
 
 @Mixin(LevelChunk.class)
 public class LevelChunkMixin {

@@ -2,13 +2,13 @@
 
 package foo.starred.athen.config.ui.elements
 
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.config.ui.elements.base.IBaseUI
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.keyName
 import foo.starred.athen.utils.render.animations.springValue
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.hovered
+import org.lwjgl.glfw.GLFW
 
 class KeybindElement(
     name: String,

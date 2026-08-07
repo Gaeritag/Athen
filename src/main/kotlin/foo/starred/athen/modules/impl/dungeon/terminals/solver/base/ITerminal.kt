@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.base
 
-import net.minecraft.world.inventory.ClickType
-import net.minecraft.world.item.ItemStack
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
@@ -11,6 +9,8 @@ import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.guiClick
 import foo.starred.athen.utils.nvg.NVGRenderer
 import foo.starred.snowbird.api.client
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.item.ItemStack
 import java.util.concurrent.CopyOnWriteArrayList
 
 abstract class ITerminal(val terminalType: TerminalType) {

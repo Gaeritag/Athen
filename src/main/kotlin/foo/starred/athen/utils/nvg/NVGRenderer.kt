@@ -33,6 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package foo.starred.athen.utils.nvg
 
+import foo.starred.athen.handlers.Resourceful
+import foo.starred.snowbird.api.client
+import foo.starred.snowbird.utils.*
 import org.lwjgl.nanovg.NVGColor
 import org.lwjgl.nanovg.NVGPaint
 import org.lwjgl.nanovg.NanoSVG.*
@@ -41,9 +44,6 @@ import org.lwjgl.nanovg.NanoVGGL3.*
 import org.lwjgl.stb.STBImage.stbi_load_from_memory
 import org.lwjgl.system.MemoryUtil.memAlloc
 import org.lwjgl.system.MemoryUtil.memFree
-import foo.starred.athen.handlers.Resourceful
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.*
 import java.nio.ByteBuffer
 import kotlin.math.max
 import kotlin.math.min

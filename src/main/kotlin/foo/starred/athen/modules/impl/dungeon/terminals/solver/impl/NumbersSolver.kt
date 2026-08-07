@@ -1,13 +1,13 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGRenderer
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 
 object NumbersSolver : ITerminal(TerminalType.NUMBERS) {
     private val counts = mutableMapOf<Int, Int>()

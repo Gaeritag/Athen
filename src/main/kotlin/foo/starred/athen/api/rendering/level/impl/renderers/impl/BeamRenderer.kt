@@ -3,16 +3,16 @@
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
+import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
+import foo.starred.athen.api.rendering.level.impl.renderers.base.ILevelRenderer
+import foo.starred.athen.api.rendering.level.internal.annotations.impl.LevelRenderer
+import foo.starred.snowbird.api.client
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Mth
-import foo.starred.athen.api.rendering.level.impl.renderers.base.ILevelRenderer
-import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
-import foo.starred.athen.api.rendering.level.internal.annotations.impl.LevelRenderer
-import foo.starred.snowbird.api.client
 import kotlin.math.sqrt
 
 //? if >= 26.1 {

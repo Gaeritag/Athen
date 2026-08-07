@@ -2,9 +2,9 @@
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import net.minecraft.client.renderer.MultiBufferSource
 import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
 import foo.starred.athen.api.rendering.level.impl.queue.data.ExtractedQueue
+import net.minecraft.client.renderer.MultiBufferSource
 import kotlin.math.sqrt
 
 interface ILevelRenderer {

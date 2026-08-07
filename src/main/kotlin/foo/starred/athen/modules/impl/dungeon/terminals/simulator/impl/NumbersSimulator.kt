@@ -1,14 +1,14 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
+import foo.starred.athen.api.dungeon.terminals.TerminalType
+import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
+import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
+import foo.starred.snowbird.api.EMPTY_COMPONENT
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
-import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
-import foo.starred.snowbird.api.EMPTY_COMPONENT
 
 class NumbersSimulator : ITerminalSim(TerminalType.NUMBERS) {
     private val ints = (1..14).shuffled()

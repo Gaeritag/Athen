@@ -1,5 +1,8 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.GuiEvent;
+import foo.starred.athen.modules.impl.render.tooltip.ScrollableTooltip;
+import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -13,9 +16,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import foo.starred.athen.events.GuiEvent;
-import foo.starred.athen.modules.impl.render.tooltip.ScrollableTooltip;
-import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.network.chat.Component
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
@@ -12,6 +11,7 @@ import foo.starred.athen.handlers.Ticking
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.network.chat.Component
 
 @Load
 @OnlyIn(skyblock = true)

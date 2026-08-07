@@ -1,8 +1,8 @@
 ﻿package foo.starred.athen.api.rendering.level.impl.data.impl
 
+import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
 import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
-import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
 
 data class ExtractedText(
     val text: Component,

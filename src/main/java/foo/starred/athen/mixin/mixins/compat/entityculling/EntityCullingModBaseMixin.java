@@ -1,14 +1,14 @@
 package foo.starred.athen.mixin.mixins.compat.entityculling;
 
 import dev.tr7zw.entityculling.EntityCullingModBase;
+import foo.starred.athen.handlers.Texter;
+import foo.starred.athen.handlers.Typo;
+import foo.starred.athen.modules.impl.ModSettings;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import foo.starred.athen.handlers.Texter;
-import foo.starred.athen.handlers.Typo;
-import foo.starred.athen.modules.impl.ModSettings;
 
 @Mixin(value = EntityCullingModBase.class, remap = false)
 public class EntityCullingModBaseMixin {

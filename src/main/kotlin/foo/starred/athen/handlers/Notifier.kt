@@ -1,9 +1,5 @@
 ﻿package foo.starred.athen.handlers
 
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.network.chat.Component
-import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundEvents
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
@@ -17,6 +13,10 @@ import foo.starred.athen.utils.render.animations.timedValue
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.play
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.min
 

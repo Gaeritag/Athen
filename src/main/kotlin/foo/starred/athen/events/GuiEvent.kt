@@ -1,5 +1,8 @@
 ﻿package foo.starred.athen.events
 
+import foo.starred.athen.events.core.CancellableEvent
+import foo.starred.athen.events.core.Event
+import foo.starred.snowbird.utils.stripped
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
@@ -8,9 +11,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-import foo.starred.athen.events.core.CancellableEvent
-import foo.starred.athen.events.core.Event
-import foo.starred.snowbird.utils.stripped
 
 sealed class GuiEvent {
     sealed class Render {

@@ -1,11 +1,6 @@
 ﻿package foo.starred.athen.updater
 
 import com.google.gson.JsonElement
-import moe.nea.libautoupdate.CurrentVersion
-import moe.nea.libautoupdate.PotentialUpdate
-import moe.nea.libautoupdate.UpdateContext
-import moe.nea.libautoupdate.UpdateTarget
-import net.minecraft.SharedConstants
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.events.LocationEvent
@@ -16,6 +11,11 @@ import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.snowbird.api.mainThread
 import foo.starred.snowbird.handlers.time.client
+import moe.nea.libautoupdate.CurrentVersion
+import moe.nea.libautoupdate.PotentialUpdate
+import moe.nea.libautoupdate.UpdateContext
+import moe.nea.libautoupdate.UpdateTarget
+import net.minecraft.SharedConstants
 import java.util.concurrent.CompletableFuture
 
 @Priority(-6)

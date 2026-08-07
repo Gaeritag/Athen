@@ -1,17 +1,17 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
-import net.minecraft.core.component.DataComponents
-import net.minecraft.world.inventory.Slot
-import net.minecraft.world.item.DyeColor
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
 import foo.starred.athen.utils.glint
 import foo.starred.snowbird.utils.literal
+import net.minecraft.core.component.DataComponents
+import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.DyeColor
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import kotlin.random.Random
 
 class ColorSimulator(

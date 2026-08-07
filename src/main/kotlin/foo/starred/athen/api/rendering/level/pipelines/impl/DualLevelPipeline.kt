@@ -1,10 +1,10 @@
 ﻿package foo.starred.athen.api.rendering.level.pipelines.impl
 
 import com.mojang.blaze3d.pipeline.RenderPipeline
-import net.minecraft.client.renderer.RenderPipelines
 import foo.starred.athen.api.rendering.level.pipelines.base.ILevelPipeline
 import foo.starred.athen.api.rendering.level.pipelines.base.LevelPipelineBuilder
 import foo.starred.athen.api.rendering.level.pipelines.depth.LevelPipelineDepth
+import net.minecraft.client.renderer.RenderPipelines
 
 class DualLevelPipeline(identifier: String, block: LevelPipelineBuilder.() -> Unit) : ILevelPipeline {
     override val depth: RenderPipeline = RenderPipelines.register(

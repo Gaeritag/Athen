@@ -33,12 +33,12 @@ package foo.starred.athen.mixin.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import foo.starred.athen.events.PacketEvent;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.*;
 import net.minecraft.network.protocol.game.GamePacketTypes;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
-import foo.starred.athen.events.PacketEvent;
 
 import java.util.ArrayList;
 import java.util.List;

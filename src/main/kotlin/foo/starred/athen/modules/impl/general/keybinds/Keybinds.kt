@@ -8,11 +8,11 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.general.keybinds.data.CategoryEntry
 import foo.starred.athen.modules.impl.general.keybinds.data.KeybindCondition
 import foo.starred.athen.modules.impl.general.keybinds.data.KeybindEntry
+import foo.starred.athen.modules.impl.general.keybinds.ui.KeybindsGUI
+import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.command
 import foo.starred.snowbird.api.message
-import foo.starred.athen.modules.impl.general.keybinds.ui.KeybindsGUI
-import foo.starred.athen.utils.command
 
 @Load
 object Keybinds : Module(

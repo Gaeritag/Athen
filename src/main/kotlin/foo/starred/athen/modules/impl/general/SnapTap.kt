@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.general
 
-import net.minecraft.client.KeyMapping
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.InputEvent
@@ -9,6 +8,7 @@ import foo.starred.athen.events.core.override
 import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.client
+import net.minecraft.client.KeyMapping
 
 @Load
 object SnapTap : Module(

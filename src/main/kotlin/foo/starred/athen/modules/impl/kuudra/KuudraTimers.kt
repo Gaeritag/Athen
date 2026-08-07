@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.kuudra
 
-import net.minecraft.util.FormattedCharSequence
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -14,6 +13,7 @@ import foo.starred.athen.handlers.Ticking
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.toDurationFromMillis
+import net.minecraft.util.FormattedCharSequence
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.KUUDRA])

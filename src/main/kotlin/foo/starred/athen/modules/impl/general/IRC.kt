@@ -3,7 +3,6 @@
 package foo.starred.athen.modules.impl.general
 
 import com.google.gson.JsonParser
-import net.minecraft.network.protocol.game.ServerboundChatPacket
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.websocket.SocketPacket
@@ -16,14 +15,11 @@ import foo.starred.athen.handlers.Typo
 import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
-import foo.starred.snowbird.api.center
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.name
-import foo.starred.snowbird.api.repeat
+import foo.starred.snowbird.api.*
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.kommand.ICommand
+import net.minecraft.network.protocol.game.ServerboundChatPacket
 
 @Load
 object IRC : Module(

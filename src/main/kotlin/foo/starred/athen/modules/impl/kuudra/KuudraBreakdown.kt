@@ -1,6 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.kuudra
 
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
@@ -16,6 +15,7 @@ import foo.starred.athen.utils.regex
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.name
 import foo.starred.snowbird.handlers.parser.parse
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 
 @Load
 @OnlyIn(islands = [SkyBlockIsland.KUUDRA])

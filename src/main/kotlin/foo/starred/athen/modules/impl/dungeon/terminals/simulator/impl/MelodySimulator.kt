@@ -1,14 +1,14 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
+import foo.starred.athen.api.dungeon.terminals.TerminalType
+import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
+import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
+import foo.starred.snowbird.api.EMPTY_COMPONENT
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
-import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
-import foo.starred.snowbird.api.EMPTY_COMPONENT
 
 class MelodySimulator : ITerminalSim(TerminalType.MELODY) {
     private val magentaPane = Items.MAGENTA_STAINED_GLASS_PANE.pane()

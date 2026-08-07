@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.handlers
 
-import net.minecraft.network.chat.Component
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.utils.literal
+import net.minecraft.network.chat.Component
 
 object Typo {
     @JvmStatic

@@ -1,10 +1,10 @@
 ﻿package foo.starred.athen.annotations
 
-import io.github.classgraph.ClassGraph
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.utils.safely
+import io.github.classgraph.ClassGraph
 
 object AnnotationLoader {
     fun load(load: String = "foo.starred.athen") {

@@ -2,10 +2,6 @@
 
 package foo.starred.athen.handlers
 
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.world.inventory.Slot
-import net.minecraft.world.item.ItemStack
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.ConfigBuilder
@@ -13,6 +9,10 @@ import foo.starred.athen.ducks.item.ItemStackDuck.Companion.`athen$cached$toolti
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.on
 import foo.starred.snowbird.api.client
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.ItemStack
 import java.util.*
 
 @Load

@@ -2,12 +2,6 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.decoration.ArmorStand
-import tech.thatgravyboat.skyblockapi.utils.extentions.serverHealth
-import tech.thatgravyboat.skyblockapi.utils.extentions.toRomanNumeral
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractText
@@ -27,6 +21,12 @@ import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.abbreviate
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.toDuration
+import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.decoration.ArmorStand
+import tech.thatgravyboat.skyblockapi.utils.extentions.serverHealth
+import tech.thatgravyboat.skyblockapi.utils.extentions.toRomanNumeral
 import java.util.*
 
 @Load

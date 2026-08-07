@@ -1,5 +1,7 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.events.PacketEvent;
+import foo.starred.athen.events.TickEvent;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.Connection;
@@ -9,8 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import foo.starred.athen.events.PacketEvent;
-import foo.starred.athen.events.TickEvent;
 
 @Mixin(value = Connection.class, priority = Integer.MIN_VALUE) // why min value? it's for the features to not break when other mods cancel the packet.
 public class ConnectionMixin {

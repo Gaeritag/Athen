@@ -2,14 +2,14 @@
 
 package foo.starred.athen.api.slayers.enums.drop.impl
 
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.Items
 import foo.starred.athen.api.slayers.enums.drop.base.ISlayerDrop
 import foo.starred.athen.api.slayers.enums.drop.base.ISlayerDropParser
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropChance
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropGrade
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropParserType
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropTable
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
 
 enum class TarantulaDrops(
     override val display: String,

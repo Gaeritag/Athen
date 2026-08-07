@@ -2,9 +2,11 @@
 
 package foo.starred.athen.events.core
 
-import net.minecraft.network.protocol.Packet
-import foo.starred.athen.events.*
+import foo.starred.athen.events.LocationEvent
+import foo.starred.athen.events.PacketEvent
+import foo.starred.athen.events.SlayerEvent
 import foo.starred.snowbird.handlers.Observable
+import net.minecraft.network.protocol.Packet
 
 inline fun <reified T : Event> on(
     priority: Int = 0,

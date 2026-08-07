@@ -2,8 +2,6 @@
 
 package foo.starred.athen.api.dungeon.terminals
 
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.network.protocol.game.*
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.events.DungeonEvent
@@ -20,6 +18,8 @@ import foo.starred.snowbird.handlers.Observable.Companion.and
 import foo.starred.snowbird.handlers.Observable.Companion.or
 import foo.starred.snowbird.handlers.time.client
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.network.protocol.game.*
 
 @Priority
 object TerminalAPI {

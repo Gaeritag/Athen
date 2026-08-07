@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.hud
 
-import net.minecraft.client.gui.GuiGraphics
-import org.lwjgl.glfw.GLFW
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
@@ -9,6 +7,8 @@ import foo.starred.athen.handlers.Scram
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
+import net.minecraft.client.gui.GuiGraphics
+import org.lwjgl.glfw.GLFW
 import kotlin.math.roundToInt
 
 @Priority(-1)

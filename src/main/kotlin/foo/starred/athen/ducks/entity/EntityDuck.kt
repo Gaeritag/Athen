@@ -2,10 +2,10 @@
 
 package foo.starred.athen.ducks.entity
 
-import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.Entity
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.Entity
 import java.lang.ref.WeakReference
 
 interface EntityDuck {

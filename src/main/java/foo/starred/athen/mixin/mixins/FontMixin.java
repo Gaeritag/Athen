@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import foo.starred.athen.modules.impl.render.VisualWords;
 import kotlin.Unit;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -9,7 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import foo.starred.athen.modules.impl.render.VisualWords;
 
 @Mixin(Font.class)
 public class FontMixin {

@@ -1,11 +1,11 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 
 object PanesSolver : ITerminal(TerminalType.PANES) {
     override val int0 = 5

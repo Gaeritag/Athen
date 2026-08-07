@@ -2,34 +2,34 @@
 
 package foo.starred.athen.modules.impl.general.slotbinds
 
-import net.minecraft.client.gui.GuiGraphics
-import org.lwjgl.glfw.GLFW
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.data.PositionAlignment
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.position.AlignPositionConstraint
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.position.CenterPositionConstraint
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.position.FixedPositionConstraint
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.size.FillSizeConstraint
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.size.FixedSizeConstraint
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.size.MixedSizeConstraint
-import foo.starred.athen.api.rendering.ui.dsl.constraints.impl.size.PercentSizeConstraint
-import foo.starred.athen.api.rendering.ui.dsl.elements.components.impl.TextFieldComponent
-import foo.starred.athen.api.rendering.ui.dsl.elements.components.impl.TextFieldComponent.Companion.textField
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.ContainerPrimitive.Companion.container
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.RectanglePrimitive
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.RectanglePrimitive.Companion.rectangle
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.ScrollablePrimitive
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.ScrollablePrimitive.Companion.scrollable
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.TextPrimitive
-import foo.starred.athen.api.rendering.ui.dsl.elements.primitives.impl.TextPrimitive.Companion.text
-import foo.starred.athen.api.rendering.ui.dsl.events.impl.KeyEvent
-import foo.starred.athen.api.rendering.ui.dsl.events.impl.MouseEvent
-import foo.starred.athen.api.rendering.ui.dsl.screen.PrimitiveScreen
+import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
+import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.api.rendering.ui.shapes.line.line
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.cascade.constraints.impl.data.PositionAlignment
+import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
+import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
+import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
+import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
+import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
+import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.events.impl.KeyEvent
+import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
+import foo.starred.cascade.primitives.impl.RectanglePrimitive
+import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
+import foo.starred.cascade.primitives.impl.ScrollablePrimitive
+import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrollable
+import foo.starred.cascade.primitives.impl.TextPrimitive
+import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
+import net.minecraft.client.gui.GuiGraphics
+import org.lwjgl.glfw.GLFW
 
-object SlotBindsGUI : PrimitiveScreen("Slot Binds Editor [Athen]") {
+object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
     private var deleting: String? = null
     private var renaming: String? = null
     private var selected: Int? = null
@@ -252,9 +252,9 @@ object SlotBindsGUI : PrimitiveScreen("Slot Binds Editor [Athen]") {
             override fun render(graphics: GuiGraphics) {
                 super.render(graphics)
 
-                val x0 = x + 16
-                val y0 = y + 48
-                val y1 = y + 112
+                val x0 = x.toInt() + 16
+                val y0 = y.toInt() + 48
+                val y1 = y.toInt() + 112
 
                 for (e in SlotBinds.m0.int2IntEntrySet()) {
                     val a = pos(e.intKey, x0, y0, y1) ?: continue

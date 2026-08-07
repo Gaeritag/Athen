@@ -2,16 +2,11 @@
 
 package foo.starred.athen.api.slayers.enums.drop.base
 
-import net.minecraft.world.item.Item
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropChance
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropGrade
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropParserType
-import foo.starred.athen.api.slayers.enums.drop.impl.InfernoDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.RevenantDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.SvenDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.TarantulaDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.VampireDrops
-import foo.starred.athen.api.slayers.enums.drop.impl.VoidgloomDrops
+import foo.starred.athen.api.slayers.enums.drop.impl.*
+import net.minecraft.world.item.Item
 
 interface ISlayerDrop {
     val display: String

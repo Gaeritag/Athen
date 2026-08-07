@@ -2,10 +2,6 @@
 
 package foo.starred.athen.modules.impl.general
 
-import net.minecraft.world.inventory.Slot
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.config.Category
@@ -19,6 +15,10 @@ import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.pressed
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.world.inventory.Slot
+import org.lwjgl.glfw.GLFW
+import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
 @Load
 @OnlyIn(skyblock = true)

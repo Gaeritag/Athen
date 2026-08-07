@@ -1,7 +1,5 @@
 ﻿package foo.starred.athen.modules.impl.kuudra
 
-import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.config.Category
@@ -13,6 +11,8 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.command
 import foo.starred.snowbird.api.name
 import foo.starred.snowbird.handlers.time.client
+import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
+import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
 @Load
 object KuudraQueuer : Module(

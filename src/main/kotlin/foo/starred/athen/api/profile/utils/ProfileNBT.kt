@@ -1,17 +1,11 @@
 ﻿package foo.starred.athen.api.profile.utils
 
-import net.minecraft.nbt.NbtAccounter
-import net.minecraft.nbt.NbtIo
 import foo.starred.athen.api.profile.data.PlayerProfileStack
 import foo.starred.snowbird.utils.stripped
-import kotlin.collections.any
-import kotlin.collections.firstNotNullOfOrNull
-import kotlin.collections.mapNotNull
-import kotlin.collections.orEmpty
+import net.minecraft.nbt.NbtAccounter
+import net.minecraft.nbt.NbtIo
 import kotlin.io.encoding.Base64
 import kotlin.jvm.optionals.getOrNull
-import kotlin.text.contains
-import kotlin.text.startsWith
 
 object ProfileNBT {
     fun armor(string: String?): List<PlayerProfileStack>? {

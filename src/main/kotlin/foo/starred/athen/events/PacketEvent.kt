@@ -1,7 +1,7 @@
 ﻿package foo.starred.athen.events
 
-import net.minecraft.network.protocol.Packet
 import foo.starred.athen.events.core.CancellableEvent
+import net.minecraft.network.protocol.Packet
 
 sealed class PacketEvent(open val packet: Packet<*>) : CancellableEvent() {
     sealed class Process(override val packet: Packet<*>) : PacketEvent(packet) {
