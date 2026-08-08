@@ -33,6 +33,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.phys.AABB
+import tech.thatgravyboat.skyblockapi.utils.extentions.serverMaxHealth
 
 @Load
 @OnlyIn(skyblock = true)
@@ -185,14 +186,14 @@ object MobHighlight : Module(
                 val a0 = if (b0) a.parent?.id ?: (a.id - 1) else -1
                 val a = (a as? LivingEntity)?.takeIf { it.id !in int && (!b0 || a0 !in int) } ?: continue
 
-                var b = a.maxHealth.toInt()
+                var b = a.serverMaxHealth.toInt()
                 var id = a.id
                 if (b0 && a.isInvisible) {
                     val e = l.getEntity(a0) as? LivingEntity ?: continue
                     if (e is ArmorStand) continue
                     if (e.isInvisible) continue
 
-                    b = e.maxHealth.toInt()
+                    b = e.serverMaxHealth.toInt()
                     id = a0
                 }
 
@@ -248,7 +249,7 @@ object MobHighlight : Module(
     private fun fn() {
         val a = client.crosshairPickEntity as? LivingEntity ?: return
         val name = (client.level?.getEntity(a.id + 1) as? ArmorStand)?.customName?.name
-        val max = a.maxHealth
+        val max = a.serverMaxHealth
         val type = a.type
 
         MobHighlightPopup.open(name, type, max.toInt())
