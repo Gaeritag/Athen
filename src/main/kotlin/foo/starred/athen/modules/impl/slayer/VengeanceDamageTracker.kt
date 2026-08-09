@@ -3,13 +3,12 @@
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.EntityEvent
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
-import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.abbreviate
 import net.minecraft.world.entity.decoration.ArmorStand
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
@@ -36,7 +35,7 @@ object VengeanceDamageTracker : Module(
             if (damage < 500_000) return@on
 
             val displayDamage = if (abbreviate) damage.abbreviate() else match
-            "Vengeance -> <${Mocha.Red.argb}>$displayDamage".parse().modMessage()
+            "Vengeance -> <${Mocha.Red.argb}>$displayDamage".mod()
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
 import foo.starred.athen.utils.glint
-import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
@@ -37,7 +35,7 @@ class NameSimulator(
         val item = slot.item
         val name = item.hoverName.string
 
-        if (!name.startsWith(targetLetter, ignoreCase = true)) return "Invalid item! Does not start with <red>$targetLetter".parse().modMessage(Typo.PrefixType.ERROR)
+        if (!name.startsWith(targetLetter, ignoreCase = true)) return "Invalid item! Does not start with <red>$targetLetter".mod()
         if (item.glint()) return
 
         mapOf(slot.containerSlot to item.apply { set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true) }).a()

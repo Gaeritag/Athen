@@ -6,7 +6,10 @@ import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.Category
 import foo.starred.athen.config.ConfigBuilder
 import foo.starred.athen.events.LocationEvent
@@ -14,10 +17,6 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Texter.onHover
-import foo.starred.athen.handlers.Ticking
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.api.level
@@ -123,7 +122,7 @@ object WatcherHelper : Module(
             if (!it) return@onChange
 
             `blood$start` = System.currentTimeMillis()
-            `blood$start$t` = Chronos.ticks.server
+            `blood$start$t` = Scheduler.ticks.server
         }
 
         DungeonAPI.bloodSpawnedAll.onChange {
@@ -133,12 +132,12 @@ object WatcherHelper : Module(
             if (!enabled) return@onChange
 
             val t = System.currentTimeMillis() - `blood$start`
-            val t0 = Chronos.ticks.server - `blood$start$t`
+            val t0 = Scheduler.ticks.server - `blood$start$t`
 
             val d = t.toDurationFromMillis(secondsDecimals = 1, secondsOnly = true)
             val d0 = (t0 / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
 
-            "Watcher took <red>$d <gray>($d0) <r>to spawn all!".parse().modMessage()
+            "Watcher took <red>$d <gray>($d0) <r>to spawn all!".mod()
         }
 
         DungeonAPI.bloodKilledAll.onChange {
@@ -149,10 +148,10 @@ object WatcherHelper : Module(
             reset()
 
             if (!breakdown) return@onChange
-            "Watcher time breakdown:".modMessage()
-            " <gray>• <r>Speak time: <red>$`display$speak` <gray>| <red>$`display$speak$t`".parse().modMessage()
-            " <gray>• <r>Move time: <red>$`display$move` <gray>| <red>$`display$move$t`".parse().modMessage()
-            " <gray>• <r>Total time: <red>$`display$total` <gray>| <red>$`display$total$t`".parse().modMessage()
+            "Watcher time breakdown:".mod()
+            " <gray>• <r>Speak time: <red>$`display$speak` <gray>| <red>$`display$speak$t`".mod()
+            " <gray>• <r>Move time: <red>$`display$move` <gray>| <red>$`display$move$t`".mod()
+            " <gray>• <r>Total time: <red>$`display$total` <gray>| <red>$`display$total$t`".mod()
         }
 
         on<LocationEvent.Server.Connect> {
@@ -164,7 +163,7 @@ object WatcherHelper : Module(
             if (DungeonAPI.bloodKilledAll.value) return@on
 
             `display$total` = (System.currentTimeMillis() - `blood$start`).toDurationFromMillis(secondsDecimals = 1, secondsOnly = true)
-            `display$total$t` = ((Chronos.ticks.server - `blood$start$t`) / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
+            `display$total$t` = ((Scheduler.ticks.server - `blood$start$t`) / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
         }.runWhen(DungeonAPI.bloodOpened)
 
         on<MessageEvent.Chat.Receive> {
@@ -172,7 +171,7 @@ object WatcherHelper : Module(
             if (`blood$start` == 0L) return@on
 
             `blood$speak` = System.currentTimeMillis()
-            `blood$speak$t` = Chronos.ticks.server
+            `blood$speak$t` = Scheduler.ticks.server
 
             val t = `blood$speak` - `blood$start`
             val t0 = `blood$speak$t` - `blood$start$t`
@@ -184,7 +183,7 @@ object WatcherHelper : Module(
 
             val ty = Shrimp.get(t)
 
-            "Watcher took <red>$`display$speak` <gray>($`display$speak$t`)<r> to speak!".parse().onHover("<red>$t0<white> ticks.".parse()).modMessage()
+            "<hover:<red>$t0 <white>ticks.>Watcher took <red>$`display$speak` <gray>($`display$speak$t`)<r> to speak!".mod()
 
             when (ty) {
                 Shrimp.FAST -> `text$fast`.parse().alert(subTitle = "Took <red>$`display$speak` <r>to speak!".parse(), soundType = purreow)
@@ -208,7 +207,7 @@ object WatcherHelper : Module(
             if (abs(e.x - x) <= 0.05 && abs(e.z - z) <= 0.05) return@on
 
             `blood$move` = System.currentTimeMillis()
-            `blood$move$t` = Chronos.ticks.server
+            `blood$move$t` = Scheduler.ticks.server
             `blood$watcher$moved` = true
 
             val t = `blood$move` - `blood$start`
@@ -219,7 +218,7 @@ object WatcherHelper : Module(
 
             if (!move) return@on
 
-            "Watcher moved at <red>$`display$move` <gray>($`display$move$t`)<r>!".parse().onHover("<red>$t0<white> ticks.".parse()).modMessage()
+            "<hover:<red>$t0 <white>ticks.>Watcher moved at <red>$`display$move` <gray>($`display$move$t`)<r>!".mod()
         }.runWhen(DungeonAPI.bloodOpened)
     }
 

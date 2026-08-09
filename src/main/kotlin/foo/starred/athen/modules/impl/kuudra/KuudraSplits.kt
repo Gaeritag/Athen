@@ -9,15 +9,15 @@ import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.scheduling.Ticking
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.LocationEvent
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Ticking
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
@@ -64,7 +64,7 @@ object KuudraSplits : Module(
     private val overallStyle by config.textInput("Overall", "<dark_red>Overlay<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
     private val _unused0 by config.textParagraph("Variable: <red>#time<r>, <red>#tick<r>, <red>#pb").dependsOn { advanced }.childOf { styleExpandable }
 
-    private val scribble = Scribble("features/kuudraSplits")
+    private val json = JsonStore("features/kuudraSplits")
     private val display = Ticking {
         if (!KuudraAPI.inRun) return@Ticking null
         val tier = KuudraAPI.tier?.int ?: return@Ticking null
@@ -99,11 +99,11 @@ object KuudraSplits : Module(
                 val pbs = splits.associateWith { PB.get(tier, it) }
 
                 if (pbs.values.all { it == 0L }) {
-                    "<red>No Kuudra splits for tier $tier. Did you have \"Kuudra Splits\" enabled?".parse().modMessage(Typo.PrefixType.ERROR)
+                    "<red>No Kuudra splits for tier $tier. Did you have \"Kuudra Splits\" enabled?".mod(MessagePrefixType.ERROR)
                     return@int
                 }
 
-                "<yellow>PBs for <red>Kuudra T$tier:".parse().modMessage()
+                "<yellow>PBs for <red>Kuudra T$tier:".mod()
 
                 for (s in splits) {
                     val pb = pbs[s]?.toDurationFromMillis(secondsDecimals = 1) ?: continue
@@ -135,8 +135,8 @@ object KuudraSplits : Module(
             PB.set(tier, null, splits.sumOf { it.durTime })
 
             if (!chat) return@on
-            Chronos.schedule(2.client) {
-                "Split breakdown:".modMessage()
+            Scheduler.schedule(2.client) {
+                "Split breakdown:".mod()
 
                 for (s in splits) {
                     val t0 = s.durTime.toDurationFromMillis(secondsDecimals = 1)
@@ -188,7 +188,7 @@ object KuudraSplits : Module(
     }
 
     private object PB {
-        private val pbs = scribble.mutableMap("pbs", Codec.STRING, Codec.LONG)
+        private val pbs = json.mutableMap("pbs", Codec.STRING, Codec.LONG)
 
         private fun key(tier: Int, split: KuudraPhase?) =
             if (split == null) "$tier.Overall" else "$tier.${split.name}"
@@ -211,8 +211,8 @@ object KuudraSplits : Module(
     }
 
     private object Average {
-        private val averages = scribble.mutableMap("averages", Codec.STRING, Codec.LONG)
-        private val history = scribble.mutableMap("splitHistory", Codec.STRING, Codec.LONG.listOf(0, 10), mutableMapOf())
+        private val averages = json.mutableMap("averages", Codec.STRING, Codec.LONG)
+        private val history = json.mutableMap("splitHistory", Codec.STRING, Codec.LONG.listOf(0, 10), mutableMapOf())
 
         fun set(tier: Int, split: KuudraPhase, duration: Long) {
             val key = "$tier.${split.name}"

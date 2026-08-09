@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.api.kuudra.enums
 
 import foo.starred.athen.api.kuudra.KuudraAPI
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.core.Event
-import foo.starred.athen.handlers.Chronos
 
 enum class KuudraPhase(val event: Event, val tiers: IntRange = KuudraTier.BASIC.int..KuudraTier.INFERNAL.int) {
     Supply(KuudraEvent.Phase.Supply),
@@ -30,7 +30,7 @@ enum class KuudraPhase(val event: Event, val tiers: IntRange = KuudraTier.BASIC.
     val durTicks: Int
         get() {
             if (startTick == 0) return 0
-            if (endTick == 0) return Chronos.ticks.server - startTick
+            if (endTick == 0) return Scheduler.ticks.server - startTick
             return (endTick - startTick).coerceAtLeast(0)
         }
 
@@ -60,7 +60,7 @@ enum class KuudraPhase(val event: Event, val tiers: IntRange = KuudraTier.BASIC.
         if (started) return@apply
 
         startTime = System.currentTimeMillis()
-        startTick = Chronos.ticks.server
+        startTick = Scheduler.ticks.server
         entries.filter { it.ordinal < ordinal }.forEach { it.end() }
     }
 
@@ -68,7 +68,7 @@ enum class KuudraPhase(val event: Event, val tiers: IntRange = KuudraTier.BASIC.
         if (ended) return@apply
 
         endTime = System.currentTimeMillis()
-        endTick = Chronos.ticks.server
+        endTick = Scheduler.ticks.server
     }
 
     companion object {

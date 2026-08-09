@@ -8,14 +8,14 @@ import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraSupply
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Ticking
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.render.fcs
@@ -54,7 +54,7 @@ object BuildInfo : Module(
 
             val prs = `stun$message`.parse(true)
             prs.alert()
-            prs.modMessage()
+            prs.mod()
             sent = true
         }
 

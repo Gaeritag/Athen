@@ -3,7 +3,7 @@
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.handlers.Scram
+import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.modules.impl.render.highlight.MobHighlight
 import foo.starred.athen.modules.impl.render.highlight.popup.data.UIZoneType
 import foo.starred.athen.ui.InputField
@@ -16,7 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.EntityType
 import org.lwjgl.glfw.GLFW
 
-object MobHighlightPopup : Scram("Add Highlight [Athen]") {
+object MobHighlightPopup : MultiVersionScreen("Add Highlight [Athen]") {
     private val colorField = InputField("Hex color (e.g. ff0000)")
     private val zones = mutableListOf<UIZone>()
 
@@ -182,7 +182,7 @@ object MobHighlightPopup : Scram("Add Highlight [Athen]") {
             MobHighlight.e0.update { add(MobHighlight.EntityNamed(name, color, hp)) }
         }
 
-        MobHighlight.scribble.save()
+        MobHighlight.json.save()
         onClose()
     }
 }

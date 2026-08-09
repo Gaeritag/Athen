@@ -5,7 +5,7 @@ package foo.starred.athen.modules.impl.render.highlight.ui
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.handlers.Scram
+import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.modules.impl.render.highlight.MobHighlight
 import foo.starred.athen.modules.impl.render.highlight.ui.data.HighlightEntry
 import foo.starred.athen.modules.impl.render.highlight.ui.data.UIZoneType
@@ -20,7 +20,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.EntityType
 import org.lwjgl.glfw.GLFW
 
-object MobHighlightGUI : Scram("Mob Highlights [Athen]") {
+object MobHighlightGUI : MultiVersionScreen("Mob Highlights [Athen]") {
     private val entries = mutableListOf<HighlightEntry>()
     private val zones = mutableListOf<UIZone>()
     private val listRenderer = ListRenderer(28, 4, 16, 6)
@@ -33,7 +33,7 @@ object MobHighlightGUI : Scram("Mob Highlights [Athen]") {
         tab = false
     }
 
-    override fun onScramClose() = MobHighlight.scribble.save()
+    override fun onScramClose() = MobHighlight.json.save()
 
     override fun isPauseScreen() = false
 

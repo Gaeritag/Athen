@@ -1,8 +1,8 @@
 ﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.base
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.PacketEvent
-import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
 import foo.starred.snowbird.api.EMPTY_COMPONENT
 import foo.starred.snowbird.api.client
@@ -81,7 +81,7 @@ abstract class ITerminalSim(
         if (TerminalSimulator.ping <= 0) return click(slot, mouseButton)
 
         c = false
-        Chronos.schedule(TerminalSimulator.ping.milliseconds) {
+        Scheduler.schedule(TerminalSimulator.ping.milliseconds) {
             c = true
             click(slot, mouseButton)
         }

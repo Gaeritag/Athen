@@ -6,29 +6,29 @@ import com.google.gson.reflect.TypeToken
 import foo.starred.athen.Athen
 import foo.starred.athen.Athen.GSON
 import foo.starred.athen.annotations.Load
-import foo.starred.athen.api.rendering.ui.effects.outline.outline
-import foo.starred.athen.api.rendering.ui.shapes.line.line
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.PlayerEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.guiClick
+import foo.starred.cascade.extensions.line.line
+import foo.starred.cascade.extensions.rectangle.outline
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.pressed
-import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.world.inventory.ClickType
+import org.joml.Matrix3x2f
 import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 
@@ -48,9 +48,9 @@ object SlotBinds : Module(
     private var last0: Int? = null
     private var last1: Int = 0
 
-    private val scribble = Scribble("features/slotBinds")
-    var active: String by scribble.string("active", "Default")
-    var saved: String by scribble.string("profiles")
+    private val json = JsonStore("features/slotBinds")
+    var active: String by json.string("active", "Default")
+    var saved: String by json.string("profiles")
 
     val m0 = Int2IntOpenHashMap().apply { defaultReturnValue(-1) }
     val m1 = Int2IntOpenHashMap().apply { defaultReturnValue(-1) }
@@ -123,19 +123,19 @@ object SlotBinds : Module(
 
             "slotbinds" / "profile" / "swap" / greedyString("name") {
                 val s = string("name")
-                if (s !in map0) return@greedyString "Profile <red>\"$s\"<r> does not exist!".parse().modMessage()
-                if (s == active) return@greedyString "Already on profile <red>\"$s\"<r>!".parse().modMessage()
+                if (s !in map0) return@greedyString "Profile <red>\"$s\"<r> does not exist!".mod()
+                if (s == active) return@greedyString "Already on profile <red>\"$s\"<r>!".mod()
 
                 load(s)
-                "Swapped to profile <green>$s<r>!".parse().modMessage()
+                "Swapped to profile <green>$s<r>!".mod()
             }
 
             "export" / "slotbinds" {
                 val clipboard = McClient.clipboard
-                if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".modMessage()
+                if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 val data = GSON.fromJson(clipboard.decompress(), object : TypeToken<Map<String, Any>>() {}.type) as Map<String, Any>
-                val name = data["name"] as? String ?: return@invoke "Invalid config data!".modMessage()
+                val name = data["name"] as? String ?: return@invoke "Invalid config data!".mod()
 
                 val raw = GSON.toJson(data["binds"])
                 val binds = GSON.fromJson(raw, object : TypeToken<Map<String, Double>>() {}.type) as Map<String, Double>
@@ -159,7 +159,7 @@ object SlotBinds : Module(
 
                 load(n)
                 disk()
-                "Imported profile '$n' with ${m.size} binds!".modMessage()
+                "Imported profile '$n' with ${m.size} binds!".mod()
             }
 
             "import" / "slotbinds" {
@@ -173,7 +173,7 @@ object SlotBinds : Module(
                 if (c != null) for (e in c.int2IntEntrySet()) colors[e.intKey.toString()] = e.intValue
 
                 McClient.clipboard = GSON.toJson(mapOf("name" to active, "binds" to binds, "colors" to colors)).compress()
-                "Exported profile '$active' to clipboard!".modMessage()
+                "Exported profile '$active' to clipboard!".mod()
             }
         }
 
@@ -249,12 +249,15 @@ object SlotBinds : Module(
             val m = s.menu.slots
             if (slot != m.last()) return@on
 
+            val pose = Matrix3x2f(graphics.pose())
+            val screen = graphics.scissorStack.peek()
+
             for (e in m0.int2IntEntrySet()) {
                 val a = m.getOrNull(e.intKey) ?: continue
                 val b = m.getOrNull(e.intValue) ?: continue
                 val c = m2.get(e.intKey)
 
-                graphics.line(a.x + 8, a.y + 8, b.x + 8, b.y + 8, c, 1)
+                graphics.line(a.x + 8f, a.y + 8f, b.x + 8f, b.y + 8f, c, 1f, pose, screen)
 
                 graphics.outline(a.x, a.y, 16, 16, 1, c, true)
                 graphics.outline(b.x, b.y, 16, 16, 1, c, true)

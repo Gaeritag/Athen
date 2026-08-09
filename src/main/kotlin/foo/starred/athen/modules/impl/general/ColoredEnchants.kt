@@ -5,12 +5,12 @@ package foo.starred.athen.modules.impl.general
 import com.google.gson.Gson
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.Category
 import foo.starred.athen.config.ConfigManager.updateConfig
 import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.handlers.Beacon.request
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
@@ -108,12 +108,12 @@ object ColoredEnchants : Module(
                 )
 
                 McClient.clipboard = Gson().toJson(data).compress()
-                "Enchant config exported to clipboard!".modMessage()
+                "Enchant config exported to clipboard!".mod()
             }
 
             "import" / "enchants" {
                 val clipboard = McClient.clipboard
-                if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".modMessage(Typo.PrefixType.ERROR)
+                if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod(MessagePrefixType.ERROR)
 
                 val map = Gson().fromJson<Map<String, Any>>(clipboard.decompress(), Map::class.java)
 
@@ -123,7 +123,7 @@ object ColoredEnchants : Module(
                     "replaceRoman" -> updateConfig(k, v as Boolean)
                 }
 
-                "Enchant config imported successfully!".modMessage()
+                "Enchant config imported successfully!".mod()
             }
         }
 

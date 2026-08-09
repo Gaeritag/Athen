@@ -2,10 +2,10 @@
 
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.extensions.rectangle.outline
+import foo.starred.cascade.extensions.rectangle.rectangle
+import foo.starred.cascade.extensions.text.extractText
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.vanilla.extensions.shapes.rectangle.outline
-import foo.starred.cascade.vanilla.extensions.shapes.rectangle.rectangle
-import foo.starred.cascade.vanilla.extensions.vanilla.extractText
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphics
 import kotlin.math.max

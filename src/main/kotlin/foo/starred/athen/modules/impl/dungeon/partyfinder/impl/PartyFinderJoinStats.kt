@@ -6,13 +6,12 @@ import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.dungeon.enums.DungeonClass
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.profile.ProfileAPI
 import foo.starred.athen.api.profile.data.PlayerProfileStats
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.MessageEvent
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Texter.onHover
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
@@ -21,6 +20,7 @@ import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.handlers.time.server
 import foo.starred.snowbird.utils.*
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
 import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
 import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
@@ -55,7 +55,7 @@ object PartyFinderJoinStats : Module(
         get() = kick && (PartyAPI.leader?.name ?: name) == name
 
     init {
-        Chronos.repeat(1.hours) {
+        Scheduler.repeat(1.hours) {
             val i0 = System.currentTimeMillis() - 1.hours.inWholeMilliseconds
             val it = cache.object2ObjectEntrySet().fastIterator()
 
@@ -139,10 +139,10 @@ object PartyFinderJoinStats : Module(
 
         if (!`kick$message`) return
         val reason = reasons.joinToString(", ")
-        "Kicked <aqua>$name<r>: $reason".parse().modMessage()
+        "Kicked <aqua>$name<r>: $reason".mod()
 
         if (!`kick$message$party`) return
-        Chronos.schedule(`kick$message$party$delay`.server) {
+        Scheduler.schedule(`kick$message$party$delay`.server) {
             "party chat [Athen] Kicked $name: $reason".command()
         }
     }
@@ -157,7 +157,7 @@ object PartyFinderJoinStats : Module(
         val third = Catppuccin.Mocha.Red.argb
 
         divider.lie()
-        "Stats for <aqua>$name<white>:".parse().modMessage()
+        "Stats for <aqua>$name<white>:".mod()
         divider.lie()
         " <dark_gray>📈 <$main>Dungeons level: <bold><$second>${dungeons?.catacombs}".parse().lie()
         " <dark_gray>✦ <$main>Class levels: <orange>A${classes?.get(DungeonClass.ARCHER)} <dark_gray>| <red>B${classes?.get(DungeonClass.BERSERK)} <dark_gray>| <pink>H${classes?.get(DungeonClass.HEALER)} <dark_gray>| <aqua>M${classes?.get(DungeonClass.MAGE)} <dark_gray>| <dark_green>T${classes?.get(DungeonClass.TANK)}".parse().lie()
@@ -169,7 +169,7 @@ object PartyFinderJoinStats : Module(
         divider.lie()
 
         fun piece(a: Int, b: String): MutableComponent {
-            return (armor?.get(a)?.let { it.name + (it.lore?.joinToString("\n")?.let { l -> "\n$l" } ?: "") } ?: "Empty").literal().let { "<$third>[$b]".parse().onHover(it) }
+            return (armor?.get(a)?.let { it.name + (it.lore?.joinToString("\n")?.let { l -> "\n$l" } ?: "") } ?: "Empty").literal().let { a -> "<$third>[$b]".parse().apply { withStyle { style.withHoverEvent(HoverEvent.ShowText(a)) } } }
         }
 
         " <dark_gray>▸ <$main>Armor: ".parse()
@@ -181,7 +181,7 @@ object PartyFinderJoinStats : Module(
 
         val pb = ("<$main>Personal Bests\n" + (1..7).joinToString("\n") { f -> "<$main>F$f<dark_gray>: <$second>${dungeons?.`pbs$normal`?.get(f)?.time()} <dark_gray>| <$main>M$f<dark_gray>: <$second>${dungeons?.`pbs$master`?.get(f)?.time()}" }).parse()
         val pets = "<$main>Legendary and Mythic pets\n" + (inventory?.pets?.filter { it.rarity == SkyBlockRarity.LEGENDARY || it.rarity == SkyBlockRarity.MYTHIC }?.takeIf { it.isNotEmpty() }?.joinToString("\n") { "<${it.rarity.color}>${it.name}" } ?: "<white>No pets")
-        " <dark_gray>▸ <$third>[Personal Bests]".parse().onHover(pb).append(" <dark_gray>| <$third>[Pets]".parse().onHover(pets)).lie()
+        " <dark_gray>▸ <$third>[Personal Bests]".parse().apply { withStyle { style.withHoverEvent(HoverEvent.ShowText(pb)) } }.append(" <dark_gray>| <hover:$pets><$third>[Pets]".parse()).lie()
         divider.lie()
     }
 

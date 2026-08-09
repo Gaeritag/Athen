@@ -5,13 +5,13 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import foo.starred.athen.annotations.Priority
-import foo.starred.athen.handlers.Scribble
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.snowbird.handlers.Observable
 import java.awt.Color
 
 @Priority(-4)
 object ConfigManager {
-    private val configFile = Scribble("config/Config")
+    private val configFile = JsonStore("config/Config")
     val configValues = mutableMapOf<String, Any>()
     val features = mutableMapOf<Category, MutableList<Feature>>()
     val states = mutableMapOf<String, Observable<Any>>()
@@ -128,9 +128,7 @@ object ConfigManager {
             }
         }
 
-        @Suppress("VariableNeverRead")
         var dataProp by configFile.jsonObject("data")
-        @Suppress("AssignedValueIsNeverRead")
         dataProp = data
 
         if (force) configFile.save()

@@ -5,14 +5,14 @@ package foo.starred.athen.modules.impl.general
 import com.google.gson.JsonParser
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
-import foo.starred.athen.api.websocket.SocketPacket
-import foo.starred.athen.api.websocket.base.IWebSocket
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.websocket.SocketPacket
+import foo.starred.athen.api.network.websocket.base.IWebSocket
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.InternalEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.snowbird.api.*
@@ -49,7 +49,7 @@ object IRC : Module(
             "toggle" {
                 val b = !ob.value
                 ob.value = b
-                "Send all messages to IRC <gray>➤ ${if (b) "<green>Enabled" else "<red>Disabled"}".parse().modMessage()
+                "Send all messages to IRC <gray>➤ ${if (b) "<green>Enabled" else "<red>Disabled"}".mod()
             }
 
             "help" {
@@ -132,15 +132,15 @@ object IRC : Module(
                     if (channel == cc) return@on
 
                     cc = channel
-                    "<gray>Joined channel <aqua>#$channel".parse().modMessage()
-                    if (help) "<gray>Need help? Run <red>\"/athen irc help\"<r>!".parse().modMessage()
+                    "<gray>Joined channel <aqua>#$channel".mod()
+                    if (help) "<gray>Need help? Run <red>\"/athen irc help\"<r>!".mod()
                 }
 
                 SocketPacket.IRC.ClientBound.Left.id -> {
                     if (channel == null) return@on
                     if (cc == channel) cc = "general"
 
-                    "<gray>Left channel <aqua>#$channel".parse().modMessage()
+                    "<gray>Left channel <aqua>#$channel".mod()
                 }
 
                 SocketPacket.IRC.ClientBound.Chat.id -> {
@@ -150,7 +150,7 @@ object IRC : Module(
                     if (name == client.user.name) return@on
                     if (name == "[Discord]") return@on
 
-                    "<dark_gray>[<aqua>#$channel<dark_gray>]".format0(name, body).parse().modMessage()
+                    "<dark_gray>[<aqua>#$channel<dark_gray>]".format0(name, body).mod()
                 }
 
                 SocketPacket.IRC.ClientBound.Discord.id -> {
@@ -158,15 +158,15 @@ object IRC : Module(
                     if (name == null) return@on
                     if (body == null) return@on
 
-                    "<dark_gray>[<aqua>Discord<dark_gray>]".format1(name, body).parse().modMessage()
+                    "<dark_gray>[<aqua>Discord<dark_gray>]".format1(name, body).mod()
                 }
 
                 SocketPacket.IRC.ClientBound.Error.id -> {
-                    "<red>IRC error: <gray>$body".parse().modMessage(Typo.PrefixType.ERROR)
+                    "<red>IRC error: <gray>$body".mod(MessagePrefixType.ERROR)
                 }
 
                 SocketPacket.IRC.ClientBound.Warn.id -> {
-                    "<yellow>IRC: <gray>$body".parse().modMessage(Typo.PrefixType.ERROR)
+                    "<yellow>IRC: <gray>$body".mod(MessagePrefixType.ERROR)
                 }
 
                 SocketPacket.IRC.ClientBound.List.id -> {
@@ -179,8 +179,8 @@ object IRC : Module(
                         }.sortedWith(compareBy({ if (it.startsWith("general ")) 0 else 1 }, { it }))
                     }.getOrNull() ?: return@on
 
-                    if (ch.isEmpty()) "<gray>No active channels.".parse().modMessage()
-                    else "<gray>Active channels: <aqua>${ch.joinToString("<dark_gray>, <aqua>") { ch -> "#$ch" }}".parse().modMessage()
+                    if (ch.isEmpty()) "<gray>No active channels.".mod()
+                    else "<gray>Active channels: <aqua>${ch.joinToString("<dark_gray>, <aqua>") { ch -> "#$ch" }}".mod()
                 }
             }
         }
@@ -207,11 +207,11 @@ object IRC : Module(
     }
 
     private fun send(body: String) {
-        if ("@everyone" in body) return "Please don't ping everyone...".modMessage()
-        if ("@here" in body) return "Please don't ping every online member...".modMessage()
+        if ("@everyone" in body) return "Please don't ping everyone...".mod()
+        if ("@here" in body) return "Please don't ping every online member...".mod()
 
         `socket$send`(SocketPacket.IRC.ServerBound.Chat.id, "b" to body)
-        "<dark_gray>[<aqua>#$cc<dark_gray>]".format0(name, body).parse(true).modMessage()
+        "<dark_gray>[<aqua>#$cc<dark_gray>]".format0(name, body).parse(true).mod()
     }
 
     private fun String.format0(n: String, b: String): String {
@@ -247,10 +247,10 @@ object IRC : Module(
     }
 
     private fun er0() {
-        "Not connected to IRC! Use <yellow>/${Athen.modId} ws connect".parse().modMessage(Typo.PrefixType.ERROR)
+        "Not connected to IRC! Use <yellow>/${Athen.modId} ws connect".mod(MessagePrefixType.ERROR)
     }
 
     private fun er1() {
-        "<red>IRC module not enabled!".parse().modMessage(Typo.PrefixType.ERROR)
+        "<red>IRC module not enabled!".mod(MessagePrefixType.ERROR)
     }
 }

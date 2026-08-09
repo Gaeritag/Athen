@@ -4,18 +4,17 @@ import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractStyledCircle
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractText
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.WorldRenderEvent
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.command
-import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.toDurationFromMillis
 import net.minecraft.world.phys.Vec3
 import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
@@ -62,7 +61,7 @@ object IchorPool : Module(
             time = System.currentTimeMillis()
 
             val str = "${n.x} ${n.y} ${n.z}"
-            "Ichor pool casted at <red>$str".parse().modMessage()
+            "Ichor pool casted at <red>$str".mod()
             if (notifyParty && PartyAPI.inParty) "pc Ichor pool casted at $str".command(false)
         }
 

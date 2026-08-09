@@ -1,20 +1,19 @@
-﻿package foo.starred.athen.api.websocket
+﻿package foo.starred.athen.api.network.websocket
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import foo.starred.athen.Athen
 import foo.starred.athen.Athen.SCOPE
 import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.InternalEvent
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.wsUrl
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.name
-import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.handlers.time.Task
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -42,14 +41,14 @@ object WebSocket {
     init {
         command {
             "ws" / "connect" {
-                "<gray>Connecting to WebSocket...".parse().modMessage()
+                "<gray>Connecting to WebSocket...".mod()
                 SCOPE.launch { connect() }
             }
 
             "ws" / "disconnect" {
-                if (!auth) return@invoke "Not connected to WebSocket!".modMessage(Typo.PrefixType.ERROR)
+                if (!auth) return@invoke "Not connected to WebSocket!".mod(MessagePrefixType.ERROR)
                 SCOPE.launch { close() }
-                "<gray>Disconnected from WebSocket.".parse().modMessage()
+                "<gray>Disconnected from WebSocket.".mod()
             }
         }
 
@@ -74,7 +73,7 @@ object WebSocket {
             client.services().sessionService().joinServer(client.user.profileId, client.user.accessToken, s)
         } catch (e: Exception) {
             Athen.LOGGER.error("Failed to authenticate with Mojang!", e)
-            "Failed to authenticate with Mojang! This shouldn't happen, please message @skies.starred on discord with a copy of your logs.".modMessage(Typo.PrefixType.ERROR)
+            "Failed to authenticate with Mojang! This shouldn't happen, please message @skies.starred on discord with a copy of your logs.".mod(MessagePrefixType.ERROR)
             return
         }
 
@@ -98,21 +97,21 @@ object WebSocket {
                         SocketPacket.WebSocket.ClientBound.AuthSuccess.id -> {
                             auth = true
                             Athen.LOGGER.info("Websocket authenticated as $n")
-                            if (Dev.debug) "<green>Connected to Websocket as <white>$n".parse().modMessage()
+                            if (Dev.debug) "<green>Connected to Websocket as <white>$n".mod()
                         }
 
                         SocketPacket.WebSocket.ClientBound.AuthError.id -> {
                             Athen.LOGGER.error("Websocket authentication failed: $b")
-                            "<red>Failed to authenticate! <gray>Error: $b".parse().modMessage(Typo.PrefixType.ERROR)
+                            "<red>Failed to authenticate! <gray>Error: $b".mod(MessagePrefixType.ERROR)
                         }
 
                         SocketPacket.WebSocket.ClientBound.Error.id -> {
                             Athen.LOGGER.error("Websocket error: $b")
-                            "<red>WS error: <gray>$b".parse().modMessage(Typo.PrefixType.ERROR)
+                            "<red>WS error: <gray>$b".mod(MessagePrefixType.ERROR)
                         }
 
                         SocketPacket.WebSocket.ClientBound.Warn.id -> {
-                            if (b != null) "<yellow>$b".parse().modMessage(Typo.PrefixType.ERROR)
+                            if (b != null) "<yellow>$b".mod(MessagePrefixType.ERROR)
                         }
 
                         else -> {
@@ -152,6 +151,6 @@ object WebSocket {
 
     private fun fn0() {
         rc?.cancel()
-        rc = Chronos.repeat(15.seconds) { connect() }
+        rc = Scheduler.repeat(15.seconds) { connect() }
     }
 }

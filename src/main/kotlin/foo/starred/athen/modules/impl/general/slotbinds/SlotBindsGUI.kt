@@ -4,7 +4,6 @@ package foo.starred.athen.modules.impl.general.slotbinds
 
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
-import foo.starred.athen.api.rendering.ui.shapes.line.line
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
@@ -16,6 +15,7 @@ import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.extensions.line.line
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
@@ -27,6 +27,7 @@ import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphics
+import org.joml.Matrix3x2f
 import org.lwjgl.glfw.GLFW
 
 object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
@@ -256,10 +257,13 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 val y0 = y.toInt() + 48
                 val y1 = y.toInt() + 112
 
+                val pose = Matrix3x2f(graphics.pose())
+                val scissor = graphics.scissorStack.peek()
+
                 for (e in SlotBinds.m0.int2IntEntrySet()) {
                     val a = pos(e.intKey, x0, y0, y1) ?: continue
                     val b = pos(e.intValue, x0, y0, y1) ?: continue
-                    graphics.line(a.first, a.second, b.first, b.second, SlotBinds.m2.get(e.intKey), 1)
+                    graphics.line(a.first.toFloat(), a.second.toFloat(), b.first.toFloat(), b.second.toFloat(), SlotBinds.m2.get(e.intKey), 1f, pose, scissor)
                 }
             }
 

@@ -2,15 +2,14 @@
 
 import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo.modMessage
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.handlers.parser.parse
 import java.text.SimpleDateFormat
 import java.util.*
 
 abstract class ICarryStateTracker<T : ITrackedCarry>(storagePath: String, historyCodec: Codec<HistoryEntry>) {
-    protected val storage = Scribble(storagePath)
+    protected val storage = JsonStore(storagePath)
     protected var data by storage.jsonObject("active")
 
     private var history = storage.mutableList("history", historyCodec)
@@ -32,37 +31,37 @@ abstract class ICarryStateTracker<T : ITrackedCarry>(storagePath: String, histor
 
     fun addCarry(player: String, total: Int, vararg params: Any) {
         val existing = tracked[player]
-        if (existing != null && !valid(existing, *params)) return "§b$player§f is already being tracked for §b${existing.short}§f. Remove first.".modMessage()
+        if (existing != null && !valid(existing, *params)) return "§b$player§f is already being tracked for §b${existing.short}§f. Remove first.".mod()
         
-        val carry = existing ?: create(player, 0, *params)?.also { tracked[player] = it } ?: return "Failed to create carry tracker.".modMessage()
+        val carry = existing ?: create(player, 0, *params)?.also { tracked[player] = it } ?: return "Failed to create carry tracker.".mod()
         carry.total += total
 
         persist()
-        "Now tracking §b$player§f for §b${carry.total}§f §b${carry.short}§f carries.".modMessage()
+        "Now tracking §b$player§f for §b${carry.total}§f §b${carry.short}§f carries.".mod()
     }
 
     fun removeCarry(player: String) {
-        tracked.remove(player) ?: return "§b$player§f is not being tracked.".modMessage()
+        tracked.remove(player) ?: return "§b$player§f is not being tracked.".mod()
         persist()
-        "Removed §b$player§f from tracking.".modMessage()
+        "Removed §b$player§f from tracking.".mod()
     }
 
     fun listCarries() {
         val l = tracked.values
-        if (tracked.values.isEmpty()) return "<red>No carries being tracked.".parse().modMessage()
+        if (tracked.values.isEmpty()) return "<red>No carries being tracked.".mod()
 
-        "Currently tracking:".modMessage()
-        for (a in l) " ${a.str()}".parse().modMessage()
+        "Currently tracking:".mod()
+        for (a in l) " ${a.str()}".mod()
     }
 
     fun clearCarries() {
-        "Cleared §b${tracked.size}§f tracked carries.".modMessage()
+        "Cleared §b${tracked.size}§f tracked carries.".mod()
         tracked.clear()
         persist()
     }
 
     fun displayHistory(page: Int) {
-        if (history.value.isEmpty()) return "No carry history found.".modMessage()
+        if (history.value.isEmpty()) return "No carry history found.".mod()
         
         val sorted = history.value.sortedByDescending { it.timestamp }
         val totalPages = (sorted.size + 9) / 10
@@ -74,13 +73,13 @@ abstract class ICarryStateTracker<T : ITrackedCarry>(storagePath: String, histor
         val divider = "§7" + "-".repeat()
         val dateFormat = SimpleDateFormat("MM/dd HH:mm")
         
-        divider.modMessage()
-        "Carry History - Page §b$currentPage§f/§b$totalPages".modMessage()
+        divider.mod()
+        "Carry History - Page §b$currentPage§f/§b$totalPages".mod()
 
-        for (e in sorted.subList(rangeStart, rangeEnd)) " <gray>• <aqua>${e.player} <dark_gray>[<gray>${e.type}<dark_gray>] <gray>- <red>${dateFormat.format(Date(e.timestamp))} <gray>- <aqua>${e.amount}<r> carries".parse().modMessage()
+        for (e in sorted.subList(rangeStart, rangeEnd)) " <gray>• <aqua>${e.player} <dark_gray>[<gray>${e.type}<dark_gray>] <gray>- <red>${dateFormat.format(Date(e.timestamp))} <gray>- <aqua>${e.amount}<r> carries".mod()
 
-        "Total: §b${sorted.sumOf { it.amount }}§f carries".modMessage()
-        divider.modMessage()
+        "Total: §b${sorted.sumOf { it.amount }}§f carries".mod()
+        divider.mod()
     }
 
     fun persist() {

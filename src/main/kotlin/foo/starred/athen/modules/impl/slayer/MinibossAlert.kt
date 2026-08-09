@@ -4,13 +4,12 @@ package foo.starred.athen.modules.impl.slayer
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerMini
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Notifier.notify
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.handlers.parser.parse
@@ -43,7 +42,7 @@ object MinibossAlert : Module(
             val text = if (name in bigBoys) bigBoiText else alertText
 
             if (showTitle) text.parse().alert()
-            if (sendMessage) if (vanillaMessage) text.parse().modMessage() else text.notify()
+            if (sendMessage) text.mod()
         }.runWhen(detection.state.map { it == 0 })
 
         on<SlayerEvent.Miniboss.Spawn> {
@@ -53,7 +52,7 @@ object MinibossAlert : Module(
             val text = (if (slayerMiniBoss.special) bigBoiText else alertText)
 
             if (showTitle) text.parse().alert()
-            if (sendMessage) if (vanillaMessage) text.parse().modMessage() else text.notify()
+            if (sendMessage) text.mod()
         }.runWhen(detection.state.map { it == 1 })
     }
 }

@@ -1,22 +1,28 @@
-﻿package foo.starred.athen.handlers
+package foo.starred.athen.api.math
 
 import foo.starred.athen.annotations.Load
-import foo.starred.athen.handlers.Typo.modMessage
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.modules.impl.ModSettings
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.athen.utils.command
 import foo.starred.snowbird.kommand.ICommand
 import foo.starred.snowbird.utils.formatted
 import kotlin.math.pow
 
-/**
- * Calc stands for calculator, I'm just using slang guys.
- */
 @Load
 object Calculator : ICommand {
     private val tokenRegex = Regex("""\d+(\.\d+)?|[+\-*/x^()]""")
     private val priority = mapOf("+" to 1, "-" to 1, "*" to 2, "x" to 2, "/" to 2, "^" to 3)
 
     init {
+        command {
+            "calc" / greedyString("operation") {
+                val string = string("operation")
+                val result = calc(string).formatted()
+                "<gray>$string = <green>$result".mod(MessagePrefixType.SUCCESS)
+            }
+        }
+
         run {
             if (!ModSettings.calculator) return@run
 
@@ -24,7 +30,7 @@ object Calculator : ICommand {
                 greedyString("operation") {
                     val string = string("operation")
                     val result = calc(string).formatted()
-                    "<gray>$string = <green>$result".parse().modMessage(Typo.PrefixType.SUCCESS)
+                    "<gray>$string = <green>$result".mod(MessagePrefixType.SUCCESS)
                 }
             }
         }

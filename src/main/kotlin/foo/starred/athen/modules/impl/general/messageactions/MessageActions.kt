@@ -6,12 +6,12 @@ import com.google.gson.reflect.TypeToken
 import foo.starred.athen.Athen
 import foo.starred.athen.Athen.GSON
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.events.MessageEvent
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.general.messageactions.actions.impl.NoAction
 import foo.starred.athen.modules.impl.general.messageactions.data.ActionEntry
@@ -36,9 +36,9 @@ object MessageActions : Module(
     private val _unused by config.button("Open manager") { client.setScreen(MessageActionsGUI) }
     private val _unused0 by config.textParagraph("You can use the commands <red>\"/${Athen.modId} [import|export] messageactions\"<r> to share configs!")
 
-    private val scribble = Scribble("features/MessageActions")
-    private var _actions: String by scribble.string("actions")
-    private var _categories: String by scribble.string("categories")
+    private val json = JsonStore("features/MessageActions")
+    private var _actions: String by json.string("actions")
+    private var _categories: String by json.string("categories")
 
     private var set = emptySet<String>()
     private var a0 = emptyArray<ResolvedEntry>()
@@ -77,7 +77,7 @@ object MessageActions : Module(
 
                 if (entry.action == NoAction) return@on
                 val action = entry.action() ?: continue
-                if (entry.source.delay > 0.0) Chronos.schedule(entry.delay) { action.run() }
+                if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() }
                 else action.run()
             }
         }
@@ -87,7 +87,7 @@ object MessageActions : Module(
                 if (!entry.matches(stripped, set)) continue
 
                 val action = entry.action() ?: continue
-                if (entry.source.delay > 0.0) Chronos.schedule(entry.delay) { action.run() }
+                if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() }
                 else action.run()
             }
         }
@@ -104,12 +104,12 @@ object MessageActions : Module(
             "export" / "messageactions" {
                 disk()
                 McClient.clipboard = GSON.toJson(mapOf("actions" to actions, "categories" to categories)).compress()
-                "Exported ${actions.size} actions to clipboard!".modMessage()
+                "Exported ${actions.size} actions to clipboard!".mod()
             }
 
             "import" / "messageactions" {
                 val a = McClient.clipboard
-                if (a.isEmpty()) return@invoke "No data found in clipboard!".modMessage()
+                if (a.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 safely {
                     val map = GSON.fromJson(a.decompress(), object : TypeToken<Map<String, Any>>() {}.type) as Map<String, Any>
@@ -123,7 +123,7 @@ object MessageActions : Module(
 
                     fn()
                     disk()
-                    "Imported ${b.size} actions and ${c.size} categories!".modMessage()
+                    "Imported ${b.size} actions and ${c.size} categories!".mod()
                 }
             }
         }

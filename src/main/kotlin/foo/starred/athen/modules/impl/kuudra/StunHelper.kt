@@ -6,11 +6,11 @@ import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPod
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.CancellableEvent
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.render.renderPos
@@ -21,7 +21,6 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.level.ClipContext
-import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
@@ -76,7 +75,7 @@ object StunHelper : Module(
             val result = player.level().clip(ClipContext(eye, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player))
             if (result.type != HitResult.Type.BLOCK) return@on ccl()
 
-            val pos = (result as BlockHitResult).blockPos
+            val pos = result.blockPos
             val pod = KuudraPod.entries.any { pod ->
                 val box = pod.aabb
                 pos.x >= box.minX && pos.x <= box.maxX &&
@@ -108,7 +107,7 @@ object StunHelper : Module(
             if (!stunning) return@on
             if (belly) return@on
 
-            val p = change.position ?: return@on
+            val p = change.position
             if (Mth.floor(p.x) == -161 && Mth.floor(p.y) == 49 && Mth.floor(p.z) == -186) belly = true
         }
 
@@ -150,7 +149,7 @@ object StunHelper : Module(
         if (now - last < 500) return
         last = now
 
-        "Blocked pickaxe ability!".modMessage()
+        "Blocked pickaxe ability!".mod()
     }
 
     private fun reset() {

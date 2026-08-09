@@ -1,19 +1,18 @@
-﻿@file:Suppress("Unused")
+﻿@file:Suppress("Unused", "ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.general
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Commander
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
 import foo.starred.snowbird.handlers.parser.parse
@@ -39,9 +38,9 @@ object KatReminder : Module(
     private val _unused0 by config.textParagraph("Variable: <red>#pet")
     private val _unused1 by config.textParagraph("Commands: <red>/athen times kat<r>, <red>/athen clear kat")
 
-    private val scribble = Scribble("features/katReminder")
-    private var pet by scribble.string("pet")
-    private var time by scribble.long("time")
+    private val json = JsonStore("features/katReminder")
+    private var pet by json.string("pet")
+    private var time by json.long("time")
 
     private val giveRegex = Regex("^\\[NPC] Kat: I'll get your (?<pet>\\w+) upgraded to \\w+ in no time!$")
     private val durationRegex = Regex("^\\[NPC] Kat: Come back in (?<duration>.+) to pick it up!$")
@@ -49,6 +48,7 @@ object KatReminder : Module(
     private val remindRegex = Regex("^\\[NPC] Kat: I'm currently taking care of your (?<pet>\\w+)!$")
     private val durationRemindRegex = Regex("^\\[NPC] Kat: You can pick it up in (?<duration>.+)\\.$")
 
+    private var `warning$kat$sentOnce` = false
     private var task: Task? = null
 
     init {
@@ -56,22 +56,22 @@ object KatReminder : Module(
 
         command {
             "clear" / "kat" {
-                if (!Commander.StateTracker.`warning$kat$sentOnce`) {
-                    "<red>This WILL clear your Kat time info! Only use this if you know what you're doing.".parse().modMessage(Typo.PrefixType.ERROR)
-                    Commander.StateTracker.`warning$kat$sentOnce` = true
+                if (!`warning$kat$sentOnce`) {
+                    "<red>This WILL clear your Kat time info! Only use this if you know what you're doing.".mod(MessagePrefixType.ERROR)
+                    `warning$kat$sentOnce` = true
                     return@invoke
                 }
 
                 reset()
-                "Kat time info was successfully reset.".modMessage(Typo.PrefixType.SUCCESS)
-                Commander.StateTracker.`warning$kat$sentOnce` = false
+                "Kat time info was successfully reset.".mod(MessagePrefixType.SUCCESS)
+                `warning$kat$sentOnce` = false
             }
 
             "times" / "kat" {
-                if (time == 0L) return@invoke "No pet being upgraded!".modMessage(Typo.PrefixType.ERROR)
+                if (time == 0L) return@invoke "No pet being upgraded!".mod(MessagePrefixType.ERROR)
 
                 val d = (time - System.currentTimeMillis()).toDurationFromMillis()
-                "Time until upgrade for <red>$pet<r>: <red>$d".parse().modMessage()
+                "Time until upgrade for <red>$pet<r>: <red>$d".mod()
             }
         }
 
@@ -79,7 +79,7 @@ object KatReminder : Module(
             if (time <= 0) return@on
             if (time > System.currentTimeMillis()) return@on
 
-            Chronos.schedule(10.client) {
+            Scheduler.schedule(10.client) {
                 fn0()
             }
         }
@@ -130,7 +130,7 @@ object KatReminder : Module(
         task?.cancel()
 
         val delay = (time - System.currentTimeMillis()).takeIf { it > 0 } ?: return
-        task = Chronos.schedule(delay.milliseconds) { fn0() }
+        task = Scheduler.schedule(delay.milliseconds) { fn0() }
     }
 
     private fun fn1(days: Duration) {
@@ -149,7 +149,7 @@ object KatReminder : Module(
         val str = message.replace("#pet", pet).parse()
 
         if (showTitle) str.showTitle(fadeIn = 10, stay = 40, fadeOut = 10)
-        str.modMessage()
+        str.mod()
     }
 
     private fun reset() {

@@ -3,8 +3,8 @@ package foo.starred.athen.mixin.mixins;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import foo.starred.athen.api.storage.ResourceAPI;
 import foo.starred.athen.ducks.entity.EntityRenderStateDuck;
-import foo.starred.athen.handlers.Resourceful;
 import foo.starred.athen.modules.impl.slayer.EndermanPhaseColor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -28,8 +28,8 @@ public abstract class LivingEntityRendererMixin {
             RenderSetup.builder(
                             RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
                                     .withLocation("athen/pipeline/enderman")
-                                    .withVertexShader(Resourceful.INSTANCE.identify("core/level/entity/enderman"))
-                                    .withFragmentShader(Resourceful.INSTANCE.identify("core/level/entity/enderman"))
+                                    .withVertexShader(ResourceAPI.INSTANCE.identify("core/level/entity/enderman"))
+                                    .withFragmentShader(ResourceAPI.INSTANCE.identify("core/level/entity/enderman"))
                                     .withSampler("Sampler0")
                                     .withSampler("Sampler1")
                                     .withSampler("Sampler2")

@@ -2,10 +2,10 @@
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Ticking
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.utils.toDuration
 import net.minecraft.world.entity.Entity
@@ -33,7 +33,7 @@ data class SlayerCarryPlayer(
     fun spawn(entity: Entity): Boolean {
         if (boss != null) return false
         boss = entity
-        tick = Chronos.ticks.server
+        tick = Scheduler.ticks.server
         return true
     }
 
@@ -48,7 +48,7 @@ data class SlayerCarryPlayer(
 
         return Result(
             entity.tickCount / 20.0,
-            Chronos.ticks.server - tick,
+            Scheduler.ticks.server - tick,
             done >= max,
             done,
             max,

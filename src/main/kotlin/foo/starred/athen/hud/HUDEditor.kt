@@ -3,7 +3,7 @@
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.handlers.Scram
+import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW
 import kotlin.math.roundToInt
 
 @Priority(-1)
-object HUDEditor : Scram("HUD Editor [Athen]") {
+object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
     private var grid = false
     private var snappy = false
     private var dragging: HUDElement? = null

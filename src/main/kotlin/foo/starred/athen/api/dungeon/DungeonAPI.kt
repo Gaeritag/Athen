@@ -36,10 +36,10 @@ import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.dungeon.enums.DungeonClass
 import foo.starred.athen.api.dungeon.enums.DungeonPlayer
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Typo.devMessage
 import foo.starred.snowbird.api.name
 import foo.starred.snowbird.api.player
 import foo.starred.snowbird.handlers.Observable
@@ -95,7 +95,7 @@ object DungeonAPI {
 
     init {
         on<LocationEvent.Hypixel.Island> {
-            "DungeonAPI: Cleaning up.".devMessage()
+            "DungeonAPI: Cleaning up.".dev()
 
             bloodKilledAll.value = false
             bloodSpawnedAll.value = false
@@ -157,7 +157,7 @@ object DungeonAPI {
                     if (t.name != n0) continue
                     t.deaths++
                     DungeonEvent.Player.Death(t).post()
-                    "DungeonAPI: Player died! Player deaths: ${t.deaths}".devMessage()
+                    "DungeonAPI: Player died! Player deaths: ${t.deaths}".dev()
                 }
             } ?: return@on
 
@@ -188,28 +188,28 @@ object DungeonAPI {
                 endRegex.matches(stripped) -> {
                     complete = true
                     floor.value?.let { (DungeonEvent.End(it)).post() }
-                    "DungeonAPI: Floor ended.".devMessage()
+                    "DungeonAPI: Floor ended.".dev()
                 }
 
                 !started && stripped == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {
                     started = true
                     floor.value?.let { (DungeonEvent.Start(it)).post() }
-                    "DungeonAPI: Floor started.".devMessage()
+                    "DungeonAPI: Floor started.".dev()
                 }
 
                 sectionCompleteRegex.matches(stripped) -> {
                     P3Phase.value++
-                    "DungeonAPI: P3 Phase set to $P3Phase.".devMessage()
+                    "DungeonAPI: P3 Phase set to $P3Phase.".dev()
                 }
 
                 stripped == "[BOSS] Storm: I should have known that I stood no chance." -> {
                     P3Phase.value = 1
-                    "DungeonAPI: P3 Phase set to 1.".devMessage()
+                    "DungeonAPI: P3 Phase set to 1.".dev()
                 }
 
                 stripped == "The Core entrance is opening!" -> {
                     P3Phase.value = 0
-                    "DungeonAPI: P3 Phase set to 0.".devMessage()
+                    "DungeonAPI: P3 Phase set to 0.".dev()
                 }
             }
         }.runWhen(SkyBlockIsland.THE_CATACOMBS.inIsland)

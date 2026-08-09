@@ -1,12 +1,21 @@
 ﻿package foo.starred.athen.modules.impl
 
 import foo.starred.athen.annotations.Load
-import foo.starred.athen.handlers.Scribble
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.storage.JsonStore
+import foo.starred.athen.config.ConfigManager
+import foo.starred.athen.events.MessageEvent
+import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.athen.utils.command
+import foo.starred.snowbird.api.client
+import foo.starred.snowbird.utils.literal
 
 @Load
 object Dev {
+    private val r = Regex("(?<!^)([A-Z])")
+
     @JvmStatic
-    val file = Scribble("main/Dev")
+    val file = JsonStore("main/Dev")
 
     @JvmStatic
     var lastVersion: String by file.string("lastVersion")
@@ -20,6 +29,38 @@ object Dev {
     @JvmStatic
     var clickUiHelperCollapsed: Boolean by file.boolean("clickUiHelperCollapsed")
 
-    @JvmStatic
-    var clickUiHelperHidden: Boolean by file.boolean("clickUiHelperHidden")
+    init {
+        command {
+            "toggle" / "dev" {
+                debug = !debug
+                val a = if (debug) "<green>Enabled" else "<red>Disabled"
+
+                "Debug mode is now: $a<r>.".mod()
+            }
+
+            "toggle" / "feature" / string("key") {
+                val key = string("key")
+
+                val b = ConfigManager.getValue(key) as? Boolean ?: return@string "Not a valid feature!".mod()
+                ConfigManager.updateConfig(key, !b)
+
+                val s = key.replace(r, " $1").lowercase().replaceFirstChar { it.uppercase() }
+                "<${Mocha.Mauve.argb}>$s <gray>➤ ${if (b) "<red>Disabled" else "<green>Enabled"}".mod()
+            }
+
+            "simulate" / "chat" / bool("actionbar") / greedyString("message") {
+                val actionBar = bool("actionbar")
+                val message = string("message")
+
+                if (actionBar) MessageEvent.ActionBar(message.literal()).post()
+                else MessageEvent.Chat.Receive(message.literal()).post()
+
+                "<gray>Simulated ($actionBar): <red>$message".mod()
+            }
+
+            "clear" / "chat" {
+                client.gui.chat.clearMessages(false)
+            }
+        }
+    }
 }

@@ -8,16 +8,16 @@ import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.Category
 import foo.starred.athen.config.ConfigBuilder
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Beacon.request
-import foo.starred.athen.handlers.Ticking
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.kuudra.carry.KuudraCarryStateTracker.tracked
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -94,7 +94,7 @@ object KuudraCarryTracker : Module(
                 val amount = int("amount")
                 val tierInput = string("tier")
 
-                val tier = tierMap[tierInput.lowercase()] ?: return@word "Invalid tier. Use: basic, hot, burning, fiery, infernal, or t1-t5.".modMessage()
+                val tier = tierMap[tierInput.lowercase()] ?: return@word "Invalid tier. Use: basic, hot, burning, fiery, infernal, or t1-t5.".mod()
 
                 KuudraCarryStateTracker.addCarry(player, amount, tier)
             }.suggests { tierMap.keys.toList() }
@@ -139,7 +139,7 @@ object KuudraCarryTracker : Module(
                 val carry = tracked[teammate.name] ?: continue
                 if (carry.tier != tier) continue
 
-                if (showStartMessage) "Kuudra started for <${TextColor.AQUA}>${teammate.name}<${TextColor.GRAY}> [${tier.str}]".parse().modMessage()
+                if (showStartMessage) "Kuudra started for <${TextColor.AQUA}>${teammate.name}<${TextColor.GRAY}> [${tier.str}]".mod()
             }
         }
 
@@ -152,7 +152,7 @@ object KuudraCarryTracker : Module(
 
                 val result = carry.onCompletion()
 
-                "Completed run for <aqua>${teammate.name}".parse().modMessage()
+                "Completed run for <aqua>${teammate.name}".mod()
                 if (announceInParty) "pc ${teammate.name}: ${result.current}/${result.total}".command(false)
                 if (webhookEach && webhook) {
                     webhookUrl.request(Request.POST) {
@@ -162,7 +162,7 @@ object KuudraCarryTracker : Module(
 
                 if (result.completed) {
                     val time = result.totalTime.toDuration()
-                    "<${Mocha.Green.argb}>Completed carries for <${TextColor.AQUA}>${teammate.name} <${TextColor.GRAY}>[${tier.str}] <r>in <${TextColor.YELLOW}>$time".parse().modMessage()
+                    "<${Mocha.Green.argb}>Completed carries for <${TextColor.AQUA}>${teammate.name} <${TextColor.GRAY}>[${tier.str}] <r>in <${TextColor.YELLOW}>$time".mod()
 
                     if (webhook) {
                         webhookUrl.request(Request.POST) {

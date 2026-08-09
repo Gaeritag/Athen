@@ -4,9 +4,9 @@ package foo.starred.athen.modules.impl.render.tooltip.custom
 
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.TooltipContext
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl.CombinedTooltip
@@ -84,14 +84,14 @@ object CustomTooltip : Module(
         on<GuiEvent.Input.Key.Press> {
             if (!onlyName.bound) return@on
             if (keyEvent.key != onlyName) return@on
-            if (last != Chronos.ticks.client) return@on
+            if (last != Scheduler.ticks.client) return@on
 
             name = !name
             if (name) yo = 0.0
         }
 
         on<GuiEvent.Input.Mouse.Scroll> {
-            if (last != Chronos.ticks.client) return@on
+            if (last != Scheduler.ticks.client) return@on
             if (name) return@on
 
             if (`scroll$scale` && `scroll$scale$key`.bound && `scroll$scale$key`.pressed) {
@@ -116,7 +116,7 @@ object CustomTooltip : Module(
     fun render(graphics: GuiGraphics, font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner) {
         if (color != `border$color`.rgb && (client.screen as? AbstractContainerScreen<*>)?.hovered == null) color = `border$color`.rgb
 
-        last = Chronos.ticks.client
+        last = Scheduler.ticks.client
         val components = if (name) components.take(1) else components
         val cs = components.size == 1
 

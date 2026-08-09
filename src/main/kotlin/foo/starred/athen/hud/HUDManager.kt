@@ -3,17 +3,17 @@
 package foo.starred.athen.hud
 
 import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Scribble
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.handlers.time.client
 
 @Priority(-2)
 object HUDManager {
-    private val storage = Scribble("config/HUDEditor")
+    private val storage = JsonStore("config/HUDEditor")
     val elements = mutableMapOf<String, HUDElement>()
 
     init {
@@ -43,7 +43,7 @@ object HUDManager {
 
     fun register(element: HUDElement) {
         elements[element.id] = element
-        Chronos.schedule(1.client){ get(element.id) }
+        Scheduler.schedule(1.client){ get(element.id) }
     }
 
     fun set() {

@@ -1,6 +1,6 @@
 ﻿package foo.starred.athen.modules.common.carry
 
-import foo.starred.athen.handlers.Scram
+import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.NVGRenderer
 import foo.starred.athen.utils.nvg.NVGSpecialRenderer
@@ -14,7 +14,7 @@ import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.plural
 import net.minecraft.client.gui.GuiGraphics
 
-abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : Scram(screenName) {
+abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : MultiVersionScreen(screenName) {
     private var scrollOffset = 0f
     private val entries = mutableListOf<CarryEntry>()
     private val tooltips = mutableListOf<TooltipEntry>()

@@ -2,11 +2,11 @@
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.slayers.enums.drop.impl.*
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
-import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.enchants0
 import net.minecraft.world.entity.item.ItemEntity
@@ -45,7 +45,7 @@ object BigSlayerDrops : Module(
             val p = entity.position()
             set.add(p)
 
-            Chronos.schedule(unscale.seconds) {
+            Scheduler.schedule(unscale.seconds) {
                 set.remove(p)
             }
         }

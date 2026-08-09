@@ -3,9 +3,9 @@
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.MessageEvent
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.command
@@ -40,7 +40,7 @@ object ManaUsedAlert : Module(
             if (i1 == 0 && ignore0) return@on
 
             "pc $i0 mana used on $i1 players!".command(false)
-            "<red>$i0 <r>mana used on <red>$i1 <r>players!".parse(true).modMessage()
+            "<red>$i0 <r>mana used on <red>$i1 <r>players!".parse(true).mod()
         }
     }
 }

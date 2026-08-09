@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.websocket
+﻿package foo.starred.athen.api.network.websocket
 
 object SocketPacket {
     sealed class WebSocket {

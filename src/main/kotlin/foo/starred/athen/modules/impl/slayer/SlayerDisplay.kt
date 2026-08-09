@@ -3,11 +3,11 @@
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.config.Category
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.attachedNames
-import foo.starred.athen.handlers.Ticking
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.utils.stripped

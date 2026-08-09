@@ -4,13 +4,12 @@ package foo.starred.athen
 
 import com.google.gson.Gson
 import foo.starred.athen.annotations.AnnotationLoader
+import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.http.WebAPI.request
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.handlers.Beacon.request
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Texter.onHover
-import foo.starred.athen.handlers.Typo.devMessage
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.data
@@ -48,9 +47,9 @@ object Athen : ClientModInitializer {
         AnnotationLoader.load()
 
         on<LocationEvent.Server.Connect> {
-            Chronos.schedule(20.client) { li() }
-            Chronos.schedule(60.client) { broadcast() }
-            Chronos.repeat(1.hours) { broadcast() }
+            Scheduler.schedule(20.client) { li() }
+            Scheduler.schedule(60.client) { broadcast() }
+            Scheduler.repeat(1.hours) { broadcast() }
         }.once()
     }
 
@@ -83,12 +82,12 @@ object Athen : ClientModInitializer {
             onSuccess<String> {
                 val str = it.trim().takeIf { s -> s.isNotBlank() && s != Dev.lastBroadcast } ?: return@onSuccess
 
-                str.parse().onHover("<${Mocha.Lavender.argb}>Broadcasted message!").modMessage()
+                "<hover<${Mocha.Lavender.argb}>Broadcasted message!>$str".mod()
                 Dev.lastBroadcast = str
             }
 
             onError {
-                "Failed to read broadcast: ${it.message}".devMessage()
+                "Failed to read broadcast: ${it.message}".dev()
             }
         }
     }

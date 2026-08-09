@@ -5,15 +5,15 @@ package foo.starred.athen.modules.impl.render.radial
 import com.google.gson.reflect.TypeToken
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.InputEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.render.radial.data.RadialSlot
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
@@ -56,7 +56,7 @@ object RadialMenu : Module(
 
     private val _unused1 by config.textParagraph("The configs can be exported/imported using the command <red>\"/athen radial [export|import]\"<r>. View all commands using <red>\"/athen radial help\"<r>!")
 
-    private val scribble = Scribble("features/radialMenu")
+    private val json = JsonStore("features/radialMenu")
     private val stack = ArrayDeque<List<RadialSlot>>()
 
     val slots = mutableListOf<RadialSlot>()
@@ -83,10 +83,10 @@ object RadialMenu : Module(
     var i2 = -1
         private set
 
-    var active: String by scribble.string("active", "Default")
+    var active: String by json.string("active", "Default")
         private set
 
-    var saved: String by scribble.string("configs")
+    var saved: String by json.string("configs")
         private set
 
     init {
@@ -105,10 +105,10 @@ object RadialMenu : Module(
 
             "import" / "radial" {
                 val clipboard = McClient.clipboard
-                if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".modMessage()
+                if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 val map: Map<String, Any> = Athen.GSON.fromJson(clipboard.decompress(), object : TypeToken<Map<String, Any>>() {}.type)
-                val name = map["name"] as? String ?: return@invoke "Invalid config data!".modMessage()
+                val name = map["name"] as? String ?: return@invoke "Invalid config data!".mod()
                 val data: List<RadialSlot> = Athen.GSON.fromJson(Athen.GSON.toJson(map["slots"]), object : TypeToken<List<RadialSlot>>() {}.type)
 
                 var n = name
@@ -118,13 +118,13 @@ object RadialMenu : Module(
                 configs[n] = data
                 load(n)
                 disk()
-                "Imported config '$n' with ${data.size} slots!".modMessage()
+                "Imported config '$n' with ${data.size} slots!".mod()
             }
 
             "export" / "radial" {
                 save()
                 McClient.clipboard = Athen.GSON.toJson(mapOf("name" to active, "slots" to slots)).compress()
-                "Exported config '$active' to clipboard!".modMessage()
+                "Exported config '$active' to clipboard!".mod()
             }
         }
 

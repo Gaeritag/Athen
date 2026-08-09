@@ -5,18 +5,18 @@ package foo.starred.athen.modules.impl.slayer
 import com.mojang.serialization.Codec
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.slayers.enums.drop.base.ISlayerDrop
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropGrade
 import foo.starred.athen.api.slayers.enums.drop.impl.*
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.snowbird.api.client
@@ -50,8 +50,8 @@ object SlayerDropsData : Module(
     private val void by config.dropdown("Voidgloom", VoidgloomDrops.entries.map { it.display }).childOf { _filter }
     private val blaze by config.dropdown("Blaze", InfernoDrops.entries.map { it.display }).childOf { _filter }
 
-    private val scribble = Scribble("features/slayerDropsData")
-    private val map = scribble.mutableMap("map", Codec.STRING, Codec.INT)
+    private val json = JsonStore("features/slayerDropsData")
+    private val map = json.mutableMap("map", Codec.STRING, Codec.INT)
 
     private val regex0 = Regex("^ {3}RNG Meter - (?<exp>[\\d,]+) Stored XP$")
     private val regex1 = Regex("^(?<type>RARE DROP!|VERY RARE DROP!|CRAZY RARE DROP!|INSANE DROP!) \\((?<name>.*?)\\) \\(\\+(?<mf>\\d+)% \uE01A Magic Find\\)$")
@@ -87,7 +87,7 @@ object SlayerDropsData : Module(
             val b0 = b.lowercase()
 
             ConfigManager.updateConfig(a0, (ISlayerDrop.Companion.Names.LOOKUP0[b0] as? Enum<*>)?.ordinal ?: return@on)
-            "Changed selected drop for <red>$a <r>to <red>$b<r>!".parse().modMessage()
+            "Changed selected drop for <red>$a <r>to <red>$b<r>!".mod()
         }.runWhen(auto.state)
 
         on<MessageEvent.Chat.Receive> {
@@ -146,7 +146,7 @@ object SlayerDropsData : Module(
         val b0 = ISlayerDrop.Companion.Names.LOOKUP0[b.lowercase()]?.key() ?: return
         val b1 = map.value[b0] ?: return map.update { this[b0] = 0 }
 
-        "<red>$b1 <r>bosses since last <red>$b<r>!".parse(true).modMessage()
+        "<red>$b1 <r>bosses since last <red>$b<r>!".parse(true).mod()
         map.update { this[b0] = 0 }
     }
 

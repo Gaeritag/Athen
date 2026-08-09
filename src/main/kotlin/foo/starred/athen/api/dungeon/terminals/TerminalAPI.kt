@@ -4,12 +4,12 @@ package foo.starred.athen.api.dungeon.terminals
 
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.dungeon.DungeonAPI
+import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.DungeonEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Typo.devMessage
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.snowbird.api.client
@@ -84,7 +84,7 @@ object TerminalAPI {
         }.runWhen(state1)
 
         on<PacketEvent.Process.Pre, ClientboundContainerClosePacket> {
-            Chronos.schedule(1.client, ::reset)
+            Scheduler.schedule(1.client, ::reset)
         }.runWhen(state1)
 
         on<PacketEvent.Send, ServerboundContainerClickPacket> {
@@ -109,6 +109,6 @@ object TerminalAPI {
         id = -1
         i = 0
 
-        "TerminalAPI: reset".devMessage()
+        "TerminalAPI: reset".dev()
     }
 }

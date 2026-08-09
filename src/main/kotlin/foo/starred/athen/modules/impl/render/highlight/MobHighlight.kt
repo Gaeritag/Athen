@@ -7,15 +7,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
 import foo.starred.athen.events.InputEvent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.WorldRenderEvent
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.render.highlight.popup.MobHighlightPopup
 import foo.starred.athen.modules.impl.render.highlight.ui.MobHighlightGUI
@@ -42,9 +42,9 @@ object MobHighlight : Module(
     "Highlights mobs",
     Category.RENDER
 ) {
-    val scribble = Scribble("features/mobHighlight")
-    val e0 = scribble.mutableList("e0", EntityNamed.CODEC)
-    val e1 = scribble.mutableList("e1", EntityTyped.CODEC)
+    val json = JsonStore("features/mobHighlight")
+    val e0 = json.mutableList("e0", EntityNamed.CODEC)
+    val e1 = json.mutableList("e1", EntityTyped.CODEC)
 
     private val key by config.switch("Highlight key", true)
     private val keybind by config.keybind("Key to add entity")
@@ -64,7 +64,7 @@ object MobHighlight : Module(
                 val name = string("name")
 
                 e0.update { add(EntityNamed(name, color, max)) }
-                "Added entity highlight for <red>\"$name\"<r> <gray>[Max HP=$max]<r> with color <$color>$c0<r>!".parse().modMessage()
+                "Added entity highlight for <red>\"$name\"<r> <gray>[Max HP=$max]<r> with color <$color>$c0<r>!".mod()
             }
 
             "highlight" / "add" / "named" / string("color") / greedyString("name") {
@@ -73,7 +73,7 @@ object MobHighlight : Module(
                 val name = string("name")
 
                 e0.update { add(EntityNamed(name, color)) }
-                "Added entity highlight for <red>\"$name\"<r> with color <$color>$c0<r>!".parse().modMessage()
+                "Added entity highlight for <red>\"$name\"<r> with color <$color>$c0<r>!".mod()
             }
 
             "highlight" / "add" / "typed" / string("color") / int("maxHp") / string("type") {
@@ -84,7 +84,7 @@ object MobHighlight : Module(
                 val max = int("maxHp")
 
                 e1.update { add(EntityTyped(type, color, max)) }
-                "Added entity highlight for <red>\"$t0\"<r> <gray>[Max HP=$max]<r> with color <$color>$c0<r>!".parse().modMessage()
+                "Added entity highlight for <red>\"$t0\"<r> <gray>[Max HP=$max]<r> with color <$color>$c0<r>!".mod()
             }
 
             "highlight" / "add" / "typed" / string("color") / string("type") {
@@ -94,14 +94,14 @@ object MobHighlight : Module(
                 val color = c0.removePrefix("#").toInt(16)
 
                 e1.update { add(EntityTyped(type, color)) }
-                "Added entity highlight for <red>\"$t0\"<r> with color <$color>$c0<r>!".parse().modMessage()
+                "Added entity highlight for <red>\"$t0\"<r> with color <$color>$c0<r>!".mod()
             }
 
             "highlight" / "remove" / "named" / greedyString("name") {
                 val name = string("name")
 
                 e0.update { removeIf { it.name == name } }
-                "Removed highlight for <red>\"$name\"<r>!".parse().modMessage()
+                "Removed highlight for <red>\"$name\"<r>!".mod()
             }
 
             "highlight" / "remove" / "typed" / string("type") {
@@ -109,14 +109,14 @@ object MobHighlight : Module(
                 val type = EntityType.byString(t0).orElse(null) ?: return@string
 
                 e1.update { removeIf { it.type == type } }
-                "Removed highlight for <red>\"$t0\"<r>!".parse().modMessage()
+                "Removed highlight for <red>\"$t0\"<r>!".mod()
             }
 
             "highlight" / "list" / "named" {
                 val a = ("<dark_gray>" + ("-".repeat())).parse()
 
                 a.lie()
-                "Highlight list <gray>[Named]<r>:".parse().modMessage()
+                "Highlight list <gray>[Named]<r>:".mod()
                 a.lie()
 
                 for (b in e0.value) {
@@ -130,7 +130,7 @@ object MobHighlight : Module(
                 val a = ("<dark_gray>" + ("-".repeat())).parse()
 
                 a.lie()
-                "Highlight list <gray>[Typed]<r>:".parse().modMessage()
+                "Highlight list <gray>[Typed]<r>:".mod()
                 a.lie()
 
                 for (b in e1.value) {

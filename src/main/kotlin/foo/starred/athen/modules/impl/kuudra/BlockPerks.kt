@@ -6,7 +6,6 @@ import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Itemizer.`watch$slot`
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.pressed
@@ -26,7 +25,7 @@ object BlockPerks : Module(
     private val basic = listOf("Auto Revive", "Human Cannonball", "Elle's Lava Rod", "Elle's Pickaxe")
 
     private val cancelRender = config.switch("Cancel slot render", true).custom("cancelRender")
-    private val key by config.keybind("Override key").`watch$slot`()
+    private val key by config.keybind("Override key")
 
     private val blockedExpandable by config.expandable("Blocked perks")
     private val perks0 = config.multiCheckbox("Cannoneer", cannoneer).childOf { blockedExpandable }.custom("cannoneer")
@@ -36,7 +35,7 @@ object BlockPerks : Module(
     private val perks4 = config.multiCheckbox("Basic", basic, listOf(0, 2, 3)).childOf { blockedExpandable }.custom("basic")
 
     private var blocked: Set<String> = fn()
-    private var inGui: Boolean = false
+    private var menu: Boolean = false
 
     init {
         perks0.state.onChange(::r)
@@ -46,27 +45,33 @@ object BlockPerks : Module(
         perks4.state.onChange(::r)
 
         on<GuiEvent.Open.Container> {
-            inGui = stripped == "Perk Menu"
+            menu = stripped == "Perk Menu"
         }
 
         on<GuiEvent.Close.Container> {
-            inGui = false
+            menu = false
         }
 
-        on<GuiEvent.Slots.Render.Update> {
-            if (!inGui) return@on
-            if (!key.bound || key.pressed) return@on
+        on<GuiEvent.Slots.Render.Pre> {
+            if (!menu) return@on
+            if (!key.bound) return@on
+            if (key.pressed) return@on
 
-            val name = slot.item?.hoverName?.stripped()?.substringBeforeLast(" ") ?: return@on
-            if (name in blocked) cancel()
+            val name = slot.item.hoverName.stripped().substringBeforeLast(" ").takeIf { it.isNotEmpty() } ?: return@on
+            if (name !in blocked) return@on
+
+            cancel()
         }.runWhen(cancelRender.state)
 
         on<GuiEvent.Slots.Click> {
-            if (!inGui) return@on
-            if (!key.bound || key.pressed) return@on
+            if (!menu) return@on
+            if (!key.bound) return@on
+            if (key.pressed) return@on
 
-            val name = slot?.item?.hoverName?.stripped()?.substringBeforeLast(" ") ?: return@on
-            if (name in blocked) cancel()
+            val name = slot?.item?.hoverName?.stripped()?.substringBeforeLast(" ")?.takeIf { it.isNotEmpty() } ?: return@on
+            if (name !in blocked) return@on
+
+            cancel()
         }
     }
 

@@ -5,10 +5,10 @@ package foo.starred.athen.modules.impl.general
 import com.google.gson.JsonObject
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.items.ItemAPI.`watch$tooltip`
+import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.handlers.Beacon.request
-import foo.starred.athen.handlers.Itemizer.`watch$tooltip`
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.data

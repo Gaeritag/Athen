@@ -6,10 +6,10 @@ import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
+import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Resourceful
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.Observable.Companion.and
 import foo.starred.snowbird.utils.withAlpha
@@ -45,14 +45,14 @@ object ItemRarityBackground : Module(
     private val `color$divine` by config.colorPicker("Divine color", Color(SkyBlockRarity.DIVINE.color)).childOf { colorExpandable }
     private val `color$special` by config.colorPicker("Special color", Color(SkyBlockRarity.SPECIAL.color)).childOf { colorExpandable }
 
-    private val common = Resourceful.identify("rarity/common")
-    private val uncommon = Resourceful.identify("rarity/uncommon")
-    private val rare = Resourceful.identify("rarity/rare")
-    private val epic = Resourceful.identify("rarity/epic")
-    private val leg = Resourceful.identify("rarity/legendary")
-    private val mythic = Resourceful.identify("rarity/mythic")
-    private val divine = Resourceful.identify("rarity/divine")
-    private val special = Resourceful.identify("rarity/special")
+    private val common = ResourceAPI.identify("rarity/common")
+    private val uncommon = ResourceAPI.identify("rarity/uncommon")
+    private val rare = ResourceAPI.identify("rarity/rare")
+    private val epic = ResourceAPI.identify("rarity/epic")
+    private val leg = ResourceAPI.identify("rarity/legendary")
+    private val mythic = ResourceAPI.identify("rarity/mythic")
+    private val divine = ResourceAPI.identify("rarity/divine")
+    private val special = ResourceAPI.identify("rarity/special")
 
     init {
         on<GuiEvent.Items.Render.Pre> {

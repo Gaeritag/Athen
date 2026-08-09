@@ -3,14 +3,13 @@
 import com.mojang.serialization.Codec
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.SlayerEvent
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Texter.onHover
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.command
@@ -28,19 +27,22 @@ object SlayerTimers : Module(
     "Kill and spawn timers for slayer bosses.",
     Category.SLAYER
 ) {
-    private val scribble = Scribble("features/slayerTimers")
-    private val killPBs = scribble.mutableMap("kill_pbs", Codec.STRING, Codec.DOUBLE)
-    private var questStartTime: Long = 0
+    private val `format$spawn` by config.textInput("Spawn format", "Slayer spawned in <yellow>#time<r>.")
+    private val `format$kill` by config.textInput("Kill format", "Slayer #tara killed in <#time><r>.")
+
+    private val json = JsonStore("features/slayerTimers")
+    private val killPBs = json.mutableMap("kill_pbs", Codec.STRING, Codec.DOUBLE)
+    private var questStart: Long = 0
     private var startTick: Int = 0
     private var bool: Boolean = false
 
     init {
         on<SlayerEvent.Quest.Start> {
-            questStartTime = System.currentTimeMillis()
+            questStart = System.currentTimeMillis()
         }
 
         on<SlayerEvent.Quest.End> {
-            questStartTime = 0
+            questStart = 0
         }
 
         on<SlayerEvent.Reset.Any> {
@@ -54,12 +56,12 @@ object SlayerTimers : Module(
             if (bool && a) return@on ::bool.set(false)
             if (a) bool = true
 
-            startTick = Chronos.ticks.server
+            startTick = Scheduler.ticks.server
             val spawnTime = System.currentTimeMillis()
-            if (questStartTime <= 0) return@on
+            if (questStart <= 0) return@on
 
-            val time = (spawnTime - questStartTime) / 1000.0
-            "Slayer spawned in <yellow>${time.toDuration(secondsDecimals = 1)}<r>.".parse().modMessage()
+            val time = (spawnTime - questStart) / 1000.0
+            "Slayer spawned in <yellow>${time.toDuration(secondsDecimals = 1)}<r>.".mod()
         }
 
         on<SlayerEvent.Boss.Death> {
@@ -67,7 +69,7 @@ object SlayerTimers : Module(
 
             val time = entity.tickCount / 20.0
             val str0 = time.toDuration(secondsDecimals = 1)
-            val time0 = Chronos.ticks.server - startTick
+            val time0 = Scheduler.ticks.server - startTick
             val str1 = (time0 / 20.0).toDuration(secondsDecimals = 1)
             val key = slayerInfo.string + if (entity.customName?.stripped()?.contains("Conjoined Brood") == true) "_P2" else ""
             val pb = killPBs.value[key]
@@ -93,7 +95,7 @@ object SlayerTimers : Module(
 
             val a = slayerInfo.type == SlayerBoss.Tarantula && slayerInfo.tier == SlayerTier.Five
             val p = if (a && bool) " <dark_gray>[P1]<r>" else if (a) " <dark_gray>[P2]<r>" else ""
-            "Slayer$p killed in $str<r>.".parse().onHover("<red>$time0 ticks.".parse()).modMessage()
+            "<hover:<red>$time0 ticks.>Slayer$p killed in $str<r>.".mod()
         }
 
         command {
@@ -129,6 +131,6 @@ object SlayerTimers : Module(
 
     private fun reset() {
         bool = false
-        questStartTime = 0
+        questStart = 0
     }
 }

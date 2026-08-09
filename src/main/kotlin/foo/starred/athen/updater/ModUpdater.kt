@@ -3,12 +3,13 @@
 import com.google.gson.JsonElement
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Typo.PrefixType
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.impl.Dev
+import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.mainThread
 import foo.starred.snowbird.handlers.time.client
 import moe.nea.libautoupdate.CurrentVersion
@@ -33,25 +34,43 @@ object ModUpdater {
     init {
         context.cleanup()
 
+        command {
+            "checkupdate" {
+                checkAndNotify(silent = false)
+            }
+
+            "checkupdate" / string("stream") {
+                checkAndNotify(string("stream"), false)
+            }
+
+            "update" {
+                installUpdate()
+            }
+
+            "update" / string("stream") {
+                installUpdate(string("stream"))
+            }
+        }
+
         on<LocationEvent.Server.Connect> {
-            Chronos.schedule(60.client) { checkAndNotify() }
+            Scheduler.schedule(60.client) { checkAndNotify() }
         }.once()
     }
 
-    fun checkForUpdate(stream: String = "release"): CompletableFuture<PotentialUpdate> {
+    private fun checkForUpdate(stream: String = "release"): CompletableFuture<PotentialUpdate> {
         return context.checkUpdate(stream)
     }
 
-    fun checkAndNotify(stream: String = "release", silent: Boolean = true) {
+    private fun checkAndNotify(stream: String = "release", silent: Boolean = true) {
         checkForUpdate(stream).thenAccept { update ->
-            if (!silent && !update.isUpdateAvailable) return@thenAccept "No update available!".modMessage()
+            if (!silent && !update.isUpdateAvailable) return@thenAccept "No update available!".mod()
             if (!update.isUpdateAvailable) return@thenAccept
 
             val newVersion = update.update.versionName
             if (skippedVersion == newVersion && trulySkip == newVersion) return@thenAccept
 
-            "Update available: $newVersion".modMessage()
-            "Run /${Athen.modId} update to install".modMessage()
+            "Update available: $newVersion".mod()
+            "Run /${Athen.modId} update to install".mod()
 
             if (newVersion == skippedVersion) return@thenAccept
             mainThread {
@@ -63,20 +82,20 @@ object ModUpdater {
         }
     }
 
-    fun installUpdate(stream: String = "release"): CompletableFuture<Boolean> {
+    private fun installUpdate(stream: String = "release"): CompletableFuture<Boolean> {
         return checkForUpdate(stream).thenCompose { update ->
             if (!update.isUpdateAvailable) {
-                "Already on latest version".modMessage(PrefixType.ERROR)
+                "Already on latest version".mod(MessagePrefixType.ERROR)
                 return@thenCompose CompletableFuture.completedFuture(false)
             }
 
-            "Downloading update: ${update.update.versionName}".modMessage()
+            "Downloading update: ${update.update.versionName}".mod()
             update.launchUpdate().thenApply {
-                "Update downloaded! Restart to apply.".modMessage(PrefixType.SUCCESS)
+                "Update downloaded! Restart to apply.".mod(MessagePrefixType.SUCCESS)
                 true
             }
         }.exceptionally {
-            "Update failed: ${it.message}".modMessage(PrefixType.ERROR)
+            "Update failed: ${it.message}".mod(MessagePrefixType.ERROR)
             Athen.LOGGER.error("Failed to install update: ${it.message}")
             false
         }

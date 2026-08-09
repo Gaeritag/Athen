@@ -4,11 +4,11 @@ package foo.starred.athen.modules.impl.dungeon.terminals
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.DungeonEvent
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.nvg.NVGRenderer
@@ -74,15 +74,15 @@ object TerminalClick : Module(
         on<DungeonEvent.Terminal.Close> {
             render.value = true
 
-            Chronos.schedule(100.milliseconds) {
+            Scheduler.schedule(100.milliseconds) {
                 opacity.value = 1f
             }
 
-            Chronos.schedule(3.seconds) {
+            Scheduler.schedule(3.seconds) {
                 opacity.value = 0f
             }
 
-            Chronos.schedule(4.seconds) {
+            Scheduler.schedule(4.seconds) {
                 reset()
             }
         }

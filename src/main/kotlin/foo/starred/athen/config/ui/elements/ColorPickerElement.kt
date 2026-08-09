@@ -4,8 +4,8 @@ package foo.starred.athen.config.ui.elements
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.ui.elements.base.IBaseUI
-import foo.starred.athen.handlers.Scribble
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.nvg.Gradient
 import foo.starred.athen.utils.nvg.NVGRenderer
@@ -31,7 +31,7 @@ class ColorPickerElement(
         private const val MAX_HISTORY = 4
         private const val CHANGE_THRESHOLD = 15
 
-        private val historyStorage = Scribble("config/ColorPickerHistory")
+        private val historyStorage = JsonStore("config/ColorPickerHistory")
 
         private data class ColorData(val r: Int, val g: Int, val b: Int, val a: Int) {
             fun toColor() = JavaColor(r, g, b, a)
@@ -56,9 +56,7 @@ class ColorPickerElement(
         }
 
         private fun saveHistory() {
-            @Suppress("VariableNeverRead")
             var history by historyStorage.list("history", ColorData.CODEC, emptyList())
-            @Suppress("AssignedValueIsNeverRead")
             history = globalColorHistory.map { ColorData.fromColor(it) }
         }
     }

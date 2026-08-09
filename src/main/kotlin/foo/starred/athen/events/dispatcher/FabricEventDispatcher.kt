@@ -1,83 +1,25 @@
-﻿package foo.starred.athen.handlers
+package foo.starred.athen.events.dispatcher
 
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.events.*
-import foo.starred.athen.events.core.on
-import foo.starred.athen.utils.nvg.NVGSpecialRenderer
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.mainThread
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry
 //~ if >= 26.1 'world.WorldRenderEvents' -> 'level.LevelRenderEvents'
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents
 import net.fabricmc.fabric.api.event.player.*
-import net.hypixel.modapi.HypixelModAPI
-import net.hypixel.modapi.fabric.event.HypixelModAPICallback
-import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket
 import net.minecraft.world.InteractionResult
-import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
-import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
-import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEquipmentUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
-import tech.thatgravyboat.skyblockapi.api.events.minecraft.sounds.SoundPlayedEvent
-import tech.thatgravyboat.skyblockapi.api.events.screen.ItemTooltipEvent
-import kotlin.jvm.optionals.getOrNull
 
-/**
- * Handles event conversion and posts events that are not handled by mixins.
- */
 @Priority
-object Signal {
+object FabricEventDispatcher {
     init {
-        SkyBlockAPI.eventBus.register(Signal)
-
-        HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket::class.java)
-
-        HypixelModAPICallback.EVENT.register { event ->
-            if (event is ClientboundLocationPacket) {
-                LocationEvent.Hypixel.Server(
-                    event.serverName,
-                    event.serverType.getOrNull(),
-                    event.lobbyName.getOrNull(),
-                    event.mode.getOrNull(),
-                    event.map.getOrNull(),
-                ).post()
-            }
-        }
-
-        on<PacketEvent.Receive, ClientboundSystemChatPacket> {
-            mainThread {
-                (if (this@on.overlay) MessageEvent.ActionBar(content) else MessageEvent.Chat.Receive(content)).post()
-            }
-        }
-
-        on<PacketEvent.Process.Pre, ClientboundSetTitleTextPacket> {
-            if (MessageEvent.Title.Main(text).post()) it.cancel()
-        }
-
-        on<PacketEvent.Process.Pre, ClientboundSetSubtitleTextPacket> {
-            if (MessageEvent.Title.Sub(text).post()) it.cancel()
-        }
-
-        SpecialGuiElementRegistry.register { graphics ->
-            //~ if >= 26.1 'vertexConsumers' -> 'bufferSource'
-            NVGSpecialRenderer(graphics.vertexConsumers())
-        }
-
         ClientLifecycleEvents.CLIENT_STARTED.register { _ ->
             GameEvent.Start.post()
         }
@@ -186,28 +128,5 @@ object Signal {
             if (!a && !b) return@register InteractionResult.PASS
             InteractionResult.FAIL
         }
-    }
-
-    @Subscription
-    fun onTabListChange(event: TabListChangeEvent) = TabListEvent.Change(event.old, event.new).post()
-
-    @Subscription
-    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) = ScoreboardEvent.UpdateTitle(event.old, event.new).post()
-
-    @Subscription
-    fun onScoreboardUpdate(event: ScoreboardUpdateEvent) = ScoreboardEvent.Update(event.old, event.new, event.oldComponents, event.newComponents).post()
-
-    @Subscription(receiveCancelled = true)
-    fun onEntityEquipment(event: EntityEquipmentUpdateEvent) = EntityEvent.Update.Equipment(event.entity).post()
-
-    @Subscription(receiveCancelled = true)
-    fun onEntityAttribute(event: EntityAttributesUpdateEvent) = EntityEvent.Update.Attributes(event.entity, event.changed).post()
-
-    @Subscription
-    fun onTooltipRender(event: ItemTooltipEvent) = GuiEvent.Tooltip.Render(event.item, event.tooltip).post()
-
-    @Subscription
-    fun onSoundPlay(event: SoundPlayedEvent) {
-        if (SoundPlayEvent(event.sound, event.pos, event.volume, event.pitch).post()) event.cancel()
     }
 }

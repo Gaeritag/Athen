@@ -4,8 +4,8 @@ package foo.starred.athen.api.skyblock
 
 import com.google.gson.JsonObject
 import foo.starred.athen.annotations.Priority
-import foo.starred.athen.handlers.Beacon.request
-import foo.starred.athen.handlers.Chronos
+import foo.starred.athen.api.network.http.WebAPI.request
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.utils.api
 import foo.starred.snowbird.handlers.time.Task
@@ -26,10 +26,10 @@ object PriceAPI {
     init {
         fn()
 
-        task = Chronos.repeat(ModSettings.priceFetch.value.minutes) { fn() }
+        task = Scheduler.repeat(ModSettings.priceFetch.value.minutes) { fn() }
         ModSettings.priceFetch.state.onChange {
             task?.cancel()
-            task = Chronos.repeat(it.minutes) { fn() }
+            task = Scheduler.repeat(it.minutes) { fn() }
         }
     }
 

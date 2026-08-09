@@ -36,10 +36,10 @@
 package foo.starred.athen.api.skyblock
 
 import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.ducks.entity.EntityDuck
 import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.handlers.Chronos
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.handlers.time.client
 import foo.starred.snowbird.utils.stripped
@@ -137,9 +137,9 @@ object EntityAPI {
 
         fun tick() {
             if (ent.customName != null) return attach(ent)
-            if (tries++ < 3) Chronos.schedule(1.client) { tick() }
+            if (tries++ < 3) Scheduler.schedule(1.client) { tick() }
         }
 
-        Chronos.schedule(2.client) { tick() }
+        Scheduler.schedule(2.client) { tick() }
     }
 }

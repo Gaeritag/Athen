@@ -8,11 +8,11 @@ import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraSupply
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.api.client
@@ -66,7 +66,7 @@ object FreshTools : Module(
             time = System.currentTimeMillis()
 
             if (!alert && !notify) return@on
-            if (alert && `alert$message`) `alert$message$t`.parse().modMessage()
+            if (alert && `alert$message`) `alert$message$t`.mod()
             if (alert && `alert$title`) `alert$title$t`.parse().showTitle()
             if (notify && (!`notify$checkParty` || PartyAPI.inParty)) fn0()
         }

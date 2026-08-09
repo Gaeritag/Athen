@@ -25,7 +25,6 @@ class HelpTooltip {
         )
     }
 
-    var visible = false
     var collapsed = false
 
     private var x = 0f
@@ -49,9 +48,7 @@ class HelpTooltip {
 
     fun initialize(screenWidth: Int) {
         this.screenWidth = screenWidth
-        visible = !Dev.clickUiHelperHidden
         collapsed = Dev.clickUiHelperCollapsed
-        if (!visible) return
 
         y = screenPadding
         x = if (collapsed) screenWidth - collapsedWidth - screenPadding else screenWidth - width - screenPadding
@@ -59,8 +56,6 @@ class HelpTooltip {
     }
 
     fun draw(mouseX: Float, mouseY: Float) {
-        if (!visible) return
-
         if (!collapsed && dragging) {
             x = dragDeltaX + mouseX
             y = dragDeltaY + mouseY
@@ -122,8 +117,6 @@ class HelpTooltip {
     }
 
     fun mouseClicked(mouseX: Float, mouseY: Float, button: Int): Boolean {
-        if (!visible) return false
-
         val anim = `anim$open`.value
         val currentWidth = collapsedWidth + (width - collapsedWidth) * anim
 

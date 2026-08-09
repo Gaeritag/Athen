@@ -3,9 +3,9 @@
 package foo.starred.athen.modules.impl.render.tooltip
 
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.pressed
@@ -59,7 +59,7 @@ object ScrollableTooltip : Module(
         }
 
         on<GuiEvent.Input.Mouse.Scroll> {
-            if (last != Chronos.ticks.client) return@on
+            if (last != Scheduler.ticks.client) return@on
 
             if (scale && `scale$key`.bound && `scale$key`.pressed) {
                 sc = (sc + amount * 0.1).coerceIn(0.5, 3.0)
@@ -83,7 +83,7 @@ object ScrollableTooltip : Module(
         var i = 0
         var j = if (components.size == 1) -2 else 0
 
-        last = Chronos.ticks.client
+        last = Scheduler.ticks.client
 
         for (c in components) {
             val k = c.getWidth(font)

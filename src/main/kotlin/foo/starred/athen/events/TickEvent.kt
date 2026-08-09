@@ -1,7 +1,7 @@
 ﻿package foo.starred.athen.events
 
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.core.Event
-import foo.starred.athen.handlers.Chronos
 
 sealed class TickEvent {
     sealed class Client {
@@ -9,12 +9,12 @@ sealed class TickEvent {
 
         data object End : Event() {
             val ticks: Int
-                get() = Chronos.ticks.client
+                get() = Scheduler.ticks.client
         }
     }
 
     data object Server : Event() {
         val ticks: Int
-            get() = Chronos.ticks.server
+            get() = Scheduler.ticks.server
     }
 }

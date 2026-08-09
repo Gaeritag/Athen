@@ -5,11 +5,10 @@ import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.SkyBlockIsland
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.MessageEvent
-import foo.starred.athen.handlers.Texter.onHover
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.regex
 import foo.starred.snowbird.api.lie
@@ -54,13 +53,14 @@ object KuudraBreakdown : Module(
 
                 val fresh: MutableList<String> = mutableListOf()
 
-                "<red>Run breakdown:".parse().modMessage()
+                "<red>Run breakdown:".mod()
                 for (p in set) {
                     if (p.fresh > 0) fresh.add("<red>${p.name}<white>: ${p.fresh}")
 
-                    " • <yellow>${p.name} <gray>- <red>${p.supply} <r>Supplies <gray>| <red>${p.fuel} <r>Fuels <gray>| <red>${p.deaths ?: "???"} <r>Deaths".parse().apply {
-                        if (p.stun > 0) onHover("<red>${p.stun} <r>Stuns".parse())
-                    }.lie()
+                    val a = " • <yellow>${p.name} <gray>- <red>${p.supply} <r>Supplies <gray>| <red>${p.fuel} <r>Fuels <gray>| <red>${p.deaths ?: "???"} <r>Deaths"
+                    val b = "<hover:<red>${p.stun} <r>Stuns>"
+
+                    if (p.stun > 0) "$b$a".parse().lie() else a.parse().lie()
                 }
 
                 val total = set.sumOf { it.fresh }

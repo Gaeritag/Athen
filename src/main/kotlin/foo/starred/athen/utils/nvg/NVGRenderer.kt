@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package foo.starred.athen.utils.nvg
 
-import foo.starred.athen.handlers.Resourceful
+import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.*
 import org.lwjgl.nanovg.NVGColor
@@ -64,7 +64,7 @@ object NVGRenderer {
     private var drawing: Boolean = false
     private var vg = -1L
 
-    val defaultFont = Font("Default", Resourceful.resource("inter.ttf").open())
+    val defaultFont = Font("Default", ResourceAPI.resource("inter.ttf").open())
 
     init {
         vg = nvgCreate(NVG_ANTIALIAS or NVG_STENCIL_STROKES)

@@ -4,28 +4,29 @@ package foo.starred.athen.config.ui
 
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.ConfigManager.updateConfig
 import foo.starred.athen.config.ui.elements.FeatureTooltip
 import foo.starred.athen.config.ui.elements.HelpTooltip
 import foo.starred.athen.config.ui.panels.Panel
-import foo.starred.athen.handlers.Scram
+import foo.starred.athen.hud.HUDEditor
+import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.athen.utils.command
 import foo.starred.athen.utils.nvg.NVGRenderer
 import foo.starred.athen.utils.nvg.NVGSpecialRenderer
 import foo.starred.athen.utils.render.animations.easeOutQuad
 import foo.starred.athen.utils.render.animations.timedValue
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.shift
-import foo.starred.snowbird.utils.hovered
-import foo.starred.snowbird.utils.mouseRX
-import foo.starred.snowbird.utils.mouseRY
-import foo.starred.snowbird.utils.open
+import foo.starred.snowbird.api.*
+import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.utils.*
 import net.minecraft.client.gui.GuiGraphics
 import kotlin.math.sign
 
 @Priority(-3)
-object ClickGUI : Scram("Config [Click UI - Athen]") {
+object ClickGUI : MultiVersionScreen("Config [Click UI - Athen]") {
     private val panels = mutableListOf<Panel>()
     private val `anim$open` = timedValue(0f, 300L, ::easeOutQuad)
     private lateinit var searchBar: SearchBar
@@ -34,6 +35,29 @@ object ClickGUI : Scram("Config [Click UI - Athen]") {
         private set
 
     private lateinit var helpTooltip: HelpTooltip
+
+    init {
+        command {
+            executes {
+                if (!ModSettings.commandConfig) return@executes help()
+
+                open()
+                "Opened the config! <gray>(use /athen help to view commands)".mod()
+            }
+
+            "help" {
+                help()
+            }
+
+            "config" {
+                open()
+            }
+
+            "hud" {
+                HUDEditor.open()
+            }
+        }
+    }
 
     override fun onScramInit() {
         panels.clear()
@@ -156,5 +180,34 @@ object ClickGUI : Scram("Config [Click UI - Athen]") {
     override fun onScramKeyPress(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         searchBar.keyPressed(keyCode)
         return panels.reversed().any { it.keyPressed(keyCode, scanCode) } || super.onScramKeyPress(keyCode, scanCode, modifiers)
+    }
+
+    private fun help() {
+        val divider = ("§8§m" + ("-".repeat())).literal()
+
+        divider.lie()
+        "§bAthen Commands".center().lie()
+        divider.lie()
+
+        val commands = listOf(
+            "/${Athen.modId} config" to "Open the configuration menu",
+            "/${Athen.modId} hud" to "Open the HUD editor",
+            "/${Athen.modId} simulate terminals" to "Terminal simulator",
+            "/${Athen.modId} radial help" to "Info about radial menu",
+            "/${Athen.modId} visuals help" to "Info about visual words replacement",
+            "/${Athen.modId} carry help" to "Info about slayer carry commands",
+            "/${Athen.modId} dcarry help" to "Info about dungeon carry commands",
+            "/${Athen.modId} kcarry help" to "Info about kuudra carry commands",
+            "/${Athen.modId} clear chat" to "Clear the chat history",
+            "/${Athen.modId} stats <name>" to "View stats for any player",
+            "/${Athen.modId} times slayers" to "Shows the slayer kill times",
+            "/${Athen.modId} times kuudra <tier>" to "Shows the kuudra pbs",
+            "/${Athen.modId} toggle feature <featureKey>" to "Toggles the specified feature!",
+            "/${Athen.modId} irc help" to "View all IRC commands"
+        )
+
+        for ((c, d) in commands) "  <${Mocha.Green.argb}>$c <dark_gray>- <gray>$d".parse().lie()
+
+        divider.lie()
     }
 }

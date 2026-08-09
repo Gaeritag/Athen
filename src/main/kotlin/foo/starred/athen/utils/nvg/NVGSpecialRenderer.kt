@@ -37,6 +37,8 @@ import com.mojang.blaze3d.opengl.GlStateManager
 import com.mojang.blaze3d.opengl.GlTexture
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
+import foo.starred.athen.annotations.Load
+import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer
@@ -46,9 +48,8 @@ import net.minecraft.client.renderer.MultiBufferSource
 import org.joml.Matrix3x2f
 import org.lwjgl.opengl.GL33.*
 
-class NVGSpecialRenderer(vertexConsumers: MultiBufferSource.BufferSource)
-    : PictureInPictureRenderer<NVGSpecialRenderer.NVGRenderState>(vertexConsumers) {
-
+@Load
+class NVGSpecialRenderer(vertexConsumers: MultiBufferSource.BufferSource) : PictureInPictureRenderer<NVGSpecialRenderer.NVGRenderState>(vertexConsumers) {
     private var lastState: NVGRenderState? = null
 
     override fun renderToTexture(state: NVGRenderState, poseStack: PoseStack) {
@@ -102,6 +103,13 @@ class NVGSpecialRenderer(vertexConsumers: MultiBufferSource.BufferSource)
     }
 
     companion object {
+        init {
+            SpecialGuiElementRegistry.register { graphics ->
+                //~ if >= 26.1 'vertexConsumers' -> 'bufferSource'
+                NVGSpecialRenderer(graphics.vertexConsumers())
+            }
+        }
+
         /**
          * Draw NVG content as a special GUI element.
          *

@@ -6,10 +6,10 @@ import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.LocationEvent
-import foo.starred.athen.handlers.Ticking
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.toDurationFromMillis

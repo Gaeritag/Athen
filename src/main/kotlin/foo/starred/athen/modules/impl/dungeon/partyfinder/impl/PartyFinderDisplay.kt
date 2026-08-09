@@ -9,11 +9,11 @@ import foo.starred.athen.api.profile.ProfileAPI
 import foo.starred.athen.api.profile.data.PlayerProfileStats
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
+import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Chronos
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.partyfinder.data.PartyFinderSlotData
 import foo.starred.athen.modules.impl.dungeon.partyfinder.enums.PartyFinderClassType
@@ -74,7 +74,7 @@ object PartyFinderDisplay : Module(
     private var klass: PartyFinderClassType? = null
 
     init {
-        Chronos.repeat(1.hours) {
+        Scheduler.repeat(1.hours) {
             val i0 = System.currentTimeMillis() - 1.hours.inWholeMilliseconds
             val it = cache.object2ObjectEntrySet().fastIterator()
 

@@ -5,11 +5,11 @@ package foo.starred.athen.modules.impl.render
 import com.mojang.serialization.Codec
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.messaging.enums.MessagePrefixType
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GameEvent
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Typo
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
@@ -34,8 +34,8 @@ object VisualWords : Module(
     private val nameChanger = config.switch("Name changer").custom("nameChanger")
     private val nickname = config.textInput("Nickname", "cooluser4").dependsOn { nameChanger.value }.custom("nickname")
 
-    private val scribble = Scribble("features/visualWords")
-    private var stored by scribble.map("words", Codec.STRING, ComponentSerialization.CODEC.xmap({ it.visualOrderText }, { seq -> seq.toComponent() }))
+    private val json = JsonStore("features/visualWords")
+    private var stored by json.map("words", Codec.STRING, ComponentSerialization.CODEC.xmap({ it.visualOrderText }, { seq -> seq.toComponent() }))
 
     @JvmField
     val words = object : AbstractWords() {}.also { it.skips = SKIP }
@@ -81,8 +81,8 @@ object VisualWords : Module(
                 words.build()
                 save()
 
-                "Added the word <red>\"$a\" <gray>-> ".parse().skip().append(b).modMessage()
-                if (!enabled) "Feature not enabled!".modMessage(Typo.PrefixType.ERROR)
+                "Added the word <red>\"$a\" <gray>-> ".parse().skip().append(b).mod()
+                if (!enabled) "Feature not enabled!".mod(MessagePrefixType.ERROR)
             }
 
             "visuals" / "set" / string("word") / greedyString("replacement") {
@@ -94,8 +94,8 @@ object VisualWords : Module(
                 words.build()
                 save()
 
-                "Set the word <red>\"$a\" <gray>-> ".parse().skip().append(b).modMessage()
-                if (!enabled) "Feature not enabled!".modMessage(Typo.PrefixType.ERROR)
+                "Set the word <red>\"$a\" <gray>-> ".parse().skip().append(b).mod()
+                if (!enabled) "Feature not enabled!".mod(MessagePrefixType.ERROR)
             }
 
             "visuals" / "remove" / string("word") {
@@ -105,12 +105,12 @@ object VisualWords : Module(
                 words.build()
                 save()
 
-                "Removed the word <red>\"$a\"".parse().skip().modMessage()
-                if (!enabled) "Feature not enabled!".modMessage(Typo.PrefixType.ERROR)
+                "Removed the word <red>\"$a\"".parse().skip().mod()
+                if (!enabled) "Feature not enabled!".mod(MessagePrefixType.ERROR)
             }
 
             "visuals" / "list" {
-                "Replacement words list:".modMessage()
+                "Replacement words list:".mod()
                 for ((a, b) in words.map2) " <dark_gray>• <r>$a <gray>-> ".parse().skip().append(b.toComponent()).lie()
             }
         }

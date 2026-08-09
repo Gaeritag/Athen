@@ -1,10 +1,10 @@
 ﻿package foo.starred.athen.updater
 
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.handlers.Scram
-import foo.starred.athen.handlers.Typo.modMessage
+import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
@@ -16,7 +16,7 @@ class UpdateGUI(
     private val onUpdate: () -> Unit,
     private val onSkip: () -> Unit,
     private val onRemind: () -> Unit
-) : Scram("Update GUI [Athen]") {
+) : MultiVersionScreen("Update GUI [Athen]") {
     private var booling = false
 
     override fun isPauseScreen(): Boolean {
@@ -83,14 +83,14 @@ class UpdateGUI(
                 }
 
                 onRemind()
-                "Will remind to update for version $newVersion on next launch".modMessage()
+                "Will remind to update for version $newVersion on next launch".mod()
                 client.setScreen(null)
             }
 
             fn(2) -> {
                 if (booling) {
                     onSkip()
-                    "Skipped update for version $newVersion".modMessage()
+                    "Skipped update for version $newVersion".mod()
                     client.setScreen(null)
                     return true
                 }

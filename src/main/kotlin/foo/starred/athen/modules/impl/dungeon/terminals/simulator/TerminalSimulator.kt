@@ -4,12 +4,12 @@ package foo.starred.athen.modules.impl.dungeon.terminals.simulator
 
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.config.Category
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.override
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl.*
@@ -43,7 +43,7 @@ object TerminalSimulator : Module(
         observable.onChange {
             SimulatorMenu.a()
             if (it) {
-                "Run \"/${Athen.modId} simulate terminals ping <ping>\" to change ping!".modMessage()
+                "Run \"/${Athen.modId} simulate terminals ping <ping>\" to change ping!".mod()
                 ConfigManager.updateConfig(configKey ?: return@onChange, false)
             }
         }
@@ -55,7 +55,7 @@ object TerminalSimulator : Module(
 
             "simulate" / "terminals" / "ping" / int("int") {
                 ConfigManager.updateConfig("$configKey.ping", int("int").toString())
-                "Ping set to ${ping}ms".modMessage()
+                "Ping set to ${ping}ms".mod()
             }
 
             "simulate" / "terminals" / "rubix" {

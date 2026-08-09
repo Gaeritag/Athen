@@ -1,9 +1,9 @@
 ﻿@file:Suppress("FunctionName", "Unused")
 
-package foo.starred.athen.api.websocket.base
+package foo.starred.athen.api.network.websocket.base
 
 import com.google.gson.JsonObject
-import foo.starred.athen.api.websocket.WebSocket
+import foo.starred.athen.api.network.websocket.WebSocket
 
 interface IWebSocket {
     val auth: Boolean

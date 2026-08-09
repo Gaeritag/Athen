@@ -1,6 +1,7 @@
 ﻿package foo.starred.athen.api.slayers
 
 import foo.starred.athen.annotations.Priority
+import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
@@ -12,7 +13,6 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.handlers.Typo.devMessage
 import net.minecraft.world.entity.Entity
 import java.util.*
 
@@ -32,18 +32,18 @@ object SlayerAPI {
         on<MessageEvent.Chat.Receive> {
             when {
                 startRegex.matches(stripped) -> {
-                    "SlayerAPI: Quest started!".devMessage()
+                    "SlayerAPI: Quest started!".dev()
                     SlayerEvent.Quest.Start.post()
                 }
 
                 completeRegex.matches(stripped) -> {
-                    "SlayerAPI: Quest completed!".devMessage()
+                    "SlayerAPI: Quest completed!".dev()
                     SlayerEvent.Quest.End.post()
                     slayer = null
                 }
 
                 failRegex.matches(stripped) -> {
-                    "SlayerAPI: Quest failed!".devMessage()
+                    "SlayerAPI: Quest failed!".dev()
 
                     SlayerEvent.Reset.QuestFail.post()
                     SlayerEvent.Reset.Any.post()
@@ -66,17 +66,17 @@ object SlayerAPI {
                 is SlayerBoss -> {
                     if (slayerInfo.owned) slayer = slayerInfo
                     SlayerEvent.Boss.Spawn(entity, slayerInfo).post()
-                    "SlayerAPI: Slayer spawned (owner=${slayerInfo.owner}, tier=${slayerInfo.tier}, tickAge=${entity.tickCount / 20.0}s)".devMessage()
+                    "SlayerAPI: Slayer spawned (owner=${slayerInfo.owner}, tier=${slayerInfo.tier}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
 
                 is SlayerMini -> {
                     SlayerEvent.Miniboss.Spawn(entity, slayerInfo).post()
-                    "SlayerAPI: Miniboss spawned (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".devMessage()
+                    "SlayerAPI: Miniboss spawned (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
 
                 is SlayerDemon -> {
                     SlayerEvent.Demon.Spawn(entity, slayerInfo).post()
-                    "SlayerAPI: Demon spawned (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".devMessage()
+                    "SlayerAPI: Demon spawned (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
             }
         }
@@ -89,23 +89,23 @@ object SlayerAPI {
                 is SlayerBoss -> {
                     if (slayerInfo.owned) slayer = null
                     SlayerEvent.Boss.Death(entity, slayerInfo).post()
-                    "SlayerAPI: Slayer killed (owner=${slayerInfo.owner}, tier=${slayerInfo.tier}, tickAge=${entity.tickCount / 20.0}s)".devMessage()
+                    "SlayerAPI: Slayer killed (owner=${slayerInfo.owner}, tier=${slayerInfo.tier}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
 
                 is SlayerMini -> {
                     SlayerEvent.Miniboss.Death(entity, slayerInfo).post()
-                    "SlayerAPI: Miniboss killed (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".devMessage()
+                    "SlayerAPI: Miniboss killed (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
 
                 is SlayerDemon -> {
                     SlayerEvent.Demon.Death(entity, slayerInfo).post()
-                    "SlayerAPI: Demon killed (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".devMessage()
+                    "SlayerAPI: Demon killed (owner=${slayerInfo.owner}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
             }
         }
 
         on<LocationEvent.Server.Connect> {
-            "SlayerAPI: Cleaning up.".devMessage()
+            "SlayerAPI: Cleaning up.".dev()
 
             SlayerEvent.Reset.ServerChange.post()
             SlayerEvent.Reset.Any.post()

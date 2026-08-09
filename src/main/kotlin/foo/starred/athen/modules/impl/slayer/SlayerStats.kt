@@ -5,15 +5,14 @@ package foo.starred.athen.modules.impl.slayer
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
-import foo.starred.athen.handlers.Notifier.notify
-import foo.starred.athen.handlers.Ticking
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.command
@@ -117,9 +116,9 @@ object SlayerStats : Module(
                 "<hover:<${Mocha.Red.argb}>This WILL clear all your stats!><${Mocha.Lavender.argb}>Detected a different slayer, click to reset stats.".parse()
                     .onClick {
                         reset()
-                        "Slayer stats were reset!".notify()
+                        "Slayer stats were reset!".mod()
                     }
-                    .modMessage()
+                    .mod()
             }
         }
 
@@ -134,7 +133,7 @@ object SlayerStats : Module(
         command {
             "reset" / "slayerStats" {
                 reset()
-                "Slayer stats were reset!".notify()
+                "Slayer stats were reset!".mod()
             }
         }
     }

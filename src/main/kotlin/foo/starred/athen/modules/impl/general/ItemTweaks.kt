@@ -4,11 +4,11 @@ package foo.starred.athen.modules.impl.general
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.items.ItemAPI.`watch$tooltip`
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Itemizer.`watch$tooltip`
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
@@ -61,13 +61,11 @@ object ItemTweaks : Module(
     private val `showItemHex$keybind` by config.keybind("Keybind").`watch$tooltip`().dependsOn { showItemHex.value }.childOf { tooltipExpandable }
 
     init {
-        on<GuiEvent.Slots.Render.Update> {
+        on<GuiEvent.Slots.Render.Post> {
             if (slot.item.item != Items.CAKE) return@on
 
             cakeRegex.findOrNull(slot.item.displayName.stripped(), "year") {
-                renders.add { graphics, slot ->
-                    graphics.extractText("§b${it.component1()}", slot.x, slot.y + 8)
-                }
+                graphics.extractText("§b${it.component1()}", slot.x, slot.y + 8)
             }
         }.runWhen(cakeNumbers.state)
 

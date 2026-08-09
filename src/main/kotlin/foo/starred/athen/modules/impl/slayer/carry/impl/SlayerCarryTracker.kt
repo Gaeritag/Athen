@@ -5,20 +5,19 @@ package foo.starred.athen.modules.impl.slayer.carry.impl
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBox
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
+import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.carry
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.runWhen
-import foo.starred.athen.handlers.Beacon.request
-import foo.starred.athen.handlers.Chronos
-import foo.starred.athen.handlers.Scribble
-import foo.starred.athen.handlers.Texter.onHover
-import foo.starred.athen.handlers.Ticking
-import foo.starred.athen.handlers.Typo.modMessage
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryHistory
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer
@@ -80,9 +79,9 @@ object SlayerCarryTracker : Module(
     private val coinsReceivedRegex = Regex("^ \\+ (?<amount>\\d+\\.?\\d*)M coins$")
     private val deathRegex = Regex("^ ☠ (?<player>\\w+) was killed by (?<killer>.+)\\.$")
 
-    private val scribble = Scribble("features/slayerCarryTracker")
-    val tracked = scribble.mutableList("tracked", SlayerCarryPlayer.CODEC)
-    private val history = scribble.mutableList("history", SlayerCarryHistory.CODEC)
+    private val json = JsonStore("features/slayerCarryTracker")
+    val tracked = json.mutableList("tracked", SlayerCarryPlayer.CODEC)
+    private val history = json.mutableList("history", SlayerCarryHistory.CODEC)
 
     private val ex0 = listOf("§f§lSlayer Carries:", "§7> §bExample §8[§7Void T4§8]§f: §b3§f/§b10 §7(12.5s | 28/hr)").fcs
     private val display = Ticking(5) {
@@ -109,19 +108,19 @@ object SlayerCarryTracker : Module(
                 val slayerType = string("slayerType").lowercase()
                 val t0 = string("tier")
 
-                if (tracked.value.any { it.name.equals(name, true) }) return@word "<red>$name is already being tracked.".parse().modMessage()
+                if (tracked.value.any { it.name.equals(name, true) }) return@word "<red>$name is already being tracked.".mod()
 
-                val type = SlayerBoss.entries.find { it.short.lowercase() == slayerType } ?: return@word "Invalid slayer type.".modMessage()
-                val i0 = if (t0.equals("any", true)) null else t0.toIntOrNull() ?: return@word "Invalid tier.".modMessage()
+                val type = SlayerBoss.entries.find { it.short.lowercase() == slayerType } ?: return@word "Invalid slayer type.".mod()
+                val i0 = if (t0.equals("any", true)) null else t0.toIntOrNull() ?: return@word "Invalid tier.".mod()
 
                 if (i0 != null) {
                     val i1 = type.max.int
-                    if (i0 !in 1..i1) return@word "<red>Tier must be 1-$i1 or any for $type.".parse().modMessage()
+                    if (i0 !in 1..i1) return@word "<red>Tier must be 1-$i1 or any for $type.".mod()
                 }
 
                 val tier = SlayerTier.entries.find { it.int == i0 }
                 tracked.update { add(SlayerCarryPlayer(name, type, tier, amount)) }
-                "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] x$amount!".parse().modMessage()
+                "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] x$amount!".mod()
             }.suggests { listOf("any", "1", "2", "3", "4", "5") }
 
             "carry" / "remove" / word("player") {
@@ -129,19 +128,19 @@ object SlayerCarryTracker : Module(
                 val bool = tracked.value.any { it.name.equals(name, true) }
 
                 if (!bool) {
-                    return@word "<red>$name is not being tracked.".parse().modMessage()
+                    return@word "<red>$name is not being tracked.".mod()
                 }
 
                 tracked.update { removeIf { it.name.equals(name, true) } }
-                "<green>Removed <aqua>$name <green>from tracking.".parse().modMessage()
+                "<green>Removed <aqua>$name <green>from tracking.".mod()
             }.suggests { tracked.value.map { it.name } }
 
             "carry" / "list" {
                 if (tracked.value.isEmpty()) {
-                    return@invoke "<red>No active carries.".parse().modMessage()
+                    return@invoke "<red>No active carries.".mod()
                 }
 
-                "Currently tracking:".modMessage()
+                "Currently tracking:".mod()
                 for (k in tracked.value) {
                     " <dark_gray>- <aqua>${k.name} <gray>[${k.type.short}${k.tier?.let { " T${it.int}" } ?: " Any"}] <yellow>${k.done}/${k.max}".parse().lie()
                 }
@@ -149,12 +148,12 @@ object SlayerCarryTracker : Module(
 
             "carry" / "list" / "clear" {
                 tracked.update { clear() }
-                "<green>Cleared all tracked carries.".parse().modMessage()
+                "<green>Cleared all tracked carries.".mod()
             }
 
             "carry" / "history" {
                 if (history.value.isEmpty()) {
-                    return@invoke "<red>No carry history.".parse().modMessage()
+                    return@invoke "<red>No carry history.".mod()
                 }
 
                 val e0 = history.value.asReversed()
@@ -164,7 +163,7 @@ object SlayerCarryTracker : Module(
                 val green = Mocha.Green.argb
 
                 c.lie()
-                "Carry History <gray>(1/$i0)<r>:".parse().modMessage()
+                "Carry History <gray>(1/$i0)<r>:".mod()
 
                 val e1 = e0.take(10)
                 for (e in e1) {
@@ -180,7 +179,7 @@ object SlayerCarryTracker : Module(
                 }
 
                 c.lie()
-                " <dark_gray>• <r>Total carries: <$green>${e0.sumOf { it.amount }} <gray>across <$green>${e0.size} <gray>entries.".parse().onHover(hover.parse(true)).lie()
+                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${e0.sumOf { it.amount }} <gray>across <$green>${e0.size} <gray>entries.".parse(true).lie()
                 c.lie()
             }
 
@@ -193,14 +192,14 @@ object SlayerCarryTracker : Module(
 
                 val page0 = maxOf(1, (list.size + 9) / 10)
                 if (page > page0) {
-                    return@int "<red>Page must be 1-$page0.".parse().modMessage()
+                    return@int "<red>Page must be 1-$page0.".mod()
                 }
 
                 val start = (page - 1) * 10
                 val end = minOf(start + 10, list.size)
 
                 c.lie()
-                "Carry History <gray>($page/$page0)<r>:".parse().modMessage()
+                "Carry History <gray>($page/$page0)<r>:".mod()
 
                 for (i in start until end) {
                     val e = list[i]
@@ -217,7 +216,7 @@ object SlayerCarryTracker : Module(
                 }
 
                 c.lie()
-                " <dark_gray>• <r>Total carries: <$green>${list.sumOf { it.amount }} <gray>across <$green>${list.size} <gray>entries.".parse().onHover(hover.parse(true)).lie()
+                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${list.sumOf { it.amount }} <gray>across <$green>${list.size} <gray>entries.".parse(true).lie()
                 c.lie()
             }.suggests { listOf("1", "2", "3", "4", "5") }
 
@@ -258,11 +257,11 @@ object SlayerCarryTracker : Module(
 
                 if (list.isEmpty()) return@findThenNull
 
-                Chronos.schedule(1.client) {
+                Scheduler.schedule(1.client) {
                     if (list.size == 1) {
                         val (boss, tier, count) = list[0]
 
-                        "<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$last<r>. Click to add!".parse().modMessage()
+                        "<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$last<r>. Click to add!".mod()
                         return@schedule
                     }
 
@@ -278,7 +277,7 @@ object SlayerCarryTracker : Module(
                         root.append("<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}><aqua>[${count}x ${boss.short} T${tier.int}]".parse())
                     }
 
-                    root.modMessage()
+                    root.mod()
                 }
             } ?: return@on
 
@@ -302,7 +301,7 @@ object SlayerCarryTracker : Module(
             entity.carry = carry
 
             if (!`announce$spawn`) return@on
-            "Boss spawned for <aqua>$owner <gray>[${type.short}${if (carry.tier == null) " Any" else " T${slayerInfo.tier?.int}"}]".parse().modMessage()
+            "Boss spawned for <aqua>$owner <gray>[${type.short}${if (carry.tier == null) " Any" else " T${slayerInfo.tier?.int}"}]".mod()
         }
 
         on<SlayerEvent.Boss.Death> {
@@ -318,7 +317,7 @@ object SlayerCarryTracker : Module(
             val result = carry.die(entity) ?: return@on
             tracked.update {} // no-op, intended.
 
-            "Killed boss for <aqua>$name<r> in <yellow>${result.time.toDuration(secondsDecimals = 1)} <gray>| <yellow>${(result.ticks / 20.0).toDuration(secondsDecimals = 1)}".parse().onHover("<red>${result.ticks} ticks.".parse()).modMessage()
+            "<hover:<red>${result.ticks} ticks>Killed boss for <aqua>$name<r> in <yellow>${result.time.toDuration(secondsDecimals = 1)} <gray>| <yellow>${(result.ticks / 20.0).toDuration(secondsDecimals = 1)}".mod()
 
             if (`announce$comp$party`) {
                 "pc $name: ${result.done}/${result.max}".command(false)
@@ -332,7 +331,7 @@ object SlayerCarryTracker : Module(
 
             if (result.last) {
                 val time = result.time0.toDuration()
-                "<${Mocha.Green.argb}>Completed bosses for <aqua>$name <gray>[${type.short}${if (carry.tier == null) " Any" else " T${slayerInfo.tier?.int}"}]<r> in <yellow>$time".parse().modMessage()
+                "<${Mocha.Green.argb}>Completed bosses for <aqua>$name <gray>[${type.short}${if (carry.tier == null) " Any" else " T${slayerInfo.tier?.int}"}]<r> in <yellow>$time".mod()
 
                 if (webhook) {
                     `webhook$url`.request(Request.POST) {

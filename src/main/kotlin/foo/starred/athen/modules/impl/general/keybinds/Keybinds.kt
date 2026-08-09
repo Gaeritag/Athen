@@ -1,9 +1,9 @@
 ﻿package foo.starred.athen.modules.impl.general.keybinds
 
 import foo.starred.athen.annotations.Load
+import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.InputEvent
-import foo.starred.athen.handlers.Scribble
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.general.keybinds.data.CategoryEntry
 import foo.starred.athen.modules.impl.general.keybinds.data.KeybindCondition
@@ -27,7 +27,7 @@ object Keybinds : Module(
     @Suppress("unused")
     private val _unused by config.button("Open manager") { client.setScreen(KeybindsGUI) }
 
-    val storage = Scribble("features/Keybinds")
+    val storage = JsonStore("features/Keybinds")
     var bindings = storage.mutableList("bindings", KeybindEntry.CODEC)
     var categories = storage.mutableList("categories", CategoryEntry.CODEC)
 
