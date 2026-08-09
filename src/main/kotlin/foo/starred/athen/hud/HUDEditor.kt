@@ -71,7 +71,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
             graphics.pose().scale(e.scale, e.scale)
 
             graphics.fill(-4, -4, e.width + 4, e.height + 4, Mocha.Base.withAlpha(0.5f))
-            graphics.outline(-4, -4, e.width + 8, e.height + 8, Mocha.Text.argb)
+            graphics.outline(-4, -4, e.width + 8, e.height + 8, 1, Mocha.Text.argb)
 
             graphics.pose().pushMatrix()
             e.render(graphics, true)
@@ -89,7 +89,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
             graphics.pose().translate(mx + 12, my - textHeight / 2)
 
             graphics.fill(-6, -6, textWidth + 6, textHeight + 6, Mocha.Base.withAlpha(0.8f))
-            graphics.outline(-6, -6, textWidth + 12, textHeight + 12, Mocha.Text.argb)
+            graphics.outline(-6, -6, textWidth + 12, textHeight + 12, 1, Mocha.Text.argb)
             graphics.extractText(text, 0, 0, false, Mocha.Text.argb)
             graphics.pose().popMatrix()
         }
@@ -247,7 +247,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
             pose().translate(x, y)
 
             fill(-4, -4, w + 4, h + 4, Mocha.Base.withAlpha(0.6f))
-            outline(-4, -4, w + 8, h + 8, Mocha.Mauve.argb)
+            outline(-4, -4, w + 8, h + 8, 1, Mocha.Mauve.argb)
 
             var yOff = 0
             for (entry in lines) {
