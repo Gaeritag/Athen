@@ -169,6 +169,10 @@ object DungeonAPI {
             }
 
             when {
+                stripped == "The BLOOD DOOR has been opened!" -> {
+                    bloodOpened.value = true
+                }
+
                 stripped == "[BOSS] The Watcher: That will be enough for now." -> {
                     bloodSpawnedAll.value = true
                 }
