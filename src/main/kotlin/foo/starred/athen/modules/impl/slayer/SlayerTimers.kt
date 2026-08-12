@@ -27,9 +27,6 @@ object SlayerTimers : Module(
     "Kill and spawn timers for slayer bosses.",
     Category.SLAYER
 ) {
-    private val `format$spawn` by config.textInput("Spawn format", "Slayer spawned in <yellow>#time<r>.")
-    private val `format$kill` by config.textInput("Kill format", "Slayer #tara killed in <#time><r>.")
-
     private val json = JsonStore("features/slayerTimers")
     private val killPBs = json.mutableMap("kill_pbs", Codec.STRING, Codec.DOUBLE)
     private var questStart: Long = 0
