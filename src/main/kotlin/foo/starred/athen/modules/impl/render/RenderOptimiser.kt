@@ -84,5 +84,6 @@ object RenderOptimiser :  Module(
         chestEquipment = ItemStack.EMPTY
         legsEquipment = ItemStack.EMPTY
         feetEquipment = ItemStack.EMPTY
+        wornHeadType = null
     }
 }
