@@ -28,31 +28,32 @@ object WardrobeKeybinds : Module(
 ) {
     private val preventUnequip by config.switch("Prevent unequip")
     private val cancelAll by config.switch("Cancel all other clicks")
-    private val override by config.keybind("Key override", GLFW.GLFW_KEY_LEFT_CONTROL).dependsOn { cancelAll }
-    private val cancelRender = config.switch("Cancel gui render").custom("cancelRender")
+    private val override by config.keybind("Key override", GLFW.GLFW_KEY_LEFT_CONTROL)
+    private val cancelRender = config.switch("Cancel gui render").unique("cancelRender")
     private val ping by config.slider("Ping", 250, 10, 1000, "ms")
-    private val _unused by config.textParagraph("Ping is used to estimate internal calculations.")
+    private val _unused by config.information("Ping is used to estimate internal calculations.")
 
-    private val keybindExpandable by config.expandable("Keybinds")
-    private val useHotbar by config.switch("Use hotbar binds", true).childOf { keybindExpandable }
+    private val keybinds by config.group("General keybinds")
+    private val useHotbar by keybinds.switch("Use hotbar binds", true)
+    private val prevPage by keybinds.keybind("Previous page")
+    private val nextPage by keybinds.keybind("Next page")
 
-    private val swapKey by config.switch("Swap key").childOf { keybindExpandable }
-    private val swapKeybind by config.keybind("Swap keybind").dependsOn { swapKey }.childOf { keybindExpandable }
-    private val swapKey1 by config.dropdown("Swap slot 1", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9")).dependsOn { swapKey }.childOf { keybindExpandable }
-    private val swapKey2 by config.dropdown("Swap slot 2", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9")).dependsOn { swapKey }.childOf { keybindExpandable }
+    private val swaps by config.group("Swap keybinds")
+    private val swapKey by swaps.switch("Swap key")
+    private val swapKeybind by swaps.keybind("Swap keybind")
+    private val swapKey1 by swaps.selector("Swap slot 1", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9"))
+    private val swapKey2 by swaps.selector("Swap slot 2", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9"))
 
-    private val prevPage by config.keybind("Previous page").childOf { keybindExpandable }
-    private val nextPage by config.keybind("Next page").childOf { keybindExpandable }
-
-    private val key0 by config.keybind("Slot 1", GLFW.GLFW_KEY_1).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key1 by config.keybind("Slot 2", GLFW.GLFW_KEY_2).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key2 by config.keybind("Slot 3", GLFW.GLFW_KEY_3).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key3 by config.keybind("Slot 4", GLFW.GLFW_KEY_4).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key4 by config.keybind("Slot 5", GLFW.GLFW_KEY_5).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key5 by config.keybind("Slot 6", GLFW.GLFW_KEY_6).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key6 by config.keybind("Slot 7", GLFW.GLFW_KEY_7).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key7 by config.keybind("Slot 8", GLFW.GLFW_KEY_8).dependsOn { !useHotbar }.childOf { keybindExpandable }
-    private val key8 by config.keybind("Slot 9", GLFW.GLFW_KEY_9).dependsOn { !useHotbar }.childOf { keybindExpandable }
+    private val slots by config.group("Slot keybinds")
+    private val key0 by slots.keybind("Slot 1", GLFW.GLFW_KEY_1)
+    private val key1 by slots.keybind("Slot 2", GLFW.GLFW_KEY_2)
+    private val key2 by slots.keybind("Slot 3", GLFW.GLFW_KEY_3)
+    private val key3 by slots.keybind("Slot 4", GLFW.GLFW_KEY_4)
+    private val key4 by slots.keybind("Slot 5", GLFW.GLFW_KEY_5)
+    private val key5 by slots.keybind("Slot 6", GLFW.GLFW_KEY_6)
+    private val key6 by slots.keybind("Slot 7", GLFW.GLFW_KEY_7)
+    private val key7 by slots.keybind("Slot 8", GLFW.GLFW_KEY_8)
+    private val key8 by slots.keybind("Slot 9", GLFW.GLFW_KEY_9)
 
     private var menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Armor Sets$")
     private var currentPage: Int = 0

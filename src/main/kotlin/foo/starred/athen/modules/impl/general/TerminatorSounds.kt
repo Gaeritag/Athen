@@ -21,12 +21,10 @@ object TerminatorSounds : Module(
     Category.GENERAL
 ) {
     private val wall by config.switch("Wall hit sound", true)
-    private val customSound by config.sound("Sound", "block.note_block.bit")
+    private val sound0 by config.sound("Sound")
 
     init {
         on<SoundPlayEvent> {
-            val r = customSound.soundEvent ?: return@on
-
             if (sound == SoundEvents.ARROW_SHOOT) return@on cancel()
             if (sound == SoundEvents.ARROW_HIT && !wall) return@on cancel()
             if (sound != SoundEvents.ARROW_HIT && sound != SoundEvents.ARROW_HIT_PLAYER) return@on
@@ -36,7 +34,7 @@ object TerminatorSounds : Module(
             if (i.getData(DataTypes.SKYBLOCK_ID)?.skyblockId != "TERMINATOR") return@on
 
             cancel()
-            customSound.play()
+            sound0.play()
         }
     }
 }

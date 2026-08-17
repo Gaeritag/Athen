@@ -52,28 +52,28 @@ object SlayerCarryTracker : Module(
     @Suppress("unused")
     private val _manager by config.button("Open manager") { client.setScreen(SlayerCarryGUI) }
 
-    private val _webhook by config.expandable("Discord webhook")
-    private val webhook by config.switch("Send to webhook").childOf { _webhook }
-    private val `webhook$each` by config.switch("Send on each kill", true).childOf { _webhook }
-    private val `webhook$url` by config.textInput("Webhook URL").childOf { _webhook }
-    private val `webhook$url$desc` by config.textParagraph("Requires you to add your own webhook URL!").childOf { _webhook }
+    private val _webhook by config.group("Discord webhook")
+    private val webhook by _webhook.switch("Send to webhook")
+    private val `webhook$each` by _webhook.switch("Send on each kill", true)
+    private val `webhook$url` by _webhook.input("Webhook URL")
+    private val `webhook$url$desc` by _webhook.information("Requires you to add your own webhook URL!")
 
-    private val _void by config.expandable("Voidgloom Prices")
-    private val `price$void$3` by config.textInput("T3 Price (M)", "0.8, 0.65").childOf { _void }
-    private val `price$void$4` by config.textInput("T4 Price (M)", "1.3, 2.3, 2, 1.5").childOf { _void }
+    private val _void by config.group("Voidgloom Prices")
+    private val `price$void$3` by _void.input("T3 Price (M)", "0.8, 0.65")
+    private val `price$void$4` by _void.input("T4 Price (M)", "1.3, 2.3, 2, 1.5")
 
-    private val _blaze by config.expandable("Inferno Prices")
-    private val `price$blaze$2` by config.textInput("T2 Price (M)", "2, 1.7, 1.2").childOf { _blaze }
-    private val `price$blaze$3` by config.textInput("T3 Price (M)", "3.5, 3, 2.5").childOf { _blaze }
-    private val `price$blaze$4` by config.textInput("T4 Price (M)", "7, 6, 5").childOf { _blaze }
+    private val _blaze by config.group("Inferno Prices")
+    private val `price$blaze$2` by _blaze.input("T2 Price (M)", "2, 1.7, 1.2")
+    private val `price$blaze$3` by _blaze.input("T3 Price (M)", "3.5, 3, 2.5")
+    private val `price$blaze$4` by _blaze.input("T4 Price (M)", "7, 6, 5")
 
-    private val _highlights by config.expandable("Highlights")
-    private val `highlight$boss` = config.switch("Highlight boss", true).childOf { _highlights }.custom("highlightBoss")
-    private val `highlight$boss$color` by config.colorPicker("Boss color", Color(255, 0, 0, 150)).dependsOn { `highlight$boss`.value }.childOf { _highlights }
-    private val `highlight$boss$width` by config.slider("Boss line width", 2f, 0f, 10f).dependsOn { `highlight$boss`.value }.childOf { _highlights }
-    private val `highlight$player` = config.switch("Highlight player", true).childOf { _highlights }.custom("highlightPlayer")
-    private val `highlight$player$color` by config.colorPicker("Player color", Color(0, 255, 255, 150)).dependsOn { `highlight$player`.value }.childOf { _highlights }
-    private val `highlight$player$width` by config.slider("Player line width", 2f, 0f, 10f).dependsOn { `highlight$player`.value }.childOf { _highlights }
+    private val _highlights by config.group("Highlights")
+    private val `highlight$boss` = _highlights.switch("Highlight boss", true).unique("highlightBoss")
+    private val `highlight$boss$color` by _highlights.colorPicker("Boss color", Color(255, 0, 0, 150))
+    private val `highlight$boss$width` by _highlights.slider("Boss line width", 2f, 0f, 10f)
+    private val `highlight$player` = _highlights.switch("Highlight player", true).unique("highlightPlayer")
+    private val `highlight$player$color` by _highlights.colorPicker("Player color", Color(0, 255, 255, 150))
+    private val `highlight$player$width` by _highlights.slider("Player line width", 2f, 0f, 10f)
 
     private val tradeCompleteRegex = Regex("^Trade completed with (?:\\[.*?] )?(?<player>\\w+)!$")
     private val coinsReceivedRegex = Regex("^ \\+ (?<amount>\\d+\\.?\\d*)M coins$")

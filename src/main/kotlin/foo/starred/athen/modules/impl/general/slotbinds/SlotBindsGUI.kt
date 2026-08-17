@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.general.slotbinds
 
@@ -384,7 +384,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
 
             val label = text {
                 text = name.literal()
-                color = if (b0) Mocha.Mauve.argb else Mocha.Subtext0.argb
+                color = if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
                 attach(row)
             }

@@ -36,19 +36,19 @@ object SlayerDropsData : Module(
     Category.SLAYER
 ) {
     private val last by config.switch("Show chance on boss kill", true)
-    private val _unused by config.textParagraph("This uses the last magic find from a boss drop to calculate the chances!")
+    private val _unused by config.information("This uses the last magic find from a boss drop to calculate the chances!")
 
     private val sinceLast by config.switch("Bosses since last drop", true)
-    private val types by config.multiCheckbox("Stored types", SlayerDropGrade.entries.map { a -> a.name.lowercase().replaceFirstChar { it.uppercase() } }).dependsOn { sinceLast }
+    private val types by config.multiSelector("Stored types", SlayerDropGrade.entries.map { a -> a.name.lowercase().replaceFirstChar { it.uppercase() } })
 
-    private val _filter by config.expandable("Filter")
-    private val auto = config.switch("Detect automatically").childOf { _filter }.custom("auto")
-    private val _unused0 by config.textParagraph("You will need to change your selected RNG Meter item for it to be automatically detected.").dependsOn { auto.value }
-    private val rev by config.dropdown("Revenant", RevenantDrops.entries.map { it.display }).childOf { _filter }
-    private val tara by config.dropdown("Tarantula", TarantulaDrops.entries.map { it.display }).childOf { _filter }
-    private val sven by config.dropdown("Sven", SvenDrops.entries.map { it.display }).childOf { _filter }
-    private val void by config.dropdown("Voidgloom", VoidgloomDrops.entries.map { it.display }).childOf { _filter }
-    private val blaze by config.dropdown("Blaze", InfernoDrops.entries.map { it.display }).childOf { _filter }
+    private val _filter by config.group("Filter")
+    private val auto = _filter.switch("Detect automatically").unique("auto")
+    private val _unused0 by _filter.information("You will need to change your selected RNG Meter item for it to be automatically detected.")
+    private val rev by _filter.selector("Revenant", RevenantDrops.entries.map { it.display })
+    private val tara by _filter.selector("Tarantula", TarantulaDrops.entries.map { it.display })
+    private val sven by _filter.selector("Sven", SvenDrops.entries.map { it.display })
+    private val void by _filter.selector("Voidgloom", VoidgloomDrops.entries.map { it.display })
+    private val blaze by _filter.selector("Blaze", InfernoDrops.entries.map { it.display })
 
     private val json = JsonStore("features/slayerDropsData")
     private val map = json.mutableMap("map", Codec.STRING, Codec.INT)
@@ -86,7 +86,7 @@ object SlayerDropsData : Module(
             val a0 = a.boss ?: return@on
             val b0 = b.lowercase()
 
-            ConfigManager.updateConfig(a0, (ISlayerDrop.Companion.Names.LOOKUP0[b0] as? Enum<*>)?.ordinal ?: return@on)
+            ConfigManager.update(a0, (ISlayerDrop.Companion.Names.LOOKUP0[b0] as? Enum<*>)?.ordinal ?: return@on)
             "Changed selected drop for <red>$a <r>to <red>$b<r>!".mod()
         }.runWhen(auto.state)
 

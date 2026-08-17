@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.dungeon.terminals
 
@@ -11,15 +11,13 @@ import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
-import foo.starred.athen.utils.nvg.NVGRenderer
-import foo.starred.athen.utils.nvg.NVGSpecialRenderer
-import foo.starred.athen.utils.render.animations.springValue
-import foo.starred.snowbird.api.client
+import foo.starred.cascade.extensions.circle.circle
+import foo.starred.cascade.extensions.line.line
 import foo.starred.snowbird.handlers.Observable
-import foo.starred.snowbird.utils.mouseRX
-import foo.starred.snowbird.utils.mouseRY
+import foo.starred.snowbird.utils.mouseSX
+import foo.starred.snowbird.utils.mouseSY
+import org.joml.Matrix3x2f
 import java.awt.Color
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Load
@@ -31,56 +29,40 @@ object TerminalClick : Module(
     private data class Click(val x: Float, val y: Float, val button: Int)
     private val clicks = mutableListOf<Click>()
     private var render = Observable(true)
-    private var opacity = springValue(0f, 0.15f)
 
     private val radius by config.slider("Radius", 4, 1, 10)
     private val thickness by config.slider("Thickness", 2, 1, 10)
-    private val `color$mouse$left` by config.colorPicker("Left mouse color", Color(Catppuccin.Mocha.Mauve.argb, true))
+    private val `color$mouse$left` by config.colorPicker("Left mouse color", Color(Catppuccin.Mocha.Lavender.argb, true))
     private val `color$mouse$right` by config.colorPicker("Right mouse color", Color(Catppuccin.Mocha.Peach.argb, true))
 
     init {
         on<GuiEvent.Input.Mouse.Press> {
-            clicks.add(Click(mouseRX, mouseRY, keyEvent.button()))
+            clicks.add(Click(mouseSX, mouseSY, keyEvent.button()))
         }.runWhen(TerminalAPI.opened)
 
         on<GuiEvent.Render.Post> {
             val cs = clicks.toList()
             if (cs.isEmpty()) return@on
 
-            val alpha = opacity.value
-            if (alpha == 0f) return@on
+            val pose = Matrix3x2f(graphics.pose())
+            val scissor = graphics.scissorStack.peek()
 
-            NVGSpecialRenderer.draw(graphics, 0, 0, client.window.width, client.window.height) {
-                NVGRenderer.push()
-                NVGRenderer.globalAlpha(alpha)
+            for (i in 0 until cs.size - 1) {
+                val c1 = cs[i]
+                val c2 = cs[i + 1]
+                val color = (if (c1.button == 0) `color$mouse$left`.rgb else `color$mouse$right`.rgb)
 
-                for (i in 0 until cs.size - 1) {
-                    val c1 = cs[i]
-                    val c2 = cs[i + 1]
-                    val color = if (c1.button == 0) `color$mouse$left`.rgb else `color$mouse$right`.rgb
+                graphics.line(c1.x, c1.y, c2.x, c2.y, color, thickness.toFloat(), pose, scissor)
+            }
 
-                    NVGRenderer.drawLine(c1.x, c1.y, c2.x, c2.y, thickness.toFloat(), color)
-                }
-
-                for (c in cs) {
-                    val color = if (c.button == 0) `color$mouse$left`.rgb else `color$mouse$right`.rgb
-                    NVGRenderer.drawCircle(c.x, c.y, radius.toFloat(), color)
-                }
-
-                NVGRenderer.pop()
+            for (c in cs) {
+                val color = (if (c.button == 0) `color$mouse$left`.rgb else `color$mouse$right`.rgb)
+                graphics.circle(c.x, c.y, radius.toFloat(), color, pose, scissor)
             }
         }.runWhen(render)
 
         on<DungeonEvent.Terminal.Close> {
             render.value = true
-
-            Scheduler.schedule(100.milliseconds) {
-                opacity.value = 1f
-            }
-
-            Scheduler.schedule(3.seconds) {
-                opacity.value = 0f
-            }
 
             Scheduler.schedule(4.seconds) {
                 reset()
@@ -89,7 +71,6 @@ object TerminalClick : Module(
 
         on<DungeonEvent.Terminal.Open> {
             reset()
-            opacity.value = 0f
         }
     }
 

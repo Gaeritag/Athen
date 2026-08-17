@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+﻿@file:Suppress("ObjectPrivatePropertyName", "Unused")
 
 package foo.starred.athen.modules.impl.slayer
 
@@ -43,20 +43,22 @@ object SlayerStats : Module(
 
     private val ex0 = listOf("§cSlayer Stats:", "Bosses: §c67", "Bosses/hr: §c104", "XP/hr: §c60,000", "Kill: §c23.4s", "Session: §c21m 24s").fcs
 
-    @Suppress("UNUSED")
-    private val _unused0 by config.textParagraph("Use <red>/${Athen.modId} reset slayerStats<r> to reset.")
-    private val displayOptions by config.multiCheckbox("Display options", listOf("Bosses killed", "Bosses/hr", "XP/hr", "Avg kill time", "Session time"), listOf(0, 1, 2, 3, 4))
+    private val _unused by config.information("Use <red>/${Athen.modId} reset slayerStats<r> to reset.")
+    private val displayOptions by config.multiSelector("Display options", listOf("Bosses killed", "Bosses/hr", "XP/hr", "Avg kill time", "Session time"), listOf(0, 1, 2, 3, 4))
+    private val styleType by config.selector("Styling type", listOf("General", "Advanced"))
 
-    private val styleExpandable by config.expandable("Text style")
-    private val `style$advanced` by config.switch("Advanced styling").childOf { styleExpandable }
-    private val `style$title` by config.textInput("Title style", "<red>Slayer Stats:").childOf { styleExpandable }
-    private val `style$general` by config.textInput("General style", "#name: <red>#number").dependsOn { !`style$advanced` }.childOf { styleExpandable }
+    private val general by config.group("General text style")
+    private val `style$title` by general.input("Title style", "<red>Slayer Stats:")
+    private val `style$general` by general.input("General style", "#name: <red>#number")
+    private val _unused0 by general.variables("#name", "#number")
 
-    private val `style$killed` by config.textInput("Bosses killed", "Bosses: <red>#number").dependsOn { `style$advanced` }.childOf { styleExpandable }
-    private val `style$bosses` by config.textInput("Bosses per hour", "Bosses/hr: <red>#number").dependsOn { `style$advanced` }.childOf { styleExpandable }
-    private val `style$xp` by config.textInput("XP per hour", "XP/hr: <red>#number").dependsOn { `style$advanced` }.childOf { styleExpandable }
-    private val `style$kill` by config.textInput("Kill times", "Kill: <red>#number").dependsOn { `style$advanced` }.childOf { styleExpandable }
-    private val `style$session` by config.textInput("Session time", "Session: <red>#number").dependsOn { `style$advanced` }.childOf { styleExpandable }
+    private val advanced by config.group("Advanced text style")
+    private val `style$killed` by advanced.input("Bosses killed", "Bosses: <red>#number")
+    private val `style$bosses` by advanced.input("Bosses per hour", "Bosses/hr: <red>#number")
+    private val `style$xp` by advanced.input("XP per hour", "XP/hr: <red>#number")
+    private val `style$kill` by advanced.input("Kill times", "Kill: <red>#number")
+    private val `style$session` by advanced.input("Session time", "Session: <red>#number")
+    private val _unused1 by advanced.variables("#number")
 
     private val display = Ticking(2) {
         val t = (System.currentTimeMillis() - start) / 1000.0
@@ -66,23 +68,23 @@ object SlayerStats : Module(
             add(`style$title`.prs())
 
             if (0 in displayOptions)
-                add((if (`style$advanced`) `style$killed` else `style$general`.replace("#name", "Bosses"))
+                add((if (styleType == 1) `style$killed` else `style$general`.replace("#name", "Bosses"))
                     .replace("#number", "$kills").prs())
 
             if (1 in displayOptions)
-                add((if (`style$advanced`) `style$bosses` else `style$general`.replace("#name", "Bosses/hr"))
+                add((if (styleType == 1) `style$bosses` else `style$general`.replace("#name", "Bosses/hr"))
                     .replace("#number", (kills / d).formatted(false)).prs())
 
             if (2 in displayOptions)
-                add((if (`style$advanced`) `style$xp` else `style$general`.replace("#name", "XP/hr"))
+                add((if (styleType == 1) `style$xp` else `style$general`.replace("#name", "XP/hr"))
                     .replace("#number", (xp / d).formatted(false)).prs())
 
             if (3 in displayOptions)
-                add((if (`style$advanced`) `style$kill` else `style$general`.replace("#name", "Kill"))
+                add((if (styleType == 1) `style$kill` else `style$general`.replace("#name", "Kill"))
                     .replace("#number", (total / kills).toDuration(secondsDecimals = 1)).prs())
 
             if (4 in displayOptions)
-                add((if (`style$advanced`) `style$session` else `style$general`.replace("#name", "Session"))
+                add((if (styleType == 1) `style$session` else `style$general`.replace("#name", "Session"))
                     .replace("#number", t.toDuration()).prs())
         }
     }

@@ -28,9 +28,6 @@ exordium-26-1 = "IK5p5vrB"
 iris-1-21-11 = "fDpuVzVr"
 iris-26-1 = "YEGDGnJM"
 
-lwjgl-nanovg-1-21-11 = "3.3.3"
-lwjgl-nanovg-26-1 = "3.4.1"
-
 skyblock-api = "4.1.10"
 classgraph = "4.8.184"
 autoupdate = "1.3.1"
@@ -38,8 +35,8 @@ autoupdate = "1.3.1"
 snowbird-1-21-11 = "012+1.21.11"
 snowbird-26-1 = "012+26.1"
 
-cascade-1-21-11 = "016+1.21.11"
-cascade-26-1 = "016+26.1"
+cascade-1-21-11 = "022+1.21.11"
+cascade-26-1 = "022+26.1"
 
 hypixel-modapi = "1.0.1"
 hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
@@ -72,9 +69,6 @@ exordium-26-1 = { module = "maven.modrinth:exordium", version.ref = "exordium-26
 
 iris-1-21-11 = { module = "maven.modrinth:iris", version.ref = "iris-1-21-11" }
 iris-26-1 = { module = "maven.modrinth:iris", version.ref = "iris-26-1" }
-
-lwjgl-nanovg-1-21-11 = { module = "org.lwjgl:lwjgl-nanovg", version.ref = "lwjgl-nanovg-1-21-11" }
-lwjgl-nanovg-26-1 = { module = "org.lwjgl:lwjgl-nanovg", version.ref = "lwjgl-nanovg-26-1" }
 
 skyblock-api = { module = "tech.thatgravyboat:skyblock-api", version.ref = "skyblock-api" }
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }

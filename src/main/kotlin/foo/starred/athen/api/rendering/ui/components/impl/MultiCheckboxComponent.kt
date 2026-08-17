@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.ui.components.impl
+package foo.starred.athen.api.rendering.ui.components.impl
 
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.events.impl.MouseEvent
@@ -88,7 +88,7 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
 
         if (label.isNotEmpty()) graphics.extractText(label, x, y - font.lineHeight - 2, false, Catppuccin.Mocha.Subtext0.argb)
         graphics.rectangle(x, y, width, height, Catppuccin.Mocha.Surface1.argb)
-        graphics.outline(x, y, width, height, 1, if (open) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Surface2.argb)
+        graphics.outline(x, y, width, height, 1, if (open) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Surface2.argb)
 
         graphics.extractText(text, x + 4, y + (height - font.lineHeight) / 2 + 1, false, Catppuccin.Mocha.Text.argb)
         graphics.extractText(if (open) "▾" else "▸", x + width - 12, y + (height - font.lineHeight) / 2 + 1, false, Catppuccin.Mocha.Overlay0.argb)
@@ -97,7 +97,7 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
             val height1 = height1
 
             graphics.rectangle(x, y + height, width, height1, Catppuccin.Mocha.Base.argb)
-            graphics.outline(x, y + height, width, height1, 1, Catppuccin.Mocha.Mauve.argb)
+            graphics.outline(x, y + height, width, height1, 1, Catppuccin.Mocha.Lavender.argb)
 
             graphics.enableScissor(x, y + height + 1, x + width, y + height + height1 - 1)
 
@@ -111,8 +111,8 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
                 graphics.rectangle(x, y0, width, 14, Catppuccin.Mocha.Base.argb)
 
                 val b = selected(idx)
-                graphics.extractText(item, x + 4, y0 + (14 - font.lineHeight) / 2 + 1, false, if (b) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Text.argb)
-                if (b) graphics.extractText("✔", x + width - 14, y0 + (14 - font.lineHeight) / 2 + 1, false, Catppuccin.Mocha.Mauve.argb)
+                graphics.extractText(item, x + 4, y0 + (14 - font.lineHeight) / 2 + 1, false, if (b) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Text.argb)
+                if (b) graphics.extractText("✔", x + width - 14, y0 + (14 - font.lineHeight) / 2 + 1, false, Catppuccin.Mocha.Lavender.argb)
 
                 y0 += 14
             }

@@ -42,23 +42,24 @@ object ItemTweaks : Module(
     private val enchants = hashSetOf("Aqua Affinity", "Depth Strider")
     private val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm").withZone(ZoneId.systemDefault())
 
-    private val showItemStars = config.switch("Item stars as stack size").custom("showItemStars")
-    private val starColor by config.colorPicker("Star Color", Color.RED).dependsOn { showItemStars.value }
+    private val showItemStars = config.switch("Item stars as stack size").unique("showItemStars")
+    private val starColor by config.colorPicker("Star Color", Color.RED)
 
-    private val cakeNumbers = config.switch("Cake numbers").custom("cakeNumbers")
+    private val cakeNumbers = config.switch("Cake numbers").unique("cakeNumbers")
 
-    private val tooltipExpandable by config.expandable("Tooltip tweaks")
-    private val removeGearScore by config.switch("Remove gear score").childOf { tooltipExpandable }
-    private val removeEnchants by config.switch("Remove vanilla enchants").childOf { tooltipExpandable }
+    private val tooltip by config.group("Tooltip tweaks")
+    private val removeGearScore by tooltip.switch("Remove gear score")
+    private val removeEnchants by tooltip.switch("Remove vanilla enchants")
 
-    private val showItemAge by config.switch("Show age").childOf { tooltipExpandable }
-    private val `showItemAge$style` by config.textInput("Style", "&7Age: &c#age &8(#time)").dependsOn { showItemAge }.childOf { tooltipExpandable }
+    private val showItemAge by config.switch("Show age")
+    private val `showItemAge$style` by config.input("Style", "&7Age: &c#age &8(#time)")
 
-    private val showItemHex = config.switch("Show hex color").childOf { tooltipExpandable }.custom("showItemHex")
-    private val `showItemHex$style` by config.textInput("Style", "&7Color: #hex").dependsOn { showItemHex.value }.childOf { tooltipExpandable }
-    private val `showItemHex$color` by config.switch("Color the hex").dependsOn { showItemHex.value }.childOf { tooltipExpandable }
-    private val `showItemHex$box` by config.switch("Display color box", true).dependsOn { showItemHex.value }.childOf { tooltipExpandable }
-    private val `showItemHex$keybind` by config.keybind("Keybind").`watch$tooltip`().dependsOn { showItemHex.value }.childOf { tooltipExpandable }
+    private val hex by config.group("Hex style")
+    private val showItemHex = hex.switch("Show hex color").unique("showItemHex")
+    private val `showItemHex$style` by hex.input("Style", "&7Color: #hex")
+    private val `showItemHex$color` by hex.switch("Color the hex")
+    private val `showItemHex$box` by hex.switch("Display color box", true)
+    private val `showItemHex$keybind` by hex.keybind("Keybind").`watch$tooltip`()
 
     init {
         on<GuiEvent.Slots.Render.Post> {

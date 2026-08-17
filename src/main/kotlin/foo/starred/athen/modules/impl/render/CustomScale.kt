@@ -17,10 +17,10 @@ object CustomScale : Module(
     "Changes the scale for players!",
     Category.RENDER
 ) {
-    private val scales by config.multiCheckbox("Scale", listOf("Self", "Others", "NPCs", "Nametags", "Shadow"), listOf(0, 1, 2, 3, 4))
-    val scale by config.slider("Scale", 1f, 0.1f, 5f, showDouble = true)
-    val chibi by config.dropdown("Chibi style", listOf("None", "Big head", "Small head"), 1)
-    val chibiness by config.slider("Chibi factor", 2f, 1f, 5f, showDouble = true)
+    private val scales by config.multiSelector("Scale", listOf("Self", "Others", "NPCs", "Nametags", "Shadow"), listOf(0, 1, 2, 3, 4))
+    val scale by config.slider("Scale", 1f, 0.1f, 5f, double = true)
+    val chibi by config.selector("Chibi style", listOf("None", "Big head", "Small head"), 1)
+    val chibiness by config.slider("Chibi factor", 2f, 1f, 5f, double = true)
 
     init {
         on<WorldRenderEvent.Entity.Pre> {

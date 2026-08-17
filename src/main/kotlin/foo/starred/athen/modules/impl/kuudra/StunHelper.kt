@@ -36,12 +36,12 @@ object StunHelper : Module(
 ) {
     private val highlightPod by config.switch("Highlight pods", true)
     private val highlightSpecific by config.switch("Highlight exact block")
-    private val pod by config.dropdown("Exact pod", listOf("Left", "Middle", "Right")).dependsOn { highlightSpecific }
-    private val boxColor by config.colorPicker("Color", Color(Catppuccin.Mocha.Sapphire.argb, true)).dependsOn { highlightPod }
-    private val depthTest by config.switch("Depth test", true).dependsOn { highlightPod }
+    private val pod by config.selector("Exact pod", listOf("Left", "Middle", "Right"))
+    private val boxColor by config.colorPicker("Color", Color(Catppuccin.Mocha.Sapphire.argb, true))
+    private val depthTest by config.switch("Depth test", true)
     private val blockAbility by config.switch("Block pickaxe ability", true)
-    private val blockOverride by config.keybind("Block override key").dependsOn { blockAbility }
-    private val blockType by config.dropdown("Block when", listOf("Outside belly", "Wrong aim inside belly", "Both"), 2).dependsOn { blockAbility }
+    private val blockOverride by config.keybind("Block override key")
+    private val blockType by config.selector("Block when", listOf("Outside belly", "Wrong aim inside belly", "Both"), 2)
 
     private val stunRegex = Regex("^\\w+ destroyed one of Kuudra's pods!$")
 

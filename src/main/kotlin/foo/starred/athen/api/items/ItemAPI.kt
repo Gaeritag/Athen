@@ -4,7 +4,7 @@ package foo.starred.athen.api.items
 
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.Load
-import foo.starred.athen.config.ConfigBuilder
+import foo.starred.athen.config.dsl.impl.builders.option.ConfigOptionBuilder
 import foo.starred.athen.ducks.item.ItemStackDuck.Companion.`athen$cached$tooltip`
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.on
@@ -50,7 +50,7 @@ object ItemAPI { // TODO: make this check the parent config of added keys if the
         }
     }
 
-    fun ConfigBuilder.OptionBuilder<Int>.`watch$tooltip`(): ConfigBuilder.OptionBuilder<Int> = apply {
+    fun ConfigOptionBuilder<Int>.`watch$tooltip`(): ConfigOptionBuilder<Int> = apply {
         resolve { `watched$tooltip`.add { it.value } }
     }
 }

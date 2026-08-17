@@ -19,8 +19,8 @@ object ItemQuality : Module(
     "Shows the quality of dungeon items.",
     Category.DUNGEONS
 ) {
-    private val textStyle by config.textInput("Style", "&7Item Quality: &c#cur&8/&c#max &8(#floor)")
-    private val _meow0 by config.textParagraph("Variable: <red>#cur<r>, <red>#max<r>, <red>#floor")
+    private val textStyle by config.input("Style", "&7Item Quality: &c#cur&8/&c#max &8(#floor)")
+    private val _meow0 by config.variables("#cur", "#max", "#floor")
 
     init {
         on<GuiEvent.Tooltip.Update> {

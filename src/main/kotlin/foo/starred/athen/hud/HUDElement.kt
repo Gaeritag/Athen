@@ -1,6 +1,6 @@
-﻿package foo.starred.athen.hud
+package foo.starred.athen.hud
 
-import foo.starred.athen.config.ConfigBuilder
+import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.ConfigManager
 import foo.starred.snowbird.api.ZERO_PAIR
 import net.minecraft.client.gui.GuiGraphics
@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiGraphics
 data class HUDElement(
     val id: String,
     val name: String,
-    val config: ConfigBuilder,
+    val config: ConfigMainBuilder,
     var renderer: GuiGraphics.(Boolean) -> Pair<Int, Int>?,
     var defaultX: Float = 20f,
     var defaultY: Float = 20f,
@@ -26,10 +26,10 @@ data class HUDElement(
     var scale: Float = defaultScale
 
     val render: Boolean
-        get() = config() && enabled
+        get() = config.value && enabled
 
     val render0: Boolean
-        get() = (config.module?.enabled ?: config()) && enabled && renderOutsidePreview
+        get() = (config.module?.enabled ?: config.value) && enabled && renderOutsidePreview
 
     init {
         ConfigManager.observe(id) { enabled = it as? Boolean ?: false }

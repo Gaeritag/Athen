@@ -26,24 +26,28 @@ object SlayerHighlight : Module(
 ) {
     private val regex = Regex("^(?<attunement>[A-Z]+) ♨(\\d+) \\d\\d:\\d\\d$")
 
-    private val boss by config.switch("Highlight boss")
-    private val `boss$mine` by config.switch("Only for mine", true).dependsOn { boss }
-    private val `boss$color` by config.colorPicker("Color", Color(255, 0, 0, 255)).dependsOn { boss }
-    private val `boss$width` by config.slider("Line width", 2f, 0f, 10f).dependsOn { boss }
+    private val _boss by config.group("Boss highlight")
+    private val boss by _boss.switch("Highlight boss")
+    private val `boss$mine` by _boss.switch("Only for mine", true)
+    private val `boss$color` by _boss.colorPicker("Color", Color(255, 0, 0, 255))
+    private val `boss$width` by _boss.slider("Line width", 2f, 0f, 10f)
 
-    private val mini by config.switch("Highlight miniboss", false)
-    private val `mini$color` by config.colorPicker("Miniboss color", Color(255, 127, 127, 255)).dependsOn { mini }
-    private val `mini$width` by config.slider("Miniboss line width", 2f, 0f, 10f).dependsOn { mini }
+    private val _mini by config.group("Miniboss highlight")
+    private val mini by _mini.switch("Highlight miniboss", false)
+    private val `mini$color` by _mini.colorPicker("Miniboss color", Color(255, 127, 127, 255))
+    private val `mini$width` by _mini.slider("Miniboss line width", 2f, 0f, 10f)
 
-    private val demon by config.switch("Highlight demon", false)
-    private val `demon$color` by config.colorPicker("Demon color", Color(255, 165, 0, 255)).dependsOn { demon }
-    private val `demon$width` by config.slider("Demon line width", 2f, 0f, 10f).dependsOn { demon }
+    private val _demon by config.group("Demon highlight")
+    private val demon by _demon.switch("Highlight demon", false)
+    private val `demon$color` by _demon.colorPicker("Demon color", Color(255, 165, 0, 255))
+    private val `demon$width` by _demon.slider("Demon line width", 2f, 0f, 10f)
 
-    private val blaze by config.switch("Blaze state colors", true)
-    private val `blaze$ashen` by config.colorPicker("Ashen", Color(TextColor.DARK_GRAY)).dependsOn { blaze }
-    private val `blaze$auric` by config.colorPicker("Auric", Color(TextColor.GOLD)).dependsOn { blaze }
-    private val `blaze$crystal` by config.colorPicker("Crystal", Color(TextColor.AQUA)).dependsOn { blaze }
-    private val `blaze$spirit` by config.colorPicker("Spirit", Color(TextColor.WHITE)).dependsOn { blaze }
+    private val _blaze by config.group("Blaze state colors")
+    private val blaze by _blaze.switch("Blaze state colors", true)
+    private val `blaze$ashen` by _blaze.colorPicker("Ashen", Color(TextColor.DARK_GRAY))
+    private val `blaze$auric` by _blaze.colorPicker("Auric", Color(TextColor.GOLD))
+    private val `blaze$crystal` by _blaze.colorPicker("Crystal", Color(TextColor.AQUA))
+    private val `blaze$spirit` by _blaze.colorPicker("Spirit", Color(TextColor.WHITE))
 
     private val slayers = ConcurrentHashMap<Entity, Int>()
     private val demons = ConcurrentHashMap<Entity, Int>()
@@ -59,6 +63,8 @@ object SlayerHighlight : Module(
         }
 
         on<EntityEvent.Update.Named> {
+            if (!blaze) return@on
+
             val a = entity in slayers.keys
             val b = entity in demons.keys
             if (!a && !b) return@on

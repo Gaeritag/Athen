@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
@@ -7,17 +7,20 @@ import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
 import foo.starred.athen.utils.glint
 import foo.starred.snowbird.utils.stripped
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import org.joml.Matrix3x2f
 
 object NameSolver : ITerminal(TerminalType.NAME) {
     private val i = mutableSetOf<Int>()
 
-    override fun render(ox: Float, oy: Float, headerH: Float, uiScale: Float) {
+    override fun render(graphics: GuiGraphics, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         for (c in list) {
-            val sx = (c.slot % 9 * float + ox + 1f) * uiScale
-            val sy = ((c.slot / 9) * float + oy + headerH + 1f) * uiScale
-            drawSlot(sx, sy, 16f * uiScale, 16f * uiScale, TerminalSolver.`names$correct`.rgb, uiScale)
+            val x1 = (c.slot % 9 * float + x0 + 1f) * scale
+            val y1 = ((c.slot / 9) * float + y0 + height + 1f) * scale
+            slot(graphics, x1, y1, 16f * scale, 16f * scale, TerminalSolver.`names$correct`.rgb, scale, pose, scissor)
         }
     }
 

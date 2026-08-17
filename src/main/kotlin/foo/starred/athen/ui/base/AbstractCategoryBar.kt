@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.ui.base
+package foo.starred.athen.ui.base
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
@@ -51,7 +51,7 @@ abstract class AbstractCategoryBar(
         if (selected == null) graphics.rectangle(lx, cy, lw, height1, Mocha.Surface0.argb)
         else if (!modalOpen && hovered(lx, cy, lw, height1, true)) graphics.rectangle(lx, cy, lw, height1, Mocha.Surface0.withAlpha(0.5f))
 
-        graphics.extractText("All", lx + 4, cy + (height1 - client.font.lineHeight) / 2 + 1, false, if (selected == null) Mocha.Mauve.argb else Mocha.Subtext0.argb)
+        graphics.extractText("All", lx + 4, cy + (height1 - client.font.lineHeight) / 2 + 1, false, if (selected == null) Mocha.Lavender.argb else Mocha.Subtext0.argb)
         zones.add(UIZone(lx, cy, lw, height1, zone0, category = ""))
         cy += height1
 
@@ -85,7 +85,7 @@ abstract class AbstractCategoryBar(
                 graphics.enableScissor(lx + 4, cy, lx + lw - 18, cy + height1)
                 graphics.extractText(cat.name, lx + 4, cy + (height1 - client.font.lineHeight) / 2 + 1, false, when {
                     !cat.enabled -> Mocha.Overlay0.argb
-                    selected == cat.name -> Mocha.Mauve.argb
+                    selected == cat.name -> Mocha.Lavender.argb
                     else -> Mocha.Subtext0.argb
                 })
                 graphics.disableScissor()

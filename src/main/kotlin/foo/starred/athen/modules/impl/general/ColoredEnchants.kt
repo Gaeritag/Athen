@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName", "Unchecked_cast")
+@file:Suppress("ObjectPrivatePropertyName", "Unchecked_cast")
 
 package foo.starred.athen.modules.impl.general
 
@@ -9,7 +9,7 @@ import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.Category
-import foo.starred.athen.config.ConfigManager.updateConfig
+import foo.starred.athen.config.ConfigManager.update
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
@@ -39,25 +39,25 @@ object ColoredEnchants : Module(
 
     private val replaceRoman by config.switch("Replace roman", true)
 
-    private val `ultimate$expandable` by config.expandable("Ultimate enchants")
-    private val `ultimate$color` by config.colorPicker("Ultimate color", Color(Catppuccin.Mocha.Mauve.argb, true)).childOf { `ultimate$expandable` }
-    private val `ultimate$style` by config.multiCheckbox("Ultimate style", l, listOf(0)).childOf { `ultimate$expandable` }
+    private val ultimate by config.group("Ultimate enchants")
+    private val `ultimate$color` by ultimate.colorPicker("Ultimate color", Color(Catppuccin.Mocha.Mauve.argb, true))
+    private val `ultimate$style` by ultimate.multiSelector("Ultimate style", l, listOf(0))
 
-    private val `max$expandable` by config.expandable("Maxed enchants")
-    private val `max$color` by config.colorPicker("Max color", Color(TextColor.RED)).childOf { `max$expandable` }
-    private val `max$style` by config.multiCheckbox("Max style", l).childOf { `max$expandable` }
+    private val max by config.group("Maxed enchants")
+    private val `max$color` by max.colorPicker("Max color", Color(TextColor.RED))
+    private val `max$style` by max.multiSelector("Max style", l)
 
-    private val `high$expandable` by config.expandable("High-level enchants")
-    private val `high$color` by config.colorPicker("High color", Color(TextColor.RED)).childOf { `high$expandable` }
-    private val `high$style` by config.multiCheckbox("High style", l).childOf { `high$expandable` }
+    private val high by config.group("High-level enchants")
+    private val `high$color` by high.colorPicker("High color", Color(TextColor.RED))
+    private val `high$style` by high.multiSelector("High style", l)
 
-    private val `normal$expandable` by config.expandable("Normal-level enchants")
-    private val `normal$color` by config.colorPicker("Normal color", Color(TextColor.BLUE)).childOf { `normal$expandable` }
-    private val `normal$style` by config.multiCheckbox("Normal style", l).childOf { `normal$expandable` }
+    private val normal by config.group("Normal-level enchants")
+    private val `normal$color` by normal.colorPicker("Normal color", Color(TextColor.BLUE))
+    private val `normal$style` by normal.multiSelector("Normal style", l)
 
-    private val `bad$expandable` by config.expandable("Bad-level enchants")
-    private val `bad$color` by config.colorPicker("Bad color", Color(0xAA, 0xAA, 0xAA, 0xFF)).childOf { `bad$expandable` }
-    private val `bad$style` by config.multiCheckbox("Bad style", l).childOf { `bad$expandable` }
+    private val bad by config.group("Bad-level enchants")
+    private val `bad$color` by bad.colorPicker("Bad color", Color(0xAA, 0xAA, 0xAA, 0xFF))
+    private val `bad$style` by bad.multiSelector("Bad style", l)
 
     private val List<Int>.bold: Boolean
         get() = 0 in this
@@ -118,9 +118,9 @@ object ColoredEnchants : Module(
                 val map = Gson().fromJson<Map<String, Any>>(clipboard.decompress(), Map::class.java)
 
                 for ((k, v) in map) when (k) {
-                    $$"ultimate$color", $$"max$color", $$"high$color", $$"normal$color", $$"bad$color" -> updateConfig("$configKey.$k", Color((v as Double).toInt(), true))
-                    $$"ultimate$style", $$"max$style", $$"high$style", $$"normal$style", $$"bad$style" -> updateConfig("$configKey.$k", (v as List<Double>).map { it.toInt() })
-                    "replaceRoman" -> updateConfig(k, v as Boolean)
+                    $$"ultimate$color", $$"max$color", $$"high$color", $$"normal$color", $$"bad$color" -> update("$configKey.$k", Color((v as Double).toInt(), true))
+                    $$"ultimate$style", $$"max$style", $$"high$style", $$"normal$style", $$"bad$style" -> update("$configKey.$k", (v as List<Double>).map { it.toInt() })
+                    "replaceRoman" -> update(k, v as Boolean)
                 }
 
                 "Enchant config imported successfully!".mod()

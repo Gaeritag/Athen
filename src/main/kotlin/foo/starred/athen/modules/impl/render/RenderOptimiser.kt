@@ -20,15 +20,15 @@ object RenderOptimiser :  Module(
     private val _arm by config.switch("Hide player arm")
     private val _effects by config.switch("Hide effects in UI", true)
 
-    private val armor0 = config.switch("Hide armor on players").custom("_armor0")
-    private val armor0t by config.multiCheckbox("Players to hide for", listOf("Self", "Others"), listOf(0)).dependsOn { armor0.value }
-    private val armor1 = config.switch("Hide armor on all mobs").custom("_armor1")
+    private val armor0 = config.switch("Hide armor on players").unique("_armor0")
+    private val armor0t by config.multiSelector("Players to hide for", listOf("Self", "Others"), listOf(0))
+    private val armor1 = config.switch("Hide armor on all mobs").unique("_armor1")
 
     private val _glow by config.switch("Hide glowing effect")
     private val _fog by config.switch("Hide fog", true)
     private val lavaOverlay by config.switch("Hide lava overlay", true)
     private val fireOverlay by config.switch("Hide fire overlay", true)
-    private val entityFire = config.switch("Hide fire on entity", true).dependsOn { fireOverlay }.custom("hideEntityFire")
+    private val entityFire = config.switch("Hide fire on entity", true).unique("hideEntityFire")
 
     @JvmStatic
     val fire: Boolean

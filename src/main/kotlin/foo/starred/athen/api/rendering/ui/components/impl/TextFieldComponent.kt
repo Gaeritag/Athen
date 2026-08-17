@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.ui.components.impl
+package foo.starred.athen.api.rendering.ui.components.impl
 
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.events.impl.KeyEvent
@@ -231,7 +231,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
         val height = height.toInt()
 
         graphics.rectangle(x, y, width, height, if (b) Catppuccin.Mocha.Surface2.argb else if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb)
-        graphics.outline(x, y, width, height, 1, if (b) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Overlay0.argb)
+        graphics.outline(x, y, width, height, 1, if (b) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Overlay0.argb)
 
         graphics.enableScissor(x + 2, y, x + width - 2, y + height)
 
@@ -248,7 +248,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
             val (s, e) = range
             val s1 = f.width(value.substring(0, s))
             val s2 = f.width(value.substring(0, e))
-            graphics.rectangle(x0 + s1, y + 2, s2 - s1, height - 4, Catppuccin.Mocha.Mauve.withAlpha(0.5f))
+            graphics.rectangle(x0 + s1, y + 2, s2 - s1, height - 4, Catppuccin.Mocha.Lavender.withAlpha(0.5f))
         }
 
         val c = value.isEmpty() && !b
@@ -258,7 +258,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
 
         if (b && (System.currentTimeMillis() / 500) % 2 == 0L) {
             val x1 = client.font.width(value.substring(0, cursor))
-            graphics.rectangle(x0 + x1, y + 2, 1, height - 4, Catppuccin.Mocha.Mauve.argb)
+            graphics.rectangle(x0 + x1, y + 2, 1, height - 4, Catppuccin.Mocha.Lavender.argb)
         }
 
         graphics.disableScissor()

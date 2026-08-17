@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused")
+@file:Suppress("Unused")
 
 package foo.starred.athen.modules.impl.general
 
@@ -36,12 +36,12 @@ object ProtectItems : Module(
     "Protects any item!",
     Category.GENERAL
 ) {
-    private val _unused by config.textParagraph("Use command <red>\"/${Athen.modId} protect [add|remove|list]\"<r> to manage items!")
+    private val _unused by config.information("Use command <red>\"/${Athen.modId} protect [add|remove|list]\"<r> to manage items!")
     private val move by config.switch("Allowing moving items")
 
-    private val render = config.switch("Render protected").custom("render")
-    private val renderKey by config.switch("Only when key pressed", true).dependsOn { render.value }
-    private val renderKeybind by config.keybind("Keybind", GLFW.GLFW_KEY_P).dependsOn { render.value }
+    private val render = config.switch("Render protected").unique("render")
+    private val renderKey by config.switch("Only when key pressed", true)
+    private val renderKeybind by config.keybind("Keybind", GLFW.GLFW_KEY_P)
 
     private val json = JsonStore("features/protectItems")
     private val uuids = json.mutableSet("uuid", Codec.STRING)
@@ -49,7 +49,7 @@ object ProtectItems : Module(
     private val types0 = json.mutableSet("type0", Codec.STRING)
 
     private val trade = Regex("^You\\s+\\w+$")
-    private val p = "<${Catppuccin.Mocha.Mauve.argb}>P".parse().apply { bold = true }.visualOrderText
+    private val p = "<${Catppuccin.Mocha.Lavender.argb}>P".parse().apply { bold = true }.visualOrderText
 
     init {
         on<PlayerEvent.Drop> {

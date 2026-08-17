@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.ui
+package foo.starred.athen.ui
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
@@ -33,7 +33,7 @@ class InputField(val placeholder: String) {
         val fh = 16
         val hovered = hovered(x, y, w, fh, true)
         graphics.rectangle(x, y, w, fh, if (focused) Mocha.Surface2.argb else if (hovered) Mocha.Surface1.argb else Mocha.Surface0.argb)
-        graphics.outline(x, y, w, fh, 1, if (focused) Mocha.Mauve.argb else Mocha.Overlay0.argb)
+        graphics.outline(x, y, w, fh, 1, if (focused) Mocha.Lavender.argb else Mocha.Overlay0.argb)
 
         graphics.enableScissor(x + 2, y, x + w - 2, y + fh)
 
@@ -54,14 +54,14 @@ class InputField(val placeholder: String) {
             val (s, e) = selection
             val s1 = client.font.width(value.substring(0, s))
             val s2 = client.font.width(value.substring(0, e))
-            graphics.rectangle(tx + s1, y + 2, s2 - s1, fh - 4, Mocha.Mauve.withAlpha(0.5f))
+            graphics.rectangle(tx + s1, y + 2, s2 - s1, fh - 4, Mocha.Lavender.withAlpha(0.5f))
         }
 
         graphics.extractText(displayTxt, tx, y + (fh - client.font.lineHeight) / 2 + 1, false, color)
 
         if (focused && (System.currentTimeMillis() / 500) % 2 == 0L) {
             val cx = client.font.width(value.substring(0, cursor))
-            graphics.rectangle(tx + cx, y + 2, 1, fh - 4, Mocha.Mauve.argb)
+            graphics.rectangle(tx + cx, y + 2, 1, fh - 4, Mocha.Lavender.argb)
         }
 
         graphics.disableScissor()

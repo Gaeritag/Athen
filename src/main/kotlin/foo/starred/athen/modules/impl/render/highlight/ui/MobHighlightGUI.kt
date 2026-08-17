@@ -1,4 +1,4 @@
-﻿@file:Suppress("SameParameterValue")
+@file:Suppress("SameParameterValue")
 
 package foo.starred.athen.modules.impl.render.highlight.ui
 
@@ -68,15 +68,15 @@ object MobHighlightGUI : MultiVersionScreen("Mob Highlights [Athen]") {
         val x0 = px + 3
         val b0 = !modal.open && hovered(x0, ty, tw, th, true)
         graphics.rectangle(x0, ty, tw, th, if (!tab) Catppuccin.Mocha.Surface1.argb else if (b0) Catppuccin.Mocha.Surface0.withAlpha(0.5f) else Catppuccin.Mocha.Mantle.argb)
-        graphics.outline(x0, ty, tw, th, 1, if (!tab) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Crust.argb)
-        graphics.extractText("Named", x0 + (tw - client.font.width("Named")) / 2, ty + (th - client.font.lineHeight) / 2 + 1, false, if (!tab) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Subtext0.argb)
+        graphics.outline(x0, ty, tw, th, 1, if (!tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Crust.argb)
+        graphics.extractText("Named", x0 + (tw - client.font.width("Named")) / 2, ty + (th - client.font.lineHeight) / 2 + 1, false, if (!tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
         zones.add(UIZone(x0, ty, tw, th, UIZoneType.TAB_NAMED))
 
         val x1 = x0 + tw + 4
         val b1 = !modal.open && hovered(x1, ty, tw, th, true)
         graphics.rectangle(x1, ty, tw, th, if (tab) Catppuccin.Mocha.Surface1.argb else if (b1) Catppuccin.Mocha.Surface0.withAlpha(0.5f) else Catppuccin.Mocha.Mantle.argb)
-        graphics.outline(x1, ty, tw, th, 1, if (tab) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Crust.argb)
-        graphics.extractText("Typed", x1 + (tw - client.font.width("Typed")) / 2, ty + (th - client.font.lineHeight) / 2 + 1, false, if (tab) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Subtext0.argb)
+        graphics.outline(x1, ty, tw, th, 1, if (tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Crust.argb)
+        graphics.extractText("Typed", x1 + (tw - client.font.width("Typed")) / 2, ty + (th - client.font.lineHeight) / 2 + 1, false, if (tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
         zones.add(UIZone(x1, ty, tw, th, UIZoneType.TAB_TYPED))
 
         graphics.rectangle(px, py + 29, pw, 1, Catppuccin.Mocha.Surface0.argb)

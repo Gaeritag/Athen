@@ -30,11 +30,11 @@ object BuildInfo : Module(
     "Shows information about the ballista build process in phase 2.",
     Category.KUUDRA
 ) {
-    private val waypoints = config.switch("Unfinished build waypoint", true).custom("waypoints")
-    private val color by config.colorPicker("Color", Color(Catppuccin.Mocha.Red.argb, true)).dependsOn { waypoints.value }
+    private val waypoints = config.switch("Unfinished build waypoint", true).unique("waypoints")
+    private val color by config.colorPicker("Color", Color(Catppuccin.Mocha.Red.argb, true))
     private val stun by config.switch("Stun notification", true)
-    private val `stun$percent` by config.slider("Notify at", 90, 1, 100, "%").dependsOn { stun }
-    private val `stun$message` by config.textInput("Notification message", "<red>Stun!").dependsOn { stun }
+    private val `stun$percent` by config.slider("Notify at", 90, 1, 100, "%")
+    private val `stun$message` by config.input("Notification message", "<red>Stun!")
 
     private val ex0 = listOf("§7Builders: §c3", "§7Progress: §c47%").fcs
     private var sent: Boolean = false

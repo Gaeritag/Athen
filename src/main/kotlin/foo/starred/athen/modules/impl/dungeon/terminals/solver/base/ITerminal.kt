@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.base
+package foo.starred.athen.modules.impl.dungeon.terminals.solver.base
 
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
@@ -7,10 +7,15 @@ import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminal
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.guiClick
-import foo.starred.athen.utils.nvg.NVGRenderer
+import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
+import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
 import foo.starred.snowbird.api.client
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.ItemStack
+import org.joml.Matrix3x2f
 import java.util.concurrent.CopyOnWriteArrayList
 
 abstract class ITerminal(val terminalType: TerminalType) {
@@ -35,18 +40,18 @@ abstract class ITerminal(val terminalType: TerminalType) {
 
     protected abstract fun compute(items: List<ItemStack>)
 
-    protected abstract fun render(ox: Float, oy: Float, headerH: Float, uiScale: Float)
+    protected abstract fun render(graphics: GuiGraphics, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?)
 
     protected abstract fun valid(click: Click): Boolean
 
     protected abstract fun forSlot(slot: Int): Click?
 
-    fun main() {
+    fun main(graphics: GuiGraphics) {
         val sp = float
         val pad = TerminalSolver.`ui$padding`
-        val uiScale = 3f * TerminalSolver.`ui$scale`
-        val w = client.window.width / uiScale
-        val h = client.window.height / uiScale
+        val scale = TerminalSolver.`ui$scale`
+        val w = client.window.guiScaledWidth.toFloat() / scale
+        val h = client.window.guiScaledHeight.toFloat() / scale
 
         val gridW = int0 * sp + 2 * pad
         val gridH = (terminalType.slots / 9 - 2) * sp + 2 * pad
@@ -54,13 +59,25 @@ abstract class ITerminal(val terminalType: TerminalType) {
         val padding = if (TerminalSolver.`ui$hideHeader`) 0f else 6f
         val totalH = gridH + headerH + padding
 
-        val ox = w / 2 - gridW / 2
-        val oy = h / 2 - totalH / 2
+        val x0 = w / 2 - gridW / 2
+        val y0 = h / 2 - totalH / 2
 
         val inset = (sp - 16f) / 2f
-        NVGRenderer.drawOutlinedRectangle(ox * uiScale, (oy + headerH + padding) * uiScale, gridW * uiScale, gridH * uiScale, TerminalSolver.`ui$bg`.rgb, TerminalSolver.`ui$border`.rgb, uiScale / 2f, TerminalSolver.`ui$roundness` * uiScale)
-        main(ox, oy, gridW, headerH, uiScale)
-        render(ox - int1 * sp + pad + inset - 1f, oy + headerH + padding - sp + pad + inset - 1f, 0f, uiScale)
+
+        val pose = Matrix3x2f(graphics.pose())
+        val scissor = graphics.scissorStack.peek()
+        val radius = RoundedRectangleRadius.of(TerminalSolver.`ui$roundness` * scale)
+
+        val x1 = x0 * scale
+        val y1 = (y0 + headerH + padding) * scale
+        val w1 = gridW * scale
+        val h1 = gridH * scale
+
+        RoundedRectangleRenderState.extract(graphics, x1, y1, w1, h1, TerminalSolver.`ui$bg`.rgb, radius, pose = pose, scissor = scissor)
+        RoundedRectangleRenderState.extract(graphics, x1, y1, w1, h1, TerminalSolver.`ui$border`.rgb, radius, maxOf(1f, scale / 2f), pose = pose, scissor = scissor)
+
+        main(graphics, x0, y0, gridW, headerH, scale, pose, scissor)
+        render(graphics, x0 - int1 * sp + pad + inset - 1f, y0 + headerH + padding - sp + pad + inset - 1f, 0f, scale, pose, scissor)
     }
 
     fun click(mx: Float, my: Float, width: Float, height: Float, mouseButton: Int) {
@@ -112,20 +129,30 @@ abstract class ITerminal(val terminalType: TerminalType) {
         click(slot, button)
     }
 
-    protected fun drawSlot(x: Float, y: Float, w: Float, h: Float, color: Int, uiScale: Float, radius: Float = TerminalSolver.`ui$slots$roundness` * uiScale) =
-        if (TerminalSolver.`ui$slots$fill`) NVGRenderer.drawRectangle(x, y, w, h, color, radius) else NVGRenderer.drawHollowRectangle(x, y, w, h, uiScale, color, radius)
+    protected fun slot(graphics: GuiGraphics, x: Float, y: Float, w: Float, h: Float, color: Int, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?, radius: RoundedRectangleRadius = RoundedRectangleRadius.of(TerminalSolver.`ui$slots$roundness` * scale)) {
+        if (TerminalSolver.`ui$slots$fill`) RoundedRectangleRenderState.extract(graphics, x, y, w, h, color, radius, pose = pose, scissor = scissor)
+        else RoundedRectangleRenderState.extract(graphics, x, y, w, h, color, radius, maxOf(1f, scale), pose = pose, scissor = scissor)
+    }
 
-    private fun main(ox: Float, oy: Float, gridW: Float, headerH: Float, uiScale: Float) {
+    private fun main(graphics: GuiGraphics, x0: Float, y0: Float, gridW: Float, headerH: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         val titleText = terminalType.name.lowercase().replaceFirstChar { it.uppercase() }
+        val font = CascadeFonts.arial
 
         if (TerminalSolver.`ui$hideHeader`) {
-            if (!TerminalSolver.`ui$hideTitle`) NVGRenderer.drawText(titleText, (ox + 1f) * uiScale, (oy + (terminalType.slots / 9 - 2) * float - 8f) * uiScale, 8f * uiScale, TerminalSolver.`ui$titleColor`.rgb)
+            if (!TerminalSolver.`ui$hideTitle`) font.extract(graphics, titleText, (x0 + 1f) * scale, (y0 + (terminalType.slots / 9 - 2) * float - 8f) * scale, TerminalSolver.`ui$titleColor`.rgb, false, 8f * scale)
             return
         }
 
-        NVGRenderer.drawOutlinedRectangle(ox * uiScale, oy * uiScale, gridW * uiScale, headerH * uiScale, TerminalSolver.`ui$header`.rgb, TerminalSolver.`ui$border`.rgb, uiScale / 2f, TerminalSolver.`ui$roundness` * uiScale)
-        val titleWidth = NVGRenderer.getTextWidth(titleText, 11f * uiScale, NVGRenderer.defaultFont)
-        val titleX = ox + gridW / 2 - titleWidth / uiScale / 2
-        NVGRenderer.drawText(titleText, titleX * uiScale, (oy + headerH / 2 - 5.5f) * uiScale, 11f * uiScale, Mocha.Text.rgba)
+        val radius = RoundedRectangleRadius.of(TerminalSolver.`ui$roundness` * scale)
+        val x1 = x0 * scale
+        val y1 = y0 * scale
+        val width = gridW * scale
+        val height = headerH * scale
+
+        RoundedRectangleRenderState.extract(graphics, x1, y1, width, height, TerminalSolver.`ui$header`.rgb, radius, pose = pose, scissor = scissor)
+        RoundedRectangleRenderState.extract(graphics, x1, y1, width, height, TerminalSolver.`ui$border`.rgb, radius, maxOf(1f, scale / 2f), pose = pose, scissor = scissor)
+
+        val size = 11f * scale
+        font.extract(graphics, titleText, (x0 + gridW / 2) * scale - font.width(titleText, size) / 2, (y0 + headerH / 2) * scale - (font.regular.height * size) / 2, Mocha.Text.rgba, false, size)
     }
 }

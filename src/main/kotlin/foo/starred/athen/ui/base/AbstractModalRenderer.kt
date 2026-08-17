@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.ui.base
+package foo.starred.athen.ui.base
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
@@ -34,7 +34,7 @@ abstract class AbstractModalRenderer<T : IEntryView>(
         graphics.rectangle(x0, y0, mw, mh, Mocha.Base.argb)
         graphics.outline(x0, y0, mw, mh, 1, Mocha.Surface0.argb)
 
-        graphics.extractText(if (entry == null) create else edit, x0 + padding, y0 + padding + 2, false, Mocha.Mauve.argb)
+        graphics.extractText(if (entry == null) create else edit, x0 + padding, y0 + padding + 2, false, Mocha.Lavender.argb)
         graphics.rectangle(x0, y0 + 24, mw, 1, Mocha.Surface0.argb)
 
         val cy = y0 + 34

@@ -24,7 +24,7 @@ object EndermanPhaseColor : Module(
 ) {
     private val all by config.switch("Change for all bosses")
     private val normal by config.colorPicker("Normal", Color(255, 255, 255, 127))
-    private val hits by config.colorPicker("Hit phase", Color(Catppuccin.Mocha.Mauve.argb.withAlpha(0.5f), true))
+    private val hits by config.colorPicker("Hit phase", Color(Catppuccin.Mocha.Lavender.argb.withAlpha(0.5f), true))
 
     private val map: Object2IntOpenHashMap<Entity> = Object2IntOpenHashMap<Entity>().apply {
         defaultReturnValue(-1)

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.hud
+package foo.starred.athen.hud
 
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
@@ -45,7 +45,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
         }
 
         Resolute.push(graphics)
-        graphics.fill(0, 0, Resolute.width.toInt(), Resolute.height.toInt(), Mocha.Mauve.withAlpha(0.1f))
+        graphics.fill(0, 0, Resolute.width.toInt(), Resolute.height.toInt(), Mocha.Lavender.withAlpha(0.1f))
 
         if (grid) {
             val color = Mocha.Surface0.withAlpha(0.35f)
@@ -247,7 +247,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
             pose().translate(x, y)
 
             fill(-4, -4, w + 4, h + 4, Mocha.Base.withAlpha(0.6f))
-            outline(-4, -4, w + 8, h + 8, 1, Mocha.Mauve.argb)
+            outline(-4, -4, w + 8, h + 8, 1, Mocha.Lavender.argb)
 
             var yOff = 0
             for (entry in lines) {

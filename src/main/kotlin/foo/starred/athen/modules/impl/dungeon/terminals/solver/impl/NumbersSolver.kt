@@ -1,31 +1,36 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
-import foo.starred.athen.utils.nvg.NVGRenderer
+import foo.starred.cascade.font.CascadeFonts
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import org.joml.Matrix3x2f
 
 object NumbersSolver : ITerminal(TerminalType.NUMBERS) {
     private val counts = mutableMapOf<Int, Int>()
 
-    override fun render(ox: Float, oy: Float, headerH: Float, uiScale: Float) {
+    override fun render(graphics: GuiGraphics, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+        val font = CascadeFonts.arial
         for ((i, c) in list.withIndex()) {
             if (i > 2) break
 
-            val sx = (c.slot % 9 * float + ox + 1f) * uiScale
-            val sy = ((c.slot / 9) * float + oy + headerH + 1f) * uiScale
+            val x1 = (c.slot % 9 * float + x0 + 1f) * scale
+            val y1 = ((c.slot / 9) * float + y0 + height + 1f) * scale
             val color = i.get() ?: continue
 
-            drawSlot(sx, sy, 16f * uiScale, 16f * uiScale, color, uiScale)
+            slot(graphics, x1, y1, 16f * scale, 16f * scale, color, scale, pose, scissor)
 
             if (!TerminalSolver.`ui$numbers$showText`) continue
             val a = counts[c.slot]?.toString() ?: continue
-            val b = NVGRenderer.getTextWidth(a, 11f * uiScale, NVGRenderer.defaultFont)
-            NVGRenderer.drawText(a, sx + 8f * uiScale - b / 2, sy + 3f * uiScale, 11f * uiScale, Mocha.Text.rgba)
+            val b = 11f * scale
+            val d = font.width(a, b)
+            font.extract(graphics, a, x1 + 8f * scale - d / 2, y1 + 3f * scale, Mocha.Text.rgba, false, b)
         }
     }
 

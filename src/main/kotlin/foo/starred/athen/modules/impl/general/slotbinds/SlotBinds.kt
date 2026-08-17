@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused")
+@file:Suppress("Unused")
 
 package foo.starred.athen.modules.impl.general.slotbinds
 
@@ -38,12 +38,12 @@ object SlotBinds : Module(
     "Bindings for slots!",
     Category.GENERAL
 ) {
-    private val _unused0 by config.textParagraph("You can use the commands <red>\"/${Athen.modId} [import|export] slotbinds\"<r> to share configs!")
+    private val _unused0 by config.information("You can use the commands <red>\"/${Athen.modId} [import|export] slotbinds\"<r> to share configs!")
     private val bind by config.keybind("Bind keybind", GLFW.GLFW_KEY_B)
     private val swap by config.keybind("Swap keybind", GLFW.GLFW_KEY_LEFT_SHIFT)
-    private val lock = config.switch("Lock bound slots").custom("lock")
+    private val lock = config.switch("Lock bound slots").unique("lock")
     private val _unused1 by config.button("Open editor") { SlotBindsGUI.open() }
-    private val _unused2 by config.textParagraph("You can use the command <red>\"/${Athen.modId} slotbinds profile swap [profile]\"<r> to swap profiles!")
+    private val _unused2 by config.information("You can use the command <red>\"/${Athen.modId} slotbinds profile swap [profile]\"<r> to swap profiles!")
 
     private var last0: Int? = null
     private var last1: Int = 0

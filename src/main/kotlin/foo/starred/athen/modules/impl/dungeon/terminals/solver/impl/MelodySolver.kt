@@ -1,12 +1,16 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
-import foo.starred.athen.utils.nvg.NVGRenderer
+import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
+import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import org.joml.Matrix3x2f
 
 object MelodySolver : ITerminal(TerminalType.MELODY) {
     private val slots = setOf(16, 25, 34, 43)
@@ -23,24 +27,36 @@ object MelodySolver : ITerminal(TerminalType.MELODY) {
         click(16 + (int - 1) * 9, 0)
     }
 
-    override fun render(ox: Float, oy: Float, headerH: Float, uiScale: Float) {
+    override fun render(graphics: GuiGraphics, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         val button = button ?: return
         val current = current ?: return
         val correct = correct ?: return
-        val sp = float
+        val float = float
 
         val row = button + 1
-        val rowY = (row * sp + oy + headerH + 1f) * uiScale
-        val rowX = (sp + ox + 1f) * uiScale
-        val size = 16f * uiScale
-        val spScaled = sp * uiScale
+        val x1 = (float + x0 + 1f) * scale
+        val y1 = (row * float + y0 + height + 1f) * scale
+        val size = 16f * scale
+        val sp = float * scale
+        val radius = RoundedRectangleRadius.of(TerminalSolver.`ui$slots$roundness` * scale)
 
         for (i in 0 until 5) {
-            val x = rowX + i * spScaled
+            val x = x1 + i * sp
+            val color = if (i == correct) TerminalSolver.`melody$correct`.rgb else TerminalSolver.`melody$wrong`.rgb
+
             when (i) {
-                current -> NVGRenderer.drawOutlinedRectangle(x, rowY, size, size, TerminalSolver.`melody$fill`.rgb, if (i == correct) TerminalSolver.`melody$correct`.rgb else TerminalSolver.`melody$wrong`.rgb, uiScale, TerminalSolver.`ui$slots$roundness` * uiScale)
-                correct -> NVGRenderer.drawHollowRectangle(x, rowY, size, size, uiScale, TerminalSolver.`melody$correct`.rgb, TerminalSolver.`ui$slots$roundness` * uiScale)
-                else -> NVGRenderer.drawHollowRectangle(x, rowY, size, size, uiScale, TerminalSolver.`melody$wrong`.rgb, TerminalSolver.`ui$slots$roundness` * uiScale)
+                current -> {
+                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, TerminalSolver.`melody$fill`.rgb, radius, pose = pose, scissor = scissor)
+                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, color, radius, outline = scale, pose = pose, scissor = scissor)
+                }
+
+                correct -> {
+                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, TerminalSolver.`melody$correct`.rgb, radius, outline = scale, pose = pose, scissor = scissor)
+                }
+
+                else -> {
+                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, TerminalSolver.`melody$wrong`.rgb, radius, outline = scale, pose = pose, scissor = scissor)
+                }
             }
         }
 
@@ -52,15 +68,15 @@ object MelodySolver : ITerminal(TerminalType.MELODY) {
             val c = slot % 9
             if (r == 0 || r == rows - 1 || c == 0 || c == 8) continue
 
-            val x = (c * sp + ox + 1f) * uiScale
-            val y = (r * sp + oy + headerH + 1f) * uiScale
+            val x = (c * float + x0 + 1f) * scale
+            val y = (r * float + y0 + height + 1f) * scale
 
             when {
-                slot == buttonSlot -> drawSlot(x, y, size, size, TerminalSolver.`melody$correct`.rgb, uiScale)
-                slot in slots -> drawSlot(x, y, size, size, TerminalSolver.`melody$wrong`.rgb, uiScale)
+                slot == buttonSlot -> slot(graphics, x, y, size, size, TerminalSolver.`melody$correct`.rgb, scale, pose, scissor)
+                slot in slots -> slot(graphics, x, y, size, size, TerminalSolver.`melody$wrong`.rgb, scale, pose, scissor)
                 r in 1..4 && r != row -> {
                     if (c !in 1..5) continue
-                    drawSlot(x, y, size, size, TerminalSolver.`melody$other`.rgb, uiScale)
+                    slot(graphics, x, y, size, size, TerminalSolver.`melody$other`.rgb, scale, pose, scissor)
                 }
             }
         }

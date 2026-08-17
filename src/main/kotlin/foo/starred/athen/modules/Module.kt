@@ -1,11 +1,11 @@
-﻿package foo.starred.athen.modules
+package foo.starred.athen.modules
 
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.annotations.Redstone
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.config.Category
-import foo.starred.athen.config.ConfigBuilder
+import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.Event
 import foo.starred.athen.events.core.runWhen
@@ -24,8 +24,8 @@ open class Module(
     category: Category? = null,
     default: Boolean = false
 ) {
-    private val _config: ConfigBuilder? by lazy {
-        ConfigBuilder(
+    private val _config: ConfigMainBuilder? by lazy {
+        ConfigMainBuilder(
             configKey ?: return@lazy null,
             name ?: return@lazy null,
             description ?: return@lazy null,
@@ -53,7 +53,7 @@ open class Module(
     val redstone: Boolean =
         this::class.hasAnnotation<Redstone>()
 
-    val config: ConfigBuilder
+    val config: ConfigMainBuilder
         get() = _config ?: error("Config not initialized")
 
     var enabled: Boolean = false

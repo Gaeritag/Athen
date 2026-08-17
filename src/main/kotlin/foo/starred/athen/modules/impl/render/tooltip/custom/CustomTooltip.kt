@@ -31,34 +31,35 @@ object CustomTooltip : Module(
     "Custom tooltip rendering!",
     Category.RENDER
 ) {
-    val unused by config.textParagraph("This feature does not break any other mod's tooltip changes. It only changes the rendering.")
-    val customisation by config.expandable("Tooltip customisation")
-    val `scroll$infinite` by config.switch("Infinite scroll").childOf { customisation }
-    val `scroll$horizontal` by config.switch("Horizontal scroll", true).childOf { customisation }
-    val `scroll$horizontal$key` by config.keybind("Horizontal keybind", GLFW.GLFW_KEY_LEFT_SHIFT).dependsOn { `scroll$horizontal` }.childOf { customisation }
-    val `scroll$horizontal$speed` by config.slider("Horizontal scroll speed", 8, 1, 20, "pixels").dependsOn { `scroll$horizontal` }.childOf { customisation }
-    val `scroll$vertical` by config.switch("Vertical scroll", true).childOf { customisation }
-    val `scroll$vertical$speed` by config.slider("Vertical scroll speed", 8, 1, 20, "pixels").dependsOn { `scroll$vertical` }.childOf { customisation }
-    val `scroll$reset` by config.switch("Reset on hover").childOf { customisation }
-    val `scroll$scale` by config.switch("Scale tooltip").childOf { customisation }
-    val `scroll$scale$key` by config.keybind("Scale keybind", GLFW.GLFW_KEY_LEFT_CONTROL).dependsOn { `scroll$scale` }.childOf { customisation }
+    val unused by config.information("This feature does not break any other mod's tooltip changes. It only changes the rendering.")
 
-    val renderExpandable by config.expandable("Custom rendering")
-    val `tooltip$style` by config.dropdown("Tooltip style", listOf("Combined", "Separated"), 1).childOf { renderExpandable }
-    val `header$centered` by config.switch("Centered header", true).dependsOn { `tooltip$style` == 1 }.childOf { renderExpandable }
+    val customisation by config.group("Tooltip customisation")
+    val `scroll$infinite` by customisation.switch("Infinite scroll")
+    val `scroll$horizontal` by customisation.switch("Horizontal scroll", true)
+    val `scroll$horizontal$key` by customisation.keybind("Horizontal keybind", GLFW.GLFW_KEY_LEFT_SHIFT)
+    val `scroll$horizontal$speed` by customisation.slider("Horizontal scroll speed", 8, 1, 20, "pixels")
+    val `scroll$vertical` by customisation.switch("Vertical scroll", true)
+    val `scroll$vertical$speed` by customisation.slider("Vertical scroll speed", 8, 1, 20, "pixels")
+    val `scroll$reset` by customisation.switch("Reset on hover")
+    val `scroll$scale` by customisation.switch("Scale tooltip")
+    val `scroll$scale$key` by customisation.keybind("Scale keybind", GLFW.GLFW_KEY_LEFT_CONTROL)
 
-    val border by config.switch("Border", true).childOf { renderExpandable }
-    val `border$width` by config.slider("Border width", 1, 0, 5).dependsOn { border }.childOf { renderExpandable }
-    val `border$rarity` by config.switch("Use rarity color", true).dependsOn { border }.childOf { renderExpandable }
-    val `border$color` by config.colorPicker("Border color", Color(Catppuccin.Mocha.Sky.argb, true)).dependsOn { border }.childOf { renderExpandable }
+    val renderExpandable by config.group("Custom rendering")
+    val `tooltip$style` by renderExpandable.selector("Tooltip style", listOf("Combined", "Separated"), 1)
+    val `header$centered` by renderExpandable.switch("Centered header", true)
 
-    val background by config.switch("Background", true).childOf { renderExpandable }
-    val `background$color` by config.colorPicker("Background color", Color(Catppuccin.Mocha.Surface0.withAlpha(0.9f), true)).dependsOn { background }.childOf { renderExpandable }
+    val border by renderExpandable.switch("Border", true)
+    val `border$width` by renderExpandable.slider("Border width", 1, 0, 5)
+    val `border$rarity` by renderExpandable.switch("Use rarity color", true)
+    val `border$color` by renderExpandable.colorPicker("Border color", Color(Catppuccin.Mocha.Sky.argb, true))
 
-    val onlyName by config.keybind("Only name toggle").childOf { renderExpandable }
-    val `onlyName$unused` by config.textParagraph("Toggling only name mode will hide the actual tooltip and show only the name when it's toggled on.").childOf { renderExpandable }
+    val background by renderExpandable.switch("Background", true)
+    val `background$color` by renderExpandable.colorPicker("Background color", Color(Catppuccin.Mocha.Surface0.withAlpha(0.9f), true))
 
-    val `text$shadow` by config.switch("Text shadows", true).childOf { renderExpandable }
+    val onlyName by renderExpandable.keybind("Only name toggle")
+    val `onlyName$unused` by renderExpandable.information("Toggling only name mode will hide the actual tooltip and show only the name when it's toggled on.")
+
+    val `text$shadow` by renderExpandable.switch("Text shadows", true)
 
     var color: Int = `border$color`.rgb
     var last: Int = 0

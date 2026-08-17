@@ -243,8 +243,8 @@ class RadialForm(mid: ContainerPrimitive) {
 
         for ((k, v) in list0.withIndex()) {
             val b0 = i1 == (list1.getOrNull(k)?.id ?: continue)
-            v.color = if (b0) Mocha.Mauve.argb.brighten(0.9f) else Mocha.Surface1.argb
-            v.borderColor = if (b0) Mocha.Mauve.argb.brighten(0.6f) else Mocha.Overlay0.argb
+            v.color = if (b0) Mocha.Lavender.argb.brighten(0.9f) else Mocha.Surface1.argb
+            v.borderColor = if (b0) Mocha.Lavender.argb.brighten(0.6f) else Mocha.Overlay0.argb
         }
     }
 

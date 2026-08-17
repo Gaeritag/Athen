@@ -25,12 +25,11 @@ object CommissionDisplay : Module(
     "Displays your commissions without you having to open the tab menu!",
     Category.GENERAL
 ) {
-    private val styleExpandable by config.expandable("Text styles")
-    private val titleStyle = config.textInput("General title", "<red>Commissions:").childOf { styleExpandable }.custom("titleStyle")
-    private val noneStyle = config.textInput("None available text", "<red>No commissions available!").childOf { styleExpandable }.custom("noneStyle")
-    private val commissionStyle by config.textInput("Commission text", "<gray>- <r>#name: #progress").childOf { styleExpandable }
-    private val `commissionStyle$perc` by config.switch("Colored percent", true).childOf { styleExpandable }
-    private val unused by config.textParagraph("Variable: <red>#name<r>, <red>#progress").childOf { styleExpandable }
+    private val titleStyle = config.input("General title", "<red>Commissions:").unique("titleStyle")
+    private val noneStyle = config.input("None available text", "<red>No commissions available!").unique("noneStyle")
+    private val commissionStyle by config.input("Commission text", "<gray>- <r>#name: #progress")
+    private val `commissionStyle$perc` by config.switch("Colored percent", true)
+    private val unused by config.variables("#name", "#progress")
 
     private val ex0 = listOf("§cCommissions:", "§7- §fExample: §640%", "§7- §fExample: §e70%", "§7- §fExample: §c7%").fcs
 

@@ -23,9 +23,9 @@ object TerminalSimulator : Module(
     "Simulator terminal, terminal simulators?",
     Category.DUNGEONS
 ) {
-    private val ipInput by config.textInput("Simulator server IP", "hypixelp3sim.zapto.org")
-    private val _unused0 by config.textParagraph("The simulator server IP is optional. You can still do <red>\"/${Athen.modId} simulate terminals\"<r> to simulate.")
-    private val pingInput = config.textInput("Ping", "0", "0").custom("ping")
+    private val ipInput by config.input("Simulator server IP", "hypixelp3sim.zapto.org")
+    private val _unused0 by config.information("The simulator server IP is optional. You can still do <red>\"/${Athen.modId} simulate terminals\"<r> to simulate.")
+    private val pingInput = config.input("Ping", "0", "0").unique("ping")
 
     var ping = 0
     val s = Observable(false)
@@ -44,7 +44,7 @@ object TerminalSimulator : Module(
             SimulatorMenu.a()
             if (it) {
                 "Run \"/${Athen.modId} simulate terminals ping <ping>\" to change ping!".mod()
-                ConfigManager.updateConfig(configKey ?: return@onChange, false)
+                ConfigManager.update(configKey ?: return@onChange, false)
             }
         }
 
@@ -54,7 +54,7 @@ object TerminalSimulator : Module(
             }
 
             "simulate" / "terminals" / "ping" / int("int") {
-                ConfigManager.updateConfig("$configKey.ping", int("int").toString())
+                ConfigManager.update("$configKey.ping", int("int").toString())
                 "Ping set to ${ping}ms".mod()
             }
 

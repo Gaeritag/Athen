@@ -1,26 +1,358 @@
-﻿package foo.starred.athen.modules.common.carry
+package foo.starred.athen.modules.common.carry
 
-import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
-import foo.starred.athen.utils.nvg.NVGRenderer
-import foo.starred.athen.utils.nvg.NVGSpecialRenderer
-import foo.starred.athen.utils.render.animations.SpringValue
-import foo.starred.athen.utils.render.animations.easeOutQuad
-import foo.starred.athen.utils.render.animations.springValue
-import foo.starred.athen.utils.render.animations.timedValue
-import foo.starred.snowbird.api.client
+import foo.starred.cascade.constraints.impl.data.PositionAlignment
+import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
+import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
+import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
+import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
+import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
+import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
+import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
+import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
+import foo.starred.cascade.primitives.impl.ScrollablePrimitive
+import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrollable
+import foo.starred.cascade.primitives.impl.TextPrimitive
+import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.utils.brighten
-import foo.starred.snowbird.utils.hovered
+import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.plural
-import net.minecraft.client.gui.GuiGraphics
+import foo.starred.snowbird.utils.toDuration
 
-abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : MultiVersionScreen(screenName) {
-    private var scrollOffset = 0f
-    private val entries = mutableListOf<CarryEntry>()
+abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScreen(screenName) {
     private val tooltips = mutableListOf<TooltipEntry>()
-    private val open = timedValue(0.8f, 300L, ::easeOutQuad)
-    private val text0 = "No carries being tracked"
-    private var width0: Float = 0f
+    private var list: ScrollablePrimitive
+    private lateinit var badge: TextPrimitive
+    private lateinit var tip: TextPrimitive
+
+    protected abstract fun carries(): Map<String, T>
+    protected abstract fun persist()
+    protected abstract fun remove(player: String)
+
+    init {
+        container {
+            size = FillSizeConstraint()
+            position = FixedPositionConstraint(0, 0)
+            interact = false
+            attach(scene)
+        }
+
+        val main = container {
+            size = FixedSizeConstraint(520, 330)
+            position = CenterPositionConstraint()
+            attach(scene)
+        }
+
+        rectangle {
+            size = FixedSizeConstraint(520, 36)
+            position = FixedPositionConstraint(0, 0)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            attach(main)
+
+            adopt(text {
+                type = CascadeTextPrimitiveRenderer
+                text = screenName.literal()
+                textSize = 10f
+                color = Mocha.Text.argb
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 14, 0)
+            })
+
+            adopt(text {
+                type = CascadeTextPrimitiveRenderer
+                text = "".literal()
+                textSize = 8f
+                color = Mocha.Subtext0.argb
+                position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -14, 0)
+            }.also { badge = it })
+        }
+
+        val body = rectangle {
+            size = FixedSizeConstraint(520, 250)
+            position = FixedPositionConstraint(0, 42)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            attach(main)
+        }
+
+        list = scrollable {
+            size = FillSizeConstraint(6)
+            position = CenterPositionConstraint()
+            attach(body)
+        }
+
+        rectangle {
+            size = FixedSizeConstraint(520, 30)
+            position = FixedPositionConstraint(0, 298)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            attach(main)
+
+            adopt(text {
+                type = CascadeTextPrimitiveRenderer
+                text = "Left click +1/-1 for completed  •  Right click for total".literal()
+                textSize = 8f
+                color = Mocha.Subtext0.argb
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 14, 0)
+            }.also { tip = it })
+        }
+
+        fn()
+    }
+
+    fun fn() {
+        list.children.clear()
+        val entries = carries().values.toList()
+
+        badge.text = "${entries.size} Active".literal()
+        footer()
+
+        if (entries.isEmpty()) {
+            text {
+                type = CascadeTextPrimitiveRenderer
+                text = "No carries being tracked".literal()
+                textSize = 9f
+                color = Mocha.Subtext0.argb
+                position = CenterPositionConstraint()
+                attach(list)
+            }
+
+            return
+        }
+
+        var cy = 2
+        val now = System.currentTimeMillis()
+
+        for (carry in entries) {
+            val row = rectangle {
+                size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 44))
+                position = FixedPositionConstraint(0, cy)
+                color = Mocha.Surface0.withAlpha(0.35f)
+                border = true
+                borderColor = Mocha.Surface0.argb
+
+                on<MouseEvent.Move.Enter> {
+                    color = Mocha.Surface0.withAlpha(0.6f)
+                }
+
+                on<MouseEvent.Move.Exit> {
+                    color = Mocha.Surface0.withAlpha(0.35f)
+                }
+
+                attach(list)
+            }
+
+            text {
+                type = CascadeTextPrimitiveRenderer
+                text = carry.player.literal()
+                textSize = 9f
+                color = Mocha.Text.argb
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 12, -7)
+                attach(row)
+            }
+
+            rectangle {
+                val width = CascadeFonts.arial.width(carry.short, 7.5f) + 10f
+                size = FixedSizeConstraint(width, 14f)
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, (CascadeFonts.arial.width(carry.player, 9f) + 18f).toInt(), -7)
+                color = Mocha.Surface1.argb
+                border = true
+                borderColor = Mocha.Surface2.argb
+                attach(row)
+
+                adopt(text {
+                    type = CascadeTextPrimitiveRenderer
+                    text = carry.short.literal()
+                    textSize = 7.5f
+                    color = Mocha.Lavender.argb
+                    position = CenterPositionConstraint()
+                })
+            }
+
+            text {
+                val time = carry.lastCompletionTime.takeIf { it != 0L }?.let { ((now - it) / 1000.0).toDuration() } ?: "N/A"
+                val rate = ((now - carry.firstCompletionTime) / 1000).takeIf { carry.completed > 2 && carry.firstCompletionTime != 0L && it > 0 }?.let { "${carry.completed * 3600 / it}/hr" } ?: "N/A"
+
+                type = CascadeTextPrimitiveRenderer
+                text = "${carry.completed}/${carry.total} completed  •  $time  •  $rate".literal()
+                textSize = 7.5f
+                color = Mocha.Subtext0.argb
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 12, 9)
+                attach(row)
+            }
+
+            var offset = -12f
+            rectangle {
+                size = FixedSizeConstraint(22f, 22f)
+                position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset.toInt(), 0)
+                color = Mocha.Surface1.argb
+                border = true
+                borderColor = Mocha.Surface2.argb
+
+                on<MouseEvent.Press> {
+                    cancel()
+                    if (button != 0) return@on
+                    remove(carry.player)
+                    persist()
+                    add(carry.player, 0, TooltipEntry.ActionType.CARRY_REMOVED)
+                    fn()
+                }
+
+                on<MouseEvent.Move.Enter> {
+                    color = Mocha.Red.argb.brighten(0.8f)
+                }
+
+                on<MouseEvent.Move.Exit> {
+                    color = Mocha.Surface1.argb
+                }
+
+                attach(row)
+                adopt(text {
+                    type = CascadeTextPrimitiveRenderer
+                    text = "×".literal()
+                    textSize = 9f
+                    color = Mocha.Text.argb
+                    position = CenterPositionConstraint()
+                })
+            }
+
+            offset -= 28f
+
+            rectangle {
+                size = FixedSizeConstraint(22f, 22f)
+                position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset.toInt(), 0)
+                color = Mocha.Surface1.argb
+                border = true
+                borderColor = Mocha.Surface2.argb
+
+                on<MouseEvent.Press> {
+                    cancel()
+                    when (button) {
+                        0 -> if (carry.completed > 0) {
+                            carry.completed--
+                            persist()
+                            add(carry.player, 1, TooltipEntry.ActionType.COUNT_DECREASE)
+                            fn()
+                        }
+                        1 -> if (carry.total > 1) {
+                            carry.total--
+                            persist()
+                            add(carry.player, 1, TooltipEntry.ActionType.TOTAL_DECREASE)
+                            fn()
+                        }
+                    }
+                }
+
+                on<MouseEvent.Move.Enter> {
+                    color = Mocha.Peach.argb.brighten(0.8f)
+                }
+
+                on<MouseEvent.Move.Exit> {
+                    color = Mocha.Surface1.argb
+                }
+
+                attach(row)
+                adopt(text {
+                    type = CascadeTextPrimitiveRenderer
+                    text = "-1".literal()
+                    textSize = 7.5f
+                    color = Mocha.Text.argb
+                    position = CenterPositionConstraint()
+                })
+            }
+
+            offset -= 28f
+
+            rectangle {
+                size = FixedSizeConstraint(22f, 22f)
+                position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset.toInt(), 0)
+                color = Mocha.Surface1.argb
+                border = true
+                borderColor = Mocha.Surface2.argb
+
+                on<MouseEvent.Press> {
+                    cancel()
+                    when (button) {
+                        0 -> {
+                            if (carry.completed < carry.total) {
+                                carry.completed++
+                                persist()
+                                add(carry.player, 1, TooltipEntry.ActionType.COUNT_INCREASE)
+                                fn()
+                            }
+                        }
+                        1 -> {
+                            carry.total++
+                            persist()
+                            add(carry.player, 1, TooltipEntry.ActionType.TOTAL_INCREASE)
+                            fn()
+                        }
+                    }
+                }
+
+                on<MouseEvent.Move.Enter> {
+                    color = Mocha.Green.argb.brighten(0.8f)
+                }
+
+                on<MouseEvent.Move.Exit> {
+                    color = Mocha.Surface1.argb
+                }
+
+                attach(row)
+                adopt(text {
+                    type = CascadeTextPrimitiveRenderer
+                    text = "+1".literal()
+                    textSize = 7.5f
+                    color = Mocha.Text.argb
+                    position = CenterPositionConstraint()
+                })
+            }
+
+            cy += 48
+        }
+    }
+
+    override fun init() {
+        super.init()
+        fn()
+    }
+
+    override fun onClose() {
+        persist()
+        super.onClose()
+    }
+
+    protected fun add(player: String, amount: Int, action: TooltipEntry.ActionType) {
+        val now = System.currentTimeMillis()
+        val active = tooltips.lastOrNull { it.player == player && it.action == action && action.group != -1 && now - it.timestamp < 2000 }
+
+        if (active != null) {
+            active.amount += amount
+            active.timestamp = now
+            footer()
+            return
+        }
+
+        if (tooltips.size >= 5) tooltips.removeAt(0)
+        tooltips.add(TooltipEntry(player, amount, action))
+        footer()
+    }
+
+    private fun footer() {
+        val last = tooltips.lastOrNull()
+        val bool = last != null && System.currentTimeMillis() - last.timestamp < 4000
+
+        tip.text = if (bool) last.display().literal() else "Left click +1/-1 for completed  •  Right click for total".literal()
+        tip.color = if (bool) Mocha.Lavender.argb else Mocha.Subtext0.argb
+    }
 
     data class TooltipEntry(val player: String, var amount: Int, val action: ActionType, var timestamp: Long = System.currentTimeMillis()) {
         enum class ActionType(val group: Int) {
@@ -33,260 +365,13 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : MultiVersi
 
         fun display(): String {
             val carry = amount.plural("carry", "carries")
-
             return when (action) {
-                ActionType.COUNT_INCREASE -> "Added $amount completed $carry for <aqua>$player"
-                ActionType.COUNT_DECREASE -> "Decreased $amount completed $carry for <aqua>$player"
-                ActionType.TOTAL_INCREASE -> "Added $amount $carry for <aqua>$player"
-                ActionType.TOTAL_DECREASE -> "Decreased $amount $carry for <aqua>$player"
-                ActionType.CARRY_REMOVED -> "Removed <aqua>$player<r> from tracking"
+                ActionType.COUNT_INCREASE -> "Added $amount completed $carry for $player"
+                ActionType.COUNT_DECREASE -> "Decreased $amount completed $carry for $player"
+                ActionType.TOTAL_INCREASE -> "Added $amount $carry for $player"
+                ActionType.TOTAL_DECREASE -> "Decreased $amount $carry for $player"
+                ActionType.CARRY_REMOVED -> "Removed $player from tracking"
             }
-        }
-    }
-
-    protected abstract fun carries(): Map<String, T>
-    protected abstract fun persist()
-    protected abstract fun remove(player: String)
-
-    override fun onScramInit() {
-        width0 = NVGRenderer.getTextWidth(text0, 18f, NVGRenderer.defaultFont)
-        entries.clear()
-        for ((_, c) in carries()) entries.add(CarryEntry(c))
-        open.value = 1f
-    }
-
-    override fun onScramClose() = persist()
-
-    override fun isPauseScreen() = false
-
-    override fun onScramRender(graphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        tooltips.removeIf { System.currentTimeMillis() - it.timestamp > 5000 }
-
-        NVGSpecialRenderer.draw(graphics, 0, 0, graphics.guiWidth(), graphics.guiHeight()) {
-            val width = client.window.width
-            val height = client.window.height
-            val progress = open.value
-            val scale = 0.8f + (progress - 0.8f) * (1f - 0.8f) / (1f - 0.8f)
-            val alpha = (progress - 0.8f) / (1f - 0.8f)
-
-            NVGRenderer.push()
-            NVGRenderer.translate(width / 2f, height / 2f)
-            NVGRenderer.scale(scale.coerceIn(0.8f, 1f), scale.coerceIn(0.8f, 1f))
-            NVGRenderer.translate(-width / 2f, -height / 2f)
-            NVGRenderer.globalAlpha(alpha.coerceIn(0f, 1f))
-
-            drawPanel(width, height)
-
-            NVGRenderer.pop()
-        }
-    }
-
-    private fun drawPanel(width: Int, height: Int) {
-        val panelWidth = 600f
-        val panelHeight = 500f
-        val panelX = (width - panelWidth) / 2f
-        val panelY = (height - panelHeight) / 2f
-
-        NVGRenderer.drawDropShadow(panelX, panelY, panelWidth, panelHeight, 15f, 4f, 10f)
-        NVGRenderer.drawRectangle(panelX, panelY, panelWidth, 50f, Mocha.Base.argb, 10f, 10f, 0f, 0f)
-        NVGRenderer.drawRectangle(panelX, panelY + 50f, panelWidth, panelHeight - 50f, Mocha.Surface0.withAlpha(0.04f), 0f, 0f, 10f, 10f)
-
-        NVGRenderer.drawText(screenName, panelX + 15f, panelY + 15f, 22f, Mocha.Text.argb)
-
-        if (entries.isEmpty()) {
-            NVGRenderer.drawText(text0, panelX + (panelWidth - width0) / 2f, panelY + panelHeight / 2f - 9f, 18f, Mocha.Subtext0.argb)
-        } else {
-            val contentHeight = entries.size * 80f
-            val maxScroll = -(contentHeight - (panelHeight - 60f)).coerceAtLeast(0f)
-            scrollOffset = scrollOffset.coerceIn(maxScroll, 0f)
-
-            NVGRenderer.pushScissor(panelX + 10f, panelY + 60f, panelWidth - 20f, panelHeight - 70f)
-
-            var currentY = panelY + 60f + scrollOffset
-            for (e in entries) {
-                e.draw(panelX + 10f, currentY, panelWidth - 20f)
-                currentY += 80f
-            }
-
-            NVGRenderer.popScissor()
-        }
-
-        drawTooltips(panelX, panelY + panelHeight + 10f, panelWidth)
-    }
-
-    private fun drawTooltips(x: Float, y: Float, width: Float) {
-        val t = tooltips.takeLast(3)
-
-        if (t.isEmpty()) {
-            val defaultText = "<yellow>Left click<r> to change count | <yellow>Right click<r> to change total"
-            val textWidth = NVGRenderer.getWrappedTextWidth(defaultText, 14f, width - 20f)
-            val boxPadding = 10f
-            val boxWidth = textWidth + boxPadding * 2
-            val boxHeight = 24f
-            val boxX = x + (width - boxWidth) / 2f
-
-            NVGRenderer.drawRectangle(boxX, y, boxWidth, boxHeight, Mocha.Base.withAlpha(0.8f), 5f)
-            NVGRenderer.drawHollowRectangle(boxX, y, boxWidth, boxHeight, 1f, Mocha.Surface0.argb, 5f)
-            NVGRenderer.drawTextWrapped(defaultText, boxX + boxPadding, y + 5f, 14f, width - 20f)
-        } else {
-            var currentY = y
-            for (d in t) {
-                val text = d.display()
-                val textWidth = NVGRenderer.getWrappedTextWidth(text, 14f, width - 20f)
-                val boxWidth = textWidth + 10f * 2
-                val boxHeight = 24f
-                val boxX = x + (width - boxWidth) / 2f
-
-                NVGRenderer.drawRectangle(boxX, currentY, boxWidth, boxHeight, Mocha.Base.withAlpha(0.8f), 5f)
-                NVGRenderer.drawHollowRectangle(boxX, currentY, boxWidth, boxHeight, 1f, Mocha.Surface0.argb, 5f)
-                NVGRenderer.drawTextWrapped(text, boxX + 10f, currentY + 5f, 14f, width - 20f)
-                currentY += boxHeight + 5f
-            }
-        }
-    }
-
-    protected fun addTooltip(player: String, amount: Int, action: TooltipEntry.ActionType) {
-        val now = System.currentTimeMillis()
-        val existing = tooltips.lastOrNull { it.player == player && it.action == action && it.action.group == action.group && it.action.group != -1 && now - it.timestamp < 2000 }
-
-        if (existing != null && action.group != -1) {
-            existing.amount += amount
-            existing.timestamp = now
-        } else {
-            if (tooltips.size >= 3) tooltips.removeAt(0)
-            tooltips.add(TooltipEntry(player, amount, action))
-        }
-    }
-
-    override fun onScramMouseScroll(mouseX: Int, mouseY: Int, horizontal: Double, vertical: Double): Boolean {
-        if (entries.isEmpty()) return false
-
-        val amount = (vertical * 20).toFloat()
-        val contentHeight = entries.size * 80f
-        val panelHeight = 500f
-        val maxScroll = -(contentHeight - (panelHeight - 60f)).coerceAtLeast(0f)
-
-        scrollOffset = (scrollOffset + amount).coerceIn(maxScroll, 0f)
-        return true
-    }
-
-    override fun onScramMouseClick(mouseX: Int, mouseY: Int, button: Int): Boolean {
-        for (e in entries) if (e.mouseClicked(button)) return true
-        return super.onScramMouseClick(mouseX, mouseY, button)
-    }
-
-    private inner class CarryEntry(val carry: T) {
-        private val buttonSize = 32f
-        private val buttonSpacing = 8f
-
-        private val addButtonAnim = springValue(Mocha.Green.argb, 0.2f)
-        private val subButtonAnim = springValue(Mocha.Peach.argb, 0.2f)
-        private val removeButtonAnim = springValue(Mocha.Red.argb, 0.2f)
-
-        private val addScaleAnim = springValue(1f, 0.25f)
-        private val subScaleAnim = springValue(1f, 0.25f)
-        private val removeScaleAnim = springValue(1f, 0.25f)
-
-        private var lastX = 0f
-        private var lastY = 0f
-        private var lastWidth = 0f
-
-        fun draw(x: Float, y: Float, width: Float) {
-            lastX = x
-            lastY = y
-            lastWidth = width
-
-            NVGRenderer.drawRectangle(x, y, width, 70f, Mocha.Base.withAlpha(0.5f), 8f)
-            NVGRenderer.drawHollowRectangle(x, y, width, 70f, 1f, Mocha.Surface0.argb, 8f)
-
-            NVGRenderer.drawText(carry.player, x + 15f, y + 8f, 18f, Mocha.Text.argb, NVGRenderer.defaultFont)
-
-            val typeText = carry.short
-            NVGRenderer.drawText(typeText, x + 15f, y + 32f, 14f, Mocha.Subtext0.argb, NVGRenderer.defaultFont)
-
-            val progressText = "${carry.completed}/${carry.total}"
-            NVGRenderer.drawText(progressText, x + 15f, y + 48f, 14f, Mocha.Text.argb, NVGRenderer.defaultFont)
-
-            val buttonsStartX = x + width - (buttonSize * 3 + buttonSpacing * 2 + 15f)
-
-            drawButton(buttonsStartX, y + 19f, "+1", addButtonAnim, addScaleAnim)
-            drawButton(buttonsStartX + buttonSize + buttonSpacing, y + 19f, "-1", subButtonAnim, subScaleAnim)
-            drawButton(buttonsStartX + (buttonSize + buttonSpacing) * 2, y + 19f, "×", removeButtonAnim, removeScaleAnim)
-        }
-
-        private fun drawButton(x: Float, y: Float, text: String, colorAnim: SpringValue<Int>, scaleAnim: SpringValue<Float>) {
-            val isHovered = hovered(x, y, buttonSize, buttonSize)
-
-            val baseColor = when (colorAnim) {
-                addButtonAnim -> Mocha.Base.withAlpha(0.5f)
-                subButtonAnim -> Mocha.Base.withAlpha(0.5f)
-                else -> Mocha.Red.withAlpha(0.49f)
-            }
-
-            colorAnim.value = if (isHovered) baseColor.brighten(2f) else baseColor
-            val color = colorAnim.value
-
-            scaleAnim.value = if (isHovered) 1.08f else 1f
-            val scale = scaleAnim.value
-
-            val centerX = x + buttonSize / 2f
-            val centerY = y + buttonSize / 2f
-            val scaledSize = buttonSize * scale
-            val scaledX = centerX - scaledSize / 2f
-            val scaledY = centerY - scaledSize / 2f
-
-            NVGRenderer.drawRectangle(scaledX, scaledY, scaledSize, scaledSize, color, 6f)
-
-            val textWidth = NVGRenderer.getTextWidth(text, 16f, NVGRenderer.defaultFont)
-            NVGRenderer.drawText(text, centerX - textWidth / 2f, centerY - 8f, 16f, Mocha.Text.argb, NVGRenderer.defaultFont)
-        }
-
-        fun mouseClicked(button: Int): Boolean {
-            val startX = lastX + lastWidth - (buttonSize * 3 + buttonSpacing * 2 + 15f)
-
-            when {
-                hovered(startX, lastY + 19f, buttonSize, buttonSize) -> {
-                    when (button) {
-                        0 -> {
-                            if (carry.completed >= carry.total - 1) return false
-                            carry.completed++
-                            persist()
-                            addTooltip(carry.player, 1, TooltipEntry.ActionType.COUNT_INCREASE)
-                        }
-                        1 -> {
-                            carry.total++
-                            persist()
-                            addTooltip(carry.player, 1, TooltipEntry.ActionType.TOTAL_INCREASE)
-                        }
-                    }
-                    return true
-                }
-
-                hovered(startX + buttonSize + buttonSpacing, lastY + 19f, buttonSize, buttonSize) -> {
-                    when (button) {
-                        0 -> if (carry.completed > 0) {
-                            carry.completed--
-                            persist()
-                            addTooltip(carry.player, 1, TooltipEntry.ActionType.COUNT_DECREASE)
-                        }
-                        1 -> if (carry.total > 1) {
-                            carry.total--
-                            persist()
-                            addTooltip(carry.player, 1, TooltipEntry.ActionType.TOTAL_DECREASE)
-                        }
-                    }
-                    return true
-                }
-
-                hovered(startX + (buttonSize + buttonSpacing) * 2, lastY + 19f, buttonSize, buttonSize) -> {
-                    remove(carry.player)
-                    entries.removeIf { it.carry.player == carry.player }
-                    addTooltip(carry.player, 0, TooltipEntry.ActionType.CARRY_REMOVED)
-                    return true
-                }
-            }
-
-            return false
         }
     }
 }

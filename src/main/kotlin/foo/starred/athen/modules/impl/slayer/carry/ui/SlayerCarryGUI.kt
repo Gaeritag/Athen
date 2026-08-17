@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.slayer.carry.ui
 
@@ -231,7 +231,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
 
             val label = text {
                 text = v.literal()
-                color = if (b0) Mocha.Mauve.argb else Mocha.Subtext0.argb
+                color = if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
                 attach(row)
             }
@@ -268,7 +268,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 position = FixedPositionConstraint(0, cy)
                 color = if (b1) Mocha.Surface1.argb else Mocha.Surface0.argb
                 border = true
-                borderColor = if (b1) Mocha.Mauve.argb else Mocha.Overlay0.argb
+                borderColor = if (b1) Mocha.Lavender.argb else Mocha.Overlay0.argb
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -302,7 +302,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 attach(row)
                 adopt(text {
                     text = s.literal()
-                    color = Mocha.Mauve.argb
+                    color = Mocha.Lavender.argb
                     position = CenterPositionConstraint()
                 })
 
@@ -488,7 +488,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
         val b0 = filter == boss
 
         entry.row.color = if (b0) Mocha.Surface0.argb else Mocha.Base.argb
-        entry.label.color = if (b0) Mocha.Mauve.argb else Mocha.Subtext0.argb
+        entry.label.color = if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
     }
 
     private fun entry(index: Int) {
@@ -496,7 +496,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
         val b1 = selected == index
 
         row.row.color = if (b1) Mocha.Surface1.argb else Mocha.Surface0.argb
-        row.row.borderColor = if (b1) Mocha.Mauve.argb else Mocha.Overlay0.argb
+        row.row.borderColor = if (b1) Mocha.Lavender.argb else Mocha.Overlay0.argb
     }
 
     private fun footer() {

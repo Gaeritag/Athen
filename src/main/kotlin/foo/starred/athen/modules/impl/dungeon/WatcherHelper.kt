@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.dungeon
 
@@ -11,7 +11,7 @@ import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.Category
-import foo.starred.athen.config.ConfigBuilder
+import foo.starred.athen.config.dsl.impl.builders.hud.ConfigHudBuilder
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.PacketEvent
@@ -63,18 +63,18 @@ object WatcherHelper : Module(
         }.split("\n").fcs
     }
 
-    private val hud: ConfigBuilder.HUDElementBuilder = config.hud("Blood timers") {
+    private val hud: ConfigHudBuilder = config.hud("Blood timers") {
         if (it) return@hud if (showTicks) sizedText(ex0) else sizedText(ex1)
         sizedText(display.value ?: return@hud null)
     }
 
-    private val showTicks by config.switch("Show ticks", true).dependsOn { hud.enabled }
+    private val showTicks by config.switch("Show ticks", true)
 
-    private val textExpandable by config.expandable("Alert texts")
-    private val `text$fast` by config.textInput("Fast", "<red>Vroom!").childOf { textExpandable }
-    private val `text$normal` by config.textInput("Normal", "<red>Watcher!").childOf { textExpandable }
-    private val `text$slow` by config.textInput("Slow", "<red>Yawn...").childOf { textExpandable }
-    private val `text$snail` by config.textInput("Very slow", "<red>Zzz...").childOf { textExpandable }
+    private val alerts by config.group("Alert texts")
+    private val `text$fast` by alerts.input("Fast", "<red>Vroom!")
+    private val `text$normal` by alerts.input("Normal", "<red>Watcher!")
+    private val `text$slow` by alerts.input("Slow", "<red>Yawn...")
+    private val `text$snail` by alerts.input("Very slow", "<red>Zzz...")
 
     private val purreow = SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.cat.purreow"))
 

@@ -39,24 +39,24 @@ object SlayerInfo : Module(
     private val entities: WeakHashMap<Entity, Info> = WeakHashMap()
     private val hideCache: MutableSet<Entity> = mutableSetOf()
 
-    private val hideOriginal = config.switch("Hide original", true).custom("hideOriginal")
+    private val hideOriginal = config.switch("Hide original", true).unique("hideOriginal")
     private val showKillTime by config.switch("Show kill time", true)
     private val increase by config.switch("Dynamic text size", true)
 
-    private val nameStyle by config.textInput("Name style", "<dark_red>#name_short #tier")
-    private val _unused0 by config.textParagraph("Variable: <red>#name_short<r>, <red>#name_long<r>, <red>#tier")
+    private val nameStyle by config.input("Name style", "<dark_red>#name_short #tier")
+    private val _unused0 by config.variables("#name_short", "#name_long", "#tier")
 
-    private val timerStyleExpandable by config.expandable("Timer styles")
-    private val timerStyle by config.textInput("Normal", "<aqua>#time").childOf { timerStyleExpandable }
-    private val blazeStyle by config.textInput("Blaze", "<aqua>#hits <dark_gray>[<gray>#time<dark_gray>]").childOf { timerStyleExpandable }
-    private val attunementColor by config.switch("Use attunement colors", true).childOf { timerStyleExpandable }
-    private val laserStyle by config.textInput("Laser", "<aqua>#laser <dark_gray>[<gray>#time<dark_gray>]").childOf { timerStyleExpandable }
-    private val _unused1 by config.textParagraph("Variable: <red>#time<r>, <red>#laser").childOf { timerStyleExpandable }
+    private val styles0 by config.group("Timer styles")
+    private val timerStyle by styles0.input("Normal", "<aqua>#time")
+    private val blazeStyle by styles0.input("Blaze", "<aqua>#hits <dark_gray>[<gray>#time<dark_gray>]")
+    private val attunementColor by styles0.switch("Use attunement colors", true)
+    private val laserStyle by styles0.input("Laser", "<aqua>#laser <dark_gray>[<gray>#time<dark_gray>]")
+    private val _unused1 by styles0.variables("#time", "#laser")
 
-    private val healthStyleExpandable by config.expandable("Health styles")
-    private val healthStyle by config.textInput("Normal", "<aqua>#health").childOf { healthStyleExpandable }
-    private val hitStyle by config.textInput("Hits", "<aqua>#hits Hits <dark_gray>[<gray>#health<dark_gray>]").childOf { healthStyleExpandable }
-    private val _unused2 by config.textParagraph("Variable: <red>#hits<r>, <red>#health").childOf { healthStyleExpandable }
+    private val styles1 by config.group("Health styles")
+    private val healthStyle by styles1.input("Normal", "<aqua>#health")
+    private val hitStyle by styles1.input("Hits", "<aqua>#hits Hits <dark_gray>[<gray>#health<dark_gray>]")
+    private val _unused2 by styles1.variables("#hits", "#health")
 
     init {
         on<TickEvent.Client.End> {

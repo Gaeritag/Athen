@@ -30,15 +30,16 @@ object FreshTools : Module(
     Category.KUUDRA
 ) {
     private val alert by config.switch("Show alert", true)
-    private val `alert$message` by config.switch("Alert message", true).dependsOn { alert }
-    private val `alert$message$t` by config.textInput("Message", "<red>Fresh tools!").dependsOn { alert && `alert$message` }
-    private val `alert$title` by config.switch("Alert title", true).dependsOn { alert }
-    private val `alert$title$t` by config.textInput("Title", "<red>Fresh tools!").dependsOn { alert && `alert$title` }
+    private val `alert$message` by config.switch("Alert message", true)
+    private val `alert$message$t` by config.input("Message", "<red>Fresh tools!")
+    private val `alert$title` by config.switch("Alert title", true)
+    private val `alert$title$t` by config.input("Title", "<red>Fresh tools!")
 
-    private val notify by config.switch("Notify party", true)
-    private val `notify$message` by config.textInput("Notify message", "FRESH [#buildPerc]").dependsOn { notify }
-    private val `notify$unused` by config.textParagraph("Variable: <red>#buildPerc").dependsOn { notify }
-    private val `notify$checkParty` by config.switch("Check party", true).dependsOn { notify }
+    private val notify0 by config.group("Notifications")
+    private val notify by notify0.switch("Notify party", true)
+    private val `notify$message` by notify0.input("Notify message", "FRESH [#buildPerc]")
+    private val `notify$unused` by notify0.variables("#buildPerc")
+    private val `notify$checkParty` by notify0.switch("Check party", true)
 
     private val ex0 = "Fresh: §c6.7s".fcs
     private val timer = config.hud("Fresh timer") {

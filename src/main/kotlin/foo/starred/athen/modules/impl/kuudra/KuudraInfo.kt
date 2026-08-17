@@ -31,8 +31,8 @@ object KuudraInfo : Module(
     Category.KUUDRA
 ) {
     private val highlight by config.switch("Highlight", true)
-    private val lineWidth by config.slider("Line width", 2f, 1f, 10f).dependsOn { highlight }
-    private val color by config.colorPicker("Color", Color(Catppuccin.Mocha.Peach.argb, true)).dependsOn { highlight }
+    private val lineWidth by config.slider("Line width", 2f, 1f, 10f)
+    private val color by config.colorPicker("Color", Color(Catppuccin.Mocha.Peach.argb, true))
     private val hpOnKuudra by config.switch("Draw hp on boss", true)
 
     private val hud = config.hud("Kuudra HP") {

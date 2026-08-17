@@ -30,15 +30,15 @@ object BigSlayerDrops : Module(
     val scale by config.slider("Scale", 3f, 1f, 10f)
     private val range by config.slider("Range multiplier", 1.0, 0.5, 5.0, "blocks", true)
     private val unscale by config.slider("Unscale after", 15, 5, 60, "seconds")
-    private val selected by config.multiCheckbox("Enable for", listOf("Revenant", "Tarantula", "Sven", "Voidgloom", "Riftstalker", "Blaze"), listOf(0, 1, 2, 3, 4, 5))
+    private val selected by config.multiSelector("Enable for", listOf("Revenant", "Tarantula", "Sven", "Voidgloom", "Riftstalker", "Blaze"), listOf(0, 1, 2, 3, 4, 5))
 
-    private val _filter by config.expandable("Scale filter")
-    private val rev by config.multiCheckbox("Revenant", RevenantDrops.entries.map { it.display }, RevenantDrops.entries.map { it.ordinal }).childOf { _filter }
-    private val tara by config.multiCheckbox("Tarantula", TarantulaDrops.entries.map { it.display }, TarantulaDrops.entries.map { it.ordinal }).childOf { _filter }
-    private val sven by config.multiCheckbox("Sven", SvenDrops.entries.map { it.display }, SvenDrops.entries.map { it.ordinal }).childOf { _filter }
-    private val void by config.multiCheckbox("Voidgloom", VoidgloomDrops.entries.map { it.display }, VoidgloomDrops.entries.map { it.ordinal }).childOf { _filter }
-    private val blaze by config.multiCheckbox("Blaze", InfernoDrops.entries.map { it.display }, InfernoDrops.entries.map { it.ordinal }).childOf { _filter }
-    private val vamp by config.multiCheckbox("Vampire", VampireDrops.entries.map { it.display }, VampireDrops.entries.map { it.ordinal }).childOf { _filter }
+    private val _filter by config.group("Scale filter")
+    private val rev by _filter.multiSelector("Revenant", RevenantDrops.entries.map { it.display }, RevenantDrops.entries.map { it.ordinal })
+    private val tara by _filter.multiSelector("Tarantula", TarantulaDrops.entries.map { it.display }, TarantulaDrops.entries.map { it.ordinal })
+    private val sven by _filter.multiSelector("Sven", SvenDrops.entries.map { it.display }, SvenDrops.entries.map { it.ordinal })
+    private val void by _filter.multiSelector("Voidgloom", VoidgloomDrops.entries.map { it.display }, VoidgloomDrops.entries.map { it.ordinal })
+    private val blaze by _filter.multiSelector("Blaze", InfernoDrops.entries.map { it.display }, InfernoDrops.entries.map { it.ordinal })
+    private val vamp by _filter.multiSelector("Vampire", VampireDrops.entries.map { it.display }, VampireDrops.entries.map { it.ordinal })
 
     init {
         on<SlayerEvent.Boss.Death> {

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render.highlight.ui.renderers
+package foo.starred.athen.modules.impl.render.highlight.ui.renderers
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
@@ -82,7 +82,7 @@ class ModalRenderer(
         val h = (list.size * 14).coerceAtMost(84)
 
         graphics.rectangle(x1, y1, w1, h, Mocha.Base.argb)
-        graphics.outline(x1, y1, w1, h, 1, Mocha.Mauve.argb)
+        graphics.outline(x1, y1, w1, h, 1, Mocha.Lavender.argb)
         graphics.enableScissor(x1, y1, x1 + w1, y1 + h)
 
         var cy = y1 + scroll0

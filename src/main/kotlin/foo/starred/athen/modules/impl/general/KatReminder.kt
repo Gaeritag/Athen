@@ -34,9 +34,9 @@ object KatReminder : Module(
     Category.GENERAL
 ) {
     private val showTitle by config.switch("Show title", true)
-    private val message by config.textInput("Alert message", "<red>#pet<white> is waiting for you at Kat!")
-    private val _unused0 by config.textParagraph("Variable: <red>#pet")
-    private val _unused1 by config.textParagraph("Commands: <red>/athen times kat<r>, <red>/athen clear kat")
+    private val message by config.input("Alert message", "<red>#pet<white> is waiting for you at Kat!")
+    private val _unused0 by config.variables("#pet")
+    private val _unused1 by config.information("Commands: <red>/athen times kat<r>, <red>/athen clear kat")
 
     private val json = JsonStore("features/katReminder")
     private var pet by json.string("pet")

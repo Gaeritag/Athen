@@ -34,7 +34,7 @@ object MessageActions : Module(
     Category.GENERAL
 ) {
     private val _unused by config.button("Open manager") { client.setScreen(MessageActionsGUI) }
-    private val _unused0 by config.textParagraph("You can use the commands <red>\"/${Athen.modId} [import|export] messageactions\"<r> to share configs!")
+    private val _unused0 by config.information("You can use the commands <red>\"/${Athen.modId} [import|export] messageactions\"<r> to share configs!")
 
     private val json = JsonStore("features/MessageActions")
     private var _actions: String by json.string("actions")

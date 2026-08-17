@@ -39,14 +39,14 @@ object PartyFinderJoinStats : Module(
 
     private val kick by config.switch("Auto kick")
     private val `kick$detect` by config.switch("Detect floor", true)
-    private val `kick$floor` by config.dropdown("Floor", listOf("F7", "M4", "M5", "M6", "M7"), 0).dependsOn { !`kick$detect` }
-    private val `kick$pb` by config.textInput("Required PB", placeholder = "5:30")
-    private val `kick$secrets` by config.textInput("Required secrets", placeholder = "50k")
-    private val `kick$secrets$average` by config.textInput("Required secret average", placeholder = "8.4")
-    private val `kick$mp` by config.textInput("Required MP", placeholder = "800")
+    private val `kick$floor` by config.selector("Floor", listOf("F7", "M4", "M5", "M6", "M7"), 0)
+    private val `kick$pb` by config.input("Required PB", placeholder = "5:30")
+    private val `kick$secrets` by config.input("Required secrets", placeholder = "50k")
+    private val `kick$secrets$average` by config.input("Required secret average", placeholder = "8.4")
+    private val `kick$mp` by config.input("Required MP", placeholder = "800")
     private val `kick$message` by config.switch("Send kick message")
-    private val `kick$message$party` by config.switch("Send to party").dependsOn { `kick$message` }
-    private val `kick$message$party$delay` by config.slider("Message send delay", 5, 1, 10, "ticks").dependsOn { `kick$message` && `kick$message$party` }
+    private val `kick$message$party` by config.switch("Send to party")
+    private val `kick$message$party$delay` by config.slider("Message send delay", 5, 1, 10, "ticks")
 
     private val regex = Regex("^Party Finder > (?:\\[.{1,7}])? ?(?<name>.{1,16}) joined the dungeon group! \\(.*\\)$")
     private val cache: Object2ObjectOpenHashMap<String, Pair<Long, PlayerProfileStats>> = Object2ObjectOpenHashMap()

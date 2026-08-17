@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.general.messageactions.ui
 
@@ -181,7 +181,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                 val name = category ?: return@on
 
                 MessageActions.toggle(name)
-                rows0[name]?.label?.color = if (MessageActions.categories.find { it.name == name }?.enabled != true) Mocha.Overlay0.argb else Mocha.Mauve.argb
+                rows0[name]?.label?.color = if (MessageActions.categories.find { it.name == name }?.enabled != true) Mocha.Overlay0.argb else Mocha.Lavender.argb
                 buttons()
 
                 for ((index, action) in MessageActions.actions.withIndex()) {
@@ -424,7 +424,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
 
             val label = text {
                 text = v.literal()
-                color = if (!b1) Mocha.Overlay0.argb else if (b0) Mocha.Mauve.argb else Mocha.Subtext0.argb
+                color = if (!b1) Mocha.Overlay0.argb else if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
                 attach(row)
             }
@@ -462,7 +462,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                 position = FixedPositionConstraint(0, cy)
                 color = if (b1) Mocha.Surface1.argb else if (!b0) Mocha.Red.withAlpha(0.15f) else Mocha.Surface0.argb
                 border = true
-                borderColor = if (b1) Mocha.Mauve.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+                borderColor = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -522,7 +522,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                 attach(row)
                 adopt(text {
                     text = str.literal()
-                    color = Mocha.Mauve.argb
+                    color = Mocha.Lavender.argb
                     position = CenterPositionConstraint()
                 })
             }
@@ -567,7 +567,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
         val b1 = name == null || MessageActions.categories.find { it.name == name }?.enabled == true
 
         entry.row.color = if (b0) Mocha.Surface0.argb else Mocha.Base.argb
-        entry.label.color = if (!b1) Mocha.Overlay0.argb else if (b0) Mocha.Mauve.argb else Mocha.Subtext0.argb
+        entry.label.color = if (!b1) Mocha.Overlay0.argb else if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
     }
 
     private fun buttons() {
@@ -592,7 +592,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
         val b1 = entry == index
 
         row.row.color = if (b1) Mocha.Surface1.argb else if (!b0) Mocha.Red.withAlpha(0.15f) else Mocha.Surface0.argb
-        row.row.borderColor = if (b1) Mocha.Mauve.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+        row.row.borderColor = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
     }
 
     private fun footer() {

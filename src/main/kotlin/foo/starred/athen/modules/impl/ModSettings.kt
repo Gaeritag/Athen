@@ -15,7 +15,7 @@ object ModSettings : Module(
     @JvmStatic
     val disableTickCulling by config.switch("Disable tick culling", true)
 
-    private val _tickCullText by config.textParagraph("Disabling this may break slayer features!")
+    private val _tickCullText by config.information("Disabling this may break slayer features!")
 
     @JvmStatic
     val commandConfig by config.switch("\'/athen\' opens config")
@@ -24,7 +24,7 @@ object ModSettings : Module(
     val upsideDown by config.switch("Upside down", true)
 
     @JvmStatic
-    val priceFetch = config.slider("Price re-fetch", 10, 5, 60, "minutes").custom("priceFetch")
+    val priceFetch = config.slider("Price re-fetch", 10, 5, 60, "minutes").unique("priceFetch")
 
     @JvmStatic
     val hideGuis by config.switch("Hide GUIs in F1", true)
@@ -32,5 +32,5 @@ object ModSettings : Module(
     @JvmStatic
     val calculator by config.switch("Enable \"/calc\"", true)
 
-    private val _calculator by config.textParagraph("You will need to restart your game after toggling this option!")
+    private val _calculator by config.information("You will need to restart your game after toggling this option!")
 }

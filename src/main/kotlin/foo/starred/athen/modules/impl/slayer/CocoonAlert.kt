@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.slayer
 
@@ -21,8 +21,8 @@ object CocoonAlert : Module(
     Category.SLAYER
 ) {
     private val alert by config.switch("Show alert", true)
-    private val `alert$message` by config.textInput("Alert message", "<red>Boss cocooned!").dependsOn { alert }
-    private val `alert$sound` by config.sound("Alert sound").dependsOn { alert }
+    private val `alert$message` by config.input("Alert message", "<red>Boss cocooned!")
+    private val `alert$sound` by config.sound("Alert sound")
 
     private val ex0 = "Cocoon: §c4.6s".fcs
     private val timer = config.hud("Cocoon timer") {

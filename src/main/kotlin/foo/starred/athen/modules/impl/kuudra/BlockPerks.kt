@@ -24,15 +24,15 @@ object BlockPerks : Module(
     private val support = listOf("Healing Aura", "Mana Aura", "Protective Aura", "Faster Respawn")
     private val basic = listOf("Auto Revive", "Human Cannonball", "Elle's Lava Rod", "Elle's Pickaxe")
 
-    private val cancelRender = config.switch("Cancel slot render", true).custom("cancelRender")
+    private val cancelRender = config.switch("Cancel slot render", true).unique("cancelRender")
     private val key by config.keybind("Override key")
 
-    private val blockedExpandable by config.expandable("Blocked perks")
-    private val perks0 = config.multiCheckbox("Cannoneer", cannoneer).childOf { blockedExpandable }.custom("cannoneer")
-    private val perks1 = config.multiCheckbox("Crowd control", crowd).childOf { blockedExpandable }.custom("crowd")
-    private val perks2 = config.multiCheckbox("Specialist", specialist, listOf(2, 3)).childOf { blockedExpandable }.custom("specialist")
-    private val perks3 = config.multiCheckbox("Support", support).childOf { blockedExpandable }.custom("support")
-    private val perks4 = config.multiCheckbox("Basic", basic, listOf(0, 2, 3)).childOf { blockedExpandable }.custom("basic")
+    private val blocks by config.group("Blocked perks")
+    private val perks0 = blocks.multiSelector("Cannoneer", cannoneer).unique("cannoneer")
+    private val perks1 = blocks.multiSelector("Crowd control", crowd).unique("crowd")
+    private val perks2 = blocks.multiSelector("Specialist", specialist, listOf(2, 3)).unique("specialist")
+    private val perks3 = blocks.multiSelector("Support", support).unique("support")
+    private val perks4 = blocks.multiSelector("Basic", basic, listOf(0, 2, 3)).unique("basic")
 
     private var blocked: Set<String> = fn()
     private var menu: Boolean = false

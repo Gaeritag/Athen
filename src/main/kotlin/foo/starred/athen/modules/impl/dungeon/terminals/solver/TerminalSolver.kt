@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused", "ObjectPropertyName", "ObjectPrivatePropertyName")
+@file:Suppress("Unused", "ObjectPropertyName", "ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.dungeon.terminals.solver
 
@@ -15,11 +15,10 @@ import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
-import foo.starred.athen.utils.nvg.NVGSpecialRenderer
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
-import foo.starred.snowbird.utils.mouseRX
-import foo.starred.snowbird.utils.mouseRY
+import foo.starred.snowbird.utils.mouseSX
+import foo.starred.snowbird.utils.mouseSY
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
@@ -32,61 +31,61 @@ object TerminalSolver : Module(
     "Shows solutions for F7/M7 terminals in a nice custom gui!",
     Category.DUNGEONS
 ) {
-    private val settingsExpandable by config.expandable("Settings")
-    val fcDelay by config.slider("First click delay", 350, 150, 1000, "ms").childOf { settingsExpandable }
-    val resync by config.slider("Resync timeout", 800, 0, 2000, "ms").childOf { settingsExpandable }
-    val dropKey by config.switch("Allow using drop key", true).childOf { settingsExpandable }
-    val keybindL by config.keybind("Keybind left click").childOf { settingsExpandable }
-    val keybindR by config.keybind("Keybind right click").childOf { settingsExpandable }
-    val solve by config.multiCheckbox("Enabled solvers", listOf("Colors", "Melody", "Name", "Numbers", "Panes", "Rubix"), listOf(0, 1, 2, 3, 4, 5)).childOf { settingsExpandable }
+    private val settings by config.group("Settings")
+    val fcDelay by settings.slider("First click delay", 350, 150, 1000, "ms")
+    val resync by settings.slider("Resync timeout", 800, 0, 2000, "ms")
+    val dropKey by settings.switch("Allow using drop key", true)
+    val keybindL by settings.keybind("Keybind left click")
+    val keybindR by settings.keybind("Keybind right click")
+    val solve by settings.multiSelector("Enabled solvers", listOf("Colors", "Melody", "Name", "Numbers", "Panes", "Rubix"), listOf(0, 1, 2, 3, 4, 5))
 
-    private val rubixExpandable by config.expandable("Rubix")
-    val `rubix$left` by config.switch("Left click only").childOf { rubixExpandable }
+    private val rubix by config.group("Rubix")
+    val `rubix$left` by rubix.switch("Left click only")
 
-    private val melodyExpandable by config.expandable("Melody")
-    val `melody$num` by config.switch("Number keys").childOf { melodyExpandable }
-    val `melody$key0` by config.keybind("Keybind 1", GLFW.GLFW_KEY_1).dependsOn { `melody$num` }.childOf { melodyExpandable }
-    val `melody$key1` by config.keybind("Keybind 2", GLFW.GLFW_KEY_2).dependsOn { `melody$num` }.childOf { melodyExpandable }
-    val `melody$key2` by config.keybind("Keybind 3", GLFW.GLFW_KEY_3).dependsOn { `melody$num` }.childOf { melodyExpandable }
-    val `melody$key3` by config.keybind("Keybind 4", GLFW.GLFW_KEY_4).dependsOn { `melody$num` }.childOf { melodyExpandable }
+    private val melody by config.group("Melody")
+    val `melody$num` by melody.switch("Number keys")
+    val `melody$key0` by melody.keybind("Keybind 1", GLFW.GLFW_KEY_1)
+    val `melody$key1` by melody.keybind("Keybind 2", GLFW.GLFW_KEY_2)
+    val `melody$key2` by melody.keybind("Keybind 3", GLFW.GLFW_KEY_3)
+    val `melody$key3` by melody.keybind("Keybind 4", GLFW.GLFW_KEY_4)
 
-    private val guiExpandable by config.expandable("GUI")
-    val `ui$scale` by config.slider("Scale", 1f, 0.1f, 4f, showDouble = true).childOf { guiExpandable }
-    val `ui$roundness` by config.slider("Roundness", 0f, 0f, 10f, showDouble = true).childOf { guiExpandable }
-    val `ui$padding` by config.slider("Padding", 5f, 0f, 20f, showDouble = true).childOf { guiExpandable }
-    val `ui$gap` by config.slider("Slot gap", 2f, 0f, 10f, showDouble = true).childOf { guiExpandable }
-    val `ui$melodyGap` by config.slider("Melody gap", 2f, 0f, 10f, showDouble = true).childOf { guiExpandable }
-    val `ui$bg` by config.colorPicker("Background color", Color(0, 0, 0, 150)).childOf { guiExpandable }
-    val `ui$border` by config.colorPicker("Border color", Color(Mocha.Mauve.argb, true)).childOf { guiExpandable }
+    private val gui by config.group("GUI")
+    val `ui$scale` by gui.slider("Scale", 1f, 0.1f, 4f, double = true)
+    val `ui$roundness` by gui.slider("Roundness", 0f, 0f, 10f, double = true)
+    val `ui$padding` by gui.slider("Padding", 5f, 0f, 20f, double = true)
+    val `ui$gap` by gui.slider("Slot gap", 2f, 0f, 10f, double = true)
+    val `ui$melodyGap` by gui.slider("Melody gap", 2f, 0f, 10f, double = true)
+    val `ui$bg` by gui.colorPicker("Background color", Color(0, 0, 0, 150))
+    val `ui$border` by gui.colorPicker("Border color", Color(Mocha.Lavender.argb, true))
 
-    private val slotsExpandable by config.expandable("Slots")
-    val `ui$slots$fill` by config.switch("Fill").childOf { slotsExpandable }
-    val `ui$slots$roundness` by config.slider("Roundness", 0f, 0f, 10f, showDouble = true).childOf { slotsExpandable }
-    val `ui$numbers$showText` by config.switch("Numbers: Show text", true).childOf { slotsExpandable }
+    private val slots by config.group("Slots")
+    val `ui$slots$fill` by slots.switch("Fill")
+    val `ui$slots$roundness` by slots.slider("Roundness", 0f, 0f, 10f, double = true)
+    val `ui$numbers$showText` by slots.switch("Numbers: Show text", true)
 
-    private val headerExpandable by config.expandable("Header")
-    val `ui$hideHeader` by config.switch("Hide header", true).childOf { headerExpandable }
-    val `ui$hideTitle` by config.switch("Hide title", true).dependsOn { `ui$hideHeader` }.childOf { headerExpandable }
-    val `ui$titleColor` by config.colorPicker("Title color", Color(Mocha.Subtext0.argb, true)).dependsOn { `ui$hideHeader` && !`ui$hideTitle` }.childOf { headerExpandable }
-    val `ui$header` by config.colorPicker("Header color", Color(20, 20, 20, 200)).childOf { headerExpandable }
+    private val header by config.group("Header")
+    val `ui$hideHeader` by header.switch("Hide header", true)
+    val `ui$hideTitle` by header.switch("Hide title", true)
+    val `ui$titleColor` by header.colorPicker("Title color", Color(Mocha.Subtext0.argb, true))
+    val `ui$header` by header.colorPicker("Header color", Color(20, 20, 20, 200))
 
-    private val soundExpandable by config.expandable("Sounds")
-    val `sound$enabled` by config.switch("Enable sounds").childOf { soundExpandable }
-    val clickSound by config.sound("Click sound", "block.note_block.pling").childOf { soundExpandable }
+    private val sounds by config.group("Sounds")
+    val `sound$enabled` by sounds.switch("Enable sounds")
+    val clickSound by sounds.sound("Click sound")
 
-    private val colorExpandable by config.expandable("Solver colors")
-    val `colors$correct` by config.colorPicker("Colors: Solution", Color(0, 255, 0, 180)).childOf { colorExpandable }
-    val `names$correct` by config.colorPicker("Names: Solution", Color(0, 255, 0, 180)).childOf { colorExpandable }
-    val `panes$correct` by config.colorPicker("Panes: Solution", Color(0, 255, 0, 180)).childOf { colorExpandable }
-    val `numbers$first` by config.colorPicker("Numbers: 1st", Color(0, 255, 0, 180)).childOf { colorExpandable }
-    val `numbers$second` by config.colorPicker("Numbers: 2nd", Color(0, 200, 0, 180)).childOf { colorExpandable }
-    val `numbers$third` by config.colorPicker("Numbers: 3rd", Color(0, 150, 0, 180)).childOf { colorExpandable }
-    val `rubix$positive` by config.colorPicker("Rubix: Positive", Color(0, 114, 255, 180)).childOf { colorExpandable }
-    val `rubix$negative` by config.colorPicker("Rubix: Negative", Color(205, 0, 0, 180)).childOf { colorExpandable }
-    val `melody$fill` by config.colorPicker("Melody: Fill", Color(Mocha.Mauve.argb, true)).childOf { colorExpandable }
-    val `melody$correct` by config.colorPicker("Melody: Correct", Color(0, 255, 0, 180)).childOf { colorExpandable }
-    val `melody$wrong` by config.colorPicker("Melody: Wrong", Color(205, 0, 0, 180)).childOf { colorExpandable }
-    val `melody$other` by config.colorPicker("Melody: Other", Color(Mocha.Base.argb, true)).childOf { colorExpandable }
+    private val colors by config.group("Solver colors")
+    val `colors$correct` by colors.colorPicker("Colors: Solution", Color(0, 255, 0, 180))
+    val `names$correct` by colors.colorPicker("Names: Solution", Color(0, 255, 0, 180))
+    val `panes$correct` by colors.colorPicker("Panes: Solution", Color(0, 255, 0, 180))
+    val `numbers$first` by colors.colorPicker("Numbers: 1st", Color(0, 255, 0, 180))
+    val `numbers$second` by colors.colorPicker("Numbers: 2nd", Color(0, 200, 0, 180))
+    val `numbers$third` by colors.colorPicker("Numbers: 3rd", Color(0, 150, 0, 180))
+    val `rubix$positive` by colors.colorPicker("Rubix: Positive", Color(0, 114, 255, 180))
+    val `rubix$negative` by colors.colorPicker("Rubix: Negative", Color(205, 0, 0, 180))
+    val `melody$fill` by colors.colorPicker("Melody: Fill", Color(Mocha.Lavender.argb, true))
+    val `melody$correct` by colors.colorPicker("Melody: Correct", Color(0, 255, 0, 180))
+    val `melody$wrong` by colors.colorPicker("Melody: Wrong", Color(205, 0, 0, 180))
+    val `melody$other` by colors.colorPicker("Melody: Other", Color(Mocha.Base.argb, true))
 
     var last: Long = 0
 
@@ -103,7 +102,7 @@ object TerminalSolver : Module(
             val term = TerminalAPI.terminal?.impl ?: return@on
 
             cancel()
-            NVGSpecialRenderer.draw(graphics, 0, 0, graphics.guiWidth(), graphics.guiHeight()) { term.main() }
+            term.main(graphics)
         }.runWhen(TerminalAPI.opened)
 
         on<GuiEvent.Input.Mouse.Press> {
@@ -181,12 +180,12 @@ object TerminalSolver : Module(
 
     private fun c(mouse: Int) {
         val solver = TerminalAPI.terminal?.impl ?: return
-        val uiScale = 3f * `ui$scale`
-        val mx = mouseRX / uiScale
-        val my = mouseRY / uiScale
+        val scale = `ui$scale`
+        val mx = mouseSX / scale
+        val my = mouseSY / scale
 
-        val width = client.window.width / uiScale
-        val height = client.window.height / uiScale
+        val width = client.window.guiScaledWidth.toFloat() / scale
+        val height = client.window.guiScaledHeight.toFloat() / scale
 
         solver.click(mx, my, width, height, mouse)
     }

@@ -1,4 +1,4 @@
-﻿@file:Suppress("PrivatePropertyName")
+@file:Suppress("PrivatePropertyName")
 
 package foo.starred.athen.modules.impl.general.keybinds.ui
 
@@ -139,7 +139,7 @@ class KeybindsPopUp(
 
             adopt(text {
                 text = "Create Keybind".literal()
-                color = Mocha.Mauve.argb
+                color = Mocha.Lavender.argb
                 position = MixedPositionConstraint(FixedPositionConstraint(8, 0), CenterPositionConstraint())
             }.also { title = it })
         }

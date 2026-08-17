@@ -1,0 +1,384 @@
+package foo.starred.athen.config.ui.pages.module.elements.input
+
+import foo.starred.athen.config.ConfigManager
+import foo.starred.athen.config.data.impl.ConfigTextInputElementData
+import foo.starred.athen.config.ui.pages.module.elements.input.ConfigInputExpandElement.Companion.configExpandButtonElement
+import foo.starred.athen.config.ui.pages.module.elements.input.ConfigInputPreviewElement.Companion.configPreviewButtonElement
+import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.cascade.animation.data.AnimatableColor.Companion.animateColor
+import foo.starred.cascade.constraints.impl.data.PositionAlignment
+import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
+import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.events.impl.FocusEvent
+import foo.starred.cascade.events.impl.KeyEvent
+import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.extensions.rectangle.rectangle
+import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
+import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
+import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
+import foo.starred.snowbird.api.ZERO_PAIR
+import foo.starred.snowbird.api.client
+import foo.starred.snowbird.api.ctrl
+import foo.starred.snowbird.api.shift
+import foo.starred.snowbird.utils.brighten
+import foo.starred.snowbird.utils.withAlpha
+import net.minecraft.client.gui.GuiGraphics
+import org.lwjgl.glfw.GLFW
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+
+open class ConfigInputElement : RoundedRectanglePrimitive() {
+    private var update: ((String) -> Unit)? = null
+    private var _cursor: Float = 0f
+    private var _selection0: Float = 0f
+    private var _selection1: Float = 0f
+
+    var placeholder: String = ""
+    var scroll: Int = 0
+
+    var value: String = ""
+        set(v) {
+            if (field == v) return
+            field = v
+            fn0()
+            update?.invoke(v)
+        }
+
+    var cursor: Int = 0
+        set(v) {
+            if (field == v) return
+            field = v
+            fn()
+        }
+
+    var anchor: Int = -1
+        set(v) {
+            if (field == v) return
+            field = v
+            fn()
+        }
+
+    var range: Pair<Int, Int> = ZERO_PAIR
+        private set
+
+    var selected: Boolean = false
+        private set
+
+    init {
+        color = Catppuccin.Mocha.Surface0.argb
+        radius = RoundedRectangleRadius.of(4f)
+        border = true
+        borderColor = Catppuccin.Mocha.Surface1.argb
+        borderInset = false
+
+        on<FocusEvent.Gain> {
+            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            borderColor = Catppuccin.Mocha.Lavender.argb.brighten(0.6f)
+        }
+
+        on<FocusEvent.Lose> {
+            animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
+            borderColor = Catppuccin.Mocha.Surface1.argb
+        }
+
+        on<MouseEvent.Move.Enter> {
+            if (root.focused == self) return@on
+            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+        }
+
+        on<MouseEvent.Move.Exit> {
+            if (root.focused == self) return@on
+            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+        }
+
+        on<MouseEvent.Press> {
+            val font = CascadeFonts.arial
+
+            root.focused = self
+            cancel()
+
+            val mx = x.toInt() - (self.x + 3) + scroll
+            var i0 = 0
+            var i1 = Int.MAX_VALUE
+
+            for (i in 0..value.length) {
+                val a = font.width(value.substring(0, i), 12f)
+                val b = abs(a - mx).takeIf { it < i1 }?.toInt() ?: continue
+
+                i1 = b
+                i0 = i
+            }
+
+            anchor = if (shift) anchor.takeIf { it != -1 } ?: cursor else -1
+            cursor = i0
+        }
+
+        on<KeyEvent.Press> {
+            val shift = shift
+            val ctrl = ctrl
+
+            when (key) {
+                GLFW.GLFW_KEY_LEFT -> {
+                    if (shift && anchor == -1) {
+                        anchor = cursor
+                    }
+
+                    if (!shift && selected) {
+                        cursor = range.first
+                        anchor = -1
+                        cancel()
+                        return@on
+                    }
+
+                    cursor = max(0, cursor - 1)
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_RIGHT -> {
+                    if (shift && anchor == -1) {
+                        anchor = cursor
+                    }
+
+                    if (!shift && selected) {
+                        cursor = range.second
+                        anchor = -1
+                        cancel()
+                        return@on
+                    }
+
+                    cursor = min(value.length, cursor + 1)
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_HOME -> {
+                    if (shift && anchor == -1) {
+                        anchor = cursor
+                    }
+
+                    if (!shift) {
+                        anchor = -1
+                    }
+
+                    cursor = 0
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_END -> {
+                    if (shift && anchor == -1) {
+                        anchor = cursor
+                    }
+
+                    if (!shift) {
+                        anchor = -1
+                    }
+
+                    cursor = value.length
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_BACKSPACE -> {
+                    if (selected) {
+                        delete()
+                        cancel()
+                        return@on
+                    }
+
+                    if (cursor > 0) {
+                        value = value.substring(0, cursor - 1) + value.substring(cursor)
+                        cursor--
+                    }
+
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_DELETE -> {
+                    if (selected) {
+                        delete()
+                        cancel()
+                        return@on
+                    }
+
+                    if (cursor < value.length) {
+                        value = value.substring(0, cursor) + value.substring(cursor + 1)
+                    }
+
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_ESCAPE -> {
+                    root.focused = null
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_A -> {
+                    if (!ctrl) return@on
+
+                    anchor = 0
+                    cursor = value.length
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_C -> {
+                    if (!ctrl) return@on
+                    if (!selected) return@on
+
+                    client.keyboardHandler.clipboard = value.substring(range.first, range.second)
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_X -> {
+                    if (!ctrl) return@on
+                    if (!selected) return@on
+
+                    client.keyboardHandler.clipboard = value.substring(range.first, range.second)
+                    delete()
+                    cancel()
+                    return@on
+                }
+
+                GLFW.GLFW_KEY_V -> {
+                    if (!ctrl) return@on
+
+                    delete()
+                    val clip = client.keyboardHandler.clipboard
+                    value = value.substring(0, cursor) + clip + value.substring(cursor)
+                    cursor += clip.length
+                    cancel()
+                    return@on
+                }
+            }
+        }
+
+        on<KeyEvent.Type> {
+            if (char.code < 32) return@on
+            if (char.code == 127) return@on
+
+            delete()
+            value = value.substring(0, cursor) + char + value.substring(cursor)
+            cursor++
+            cancel()
+        }
+    }
+
+    override fun render(graphics: GuiGraphics) {
+        val bool0 = root.focused != this
+        if (bool0) scroll = 0
+
+        super.render(graphics)
+
+        val font = CascadeFonts.arial
+        val x0 = x.toInt()
+        val y0 = y.toInt()
+
+        graphics.enableScissor(x0 + 2, y0, x0 + width.toInt() - 2, y0 + height.toInt())
+
+        val height0 = font.regular.height * 12f
+        val x1 = x0 + 3 - scroll
+        val y1 = y + (height - font.regular.height * 12f) / 2f
+
+        if (selected && !bool0) {
+            val i0 = min(_selection0, _selection1)
+            val i1 = max(_selection0, _selection1)
+            val width = i1 - i0
+
+            graphics.rectangle(x1 + i0, y1, width, height0, Catppuccin.Mocha.Base.argb.withAlpha(0.5f))
+        }
+
+        val bool1 = value.isEmpty() && bool0
+        font.extract(graphics, if (bool1) placeholder else value, x1, y1, if (bool1) Catppuccin.Mocha.Overlay0.argb else Catppuccin.Mocha.Text.argb, false)
+
+        if (!bool0 && (System.currentTimeMillis() / 500) % 2 == 0L) {
+            font.extract(graphics, "|", x1 + _cursor - 1f, y1 - 1f, Catppuccin.Mocha.Lavender.argb, false)
+        }
+
+        graphics.disableScissor()
+    }
+
+    fun update(block: ((String) -> Unit)?) {
+        update = block
+    }
+
+    private fun fn() {
+        selected = anchor != -1 && anchor != cursor
+        range = if (anchor == -1) cursor to cursor else min(anchor, cursor) to max(anchor, cursor)
+        fn0()
+    }
+
+    private fun fn0() {
+        val font = CascadeFonts.arial
+        _cursor = font.width(value.substring(0, min(cursor, value.length)), 12f)
+
+        val width = width.toInt()
+        if (width > 0) {
+            val i0 = max(10, width - 6)
+            while (_cursor - scroll > i0) scroll += 10
+            while (_cursor - scroll < 0 && scroll > 0) scroll = max(0, scroll - 10)
+            
+            val totalWidth = font.width(value, 12f)
+            val maxScroll = max(0, (totalWidth - i0).toInt())
+            if (scroll > maxScroll) scroll = maxScroll
+        }
+
+        if (!selected) return
+        _selection0 = font.width(value.substring(0, min(range.first, value.length)), 12f)
+        _selection1 = font.width(value.substring(0, min(range.second, value.length)), 12f)
+    }
+
+    private fun delete(): Boolean {
+        if (!selected) return false
+
+        value = value.substring(0, range.first) + value.substring(range.second)
+        cursor = range.first
+        anchor = -1
+        return true
+    }
+
+    companion object {
+        fun configInputElement(block: ConfigInputElement.() -> Unit): ConfigInputElement {
+            return ConfigInputElement().apply(block)
+        }
+
+        fun of(parent: IPrimitiveElement<*>, config: ConfigTextInputElementData): ConfigInputElement {
+            return ConfigInputElement().apply {
+                position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -44f, 0f)
+                size = FixedSizeConstraint(84f, 14f)
+                placeholder = config.placeholder
+                value = ConfigManager.get(config.key) as? String ?: config.default
+
+                on<KeyEvent.Type> {
+                    val value0 = value
+                    if (value0.length > config.max) {
+                        value = value0.substring(0, config.max)
+                        cursor = min(cursor, config.max)
+                    }
+
+                    ConfigManager.update(config.key, value)
+                }
+
+                on<KeyEvent.Press> {
+                    ConfigManager.update(config.key, value)
+                }
+
+                attach(parent)
+                parent.adopt(configExpandButtonElement(this, config) {
+                    position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -26f, 0f)
+                })
+
+                parent.adopt(configPreviewButtonElement({ value }) {
+                    position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
+                })
+            }
+        }
+    }
+}

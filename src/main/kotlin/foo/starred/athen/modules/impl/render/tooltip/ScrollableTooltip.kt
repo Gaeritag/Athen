@@ -24,17 +24,17 @@ object ScrollableTooltip : Module(
     Category.RENDER
 ) {
     private val horizontal by config.switch("Horizontal", true)
-    private val `horizontal$key` by config.keybind("Horizontal keybind", GLFW.GLFW_KEY_LEFT_SHIFT).dependsOn { horizontal }
-    private val `horizontal$speed` by config.slider("Horizontal speed", 8, 1, 20, "pixels").dependsOn { horizontal }
+    private val `horizontal$key` by config.keybind("Horizontal keybind", GLFW.GLFW_KEY_LEFT_SHIFT)
+    private val `horizontal$speed` by config.slider("Horizontal speed", 8, 1, 20, "pixels")
 
     private val vertical by config.switch("Vertical", true)
-    private val `vertical$place` by config.switch("Vertical in place", true).dependsOn { vertical }
-    private val `vertical$speed` by config.slider("Vertical speed", 8, 1, 20, "pixels").dependsOn { vertical }
+    private val `vertical$place` by config.switch("Vertical in place", true)
+    private val `vertical$speed` by config.slider("Vertical speed", 8, 1, 20, "pixels")
 
     private val scale by config.switch("Scale tooltip")
-    private val `scale$key` by config.keybind("Scale keybind", GLFW.GLFW_KEY_LEFT_CONTROL).dependsOn { scale }
-    private val `scale$dynamic` by config.switch("Dynamic scale", true).dependsOn { scale }
-    private val `scale$dynamic$text` by config.textParagraph("Dynamic scale automatically scales the tooltip to fit on your screen!").dependsOn { scale }
+    private val `scale$key` by config.keybind("Scale keybind", GLFW.GLFW_KEY_LEFT_CONTROL)
+    private val `scale$dynamic` by config.switch("Dynamic scale", true)
+    private val `scale$dynamic$text` by config.information("Dynamic scale automatically scales the tooltip to fit on your screen!")
 
     private val reset by config.switch("Reset on hover")
 

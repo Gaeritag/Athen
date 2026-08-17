@@ -28,11 +28,11 @@ object IRC : Module(
     Category.GENERAL,
     true
 ), IWebSocket, ICommand {
-    private val _unused by config.textParagraph("Run <red>\"/athen irc help\" <r>to view all commands!")
+    private val _unused by config.information("Run <red>\"/athen irc help\" <r>to view all commands!")
     private val help by config.switch("Help message", true)
-    private val format0 by config.textInput("Message format", "<#A6E3A1>#name <dark_gray>➤ <white>#message")
+    private val format0 by config.input("Message format", "<#A6E3A1>#name <dark_gray>➤ <white>#message")
     private val discord by config.switch("Discord IRC", true)
-    private val format1 by config.textInput("Discord format", "<#A6E3A1>#name <dark_gray>➤ <white>#message").dependsOn { discord }
+    private val format1 by config.input("Discord format", "<#A6E3A1>#name <dark_gray>➤ <white>#message")
 
     private val ob: Observable<Boolean> = Observable(false)
     private var cc: String = ""

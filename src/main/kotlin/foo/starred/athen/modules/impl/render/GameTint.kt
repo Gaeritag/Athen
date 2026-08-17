@@ -18,8 +18,8 @@ object GameTint : Module(
     Category.RENDER
 ) {
     private val color by config.colorPicker("Tint color", Color(0, 0, 0, 25))
-    private val last = config.switch("Tint HUDs", true).custom("hudTint")
-    private val gui = config.switch("Tint GUIs", true).custom("screenTint")
+    private val last = config.switch("Tint HUDs", true).unique("hudTint")
+    private val gui = config.switch("Tint GUIs", true).unique("screenTint")
 
     private val _state = Observable(false)
     private val state = _state.and(gui.state).map { !(it) }

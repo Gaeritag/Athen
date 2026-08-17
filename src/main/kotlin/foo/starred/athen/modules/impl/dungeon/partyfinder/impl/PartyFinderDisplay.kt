@@ -48,17 +48,17 @@ object PartyFinderDisplay : Module(
     "Displays stats of party finder groups in the menu.",
     Category.DUNGEONS
 ) {
-    private val stats = config.switch("Show stats").custom("showStats")
-    private val stack = config.switch("Party stack size", true).custom("stackSize")
+    private val stats = config.switch("Show stats").unique("showStats")
+    private val stack = config.switch("Party stack size", true).unique("stackSize")
 
-    private val highlight = config.switch("Highlight parties").custom("highlight")
-    val `color$allowed` by config.colorPicker("Joinable color", Color(0,255, 0)).dependsOn { highlight.value }
-    val `color$maybe` by config.colorPicker("Dupe color", Color(255, 255, 0)).dependsOn { highlight.value }
-    val `color$blocked` by config.colorPicker("Blocked color", Color(255, 0, 0)).dependsOn { highlight.value }
-    val `color$vc` by config.colorPicker("VC color", Color(115, 0, 255)).dependsOn { highlight.value }
-    val `color$perm` by config.colorPicker("Perm color", Color(0, 255, 255)).dependsOn { highlight.value }
-    val `color$carry` by config.colorPicker("Carry color", Color(100, 0, 0)).dependsOn { highlight.value }
-    private val _unused by config.textParagraph("Want to hide a color? You can set it's opacity to 0!").dependsOn { highlight.value }
+    private val highlight = config.switch("Highlight parties").unique("highlight")
+    val `color$allowed` by config.colorPicker("Joinable color", Color(0,255, 0))
+    val `color$maybe` by config.colorPicker("Dupe color", Color(255, 255, 0))
+    val `color$blocked` by config.colorPicker("Blocked color", Color(255, 0, 0))
+    val `color$vc` by config.colorPicker("VC color", Color(115, 0, 255))
+    val `color$perm` by config.colorPicker("Perm color", Color(0, 255, 255))
+    val `color$carry` by config.colorPicker("Carry color", Color(100, 0, 0))
+    private val _unused by config.information("Want to hide a color? You can set it's opacity to 0!")
 
     private val noteRegex = Regex("^Note: (?<note>.+)")
     private val floorRegex = Regex("^Floor: Floor (?<floor>[IV]+)$")

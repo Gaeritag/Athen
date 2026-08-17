@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused")
+@file:Suppress("Unused")
 
 package foo.starred.athen.modules.impl.general
 
@@ -32,7 +32,7 @@ object MissingEnchants : Module(
     Category.GENERAL
 ) {
     private val keybind: Int by config.keybind("Keybind", GLFW.GLFW_KEY_LEFT_SHIFT).`watch$tooltip`()
-    private val _unused by config.textParagraph("You can unbind the keybind to always show.")
+    private val _unused by config.information("You can unbind the keybind to always show.")
 
     private val typeRegex = Regex("""\b(?:COMMON|UNCOMMON|RARE|EPIC|LEGENDARY|MYTHIC|DIVINE|SPECIAL|VERY SPECIAL)\b\s+(?:DUNGEON\s+)?([A-Z]+(?: [A-Z]+)*)""") // https://regex101.com/r/MOQHMf/1
     private val romans = setOf("I","II","III","IV","V","VI","VII","VIII","IX","X")

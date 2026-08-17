@@ -75,7 +75,7 @@ class RadialHeader(side: RectanglePrimitive) {
 
         text00 = text {
             text = RadialMenu.active.literal()
-            color = Mocha.Mauve.argb
+            color = Mocha.Lavender.argb
             position = CenterPositionConstraint()
             interact = true
 

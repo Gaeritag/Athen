@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.config
+package foo.starred.athen.config
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
@@ -6,189 +6,97 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.storage.JsonStore
+import foo.starred.athen.config.data.feature.ConfigFeatureData
 import foo.starred.snowbird.handlers.Observable
 import java.awt.Color
 
 @Priority(-4)
 object ConfigManager {
-    private val configFile = JsonStore("config/Config")
-    val configValues = mutableMapOf<String, Any>()
-    val features = mutableMapOf<Category, MutableList<Feature>>()
+    private val json = JsonStore("config/Config")
+
+    val values = mutableMapOf<String, Any>()
+    val features = mutableMapOf<Category, MutableList<ConfigFeatureData>>()
     val states = mutableMapOf<String, Observable<Any>>()
 
     init {
-        val data by configFile.jsonObject("data")
-        data.entrySet().forEach { (key, value) ->
-            configValues[key] = parseValue(value)
+        val data by json.jsonObject("data")
+
+        for ((k, v) in data.entrySet()) {
+            values[k] = v.deserialize()
         }
     }
 
-    private fun parseValue(element: JsonElement): Any = when {
-        element.isJsonPrimitive -> {
-            element.asJsonPrimitive.let { prim ->
-                when {
-                    prim.isBoolean -> prim.asBoolean
-                    prim.isNumber -> prim.asNumber.let { if (it.toDouble() % 1.0 == 0.0) it.toInt() else it.toDouble() }
-                    else -> prim.asString
-                }
-            }
-        }
-
-        element.isJsonArray -> {
-            element.asJsonArray.map { parseValue(it) }
-        }
-
-        element.isJsonObject -> {
-            element.asJsonObject.let { obj ->
-                if (
-                    obj.has("r") &&
-                    obj.has("g") &&
-                    obj.has("b") &&
-                    obj.has("a")
-                ) {
-                    Color(obj["r"].asInt, obj["g"].asInt, obj["b"].asInt, obj["a"].asInt)
-                } else {
-                    obj.entrySet().associate { it.key to parseValue(it.value) }
-                }
-            }
-        }
-
-        else -> element.toString()
+    fun feature(name: String, description: String, category: Category, configKey: String, default: Any?): ConfigFeatureData {
+        val feature = ConfigFeatureData(name, description, configKey, default).also { features.getOrPut(category) { mutableListOf() }.add(it) }
+        return feature.also { it.default(configKey, default) }
     }
 
-    private fun toJson(value: Any): JsonElement = when (value) {
-        is Boolean -> {
-            JsonPrimitive(value)
-        }
-
-        is Number -> {
-            JsonPrimitive(value)
-        }
-
-        is String -> {
-            JsonPrimitive(value)
-        }
-
-        is List<*> -> {
-            JsonArray().apply {
-                value.forEach { add(toJson(it ?: return@forEach)) }
-            }
-        }
-
-        is Map<*, *> -> {
-            JsonObject().apply {
-                value.forEach { (k, v) ->
-                    if (k is String && v != null) add(k, toJson(v))
-                }
-            }
-        }
-
-        is Color -> {
-            JsonObject().apply {
-                addProperty("r", value.red)
-                addProperty("g", value.green)
-                addProperty("b", value.blue)
-                addProperty("a", value.alpha)
-            }
-        }
-
-        else -> JsonPrimitive(value.toString())
-    }
-
-    fun addFeature(name: String, description: String, category: Category, configKey: String, default: Any?): Feature {
-        val feature = Feature(name, description, configKey, default)
-        features.getOrPut(category) { mutableListOf() }.add(feature)
-        ensureDefault(configKey, default)
-        return feature
-    }
-
-    fun updateConfig(key: String, value: Any) {
-        configValues[key] = value
+    fun update(key: String, value: Any) {
+        values[key] = value
         states[key]?.value = value
         save(false)
     }
 
     fun observe(key: String, listener: (Any) -> Unit) {
-        states.getOrPut(key) { Observable(getValue(key) ?: return) }.onChange(listener).also { listener(it.value) }
+        states.getOrPut(key) { Observable(get(key) ?: return) }.onChange(listener).also { listener(it.value) }
     }
 
-    fun getValue(key: String): Any? = configValues[key]
-
-    fun ensureDefault(key: String, default: Any?) {
-        if (key !in configValues && default != null) configValues[key] = default
+    fun get(key: String): Any? {
+        return values[key]
     }
 
     fun save(force: Boolean) {
         val data = JsonObject()
-        features.values.flatten().forEach { feature ->
-            feature.all().forEach { key ->
-                configValues[key]?.let { value ->
-                    data.add(key, toJson(value))
+        for (feature in features.values.flatten()) {
+            for (key in feature.all()) {
+                val value = values[key] ?: continue
+                data.add(key, value.serialize())
+            }
+        }
+
+        var data0 by json.jsonObject("data")
+        data0 = data
+
+        if (force) json.save()
+    }
+
+    private fun JsonElement.deserialize(): Any = when {
+        isJsonPrimitive -> {
+            asJsonPrimitive.run {
+                when {
+                    isBoolean -> asBoolean
+                    isNumber -> asNumber.let { if (it.toDouble() % 1.0 == 0.0) it.toInt() else it.toDouble() }
+                    else -> asString
                 }
             }
         }
 
-        var dataProp by configFile.jsonObject("data")
-        dataProp = data
+        isJsonArray -> {
+            asJsonArray.map { it.deserialize() }
+        }
 
-        if (force) configFile.save()
-    }
-
-    data class Feature(
-        val name: String,
-        val description: String,
-        val configKey: String,
-        val default: Any?
-    ) {
-        val options = mutableListOf<ElementData>()
-
-        fun option(data: ElementData) {
-            options.add(data)
-            when (data) {
-                is ElementData.Switch -> ensureDefault(data.key, data.default)
-                is ElementData.Slider -> ensureDefault(data.key, data.default)
-                is ElementData.Dropdown -> ensureDefault(data.key, data.default)
-                is ElementData.TextInput -> ensureDefault(data.key, data.default)
-                is ElementData.ColorPicker -> ensureDefault(data.key, data.default)
-                is ElementData.Keybind -> ensureDefault(data.key, data.default)
-                is ElementData.MultiCheckbox -> ensureDefault(data.key, data.default.toList())
-                is ElementData.HUDElement -> ensureDefault(data.key, data.default)
-                is ElementData.Expandable -> ensureDefault(data.key, false)
-                is ElementData.Sound -> {
-                    ensureDefault(data.key, data.default)
-                    ensureDefault("${data.key}.pitch", 1.0)
-                    ensureDefault("${data.key}.volume", 1.0)
-                }
-                else -> {}
+        isJsonObject -> {
+            asJsonObject.run {
+                if (has("r") && has("g") && has("b") && has("a")) Color(get("r").asInt, get("g").asInt, get("b").asInt, get("a").asInt)
+                else entrySet().associate { it.key to it.value.deserialize() }
             }
         }
 
-        fun all(): List<String> = listOf(configKey) + options.flatMap {
-            when (it) {
-                is ElementData.Button, is ElementData.TextParagraph, is ElementData.Expandable -> emptyList()
-                is ElementData.Sound -> listOf(it.key, "${it.key}.pitch", "${it.key}.volume")
-                else -> listOf(it.key)
-            }
-        }
+        else -> toString()
     }
 
-    sealed class ElementData {
-        abstract val name: String
-        abstract val key: String
-        abstract val visibilityDependency: (() -> Boolean)?
-        abstract val parentKey: String?
-
-        data class HUDElement(override val name: String, override val key: String, val default: Boolean, val hudElement: foo.starred.athen.hud.HUDElement, val config: ConfigBuilder, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Switch(override val name: String, override val key: String, val default: Boolean, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Slider(override val name: String, override val key: String, val min: Double, val max: Double, val default: Double, val showDouble: Boolean, val unit: String, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Dropdown(override val name: String, override val key: String, val options: List<String>, val default: Int, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class TextInput(override val name: String, override val key: String, val default: String, val placeholder: String, val maxLength: Int, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class ColorPicker(override val name: String, override val key: String, val default: Color, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Keybind(override val name: String, override val key: String, val default: Int, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class MultiCheckbox(override val name: String, override val key: String, val options: List<String>, val default: List<Int>, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Button(override val name: String, override val key: String, val onClick: () -> Unit, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class TextParagraph(override val name: String, override val key: String, val text: String, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Expandable(override val name: String, override val key: String, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
-        data class Sound(override val name: String, override val key: String, val default: String, override val visibilityDependency: (() -> Boolean)? = null, override val parentKey: String? = null) : ElementData()
+    private fun Any.serialize(): JsonElement = when (this) {
+        is Boolean -> JsonPrimitive(this)
+        is Number -> JsonPrimitive(this)
+        is String -> JsonPrimitive(this)
+        is List<*> -> JsonArray().also { array -> forEach { it?.let { v -> array.add(v.serialize()) } } }
+        is Map<*, *> -> JsonObject().apply { forEach { (k, v) -> if (k is String && v != null) add(k, v.serialize()) } }
+        is Color -> JsonObject().apply {
+            addProperty("r", red)
+            addProperty("g", green)
+            addProperty("b", blue)
+            addProperty("a", alpha)
+        }
+        else -> JsonPrimitive(toString())
     }
 }

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render.highlight.popup
+package foo.starred.athen.modules.impl.render.highlight.popup
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
@@ -56,19 +56,19 @@ object MobHighlightPopup : MultiVersionScreen("Add Highlight [Athen]") {
         graphics.rectangle(px, py, 260, 140, Catppuccin.Mocha.Base.argb)
         graphics.outline(px, py, 260, 140, 1, Catppuccin.Mocha.Surface0.argb)
 
-        graphics.extractText("Add Highlight", px + 8, py + 7, false, Catppuccin.Mocha.Mauve.argb)
+        graphics.extractText("Add Highlight", px + 8, py + 7, false, Catppuccin.Mocha.Lavender.argb)
         graphics.rectangle(px, py + 22, 260, 1, Catppuccin.Mocha.Surface0.argb)
 
         var cy = py + 28
 
         graphics.rectangle(px + 8, cy, 120, 16, if (!typed && name0 != null) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Mantle.argb)
-        graphics.outline(px + 8, cy, 120, 16, 1, if (!typed && name0 != null) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Crust.argb)
-        graphics.extractText("Named", px + 8 + (120 - client.font.width("Named")) / 2, cy + (16 - client.font.lineHeight) / 2 + 1, false, if (name0 == null) Catppuccin.Mocha.Overlay0.argb else if (!typed) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Subtext0.argb)
+        graphics.outline(px + 8, cy, 120, 16, 1, if (!typed && name0 != null) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Crust.argb)
+        graphics.extractText("Named", px + 8 + (120 - client.font.width("Named")) / 2, cy + (16 - client.font.lineHeight) / 2 + 1, false, if (name0 == null) Catppuccin.Mocha.Overlay0.argb else if (!typed) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
         if (name0 != null) zones.add(UIZone(px + 8, cy, 120, 16, UIZoneType.TOGGLE_NAMED))
 
         graphics.rectangle(px + 132, cy, 120, 16, if (typed) Catppuccin.Mocha.Surface1.argb else if (hovered(px + 132, cy, 120, 16, true)) Catppuccin.Mocha.Surface0.withAlpha(0.5f) else Catppuccin.Mocha.Mantle.argb)
-        graphics.outline(px + 132, cy, 120, 16, 1, if (typed) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Crust.argb)
-        graphics.extractText("Typed", px + 132 + (120 - client.font.width("Typed")) / 2, cy + (16 - client.font.lineHeight) / 2 + 1, false, if (typed) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Subtext0.argb)
+        graphics.outline(px + 132, cy, 120, 16, 1, if (typed) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Crust.argb)
+        graphics.extractText("Typed", px + 132 + (120 - client.font.width("Typed")) / 2, cy + (16 - client.font.lineHeight) / 2 + 1, false, if (typed) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
         zones.add(UIZone(px + 132, cy, 120, 16, UIZoneType.TOGGLE_TYPED))
 
         cy += 22
@@ -81,8 +81,8 @@ object MobHighlightPopup : MultiVersionScreen("Add Highlight [Athen]") {
         cy += client.font.lineHeight + 4
 
         graphics.rectangle(px + 8, cy, 10, 10, if (useMax) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb)
-        graphics.outline(px + 8, cy, 10, 10, 1, if (useMax) Catppuccin.Mocha.Mauve.argb else Catppuccin.Mocha.Overlay0.argb)
-        if (useMax) graphics.extractText("✔", px + 9 + (10 - client.font.width("✔")) / 2, cy + 1, false, Catppuccin.Mocha.Mauve.argb)
+        graphics.outline(px + 8, cy, 10, 10, 1, if (useMax) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Overlay0.argb)
+        if (useMax) graphics.extractText("✔", px + 9 + (10 - client.font.width("✔")) / 2, cy + 1, false, Catppuccin.Mocha.Lavender.argb)
         graphics.extractText("Filter Max HP: ", px + 22, cy + 1, false, if (useMax) Catppuccin.Mocha.Subtext0.argb else Catppuccin.Mocha.Overlay0.argb)
         graphics.extractText(if (max0 == -1) "any" else max0.toString(), px + 22 + client.font.width("Filter Max HP: "), cy + 1, false, if (useMax) Catppuccin.Mocha.Peach.argb else Catppuccin.Mocha.Overlay0.argb)
         zones.add(UIZone(px + 8, cy, 10 + client.font.width("Filter Max HP: ") + client.font.width(if (max0 == -1) "any" else max0.toString()) + 14, 10, UIZoneType.TOGGLE_MAX_HP))

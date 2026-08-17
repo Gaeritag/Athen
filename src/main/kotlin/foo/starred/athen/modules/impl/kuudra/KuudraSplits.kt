@@ -45,24 +45,25 @@ object KuudraSplits : Module(
     }
 
     private val estimatePace by config.switch("Estimate run pace")
-    private val estimateType by config.dropdown("Type", listOf("Use PB", "Use average time", "Use hardcoded values"), 1).dependsOn { estimatePace }
-    private val estimateStyle by config.textInput("Style", "<red>Estimate<r>: #time").dependsOn { estimatePace }
+    private val estimateType by config.selector("Type", listOf("PB", "Average time", "Hardcoded"), 1)
+    private val estimateStyle by config.input("Style", "<red>Estimate<r>: #time")
+    private val styleType by config.selector("Styling type", listOf("General", "Advanced"))
 
-    private val styleExpandable by config.expandable("Text style")
-    private val advanced by config.switch("Advanced styling").childOf { styleExpandable }
-    private val generalStyle by config.textInput("Style", "<red>#name<r>: #time <gray>[#tick]").dependsOn { !advanced }.childOf { styleExpandable }
-    private val _unused by config.textParagraph("Variable: <red>#name<r>, <red>#time<r>, <red>#tick<r>, <red>#pb").dependsOn { !advanced }.childOf { styleExpandable }
+    private val general by config.group("General text style")
+    private val generalStyle by general.input("Style", "<red>#name<r>: #time <gray>[#tick]")
+    private val _unused by general.variables("#name", "#time", "#tick", "#pb")
 
-    private val supplyStyle by config.textInput("Supplies", "<red>Supplies<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val buildStyle by config.textInput("Build", "<red>Build<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val fuelStyle by config.textInput("Fuel", "<red>Fuel<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val eatStyle by config.textInput("Eaten", "<red>Eaten<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val stunStyle by config.textInput("Stun", "<red>Stun<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val dpsStyle by config.textInput("DPS", "<red>DPS<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val skipStyle by config.textInput("Skip", "<red>Skip<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val killStyle by config.textInput("Kill", "<red>Kill<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val overallStyle by config.textInput("Overall", "<dark_red>Overlay<r>: #time <gray>[#tick]").dependsOn { advanced }.childOf { styleExpandable }
-    private val _unused0 by config.textParagraph("Variable: <red>#time<r>, <red>#tick<r>, <red>#pb").dependsOn { advanced }.childOf { styleExpandable }
+    private val advanced by config.group("Advanced text style")
+    private val supplyStyle by advanced.input("Supplies", "<red>Supplies<r>: #time <gray>[#tick]")
+    private val buildStyle by advanced.input("Build", "<red>Build<r>: #time <gray>[#tick]")
+    private val fuelStyle by advanced.input("Fuel", "<red>Fuel<r>: #time <gray>[#tick]")
+    private val eatStyle by advanced.input("Eaten", "<red>Eaten<r>: #time <gray>[#tick]")
+    private val stunStyle by advanced.input("Stun", "<red>Stun<r>: #time <gray>[#tick]")
+    private val dpsStyle by advanced.input("DPS", "<red>DPS<r>: #time <gray>[#tick]")
+    private val skipStyle by advanced.input("Skip", "<red>Skip<r>: #time <gray>[#tick]")
+    private val killStyle by advanced.input("Kill", "<red>Kill<r>: #time <gray>[#tick]")
+    private val overallStyle by advanced.input("Overall", "<dark_red>Overlay<r>: #time <gray>[#tick]")
+    private val _unused0 by advanced.variables("#time", "#tick", "#pb")
 
     private val json = JsonStore("features/kuudraSplits")
     private val display = Ticking {
@@ -82,7 +83,7 @@ object KuudraSplits : Module(
         val d0 = splits.sumOf { it.durTime }.toDurationFromMillis(secondsDecimals = 1)
         val d1 = splits.sumOf { it.durTicks / 20.0 }.toDuration(secondsDecimals = 1)
         val pb = PB.get(tier, null).toDurationFromMillis(secondsDecimals = 1)
-        list += (if (advanced) overallStyle else generalStyle).prs("Overall", d0, d1, pb).visualOrderText
+        list += (if (styleType == 1) overallStyle else generalStyle).prs("Overall", d0, d1, pb).visualOrderText
 
         if (!estimatePace || splits.none { it.started }) return@Ticking list
         val ms = splits.est(tier).takeIf { it != 0L } ?: return@Ticking list
@@ -251,7 +252,7 @@ object KuudraSplits : Module(
 
     private val KuudraPhase.style: String
         get() {
-            if (!advanced) return generalStyle
+            if (styleType == 0) return generalStyle
 
             val eaten = this == KuudraPhase.Fuel && (KuudraAPI.tier?.int ?: 0) >= KuudraTier.BURNING.int
             return when {

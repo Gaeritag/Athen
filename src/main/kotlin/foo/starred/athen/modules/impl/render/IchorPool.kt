@@ -33,7 +33,7 @@ object IchorPool : Module(
     private val prio by config.switch("Prioritize own", true)
     private val textColor by config.colorPicker("Text color", Color(Catppuccin.Mocha.Teal.argb, true))
     private val color by config.colorPicker("Circle color", Color(Catppuccin.Mocha.Sapphire.argb, true))
-    private val style by config.dropdown("Circle style", listOf("Outline", "Filled", "Both"), 2)
+    private val style by config.selector("Circle style", listOf("Outline", "Filled", "Both"), 2)
 
     private val messageRegex = Regex("^Party > (?:\\[[^]]*?] )?\\w{1,16}(?: [ቾ⚒])?: Ichor pool casted at (?<x>-?\\d+) (?<y>-?\\d+) (?<z>-?\\d+)")
     private var pos: Vec3? = null

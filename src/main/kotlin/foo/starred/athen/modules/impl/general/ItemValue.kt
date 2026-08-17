@@ -24,20 +24,22 @@ object ItemValue : Module(
     Category.GENERAL
 ) {
     private val craft by config.switch("Craft cost")
-    private val `craft$style` by config.textInput("Craft style", "Craft Cost: <aqua>#price").dependsOn { craft }
+    private val `craft$style` by config.input("Craft style", "Craft Cost: <aqua>#price")
 
     private val lbin by config.switch("Lowest BIN")
-    private val `lbin$style` by config.textInput("Lowest BIN style", "Lowest BIN: <aqua>#price").dependsOn { lbin }
+    private val `lbin$style` by config.input("Lowest BIN style", "Lowest BIN: <aqua>#price")
 
     private val bazaar by config.switch("Bazaar")
-    private val `bazaar$oneLine` by config.switch("One line").dependsOn { bazaar }
-    private val `bazaar$style` by config.textInput("Bazaar style", "Bazaar: <aqua>#buy <gray>| <aqua>#sell #individual").dependsOn { `bazaar$oneLine` && bazaar }
-    private val `bazaar$style$buy` by config.textInput("Bazaar buy style", "Bazaar Buy: <aqua>#price #individual").dependsOn { !`bazaar$oneLine` && bazaar }
-    private val `bazaar$style$sell` by config.textInput("Bazaar sell style", "Bazaar Sell: <aqua>#price #individual").dependsOn { !`bazaar$oneLine` && bazaar }
-    private val `bazaar$style$individual` by config.textInput("Individual count style", "<gray>[#count@#price]")
-    private val unused by config.textParagraph("Variable: <red>#price\nBazaar only: <red>#buy<r>, <red>#sell<r>, <red>#individual\nIndividual only: <red>#count<r>, <red>#price")
+    private val `bazaar$oneLine` by config.switch("One line")
+    private val `bazaar$style` by config.input("Bazaar style", "Bazaar: <aqua>#buy <gray>| <aqua>#sell #individual")
+    private val `bazaar$style$buy` by config.input("Bazaar buy style", "Bazaar Buy: <aqua>#price #individual")
+    private val `bazaar$style$sell` by config.input("Bazaar sell style", "Bazaar Sell: <aqua>#price #individual")
+    private val `bazaar$style$individual` by config.input("Individual count style", "<gray>[#count@#price]")
+    private val variables by config.variables("Variables", listOf("#price"))
+    private val variables0 by config.variables("Bazaar", listOf("#buy", "#sell", "#individual"))
+    private val variables1 by config.variables("Individual", listOf("#count", "#price"))
 
-    private val number by config.dropdown("Number style", listOf("Abbreviate", "Comma"))
+    private val number by config.selector("Number style", listOf("Abbreviate", "Comma"))
 
     init {
         on<GuiEvent.Tooltip.Update> {

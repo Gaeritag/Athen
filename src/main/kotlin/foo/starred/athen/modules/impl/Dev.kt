@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl
+package foo.starred.athen.modules.impl
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
@@ -41,11 +41,11 @@ object Dev {
             "toggle" / "feature" / string("key") {
                 val key = string("key")
 
-                val b = ConfigManager.getValue(key) as? Boolean ?: return@string "Not a valid feature!".mod()
-                ConfigManager.updateConfig(key, !b)
+                val b = ConfigManager.get(key) as? Boolean ?: return@string "Not a valid feature!".mod()
+                ConfigManager.update(key, !b)
 
                 val s = key.replace(r, " $1").lowercase().replaceFirstChar { it.uppercase() }
-                "<${Mocha.Mauve.argb}>$s <gray>➤ ${if (b) "<red>Disabled" else "<green>Enabled"}".mod()
+                "<${Mocha.Lavender.argb}>$s <gray>➤ ${if (b) "<red>Disabled" else "<green>Enabled"}".mod()
             }
 
             "simulate" / "chat" / bool("actionbar") / greedyString("message") {

@@ -23,7 +23,7 @@ object KuudraBreakdown : Module(
     "Sends a message about what each player did at the end of the run.",
     Category.KUUDRA
 ) {
-    private val freshMessage = config.textInput("Fresh regex", "FRESH.*").custom("freshRegex")
+    private val freshMessage = config.input("Fresh regex", "FRESH.*").unique("freshRegex")
     private var freshRegex: Regex? = null
 
     private val supplyRegex = Regex("(?:\\[[^]]*] )?(?<user>\\w+) recovered one of Elle's supplies! \\(\\d+/\\d+\\)")

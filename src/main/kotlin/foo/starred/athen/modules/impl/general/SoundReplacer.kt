@@ -13,14 +13,14 @@ object SoundReplacer : Module(
     "Replaces all sounds, with a sound that you select.",
     Category.GENERAL
 ) {
-    private val customSound by config.sound("Sound", "entity.cat.purreow")
+    private val sound0 by config.sound("Sound", "entity.cat.purreow")
 
     init {
         on<SoundPlayEvent> {
-            val r = customSound.soundEvent?.takeIf { it != sound } ?: return@on
+            val r = sound0.sound.takeIf { it != sound } ?: return@on
 
             cancel()
-            customSound.play()
+            sound0.play()
         }
     }
 }

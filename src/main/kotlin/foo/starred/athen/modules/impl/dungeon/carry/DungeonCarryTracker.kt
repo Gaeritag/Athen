@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName", "Unused")
+@file:Suppress("ObjectPrivatePropertyName", "Unused")
 
 package foo.starred.athen.modules.impl.dungeon.carry
 
@@ -13,7 +13,7 @@ import foo.starred.athen.api.rendering.level.impl.extensions.impl.extractFrameBo
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.Category
-import foo.starred.athen.config.ConfigBuilder
+import foo.starred.athen.config.dsl.impl.builders.hud.ConfigHudBuilder
 import foo.starred.athen.events.DungeonEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.events.core.runWhen
@@ -46,23 +46,24 @@ object DungeonCarryTracker : Module(
     private val announceInParty by config.switch("Announce in party", true)
     private val showStartMessage by config.switch("Show start message", true)
 
-    private val _webhook by config.expandable("Discord webhook")
-    private val webhook by config.switch("Send to webhook").childOf { _webhook }
-    private val webhookEach by config.switch("Send on each kill", true).childOf { _webhook }
-    private val webhookUrl by config.textInput("Webhook URL").childOf { _webhook }
-    private val _webhookUrl by config.textParagraph("Requires you to add your own webhook URL!").childOf { _webhook }
+    private val _webhook by config.group("Discord webhook")
+    private val webhook by _webhook.switch("Send to webhook")
+    private val webhookEach by _webhook.switch("Send on each kill", true)
+    private val webhookUrl by _webhook.input("Webhook URL")
+    private val _webhookUrl by _webhook.information("Requires you to add your own webhook URL!")
 
-    private val highlightPlayer by config.switch("Highlight player", true)
-    private val playerColor by config.colorPicker("Player color", Color(0, 255, 255, 150)).dependsOn { highlightPlayer }
-    private val playerLineWidth by config.slider("Player line width", 2f, 0f, 10f).dependsOn { highlightPlayer }
+    private val highlights by config.group("Highlights")
+    private val highlightPlayer by highlights.switch("Highlight player", true)
+    private val playerColor by highlights.colorPicker("Player color", Color(0, 255, 255, 150))
+    private val playerLineWidth by highlights.slider("Player line width", 2f, 0f, 10f)
 
     private val ex0 = listOf("§f§lDungeon Carries:", "§7> §bExample §8[§7M7§8]§f: §b3§f/§b10 §7(5m 30s | 12/hr)").fcs
-    private val hud: ConfigBuilder.HUDElementBuilder = config.hud("Dungeon carry display") {
+    private val hud: ConfigHudBuilder = config.hud("Dungeon carry display") {
         if (it) return@hud sizedText(ex0)
         sizedText(display.value ?: return@hud null)
     }
 
-    private val `hud$dungeon` by config.switch("Only in dungeons", true).dependsOn { hud.enabled }
+    private val `hud$dungeon` by config.switch("Only in dungeons", true)
 
     private val floorMap = mapOf(
         "e" to DungeonFloor.E,

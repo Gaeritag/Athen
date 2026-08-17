@@ -1,4 +1,4 @@
-﻿@file:Suppress("PrivatePropertyName")
+@file:Suppress("PrivatePropertyName")
 
 package foo.starred.athen.modules.impl.general.messageactions.ui
 
@@ -101,7 +101,7 @@ class MessageActionsPopUp(
 
             adopt(text {
                 text = "Create Action".literal()
-                color = Mocha.Mauve.argb
+                color = Mocha.Lavender.argb
                 position = MixedPositionConstraint(FixedPositionConstraint(8, 0), CenterPositionConstraint())
             }.also { title = it })
         }
@@ -427,8 +427,8 @@ class MessageActionsPopUp(
     private fun updateActionButtons() {
         for (btn in actions) {
             val selected = btn.id == action
-            btn.rect.color = if (selected) Mocha.Mauve.argb else Mocha.Surface1.argb
-            btn.rect.borderColor = if (selected) Mocha.Mauve.argb else Mocha.Overlay0.argb
+            btn.rect.color = if (selected) Mocha.Lavender.argb else Mocha.Surface1.argb
+            btn.rect.borderColor = if (selected) Mocha.Lavender.argb else Mocha.Overlay0.argb
             btn.text.color = if (selected) Mocha.Base.argb else Mocha.Text.argb
         }
     }

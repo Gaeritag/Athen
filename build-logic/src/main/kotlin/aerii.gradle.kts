@@ -100,8 +100,6 @@ dependencies {
     shadow("autoupdate".global)
     shadow("snowbird".versioned)
     shadow("cascade".versioned)
-    shadow("lwjgl-nanovg".versioned)
-    for (p in listOf("windows", "linux", "macos", "macos-arm64")) shadow("lwjgl-nanovg".versioned.get().toString() + ":natives-$p")
 
     shadow("skyblock-api".global) {
         capabilities { requireCapability("tech.thatgravyboat:skyblock-api-$ver" + if (new) "" else "-remapped") }
@@ -124,7 +122,8 @@ loom.apply {
             arrayOf(
                 "-Ddevauth.enabled=true",
                 "-Ddevauth.account=main",
-                "-XX:+AllowEnhancedClassRedefinition"
+                "-XX:+AllowEnhancedClassRedefinition",
+                "-XX:+IgnoreUnrecognizedVMOptions",
             )
         )
     }

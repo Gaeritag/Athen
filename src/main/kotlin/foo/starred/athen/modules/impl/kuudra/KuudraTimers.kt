@@ -38,7 +38,7 @@ object KuudraTimers : Module(
         sizedText(d0.value ?: return@hud null)
     }
 
-    private val spawnStyle by config.textInput("Supply text style", "Supply in: <red>#time").dependsOn { spawn.enabled }
+    private val spawnStyle by config.input("Supply text style", "Supply in: <red>#time")
     //</editor-fold>
 
     //<editor-fold desc="Build timer">
@@ -57,7 +57,7 @@ object KuudraTimers : Module(
         sizedText(d1.value ?: return@hud null)
     }
 
-    private val buildStyle by config.textInput("Build text style", "Build in: <red>#time").dependsOn { build.enabled }
+    private val buildStyle by config.input("Build text style", "Build in: <red>#time")
     //</editor-fold>
 
     init {

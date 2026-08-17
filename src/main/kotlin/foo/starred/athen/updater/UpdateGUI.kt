@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.updater
+package foo.starred.athen.updater
 
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
@@ -34,7 +34,7 @@ class UpdateGUI(
         outline(px, py, 360, 175, 1, Mocha.Surface0.argb)
         rectangle(px, py + 28, 360, 1, Mocha.Surface0.argb)
 
-        extractText("Update available for Athen", px + 16, py + 10, false, Mocha.Mauve.argb)
+        extractText("Update available for Athen", px + 16, py + 10, false, Mocha.Lavender.argb)
 
         val a = client.font.lineHeight + 6
         val b = py + 40

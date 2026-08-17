@@ -16,12 +16,12 @@ object PlayerSpin : Module(
     Category.RENDER
 ) {
     private val head by config.switch("Rotate head")
-    private val head0 by config.dropdown("Head rotation", listOf("Clockwise", "Anti-clockwise")).dependsOn { head }
-    private val head1 by config.slider("Head speed", 1f, 0f, 10f, showDouble = true).dependsOn { head }
+    private val head0 by config.selector("Head rotation", listOf("Clockwise", "Anti-clockwise"))
+    private val head1 by config.slider("Head speed", 1f, 0f, 10f, double = true)
 
     private val body by config.switch("Rotate body")
-    private val body0 by config.dropdown("Body rotation", listOf("Clockwise", "Anti-clockwise")).dependsOn { body }
-    private val body1 by config.slider("Body speed", 1f, 0f, 10f, showDouble = true).dependsOn { body }
+    private val body0 by config.selector("Body rotation", listOf("Clockwise", "Anti-clockwise"))
+    private val body1 by config.slider("Body speed", 1f, 0f, 10f, double = true)
 
     init {
         on<WorldRenderEvent.Entity.Pre> {
