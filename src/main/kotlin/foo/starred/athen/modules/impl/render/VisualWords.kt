@@ -41,6 +41,10 @@ object VisualWords : Module(
     val words = object : AbstractWords() {}.also { it.skips = SKIP }
 
     init {
+        observable.onChange {
+            words.version++
+        }
+
         if (nameChanger.value) {
             nickname.value.fn()
         }
