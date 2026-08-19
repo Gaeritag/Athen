@@ -68,6 +68,7 @@ object TerminalAPI {
             if (containerId != id) return@on
             if (slot !in 0 until b) return@on
 
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             val c = (client.screen as? AbstractContainerScreen<*>)?.menu?.items?.takeIf { it.size >= b } ?: return@on
             c[slot] = item
             i++

@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused")
+@file:Suppress("Unused")
 
 package foo.starred.athen.api.slayers.enums.drop.impl
 
@@ -21,6 +21,7 @@ enum class VoidgloomDrops(
     override val display2: String = display
 ) : ISlayerDrop {
     NULL_SPHERE("Null sphere", Items.FIREWORK_STAR, SlayerDropGrade.GUARANTEED, SlayerDropChance(null, 10_000, 100.0, SlayerDropTable.TOKEN)),
+    //~ if >= 26.2 'Items.PURPLE_DYE' -> 'Items.DYE.pick(net.minecraft.world.item.DyeColor.PURPLE)'
     TWILIGHT_ARROW_POISON("Twilight arrow poison", Items.PURPLE_DYE, SlayerDropGrade.OCCASIONAL, SlayerDropChance(3_300, 1_800, 15.1515, SlayerDropTable.MAIN)),
     ENDERSNAKE_RUNE("Endersnake rune I", Items.PLAYER_HEAD, SlayerDropGrade.RARE, SlayerDropChance(9_438, 800, 5.2977, SlayerDropTable.EXTRA), SlayerDropParserType.TEXTURE, "ewogICJ0aW1lc3RhbXAiIDogMTcxOTUwMzYzMjkyMiwKICAicHJvZmlsZUlkIiA6ICI1ZjU5NmViY2JlOTQ0NmQxYmI0M2JlNGYzZjRiOGJlNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJUZWlsMHNzIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2MzYTlhY2JiN2QzZDQ5YjFkNTRkMjYxMTExMDRkMGRhNTdkOGI0YWIzNzg4NWI0YmJkMjQwYWM3MTA3NGNhZDIiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ=="),
     SUMMONING_EYE("Summoning eye", Items.PLAYER_HEAD, SlayerDropGrade.EXTRAORDINARY, SlayerDropChance(74_250, 80, 0.6734, SlayerDropTable.MAIN)),

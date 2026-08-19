@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
@@ -21,6 +21,7 @@ class NumbersSimulator : ITerminalSim(TerminalType.NUMBERS) {
     }
 
     override fun click(slot: Slot, button: Int) {
+        //~ if >= 26.2 'Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.red()'
         if (slot.item.item != Items.RED_STAINED_GLASS_PANE) return
         if (slot.containerSlot != min()?.containerSlot) return
 
@@ -34,6 +35,7 @@ class NumbersSimulator : ITerminalSim(TerminalType.NUMBERS) {
 
         for (s in slots) {
             val it = s.item
+            //~ if >= 26.2 'Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.red()'
             if (it.item != Items.RED_STAINED_GLASS_PANE) continue
 
             val count = it.count
@@ -47,11 +49,13 @@ class NumbersSimulator : ITerminalSim(TerminalType.NUMBERS) {
     }
 
     private fun c(): Boolean {
+        //~ if >= 26.2 'Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.red()'
         for (s in slots) if (s.item.item == Items.RED_STAINED_GLASS_PANE) return false
         return true
     }
 
     private fun pane(number: Int, completed: Boolean = false): ItemStack =
+        //~ if >= 26.2 'Items.LIME_STAINED_GLASS_PANE else Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.lime() else Items.STAINED_GLASS_PANE.red()'
         ItemStack(if (completed) Items.LIME_STAINED_GLASS_PANE else Items.RED_STAINED_GLASS_PANE, number).apply {
             set(DataComponents.CUSTOM_NAME, if (completed) EMPTY_COMPONENT else Component.literal("§a$number"))
         }

@@ -178,6 +178,7 @@ object SlotBinds : Module(
         }
 
         on<GuiEvent.Slots.Click> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             val s = client.screen as? InventoryScreen ?: return@on
             val h = slot?.index ?: return@on
 
@@ -245,6 +246,7 @@ object SlotBinds : Module(
         }
 
         on<GuiEvent.Slots.Render.Post> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             val s = client.screen as? InventoryScreen ?: return@on
             val m = s.menu.slots
             if (slot != m.last()) return@on

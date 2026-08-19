@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.impl.renderers.impl
+package foo.starred.athen.api.rendering.level.impl.renderers.impl
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -6,11 +6,12 @@ import com.mojang.math.Axis
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
 import foo.starred.athen.api.rendering.level.impl.renderers.base.ILevelRenderer
 import foo.starred.athen.api.rendering.level.internal.annotations.impl.LevelRenderer
+import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.snowbird.api.client
+//~ if >= 26.2 'MultiBufferSource' -> 'SubmitNodeCollector'
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
@@ -18,13 +19,10 @@ import kotlin.math.sqrt
 
 @LevelRenderer
 object BeamRenderer : ILevelRenderer {
-    private val beam = Identifier.fromNamespaceAndPath("minecraft", "textures/entity/beacon_beam.png")
+    private val beam = ResourceAPI.minecraft("textures/entity/beacon/beacon_beam.png")
 
+    //~ if >= 26.2 'MultiBufferSource.BufferSource' -> 'SubmitNodeCollector'
     override fun render(poseStack: PoseStack, pose: PoseStack.Pose, consumers: MultiBufferSource.BufferSource) {
-        fn(poseStack, consumers)
-    }
-
-    private fun fn(poseStack: PoseStack, consumers: MultiBufferSource.BufferSource) {
         if (LevelQueueImpl.beams.isEmpty()) return
 
         val partialTick = client.deltaTracker.getGameTimeDeltaPartialTick(false)
@@ -45,6 +43,15 @@ object BeamRenderer : ILevelRenderer {
 
             poseStack.pushPose()
             poseStack.translate(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5)
+
+            //? if >= 26.2 {
+            /*poseStack.pushPose()
+            poseStack.mulPose(Axis.YP.rotationDegrees(animationTime * 2.25f - 45f))
+            consumers.submitCustomGeometry(poseStack, opaqueType) { a, b -> a.part(b, beacon.color, 0f, beamRadius, beamRadius, 0f, -beamRadius, 0f, 0f, -beamRadius, 320 * (0.5f / beamRadius) + s, s) }
+            poseStack.popPose()
+
+            consumers.submitCustomGeometry(poseStack, translucentType) { a, b -> a.part(b, ARGB.color(32, beacon.color), -glowRadius, -glowRadius, glowRadius, -glowRadius, -glowRadius, glowRadius, glowRadius, glowRadius, 320f + s, s) }
+            *///?} else {
             val pose = poseStack.last()
 
             poseStack.pushPose()
@@ -53,12 +60,15 @@ object BeamRenderer : ILevelRenderer {
             poseStack.popPose()
 
             pose.part(consumers.getBuffer(translucentType), ARGB.color(32, beacon.color), -glowRadius, -glowRadius, glowRadius, -glowRadius, -glowRadius, glowRadius, glowRadius, glowRadius, 320f + s, s)
+            //?}
 
             poseStack.popPose()
         }
 
+        //? if < 26.2 {
         consumers.endBatch(opaqueType)
         consumers.endBatch(translucentType)
+        //?}
     }
 
     private fun PoseStack.Pose.part(consumer: VertexConsumer, color: Int, x1: Float, z1: Float, x2: Float, z2: Float, x3: Float, z3: Float, x4: Float, z4: Float, minV: Float, maxV: Float) {

@@ -17,7 +17,11 @@ import kotlin.math.abs
 
 object RubixSolver : ITerminal(TerminalType.RUBIX) {
     private val ints = intArrayOf(12, 13, 14, 21, 22, 23, 30, 31, 32)
+    //? if <= 26.1 {
     private val colors = listOf(Items.RED_STAINED_GLASS_PANE, Items.ORANGE_STAINED_GLASS_PANE, Items.YELLOW_STAINED_GLASS_PANE, Items.GREEN_STAINED_GLASS_PANE, Items.BLUE_STAINED_GLASS_PANE)
+    //? } else {
+    //private val colors = listOf(Items.STAINED_GLASS_PANE.red(), Items.STAINED_GLASS_PANE.orange(), Items.STAINED_GLASS_PANE.yellow(), Items.STAINED_GLASS_PANE.green(), Items.STAINED_GLASS_PANE.blue())
+    //? }
 
     override val int0 = 3
     override val int1 = 3

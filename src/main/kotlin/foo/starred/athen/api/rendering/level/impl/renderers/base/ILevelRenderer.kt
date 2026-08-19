@@ -1,13 +1,15 @@
-﻿package foo.starred.athen.api.rendering.level.impl.renderers.base
+package foo.starred.athen.api.rendering.level.impl.renderers.base
 
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
 import foo.starred.athen.api.rendering.level.impl.queue.data.ExtractedQueue
+//~ if >= 26.2 'MultiBufferSource' -> 'SubmitNodeCollector'
 import net.minecraft.client.renderer.MultiBufferSource
 import kotlin.math.sqrt
 
 interface ILevelRenderer {
+    //~ if >= 26.2 'MultiBufferSource.BufferSource' -> 'SubmitNodeCollector'
     fun render(poseStack: PoseStack, pose: PoseStack.Pose, consumers: MultiBufferSource.BufferSource)
 
     fun <T : ILevelExtractable> forDepth(list: ExtractedQueue<T>, block: (depth: Boolean, list: List<T>) -> Unit) {
@@ -35,7 +37,7 @@ interface ILevelRenderer {
         val ny = if (length > 0) dy / length else 0f
         val nz = if (length > 0) dz / length else 0f
 
-        buffer.addVertex(this, x1, y1, z1).setColor(color).setNormal(this, nx, ny, nz)/*? >= 1.21.11 {*/.setLineWidth(width)/*? }*/
-        buffer.addVertex(this, x2, y2, z2).setColor(color).setNormal(this, nx, ny, nz)/*? >= 1.21.11 {*/.setLineWidth(width)/*? }*/
+        buffer.addVertex(this, x1, y1, z1).setColor(color).setNormal(this, nx, ny, nz).setLineWidth(width)
+        buffer.addVertex(this, x2, y2, z2).setColor(color).setNormal(this, nx, ny, nz).setLineWidth(width)
     }
 }

@@ -103,7 +103,9 @@ object MelodySolver : ITerminal(TerminalType.MELODY) {
 
         for (i in items.indices) {
             val s = items[i].item
+            //~ if >= 26.2 'Items.LIME_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.lime()'
             if (a == -1 && s == Items.LIME_STAINED_GLASS_PANE) a = i
+            //~ if >= 26.2 'Items.MAGENTA_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.magenta()'
             if (b == -1 && s == Items.MAGENTA_STAINED_GLASS_PANE) b = i
             if (a != -1 && b != -1) break
         }

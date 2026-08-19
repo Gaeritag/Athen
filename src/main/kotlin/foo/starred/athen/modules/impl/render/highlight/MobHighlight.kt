@@ -1,4 +1,4 @@
-﻿@file:Suppress("unused")
+@file:Suppress("unused")
 
 package foo.starred.athen.modules.impl.render.highlight
 
@@ -33,6 +33,11 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.phys.AABB
 import tech.thatgravyboat.skyblockapi.utils.extentions.serverMaxHealth
+
+//? if >= 26.2 {
+/*import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.Identifier
+*///? }
 
 @Load
 @OnlyIn(skyblock = true)
@@ -77,6 +82,7 @@ object MobHighlight : Module(
 
             "highlight" / "add" / "typed" / string("color") / int("maxHp") / string("type") {
                 val t0 = string("type")
+                //~ if >= 26.2 'EntityType.byString(t0)' -> 'BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.tryParse(t0))'
                 val type = EntityType.byString(t0).orElse(null) ?: return@string
                 val c0 = string("color")
                 val color = c0.removePrefix("#").toInt(16)
@@ -88,6 +94,7 @@ object MobHighlight : Module(
 
             "highlight" / "add" / "typed" / string("color") / string("type") {
                 val t0 = string("type")
+                //~ if >= 26.2 'EntityType.byString(t0)' -> 'BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.tryParse(t0))'
                 val type = EntityType.byString(t0).orElse(null) ?: return@string
                 val c0 = string("color")
                 val color = c0.removePrefix("#").toInt(16)
@@ -105,6 +112,7 @@ object MobHighlight : Module(
 
             "highlight" / "remove" / "typed" / string("type") {
                 val t0 = string("type")
+                //~ if >= 26.2 'EntityType.byString(t0)' -> ' BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.tryParse(t0))'
                 val type = EntityType.byString(t0).orElse(null) ?: return@string
 
                 e1.update { removeIf { it.type == type } }
@@ -228,12 +236,14 @@ object MobHighlight : Module(
         }
 
         on<InputEvent.Keyboard.Press> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
             if (keyEvent.key() != keybind) return@on
             fn()
         }
 
         on<InputEvent.Mouse.Press> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
             if (buttonInfo.button() != keybind) return@on
             fn()
@@ -251,7 +261,7 @@ object MobHighlight : Module(
         val max = a.serverMaxHealth
         val type = a.type
 
-        MobHighlightGUI.openWith(name, type, max.toInt())
+        MobHighlightGUI.pop(name, type, max.toInt())
     }
 
     private fun fn1(aabb: AABB, color: Int) {

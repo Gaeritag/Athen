@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.keybinds.data
+package foo.starred.athen.modules.impl.general.keybinds.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -18,6 +18,7 @@ data class KeybindCondition(
     val phases: MutableSet<Int> = mutableSetOf()
 ) {
     fun eval(): Boolean {
+        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
         val screen = client.screen
         val ig = screen is AbstractContainerScreen<*>
         val og = screen == null

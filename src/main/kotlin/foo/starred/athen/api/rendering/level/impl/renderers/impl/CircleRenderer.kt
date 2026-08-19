@@ -1,10 +1,15 @@
-﻿package foo.starred.athen.api.rendering.level.impl.renderers.impl
+@file:Suppress("Unused")
+
+package foo.starred.athen.api.rendering.level.impl.renderers.impl
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
+import foo.starred.athen.api.rendering.level.impl.data.impl.ExtractedCircle
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl
 import foo.starred.athen.api.rendering.level.impl.renderers.base.ILevelRenderer
 import foo.starred.athen.api.rendering.level.internal.annotations.impl.LevelRenderer
 import foo.starred.athen.api.rendering.level.rendertypes.LevelRenderTypeImpl
+//~ if >= 26.2 'MultiBufferSource' -> 'SubmitNodeCollector'
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.world.phys.Vec3
 import org.joml.Vector3f
@@ -14,67 +19,72 @@ import kotlin.math.sin
 
 @LevelRenderer
 object CircleRenderer : ILevelRenderer {
+    //~ if >= 26.2 'MultiBufferSource.BufferSource' -> 'SubmitNodeCollector'
     override fun render(poseStack: PoseStack, pose: PoseStack.Pose, consumers: MultiBufferSource.BufferSource) {
-        fn0(pose, consumers)
-        fn1(pose, consumers)
-    }
-
-    fun fn0(pose: PoseStack.Pose, consumers: MultiBufferSource.BufferSource) {
         forDepth(LevelQueueImpl.circles0) { depth, circles ->
             val type = if (depth) LevelRenderTypeImpl.LINES.depth else LevelRenderTypeImpl.LINES.depthless
-            val buffer = consumers.getBuffer(type)
+            //? if >= 26.2 {
+            //consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn0(pose, buffer, circles) }
+            //? } else {
+            fn0(pose, consumers.getBuffer(type), circles)
+            //? }
+        }
 
+        forDepth(LevelQueueImpl.circles1) { depth, circles ->
+            val type = if (depth) LevelRenderTypeImpl.TRIANGLE_FAN.depth else LevelRenderTypeImpl.TRIANGLE_FAN.depthless
             for (circle in circles) {
-                val pts = circle.center.points(circle.radius, circle.segments, circle.normal)
-
-                for (i in 0 until circle.segments) {
-                    pose.vertex(
-                        buffer,
-                        pts[i].x,
-                        pts[i].y,
-                        pts[i].z,
-                        pts[i + 1].x,
-                        pts[i + 1].y,
-                        pts[i + 1].z,
-                        circle.width,
-                        circle.color
-                    )
-                }
+                //? if >= 26.2 {
+                //consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn1(pose, buffer, circle) }
+                //? } else {
+                fn1(pose, consumers.getBuffer(type), circle)
+                consumers.endBatch(type)
+                //? }
             }
         }
     }
 
-    fun fn1(pose: PoseStack.Pose, consumers: MultiBufferSource.BufferSource) {
-        forDepth(LevelQueueImpl.circles1) { depth, circles ->
-            val type = if (depth) LevelRenderTypeImpl.TRIANGLE_FAN.depth else LevelRenderTypeImpl.TRIANGLE_FAN.depthless
+    private fun fn0(pose: PoseStack.Pose, buffer: VertexConsumer, circles: List<ExtractedCircle>) {
+        for (circle in circles) {
+            val pts = circle.center.points(circle.radius, circle.segments, circle.normal)
 
-            for (circle in circles) {
-                val buffer = consumers.getBuffer(type)
-                val (u, v) = circle.normal.tangents()
-                val center = circle.center
-
-                val x0 = center.x.toFloat()
-                val y0 = center.y.toFloat()
-                val z0 = center.z.toFloat()
-                buffer.addVertex(pose, x0, y0, z0).setColor(circle.color)
-
-                val segments = circle.segments
-                val radius = circle.radius
-
-                for (i in 0..segments) {
-                    val angle = 2.0 * Math.PI * i / segments
-                    val cos = cos(angle)
-                    val sin = sin(angle)
-
-                    val x = x0 + radius * (u.x * cos + v.x * sin)
-                    val y = y0 + radius * (u.y * cos + v.y * sin)
-                    val z = z0 + radius * (u.z * cos + v.z * sin)
-
-                    buffer.addVertex(pose, x.toFloat(), y.toFloat(), z.toFloat()).setColor(circle.color)
-                }
-
-                consumers.endBatch(type)
+            for (i in 0 until circle.segments) {
+                pose.vertex(
+                    buffer,
+                    pts[i].x,
+                    pts[i].y,
+                    pts[i].z,
+                    pts[i + 1].x,
+                    pts[i + 1].y,
+                    pts[i + 1].z,
+                    circle.width,
+                    circle.color
+                )
             }
+        }
+    }
+
+    private fun fn1(pose: PoseStack.Pose, buffer: VertexConsumer, circle: ExtractedCircle) {
+        val (u, v) = circle.normal.tangents()
+        val center = circle.center
+
+        val x0 = center.x.toFloat()
+        val y0 = center.y.toFloat()
+        val z0 = center.z.toFloat()
+        buffer.addVertex(pose, x0, y0, z0).setColor(circle.color)
+
+        val segments = circle.segments
+        val radius = circle.radius
+
+        for (i in 0..segments) {
+            val angle = 2.0 * Math.PI * i / segments
+            val cos = cos(angle)
+            val sin = sin(angle)
+
+            val x = x0 + radius * (u.x * cos + v.x * sin)
+            val y = y0 + radius * (u.y * cos + v.y * sin)
+            val z = z0 + radius * (u.z * cos + v.z * sin)
+
+            buffer.addVertex(pose, x.toFloat(), y.toFloat(), z.toFloat()).setColor(circle.color)
         }
     }
 
@@ -86,7 +96,7 @@ object CircleRenderer : ILevelRenderer {
         return u to v
     }
 
-    private fun Vec3.points( radius: Double, segments: Int, normal: Vec3): Array<Vector3f> {
+    private fun Vec3.points(radius: Double, segments: Int, normal: Vec3): Array<Vector3f> {
         val (u, v) = normal.tangents()
         return Array(segments + 1) { i ->
             val angle = 2.0 * Math.PI * i / segments

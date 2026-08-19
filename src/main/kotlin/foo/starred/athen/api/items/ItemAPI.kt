@@ -23,6 +23,7 @@ object ItemAPI { // TODO: make this check the parent config of added keys if the
 
         on<GuiEvent.Input.Key.Press> {
             if (!pressed.add(keyEvent.key)) return@on
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             val screen = client.screen as? AbstractContainerScreen<*> ?: return@on
 
             if (`watched$tooltip`.any { it() == keyEvent.key }) screen.hovered?.item?.`athen$cached$tooltip` = null
@@ -30,6 +31,7 @@ object ItemAPI { // TODO: make this check the parent config of added keys if the
 
         on<GuiEvent.Input.Key.Release> {
             if (!pressed.remove(keyEvent.key)) return@on
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             val screen = client.screen as? AbstractContainerScreen<*> ?: return@on
 
             if (`watched$tooltip`.any { it() == keyEvent.key }) screen.hovered?.item?.`athen$cached$tooltip` = null

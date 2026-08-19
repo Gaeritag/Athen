@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
@@ -16,6 +16,7 @@ class PanesSimulator : ITerminalSim(TerminalType.PANES) {
     }
 
     override fun click(slot: Slot, button: Int) {
+        //~ if >= 26.2 'Items.LIME_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.lime()'
         mapOf(slot.containerSlot to pane(slot.item.item != Items.LIME_STAINED_GLASS_PANE)).a()
         if (c()) SimulatorMenu.a()
     }
@@ -23,6 +24,7 @@ class PanesSimulator : ITerminalSim(TerminalType.PANES) {
     private fun c(): Boolean {
         for (s in slots) {
             val it = s.item.item
+            //~ if >= 26.2 'it != Items.BLACK_STAINED_GLASS_PANE && it == Items.RED_STAINED_GLASS_PANE' -> 'it != Items.STAINED_GLASS_PANE.black() && it == Items.STAINED_GLASS_PANE.red()'
             if (it != Items.BLACK_STAINED_GLASS_PANE && it == Items.RED_STAINED_GLASS_PANE) return false
         }
 
@@ -30,6 +32,7 @@ class PanesSimulator : ITerminalSim(TerminalType.PANES) {
     }
 
     private fun pane(bool: Boolean): ItemStack =
+        //~ if >= 26.2 'Items.LIME_STAINED_GLASS_PANE else Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.lime() else Items.STAINED_GLASS_PANE.red()'
         ItemStack(if (bool) Items.LIME_STAINED_GLASS_PANE else Items.RED_STAINED_GLASS_PANE).apply {
             set(DataComponents.CUSTOM_NAME, EMPTY_COMPONENT)
         }

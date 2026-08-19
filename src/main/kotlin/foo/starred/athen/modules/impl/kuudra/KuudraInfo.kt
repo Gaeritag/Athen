@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.kuudra
+package foo.starred.athen.modules.impl.kuudra
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
@@ -107,6 +107,7 @@ object KuudraInfo : Module(
             val hh = k.bbHeight * 0.5
 
             val c = k.renderPos.add(0.0, hh, 0.0)
+            //~ if >= 26.2 'mainCamera' -> 'mainCamera()'
             val d = client.gameRenderer.mainCamera.position().subtract(c)
 
             val t = minOf(fn(d.x, hw), fn(d.y, hh), fn(d.z, hw))

@@ -34,6 +34,7 @@ object PanesSolver : ITerminal(TerminalType.PANES) {
         list.clear()
 
         for (i in items.indices) {
+            //~ if >= 26.2 'Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.red()'
             if (items[i].item != Items.RED_STAINED_GLASS_PANE) continue
             list.add(Click(i, 0))
         }

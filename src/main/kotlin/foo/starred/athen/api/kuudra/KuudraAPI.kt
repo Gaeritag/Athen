@@ -13,6 +13,7 @@ import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.delegate.Expirable
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.entity.monster.Giant
+//~ if >= 26.2 'monster.MagmaCube' -> 'monster.cubemob.MagmaCube'
 import net.minecraft.world.entity.monster.MagmaCube
 import tech.thatgravyboat.skyblockapi.helpers.McClient
 import tech.thatgravyboat.skyblockapi.helpers.McLevel

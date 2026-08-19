@@ -54,6 +54,7 @@ object NumbersSolver : ITerminal(TerminalType.NUMBERS) {
         val a = items.indices.sortedBy { items[it].count }
         for (b in a) {
             val c = items[b]
+            //~ if >= 26.2 'Items.RED_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.red()'
             if (c.item != Items.RED_STAINED_GLASS_PANE) continue
 
             counts[b] = c.count

@@ -194,6 +194,7 @@ object PartyFinderDisplay : Module(
     }
 
     private fun lore() {
+        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
         val slots = (client.screen as? AbstractContainerScreen<*>)?.menu?.slots ?: return
 
         for ((k, v) in data) {

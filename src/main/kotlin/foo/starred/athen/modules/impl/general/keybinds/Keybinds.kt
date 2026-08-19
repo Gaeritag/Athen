@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.keybinds
+package foo.starred.athen.modules.impl.general.keybinds
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.storage.JsonStore
@@ -10,7 +10,6 @@ import foo.starred.athen.modules.impl.general.keybinds.data.KeybindCondition
 import foo.starred.athen.modules.impl.general.keybinds.data.KeybindEntry
 import foo.starred.athen.modules.impl.general.keybinds.ui.KeybindsGUI
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.command
 import foo.starred.snowbird.api.message
 
@@ -25,7 +24,7 @@ object Keybinds : Module(
     private val triggered = mutableSetOf<KeybindEntry>()
 
     @Suppress("unused")
-    private val _unused by config.button("Open manager") { client.setScreen(KeybindsGUI) }
+    private val _unused by config.button("Open manager") { KeybindsGUI.open() }
 
     val storage = JsonStore("features/Keybinds")
     var bindings = storage.mutableList("bindings", KeybindEntry.CODEC)

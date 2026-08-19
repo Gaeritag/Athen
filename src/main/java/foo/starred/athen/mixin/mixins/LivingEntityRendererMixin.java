@@ -2,7 +2,6 @@ package foo.starred.athen.mixin.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import foo.starred.athen.api.storage.ResourceAPI;
 import foo.starred.athen.ducks.entity.EntityRenderStateDuck;
 import foo.starred.athen.modules.impl.slayer.EndermanPhaseColor;
@@ -20,6 +19,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//? if <= 26.1
+import com.mojang.blaze3d.vertex.VertexFormat;
+
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
     @Unique
@@ -30,10 +32,16 @@ public abstract class LivingEntityRendererMixin {
                                     .withLocation("athen/pipeline/enderman")
                                     .withVertexShader(ResourceAPI.INSTANCE.identify("core/level/entity/enderman"))
                                     .withFragmentShader(ResourceAPI.INSTANCE.identify("core/level/entity/enderman"))
+                                    //? if >= 26.2 {
+                                    /*.withBindGroupLayout(net.minecraft.client.renderer.BindGroupLayouts.SAMPLER0_SAMPLER1_SAMPLER2)
+                                    .withVertexBinding(0, DefaultVertexFormat.ENTITY)
+                                    .withPrimitiveTopology(com.mojang.blaze3d.PrimitiveTopology.QUADS)
+                                    *///?} else {
                                     .withSampler("Sampler0")
                                     .withSampler("Sampler1")
                                     .withSampler("Sampler2")
                                     .withVertexFormat(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS)
+                                    //?}
                                     .withShaderDefine("ALPHA_CUTOUT", 0.1f)
                                     .build()
                     )

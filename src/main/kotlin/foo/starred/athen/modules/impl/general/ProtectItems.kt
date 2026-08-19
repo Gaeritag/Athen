@@ -171,6 +171,7 @@ object ProtectItems : Module(
     }
 
     private fun fn0(): Boolean {
+        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
         val s = client.screen as? AbstractContainerScreen<*> ?: return true
         val t = s.title.string
 

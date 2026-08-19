@@ -31,6 +31,7 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FlexibleSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.extensions.scissor.scissor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
@@ -173,9 +174,9 @@ object ConfigModuleSettingsPage {
                     }
 
                     if (!v) return
-                    graphics.enableScissor(x.toInt(), y.toInt(), (x + width).toInt(), (y + height).toInt())
-                    super.render(graphics)
-                    graphics.disableScissor()
+                    graphics.scissor(x, y, width, height) {
+                        super.render(graphics)
+                    }
                 }
             }.apply {
                 position = AnchorPositionConstraint({ header }, PositionAnchor.BELOW, 0f, 0f)

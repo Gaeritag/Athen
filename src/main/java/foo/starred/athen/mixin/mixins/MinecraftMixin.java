@@ -1,10 +1,8 @@
 package foo.starred.athen.mixin.mixins;
 
 import foo.starred.athen.events.GuiEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.player.LocalPlayer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,14 +10,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Minecraft.class)
+//~ if >= 26.2 'client.Minecraft' -> 'client.gui.Gui'
+@Mixin(net.minecraft.client.Minecraft.class)
 public class MinecraftMixin {
     @Shadow
     @Nullable
-    public LocalPlayer player;
-
-    @Shadow
-    @Nullable
+    //~ if >= 26.2 'public' -> 'private'
     public Screen screen;
 
     @Inject(method = "setScreen", at = @At("HEAD"))

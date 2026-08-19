@@ -364,6 +364,7 @@ class MobHighlightPopUp(
         val max = `maxHp$field`.value.trim().toIntOrNull() ?: -1
 
         if (typed) {
+            //~ if >= 26.2 'EntityType.byString(target)' -> 'BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(target))'
             val type = EntityType.byString(target).orElse(null) ?: return
             MobHighlight.e1.update { if (index == null) add(MobHighlight.EntityTyped(type, color, max)) else set(index!!, MobHighlight.EntityTyped(type, color, max)) }
             MobHighlight.json.save()

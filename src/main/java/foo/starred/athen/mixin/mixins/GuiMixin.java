@@ -5,7 +5,6 @@ import foo.starred.athen.modules.impl.render.ItemNamePosition;
 import foo.starred.athen.modules.impl.render.RenderOptimiser;
 import foo.starred.athen.modules.impl.render.radial.RadialMenu;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,13 +15,15 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(Gui.class)
+//~ if >= 26.2 'gui.Gui.class' -> 'gui.Hud.class'
+@Mixin(net.minecraft.client.gui.Gui.class)
 public abstract class GuiMixin {
     @Inject(method = "extractRenderState", at = @At("HEAD"))
     private void athen$render$pre(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         new GuiEvent.Render.Pre(graphics).post();
     }
 
+    //~ if >= 26.2 'gui/Gui;' -> 'gui/Hud;'
     @Inject(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;extractSleepOverlay(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"))
     private void athen$render$main(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         new GuiEvent.Render.Main(graphics).post();

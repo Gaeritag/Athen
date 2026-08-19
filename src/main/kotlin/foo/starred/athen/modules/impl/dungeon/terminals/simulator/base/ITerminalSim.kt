@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.base
+package foo.starred.athen.modules.impl.dungeon.terminals.simulator.base
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.api.scheduling.Scheduler
@@ -38,6 +38,7 @@ abstract class ITerminalSim(
     component
 ) {
     protected val slots: List<Slot> get() = menu.slots.take(num)
+    //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
     protected val pane = ItemStack(Items.BLACK_STAINED_GLASS_PANE).apply { set(DataComponents.CUSTOM_NAME, EMPTY_COMPONENT) }
     var id = 0
     var c = true
@@ -71,11 +72,13 @@ abstract class ITerminalSim(
         for ((a, b) in s()) slots.getOrNull(a)?.set(b)
         val i = slots.map { it.item }
         PacketEvent.Process.Pre(ClientboundContainerSetContentPacket(id - 1, 0, i, ItemStack.EMPTY)).post()
+        //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
         for ((a, b) in i.withIndex()) if (b.item != Items.BLACK_STAINED_GLASS_PANE) PacketEvent.Process.Pre(ClientboundContainerSetSlotPacket(id - 1, 0, a, b)).post()
     }
 
     public override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ContainerInput) {
         if (slot.container != inv) return
+        //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
         if (slot.item.item == Items.BLACK_STAINED_GLASS_PANE) return
         if (!c) return
         if (TerminalSimulator.ping <= 0) return click(slot, mouseButton)

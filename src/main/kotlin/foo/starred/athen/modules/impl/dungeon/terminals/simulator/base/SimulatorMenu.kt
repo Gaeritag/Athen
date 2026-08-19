@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.base
+package foo.starred.athen.modules.impl.dungeon.terminals.simulator.base
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl.*
@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
 object SimulatorMenu : ITerminalSim(TerminalType.PANES, 27, "Simulator".literal()) {
+    //? if <= 26.1 {
     val s = mapOf(
         10 to Items.LIME_STAINED_GLASS_PANE.pane("§aPanes"),
         11 to Items.RED_STAINED_GLASS_PANE.pane("§cRubix"),
@@ -19,6 +20,17 @@ object SimulatorMenu : ITerminalSim(TerminalType.PANES, 27, "Simulator".literal(
         16 to Items.PURPLE_STAINED_GLASS_PANE.pane("§5Melody"),
         13 to Items.WHITE_STAINED_GLASS_PANE.pane("§7Random")
     )
+    //?} else {
+    /*val s = mapOf(
+        10 to Items.STAINED_GLASS_PANE.lime().pane("§aPanes"),
+        11 to Items.STAINED_GLASS_PANE.red().pane("§cRubix"),
+        12 to Items.STAINED_GLASS_PANE.cyan().pane("§bNumbers"),
+        14 to Items.STAINED_GLASS_PANE.pink().pane("§dStarts With"),
+        15 to Items.STAINED_GLASS_PANE.brown().pane("§6Select All"),
+        16 to Items.STAINED_GLASS_PANE.purple().pane("§5Melody"),
+        13 to Items.STAINED_GLASS_PANE.white().pane("§7Random")
+    )
+    *///?}
 
     override fun s(): Map<Int, ItemStack> = s
 

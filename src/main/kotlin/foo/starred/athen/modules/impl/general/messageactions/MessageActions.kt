@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused")
+@file:Suppress("Unused")
 
 package foo.starred.athen.modules.impl.general.messageactions
 
@@ -20,7 +20,6 @@ import foo.starred.athen.modules.impl.general.messageactions.data.MatchType
 import foo.starred.athen.modules.impl.general.messageactions.data.ResolvedEntry
 import foo.starred.athen.modules.impl.general.messageactions.ui.MessageActionsGUI
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
@@ -33,7 +32,7 @@ object MessageActions : Module(
     "Allows you to run actions when you receive a message.",
     Category.GENERAL
 ) {
-    private val _unused by config.button("Open manager") { client.setScreen(MessageActionsGUI) }
+    private val _unused by config.button("Open manager") { MessageActionsGUI.open() }
     private val _unused0 by config.information("You can use the commands <red>\"/${Athen.modId} [import|export] messageactions\"<r> to share configs!")
 
     private val json = JsonStore("features/MessageActions")

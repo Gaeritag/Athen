@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.rendertypes.impl
+package foo.starred.athen.api.rendering.level.rendertypes.impl
 
 import foo.starred.athen.api.rendering.level.pipelines.base.ILevelPipeline
 import foo.starred.athen.api.rendering.level.rendertypes.base.ILevelRenderType
@@ -10,6 +10,7 @@ class DualLevelRenderType(identifier: String, pipeline: ILevelPipeline) : ILevel
         RenderType.create(
             "starred_$identifier",
             RenderSetup.builder(pipeline.depth)
+                //? if <= 26.1
                 .bufferSize(RenderType.TRANSIENT_BUFFER_SIZE)
                 .createRenderSetup()
         )
@@ -18,6 +19,7 @@ class DualLevelRenderType(identifier: String, pipeline: ILevelPipeline) : ILevel
         RenderType.create(
             "starred_${identifier}_depthless",
             RenderSetup.builder(pipeline.depthless)
+                //? if <= 26.1
                 .bufferSize(RenderType.TRANSIENT_BUFFER_SIZE)
                 .createRenderSetup()
         )

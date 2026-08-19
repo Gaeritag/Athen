@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused", "ObjectPrivatePropertyName")
+@file:Suppress("Unused", "ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.slayer.carry.impl
 
@@ -50,7 +50,7 @@ object SlayerCarryTracker : Module(
     private val `announce$spawn` by config.switch("Show spawn message", true)
 
     @Suppress("unused")
-    private val _manager by config.button("Open manager") { client.setScreen(SlayerCarryGUI) }
+    private val _manager by config.button("Open manager") { SlayerCarryGUI.open() }
 
     private val _webhook by config.group("Discord webhook")
     private val webhook by _webhook.switch("Send to webhook")

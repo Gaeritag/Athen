@@ -30,9 +30,9 @@
   ],
   "accessWidener": "${accessWidener}",
   "depends": {
-    "fabricloader": ">=0.18",
+    "fabricloader": ">=0.19.3",
     "fabric-api": "*",
-    "fabric-language-kotlin": "*",
+    "fabric-language-kotlin": ">=1.13.13+kotlin.2.4.10",
     "minecraft": "${minecraft}"
   },
   "custom": {

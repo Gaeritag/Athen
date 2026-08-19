@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
@@ -10,13 +10,26 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
+//? if >= 26.2
+//import net.minecraft.world.level.block.Blocks
+
 class MelodySimulator : ITerminalSim(TerminalType.MELODY) {
+    //? if <= 26.1 {
     private val magentaPane = Items.MAGENTA_STAINED_GLASS_PANE.pane()
     private val greenPane = Items.LIME_STAINED_GLASS_PANE.pane()
     private val redPane = Items.RED_STAINED_GLASS_PANE.pane()
     private val whitePane = Items.WHITE_STAINED_GLASS_PANE.pane()
     private val redClay = Items.RED_TERRACOTTA.pane()
     private val greenClay = Items.LIME_TERRACOTTA.pane()
+    //?} else {
+    /*private val magentaPane = Items.STAINED_GLASS_PANE.magenta().pane()
+    private val greenPane = Items.STAINED_GLASS_PANE.lime().pane()
+    private val redPane = Items.STAINED_GLASS_PANE.red().pane()
+    private val whitePane = Items.STAINED_GLASS_PANE.white().pane()
+    private val redClay = Blocks.DYED_TERRACOTTA.red().asItem().pane()
+    private val greenClay = Blocks.DYED_TERRACOTTA.lime().asItem().pane()
+    *///?}
+
 
     private var magentaColumn = (1..5).random()
     private var limeColumn = 1

@@ -59,6 +59,7 @@ object Dev {
             }
 
             "clear" / "chat" {
+                //~ if >= 26.2 'client.gui.chat' -> 'client.gui.hud.chat'
                 client.gui.chat.clearMessages(false)
             }
         }

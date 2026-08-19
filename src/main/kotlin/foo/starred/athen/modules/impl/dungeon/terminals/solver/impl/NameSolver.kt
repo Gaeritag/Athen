@@ -56,6 +56,7 @@ object NameSolver : ITerminal(TerminalType.NAME) {
             val s = items[i0]
             if (i0 in i) continue
             if (s.isEmpty) continue
+            //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
             if (s.item == Items.BLACK_STAINED_GLASS_PANE) continue
             if (s.glint()) continue
             if (!s.hoverName.stripped().lowercase().startsWith(targetLetter, true)) continue

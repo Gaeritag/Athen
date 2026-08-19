@@ -48,11 +48,13 @@ object FabricEventDispatcher {
 
         ClientTickEvents.END_CLIENT_TICK.register { _ ->
             TickEvent.Client.End.post()
+            //~ if >= 26.2 'client.isSingleplayer' -> 'client.singleplayerServer != null'
             if (client.isSingleplayer) TickEvent.Server.post()
         }
 
         LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN.register { context ->
             WorldRenderEvent.Extract.post()
+            //~ if >= 26.2 'bufferSource' -> 'submitNodeCollector'
             WorldRenderEvent.Render(context.poseStack(), context.bufferSource()).post()
         }
 

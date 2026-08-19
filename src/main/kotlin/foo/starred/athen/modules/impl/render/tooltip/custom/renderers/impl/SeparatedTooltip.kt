@@ -6,6 +6,7 @@ import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.ITooltipRenderer
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.TooltipContext
+import foo.starred.cascade.extensions.scissor.scissor
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip
@@ -56,21 +57,19 @@ object SeparatedTooltip : ITooltipRenderer {
     }
 
     private fun GuiGraphicsExtractor.components(font: Font, comps: List<ClientTooltipComponent>, tx: Int, boxX: Int, boxY: Int, boxW: Int, boxH: Int, startY: Int, width: Int, totalHeight: Int) {
-        enableScissor(boxX, boxY, boxX + boxW, boxY + boxH)
+        scissor(boxX, boxY, boxX + boxW, boxY + boxH) {
+            var drawY = startY
+            for (c in comps) {
+                c.extractText(this, font, tx, drawY)
+                drawY += c.getHeight(font)
+            }
 
-        var drawY = startY
-        for (c in comps) {
-            c.extractText(this, font, tx, drawY)
-            drawY += c.getHeight(font)
+            drawY = startY
+            for (c in comps) {
+                c.extractImage(font, tx, drawY, width, totalHeight, this)
+                drawY += c.getHeight(font)
+            }
         }
-
-        drawY = startY
-        for (c in comps) {
-            c.extractImage(font, tx, drawY, width, totalHeight, this)
-            drawY += c.getHeight(font)
-        }
-
-        disableScissor()
     }
 
     private fun GuiGraphicsExtractor.fade(x: Int, y: Int, w: Int, h: Int, scrollY: Int, contentHeight: Int) {

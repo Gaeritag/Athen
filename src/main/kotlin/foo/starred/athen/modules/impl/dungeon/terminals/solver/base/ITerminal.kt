@@ -110,6 +110,7 @@ abstract class ITerminal(val terminalType: TerminalType) {
 
     open fun click(slot: Int, button: Int) {
         if (TerminalSimulator.s.value) {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             val screen = client.screen as? ITerminalSim ?: return
             val slot0 = screen.menu.slots.getOrNull(slot) ?: return
 

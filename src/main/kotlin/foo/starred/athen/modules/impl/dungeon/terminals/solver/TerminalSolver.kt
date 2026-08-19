@@ -161,6 +161,7 @@ object TerminalSolver : Module(
             if (System.currentTimeMillis() - last <= resync) return@on
 
             b.clicked = false
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             b.update((client.screen as? AbstractContainerScreen<*>)?.menu?.items?.subList(0, a.slots) ?: return@on)
             b.onResync()
         }.runWhen(TerminalAPI.opened)

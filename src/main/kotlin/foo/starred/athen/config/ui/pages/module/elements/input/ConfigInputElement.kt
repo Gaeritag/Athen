@@ -13,6 +13,7 @@ import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.extensions.rectangle.rectangle
+import foo.starred.cascade.extensions.scissor.scissor
 import foo.starred.cascade.font.CascadeFonts
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
@@ -281,28 +282,26 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
         val x0 = x.toInt()
         val y0 = y.toInt()
 
-        graphics.enableScissor(x0 + 2, y0, x0 + width.toInt() - 2, y0 + height.toInt())
+        graphics.scissor(x0 + 2, y0, width - 2, height) {
+            val height0 = font.regular.height * 12f
+            val x1 = x0 + 3 - scroll
+            val y1 = y + (height - font.regular.height * 12f) / 2f
 
-        val height0 = font.regular.height * 12f
-        val x1 = x0 + 3 - scroll
-        val y1 = y + (height - font.regular.height * 12f) / 2f
+            if (selected && !bool0) {
+                val i0 = min(_selection0, _selection1)
+                val i1 = max(_selection0, _selection1)
+                val width = i1 - i0
 
-        if (selected && !bool0) {
-            val i0 = min(_selection0, _selection1)
-            val i1 = max(_selection0, _selection1)
-            val width = i1 - i0
+                graphics.rectangle(x1 + i0, y1, width, height0, Catppuccin.Mocha.Base.argb.withAlpha(0.5f))
+            }
 
-            graphics.rectangle(x1 + i0, y1, width, height0, Catppuccin.Mocha.Base.argb.withAlpha(0.5f))
+            val bool1 = value.isEmpty() && bool0
+            font.extract(graphics, if (bool1) placeholder else value, x1, y1, if (bool1) Catppuccin.Mocha.Overlay0.argb else Catppuccin.Mocha.Text.argb, false)
+
+            if (!bool0 && (System.currentTimeMillis() / 500) % 2 == 0L) {
+                font.extract(graphics, "|", x1 + _cursor - 1f, y1 - 1f, Catppuccin.Mocha.Lavender.argb, false)
+            }
         }
-
-        val bool1 = value.isEmpty() && bool0
-        font.extract(graphics, if (bool1) placeholder else value, x1, y1, if (bool1) Catppuccin.Mocha.Overlay0.argb else Catppuccin.Mocha.Text.argb, false)
-
-        if (!bool0 && (System.currentTimeMillis() / 500) % 2 == 0L) {
-            font.extract(graphics, "|", x1 + _cursor - 1f, y1 - 1f, Catppuccin.Mocha.Lavender.argb, false)
-        }
-
-        graphics.disableScissor()
     }
 
     fun update(block: ((String) -> Unit)?) {

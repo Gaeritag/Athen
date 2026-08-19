@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused")
+@file:Suppress("Unused")
 
 package foo.starred.athen.modules.impl.general
 
@@ -87,6 +87,7 @@ object WardrobeKeybinds : Module(
             get() = client.player?.containerMenu?.slots?.getOrNull(idx)
 
         val equipped: Boolean
+            //~ if >= 26.2 'Items.LIME_DYE' -> 'Items.DYE.pick(net.minecraft.world.item.DyeColor.LIME)'
             get() = slot?.item?.item == Items.LIME_DYE
     }
 

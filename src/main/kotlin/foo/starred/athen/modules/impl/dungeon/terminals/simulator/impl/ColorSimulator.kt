@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
+package foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
@@ -40,6 +40,7 @@ class ColorSimulator(
     }
 }
 
+//? if <= 26.1 {
 private val all = listOf(
     DyeColor.WHITE to listOf(Items.WHITE_STAINED_GLASS, Items.WHITE_WOOL, Items.WHITE_CONCRETE, Items.BONE_MEAL, Items.WHITE_DYE),
     DyeColor.BLUE to listOf(Items.BLUE_STAINED_GLASS, Items.BLUE_WOOL, Items.BLUE_CONCRETE, Items.LAPIS_LAZULI, Items.BLUE_DYE),
@@ -57,3 +58,22 @@ private val all = listOf(
     DyeColor.LIGHT_GRAY to listOf(Items.LIGHT_GRAY_STAINED_GLASS, Items.LIGHT_GRAY_WOOL, Items.LIGHT_GRAY_CONCRETE, Items.LIGHT_GRAY_DYE),
     DyeColor.PURPLE to listOf(Items.PURPLE_STAINED_GLASS, Items.PURPLE_WOOL, Items.PURPLE_CONCRETE, Items.PURPLE_DYE)
 )
+//?} else {
+/*private val all = listOf(
+    DyeColor.WHITE to listOf(Items.STAINED_GLASS.white(), Items.WOOL.white(), net.minecraft.world.level.block.Blocks.CONCRETE.white().asItem(), Items.BONE_MEAL, Items.DYE.white()),
+    DyeColor.BLUE to listOf(Items.STAINED_GLASS.blue(), Items.WOOL.blue(), net.minecraft.world.level.block.Blocks.CONCRETE.blue().asItem(), Items.LAPIS_LAZULI, Items.DYE.blue()),
+    DyeColor.BLACK to listOf(Items.STAINED_GLASS.black(), Items.WOOL.black(), net.minecraft.world.level.block.Blocks.CONCRETE.black().asItem(), Items.INK_SAC, Items.DYE.black()),
+    DyeColor.BROWN to listOf(Items.STAINED_GLASS.brown(), Items.WOOL.brown(), net.minecraft.world.level.block.Blocks.CONCRETE.brown().asItem(), Items.COCOA_BEANS, Items.DYE.brown()),
+    DyeColor.RED to listOf(Items.STAINED_GLASS.red(), Items.WOOL.red(), net.minecraft.world.level.block.Blocks.CONCRETE.red().asItem(), Items.DYE.red()),
+    DyeColor.LIME to listOf(Items.STAINED_GLASS.lime(), Items.WOOL.lime(), net.minecraft.world.level.block.Blocks.CONCRETE.lime().asItem(), Items.DYE.lime()),
+    DyeColor.GREEN to listOf(Items.STAINED_GLASS.green(), Items.WOOL.green(), net.minecraft.world.level.block.Blocks.CONCRETE.green().asItem(), Items.DYE.green()),
+    DyeColor.YELLOW to listOf(Items.STAINED_GLASS.yellow(), Items.WOOL.yellow(), net.minecraft.world.level.block.Blocks.CONCRETE.yellow().asItem(), Items.DYE.yellow()),
+    DyeColor.ORANGE to listOf(Items.STAINED_GLASS.orange(), Items.WOOL.orange(), net.minecraft.world.level.block.Blocks.CONCRETE.orange().asItem(), Items.DYE.orange()),
+    DyeColor.MAGENTA to listOf(Items.STAINED_GLASS.magenta(), Items.WOOL.magenta(), net.minecraft.world.level.block.Blocks.CONCRETE.magenta().asItem(), Items.DYE.magenta()),
+    DyeColor.CYAN to listOf(Items.STAINED_GLASS.cyan(), Items.WOOL.cyan(), net.minecraft.world.level.block.Blocks.CONCRETE.cyan().asItem(), Items.DYE.cyan()),
+    DyeColor.PINK to listOf(Items.STAINED_GLASS.pink(), Items.WOOL.pink(), net.minecraft.world.level.block.Blocks.CONCRETE.pink().asItem(), Items.DYE.pink()),
+    DyeColor.GRAY to listOf(Items.STAINED_GLASS.gray(), Items.WOOL.gray(), net.minecraft.world.level.block.Blocks.CONCRETE.gray().asItem(), Items.DYE.gray()),
+    DyeColor.LIGHT_GRAY to listOf(Items.STAINED_GLASS.lightGray(), Items.WOOL.lightGray(), net.minecraft.world.level.block.Blocks.CONCRETE.lightGray().asItem(), Items.DYE.lightGray()),
+    DyeColor.PURPLE to listOf(Items.STAINED_GLASS.purple(), Items.WOOL.purple(), net.minecraft.world.level.block.Blocks.CONCRETE.purple().asItem(), Items.DYE.purple())
+)
+*///?}

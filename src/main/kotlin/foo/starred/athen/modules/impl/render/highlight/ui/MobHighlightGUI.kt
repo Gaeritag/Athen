@@ -224,8 +224,8 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]") {
         }
     }
 
-    fun openWith(name: String?, type: EntityType<*>?, max: Int = -1) {
-        client.setScreen(this)
+    fun pop(name: String?, type: EntityType<*>?, max: Int = -1) {
+        open()
         popup.open(name, type, max)
     }
 

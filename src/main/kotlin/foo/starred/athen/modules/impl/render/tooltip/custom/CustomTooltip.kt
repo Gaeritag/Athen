@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName", "ObjectPropertyName", "Unused")
+@file:Suppress("ObjectPrivatePropertyName", "ObjectPropertyName", "Unused")
 
 package foo.starred.athen.modules.impl.render.tooltip.custom
 
@@ -115,6 +115,7 @@ object CustomTooltip : Module(
 
     @JvmStatic
     fun render(graphics: GuiGraphicsExtractor, font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner) {
+        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
         if (color != `border$color`.rgb && (client.screen as? AbstractContainerScreen<*>)?.hovered == null) color = `border$color`.rgb
 
         last = Scheduler.ticks.client

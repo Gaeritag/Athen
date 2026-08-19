@@ -73,6 +73,7 @@ class UpdateGUI(
         when {
             fn(0) -> {
                 onUpdate()
+                //~ if >= 26.2 'client.setScreen' -> 'client.gui.setScreen'
                 client.setScreen(null)
             }
 
@@ -84,6 +85,7 @@ class UpdateGUI(
 
                 onRemind()
                 "Will remind to update for version $newVersion on next launch".mod()
+                //~ if >= 26.2 'client.setScreen' -> 'client.gui.setScreen'
                 client.setScreen(null)
             }
 
@@ -91,6 +93,7 @@ class UpdateGUI(
                 if (booling) {
                     onSkip()
                     "Skipped update for version $newVersion".mod()
+                    //~ if >= 26.2 'client.setScreen' -> 'client.gui.setScreen'
                     client.setScreen(null)
                     return true
                 }

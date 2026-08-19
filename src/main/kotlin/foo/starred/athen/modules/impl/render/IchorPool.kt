@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render
+package foo.starred.athen.modules.impl.render
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
@@ -57,6 +57,7 @@ object IchorPool : Module(
             if ("Casting Spell: Ichor Pool!" != stripped) return@on
 
             val n = client.player?.blockPosition() ?: return@on
+            //~ if >= 26.2 'n.center' -> 'Vec3.atCenterOf(n)'
             pos = n.center.add(0.0, 0.1, 0.0)
             time = System.currentTimeMillis()
 

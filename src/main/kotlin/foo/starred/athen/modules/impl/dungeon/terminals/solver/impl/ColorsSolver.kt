@@ -36,6 +36,7 @@ object ColorsSolver : ITerminal(TerminalType.COLORS) {
         val str = TerminalType.COLORS.regex.matchEntire(TerminalAPI.title)?.groupValues?.get(1)?.replace("SILVER", "LIGHT GRAY")?.lowercase() ?: return
         for (i in items.indices) {
             val s = items[i]
+            //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
             if (s.item == Items.BLACK_STAINED_GLASS_PANE) continue
             if (s.glint()) continue
             if (!s.matches(str)) continue
@@ -49,6 +50,7 @@ object ColorsSolver : ITerminal(TerminalType.COLORS) {
             "black" -> item == Items.INK_SAC
             "blue" -> item == Items.LAPIS_LAZULI
             "brown" -> item == Items.COCOA_BEANS
+            //~ if >= 26.2 'Items.WHITE_WOOL' -> 'Items.WOOL.white()'
             "white" -> item == Items.BONE_MEAL || item == Items.WHITE_WOOL
             "green" -> item == Items.CACTUS
             "red" -> item == Items.POPPY

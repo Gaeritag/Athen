@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.impl.queue.impl
+package foo.starred.athen.api.rendering.level.impl.queue.impl
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.rendering.level.impl.data.impl.*
@@ -23,6 +23,7 @@ object LevelQueueImpl : ILevelQueue {
 
     init {
         on<WorldRenderEvent.Render> {
+            //~ if >= 26.2 'mainCamera' -> 'mainCamera()'
             val camera = client.gameRenderer.mainCamera.position()
 
             pose.pushPose()

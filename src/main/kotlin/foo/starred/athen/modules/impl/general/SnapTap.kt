@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general
+package foo.starred.athen.modules.impl.general
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category
@@ -32,6 +32,7 @@ object SnapTap : Module(
 
     init {
         on<InputEvent.Keyboard.Press> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
 
             val key = keyEvent.key()
@@ -39,6 +40,7 @@ object SnapTap : Module(
         }
 
         on<InputEvent.Keyboard.Release> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on active.clear()
 
             val key = keyEvent.key()

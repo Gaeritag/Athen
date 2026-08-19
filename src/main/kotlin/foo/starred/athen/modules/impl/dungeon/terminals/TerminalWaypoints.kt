@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.terminals
+package foo.starred.athen.modules.impl.dungeon.terminals
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.DungeonAPI
@@ -15,6 +15,9 @@ import foo.starred.snowbird.handlers.Observable
 import net.minecraft.core.BlockPos
 import net.minecraft.world.phys.AABB
 import java.awt.Color
+
+//? if >= 26.2
+//import net.minecraft.world.phys.Vec3
 
 @Load
 object TerminalWaypoints : Module(
@@ -126,6 +129,7 @@ object TerminalWaypoints : Module(
                 val aabb = t.aabb1
 
                 extractStyledBox(aabb, color.rgb, highlightStyle, 2f, depthTest)
+                //~ if >= 26.2 't.positions.last().center' -> 'Vec3.atCenterOf(t.positions.last())'
                 if (showText) extractText(t.defaultClass.str(), t.positions.last().center, depth = depthTest)
             }
         }.runWhen(r)

@@ -147,6 +147,7 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Keyboard.Press> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
             if (keyEvent.key != keybind) return@on
 
@@ -154,6 +155,7 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Keyboard.Release> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
             if (keyEvent.key != keybind) return@on
             if (!open.value) return@on
@@ -164,6 +166,7 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Mouse.Press> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
             if (buttonInfo.button() != keybind) return@on
             if (open.value) return@on
@@ -172,6 +175,7 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Mouse.Release> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
             if (buttonInfo.button() != keybind) return@on
             if (!open.value) return@on

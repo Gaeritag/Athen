@@ -1,3 +1,4 @@
+//? if <= 26.1 {
 package foo.starred.athen.mixin.mixins.compat.exordium;
 
 import dev.tr7zw.exordium.components.BufferInstance;
@@ -35,3 +36,4 @@ public class BufferInstanceMixin {
         });
     }
 }
+//? }

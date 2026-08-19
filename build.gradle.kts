@@ -72,19 +72,17 @@ loom {
     accessWidenerPath = rootProject.file("src/main/resources/$modId.accesswidener")
 
     runConfigs.named("client") {
-        isIdeConfigGenerated = true
-        vmArgs.addAll(
-            arrayOf(
-                "-Ddevauth.enabled=true",
-                "-Ddevauth.account=main",
-                "-XX:+AllowEnhancedClassRedefinition",
-                "-XX:+IgnoreUnrecognizedVMOptions",
-            )
+        generateRunConfig = true
+        jvmArguments.addAll(
+            "-Ddevauth.enabled=true",
+            "-Ddevauth.account=main",
+            "-XX:+AllowEnhancedClassRedefinition",
+            "-XX:+IgnoreUnrecognizedVMOptions",
         )
     }
 
     runConfigs.named("server") {
-        isIdeConfigGenerated = false
+        generateRunConfig = false
     }
 }
 
@@ -103,7 +101,7 @@ kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.valueOf("JVM_25"))
 
-        freeCompilerArgs.addAll("-XXLanguage:+ExplicitBackingFields", "-Xcontext-parameters", "-Xcontext-sensitive-resolution")
+        freeCompilerArgs.addAll("-Xcontext-sensitive-resolution", "-Xcollection-literals", "-Xskip-prerelease-check")
         optIn.add("kotlin.time.ExperimentalTime")
     }
 }

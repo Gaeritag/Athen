@@ -1,4 +1,4 @@
-﻿@file:Suppress("AssignedValueIsNeverRead", "VariableNeverRead")
+@file:Suppress("AssignedValueIsNeverRead", "VariableNeverRead")
 
 package foo.starred.athen.hud
 
@@ -18,7 +18,9 @@ object HUDManager {
 
     init {
         on<GuiEvent.Render.Main> {
+            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen is HUDEditor) return@on
+            //~ if >= 26.2 'client.options.hideGui' -> 'client.gui.hud.isHidden'
             if (client.options.hideGui && ModSettings.hideGuis) return@on
 
             Resolute.push(graphics)
