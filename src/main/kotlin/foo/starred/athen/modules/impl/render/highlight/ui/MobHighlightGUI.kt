@@ -1,285 +1,430 @@
-@file:Suppress("SameParameterValue")
+@file:Suppress("ObjectPrivatePropertyName")
 
 package foo.starred.athen.modules.impl.render.highlight.ui
 
-import foo.starred.athen.api.rendering.ui.effects.outline.outline
-import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
-import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.modules.impl.render.highlight.MobHighlight
-import foo.starred.athen.modules.impl.render.highlight.ui.data.HighlightEntry
-import foo.starred.athen.modules.impl.render.highlight.ui.data.UIZoneType
-import foo.starred.athen.modules.impl.render.highlight.ui.renderers.ListRenderer
-import foo.starred.athen.modules.impl.render.highlight.ui.renderers.ModalRenderer
-import foo.starred.athen.ui.UIZone
-import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.cascade.constraints.impl.data.PositionAlignment
+import foo.starred.cascade.constraints.impl.data.PositionAnchor
+import foo.starred.cascade.constraints.impl.position.*
+import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
+import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
+import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
+import foo.starred.cascade.primitives.impl.RectanglePrimitive
+import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
+import foo.starred.cascade.primitives.impl.ScrollablePrimitive
+import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrollable
+import foo.starred.cascade.primitives.impl.TextPrimitive
+import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.hovered
-import net.minecraft.client.gui.GuiGraphics
+import foo.starred.snowbird.utils.brighten
+import foo.starred.snowbird.utils.literal
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.EntityType
-import org.lwjgl.glfw.GLFW
 
-object MobHighlightGUI : MultiVersionScreen("Mob Highlights [Athen]") {
-    private val entries = mutableListOf<HighlightEntry>()
-    private val zones = mutableListOf<UIZone>()
-    private val listRenderer = ListRenderer(28, 4, 16, 6)
-    private val modal = ModalRenderer(340, 200, 16, 6)
-    private var tab = false
+object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]") {
+    private var category = false
+    private var deleting: Int? = null
+    private var entry: Int? = null
 
-    override fun onScramInit() {
-        recreate()
-        modal.close()
-        tab = false
-    }
+    private var left: ScrollablePrimitive
+    private var right: ScrollablePrimitive
+    private var footer: RectanglePrimitive
+    private var popup: MobHighlightPopUp
 
-    override fun onScramClose() = MobHighlight.json.save()
+    private var `highlight$add`: RectanglePrimitive
+    private var `highlight$edit`: RectanglePrimitive
+    private var `highlight$delete`: RectanglePrimitive
+    private lateinit var `highlight$text$edit`: TextPrimitive
+    private lateinit var `highlight$text$delete`: TextPrimitive
 
-    override fun isPauseScreen() = false
+    private data class CategoryRow(val row: RectanglePrimitive, val label: TextPrimitive)
+    private data class EntryRow(val row: RectanglePrimitive, val swatch: RectanglePrimitive)
 
-    override fun onScramRender(graphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        zones.clear()
-        graphics.rectangle(0, 0, width, height, Catppuccin.Mocha.Crust.withAlpha(0.6f))
+    private val rows0 = LinkedHashMap<Boolean, CategoryRow>()
+    private val rows1 = LinkedHashMap<Int, EntryRow>()
 
-        val pw = 460
-        val ph = 300
-        val px = (width - pw) / 2
-        val py = (height - ph) / 2
-
-        graphics.rectangle(px, py, pw, ph, Catppuccin.Mocha.Base.argb)
-        graphics.outline(px, py, pw, ph, 1, Catppuccin.Mocha.Surface0.argb)
-
-        tabs(graphics, px, py, pw)
-
-        val ly = py + 34
-        val lh = ph - 34 - 28
-        val list = entries.filter { it.typed == tab }
-        listRenderer.draw(graphics, mouseX, mouseY, px + 6, ly, pw - 12, lh, list, modal.open, zones)
-
-        footer(graphics, px, py, pw, ph)
-        if (modal.open) modal.draw(graphics, mouseX, mouseY, width, height, zones)
-    }
-
-    private fun tabs(graphics: GuiGraphics, px: Int, py: Int, pw: Int) {
-        val tw = (pw - 3 * 2 - 4) / 2
-        val th = 22
-        val ty = py + 3
-
-        val x0 = px + 3
-        val b0 = !modal.open && hovered(x0, ty, tw, th, true)
-        graphics.rectangle(x0, ty, tw, th, if (!tab) Catppuccin.Mocha.Surface1.argb else if (b0) Catppuccin.Mocha.Surface0.withAlpha(0.5f) else Catppuccin.Mocha.Mantle.argb)
-        graphics.outline(x0, ty, tw, th, 1, if (!tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Crust.argb)
-        graphics.extractText("Named", x0 + (tw - client.font.width("Named")) / 2, ty + (th - client.font.lineHeight) / 2 + 1, false, if (!tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
-        zones.add(UIZone(x0, ty, tw, th, UIZoneType.TAB_NAMED))
-
-        val x1 = x0 + tw + 4
-        val b1 = !modal.open && hovered(x1, ty, tw, th, true)
-        graphics.rectangle(x1, ty, tw, th, if (tab) Catppuccin.Mocha.Surface1.argb else if (b1) Catppuccin.Mocha.Surface0.withAlpha(0.5f) else Catppuccin.Mocha.Mantle.argb)
-        graphics.outline(x1, ty, tw, th, 1, if (tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Crust.argb)
-        graphics.extractText("Typed", x1 + (tw - client.font.width("Typed")) / 2, ty + (th - client.font.lineHeight) / 2 + 1, false, if (tab) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
-        zones.add(UIZone(x1, ty, tw, th, UIZoneType.TAB_TYPED))
-
-        graphics.rectangle(px, py + 29, pw, 1, Catppuccin.Mocha.Surface0.argb)
-    }
-
-    private fun footer(graphics: GuiGraphics, px: Int, py: Int, pw: Int, ph: Int) {
-        val fy = py + ph - 28
-        graphics.rectangle(px, fy, pw, 1, Catppuccin.Mocha.Surface0.argb)
-
-        val label = if (tab) "+ Add Typed" else "+ Add Named"
-        val bw = 120
-        val bx = px + (pw - bw) / 2
-        val by = fy + 6
-        val hov = !modal.open && hovered(bx, by, bw, 16, true)
-        graphics.rectangle(bx, by, bw, 16, if (hov) Catppuccin.Mocha.Surface2.argb else Catppuccin.Mocha.Surface1.argb)
-        graphics.outline(bx, by, bw, 16, 1, Catppuccin.Mocha.Green.argb)
-        graphics.extractText(label, bx + (bw - client.font.width(label)) / 2, by + (16 - client.font.lineHeight) / 2 + 1, false, Catppuccin.Mocha.Green.argb)
-        zones.add(UIZone(bx, by, bw, 16, UIZoneType.BUTTON_CREATE))
-    }
-
-    override fun onScramMouseClick(mouseX: Int, mouseY: Int, button: Int): Boolean {
-        if (modal.open) {
-            clickModal(mouseX, mouseY, button)
-            return true
+    init {
+        container {
+            size = FillSizeConstraint()
+            position = FixedPositionConstraint(0, 0)
+            interact = false
+            attach(scene)
         }
 
-        if (button != 0) return false
-
-        val hit = zones.lastOrNull { hovered(it.x, it.y, it.w, it.h, true) } ?: return false
-
-        if (hit.type == UIZoneType.TAB_NAMED) {
-            tab = false
-            return true
+        val main = container {
+            size = FixedSizeConstraint(576, 300)
+            position = CenterPositionConstraint()
+            attach(scene)
         }
 
-        if (hit.type == UIZoneType.TAB_TYPED) {
-            tab = true
-            return true
+        val side0 = rectangle {
+            size = FixedSizeConstraint(110, 300)
+            position = FixedPositionConstraint(0, 0)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            interact = false
+            attach(main)
         }
 
-        if (hit.type == UIZoneType.BUTTON_CREATE) {
-            modal.open(tab)
-            return true
+        left = scrollable {
+            size = FillSizeConstraint(4)
+            position = CenterPositionConstraint()
+            attach(side0)
         }
 
-        if (hit.type == UIZoneType.ENTRY_EDIT) {
-            entries.firstOrNull { it.index == hit.data && it.typed == tab }?.let { modal.open(it) }
-            return true
+        val right0 = rectangle {
+            size = FixedSizeConstraint(460, 260)
+            position = FixedPositionConstraint(116, 0)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            interact = false
+            attach(main)
         }
 
-        if (hit.type == UIZoneType.ENTRY_DELETE) {
-            val e = entries.firstOrNull { it.index == hit.data && it.typed == tab } ?: return true
-            if (e.typed) MobHighlight.e1.update { removeAt(e.index) }
-            else MobHighlight.e0.update { removeAt(e.index) }
-            recreate()
-            return true
+        right = scrollable {
+            size = FillSizeConstraint(6)
+            position = CenterPositionConstraint()
+            attach(right0)
         }
 
-        return true
-    }
-
-    private fun clickModal(mouseX: Int, mouseY: Int, button: Int) {
-        if (button != 0) return
-
-        val hit = zones.lastOrNull { hovered(it.x, it.y, it.w, it.h, true) }
-
-        if (hit != null && hit.type == UIZoneType.MODAL_SUGGESTION) {
-            modal.click(mouseX, mouseY)
-            return
+        footer = rectangle {
+            size = FixedSizeConstraint(460, 34)
+            position = FixedPositionConstraint(116, 266)
+            color = Mocha.Base.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+            interact = false
+            attach(main)
         }
 
-        val p0 = modal.nameField.focused
-        val p1 = modal.colorField.focused
-        val p2 = modal.maxHpField.focused
-        modal.nameField.focused = false
-        modal.colorField.focused = false
-        modal.maxHpField.focused = false
-
-        if (hit == null) return
-
-        if (hit.type == UIZoneType.MODAL_NAME || hit.type == UIZoneType.MODAL_TYPE) {
-            modal.nameField.focused = true
-            if (p0) modal.nameField.updateClick(mouseX, hit.x)
-            return
+        popup = MobHighlightPopUp(this) {
+            popup.visible = false
+            scene.focused = null
+            list()
+            categories()
+            footer()
+        }.apply {
+            attach(scene)
+            visible = false
         }
 
-        if (hit.type == UIZoneType.MODAL_COLOR) {
-            modal.colorField.focused = true
-            if (p1) modal.colorField.updateClick(mouseX, hit.x)
-            return
-        }
+        `highlight$add` = rectangle {
+            size = FixedSizeConstraint(120, 20)
+            position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 8)
+            color = Mocha.Green.argb.brighten(0.8f)
+            border = true
+            borderColor = Mocha.Green.argb.brighten(0.5f)
 
-        if (hit.type == UIZoneType.MODAL_MAX_HP) {
-            modal.maxHpField.focused = true
-            if (p2) modal.maxHpField.updateClick(mouseX, hit.x)
-            return
-        }
-
-        if (hit.type == UIZoneType.MODAL_SAVE) {
-            save()
-            return
-        }
-
-        if (hit.type == UIZoneType.MODAL_CANCEL) {
-            modal.close()
-            return
-        }
-    }
-
-    override fun onScramKeyPress(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (modal.open) {
-            when {
-                modal.nameField.focused && modal.nameField.handleKey(keyCode, modifiers) -> return true
-                modal.colorField.focused && modal.colorField.handleKey(keyCode, modifiers) -> return true
-                modal.maxHpField.focused && modal.maxHpField.handleKey(keyCode, modifiers) -> return true
+            on<MouseEvent.Press> {
+                cancel()
+                if (button != 0) return@on
+                deleting = null
+                popup.open(category)
             }
 
-            when (keyCode) {
-                GLFW.GLFW_KEY_TAB -> {
-                    when {
-                        modal.nameField.focused -> {
-                            modal.nameField.focused = false
-                            modal.colorField.focused = true
-                        }
+            on<MouseEvent.Move.Enter> {
+                color = Mocha.Green.argb.brighten(0.9f)
+            }
 
-                        modal.colorField.focused -> {
-                            modal.colorField.focused = false
-                            modal.maxHpField.focused = true
-                        }
+            on<MouseEvent.Move.Exit> {
+                color = Mocha.Green.argb.brighten(0.8f)
+            }
 
-                        modal.maxHpField.focused -> {
-                            modal.maxHpField.focused = false
-                            modal.nameField.focused = true
-                        }
-                    }
+            attach(footer)
+            adopt(text {
+                text = "+ Add Highlight".literal()
+                color = Mocha.Base.argb
+                position = CenterPositionConstraint()
+                shadow = false
+            })
+        }
+
+        `highlight$edit` = rectangle {
+            size = FixedSizeConstraint(70, 20)
+            position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -82)
+            color = Mocha.Surface1.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+
+            on<MouseEvent.Press> {
+                cancel()
+                if (button != 0) return@on
+                val idx = entry ?: return@on
+                deleting = null
+                popup.open(category, idx)
+            }
+
+            on<MouseEvent.Move.Enter> {
+                if (entry != null) color = Mocha.Lavender.argb.brighten(0.9f)
+            }
+
+            on<MouseEvent.Move.Exit> {
+                if (entry != null) color = Mocha.Lavender.argb.brighten(0.8f)
+            }
+
+            attach(footer)
+            adopt(text {
+                text = "Edit".literal()
+                color = Mocha.Overlay0.argb
+                position = CenterPositionConstraint()
+                shadow = false
+            }.also { `highlight$text$edit` = it })
+        }
+
+        `highlight$delete` = rectangle {
+            size = FixedSizeConstraint(70, 20)
+            position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8)
+            color = Mocha.Surface1.argb
+            border = true
+            borderColor = Mocha.Surface0.argb
+
+            on<MouseEvent.Press> {
+                cancel()
+                if (button != 0) return@on
+                val idx = entry ?: return@on
+
+                if (deleting != idx) {
+                    deleting = idx
+                    footer()
+                    return@on
                 }
 
-                GLFW.GLFW_KEY_ESCAPE -> modal.close()
+                if (category) MobHighlight.e1.update { removeAt(idx) }
+                else MobHighlight.e0.update { removeAt(idx) }
+
+                deleting = null
+                entry = null
+                categories()
+                list()
+                footer()
             }
 
-            return true
-        }
-
-        return super.onScramKeyPress(keyCode, scanCode, modifiers)
-    }
-
-    override fun onScramCharType(char: Char): Boolean {
-        if (modal.open) {
-            when {
-                modal.nameField.focused -> modal.nameField.handleChar(char)
-                modal.colorField.focused && (char in '0'..'9' || char in 'a'..'f' || char in 'A'..'F') -> modal.colorField.handleChar(char)
-                modal.maxHpField.focused && (char.isDigit() || char == '-') -> modal.maxHpField.handleChar(char)
+            on<MouseEvent.Move.Enter> {
+                if (entry != null) color = Mocha.Red.argb.brighten(0.9f)
             }
 
-            return true
-        }
+            on<MouseEvent.Move.Exit> {
+                if (entry != null) color = Mocha.Red.argb.brighten(0.8f)
+            }
 
-        return super.onScramCharType(char)
+            attach(footer)
+            adopt(text {
+                text = "Delete".literal()
+                color = Mocha.Overlay0.argb
+                position = CenterPositionConstraint()
+                shadow = false
+            }.also { `highlight$text$delete` = it })
+        }
     }
 
-    override fun onScramMouseScroll(mouseX: Int, mouseY: Int, horizontal: Double, vertical: Double): Boolean {
-        if (modal.open) {
-            if (modal.dropdown) modal.scroll((vertical * 10).toInt())
-            return true
-        }
-        if (entries.isEmpty()) return false
-        listRenderer.scroll((vertical * 10).toInt())
-        return true
+    fun openWith(name: String?, type: EntityType<*>?, max: Int = -1) {
+        client.setScreen(this)
+        popup.open(name, type, max)
     }
 
-    private fun save() {
-        val name = modal.nameField.value.trim()
-        if (name.isEmpty()) return
+    override fun init() {
+        super.init()
+        entry = null
+        deleting = null
+        popup.visible = false
+        categories()
+        list()
+        footer()
+    }
 
-        val color = modal.colorField.value.removePrefix("#").toIntOrNull(16) ?: return
-        val max = modal.maxHpField.value.toIntOrNull() ?: -1
+    override fun onClose() {
+        MobHighlight.json.save()
+        super.onClose()
+    }
 
-        if (modal.typed) {
-            if (modal.entry == null) {
-                val type = EntityType.byString(name).orElse(null) ?: return
-                MobHighlight.e1.update { add(MobHighlight.EntityTyped(type, color, max)) }
+    private fun categories() {
+        left.children.clear()
+        rows0.clear()
+
+        val kv = listOf(false to "Named (${MobHighlight.e0.value.size})", true to "Typed (${MobHighlight.e1.value.size})")
+        var cy = 4
+
+        for ((k, v) in kv) {
+            val b0 = category == k
+
+            val row = rectangle {
+                size = MixedSizeConstraint(PercentSizeConstraint(95f, 0f), FixedSizeConstraint(0, 20))
+                position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.START, 0, cy)
+                color = if (b0) Mocha.Surface0.argb else Mocha.Base.argb
+
+                on<MouseEvent.Press> {
+                    cancel()
+                    if (button != 0) return@on
+                    if (category == k) return@on
+
+                    val p = category
+                    category = k
+                    entry = null
+                    deleting = null
+                    category(p)
+                    category(k)
+                    list()
+                    footer()
+                }
+
+                on<MouseEvent.Move.Enter> {
+                    if (category != k) color = Mocha.Surface0.withAlpha(0.5f)
+                }
+
+                on<MouseEvent.Move.Exit> {
+                    if (category != k) color = Mocha.Base.argb
+                }
+
+                attach(left)
+            }
+
+            val label = text {
+                text = v.literal()
+                color = if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 6)
+                attach(row)
+            }
+
+            rows0[k] = CategoryRow(row, label)
+            cy += 22
+        }
+    }
+
+    private fun category(key: Boolean) {
+        val entry = rows0[key] ?: return
+        val b0 = category == key
+
+        entry.row.color = if (b0) Mocha.Surface0.argb else Mocha.Base.argb
+        entry.label.color = if (b0) Mocha.Lavender.argb else Mocha.Subtext0.argb
+    }
+
+    private fun list() {
+        right.children.clear()
+        rows1.clear()
+
+        val total = if (category) MobHighlight.e1.value.size else MobHighlight.e0.value.size
+        if (total == 0) {
+            text {
+                text = (if (category) "No typed highlights" else "No named highlights").literal()
+                color = Mocha.Subtext0.argb
+                position = CenterPositionConstraint()
+                attach(right)
+            }
+
+            return
+        }
+
+        var cy = 0
+        for (i in 0 until total) {
+            val bool = entry == i
+            val color0: Int
+            val label: String
+            val max: Int
+
+            if (category) {
+                val e = MobHighlight.e1.value[i]
+                color0 = e.color
+                label = BuiltInRegistries.ENTITY_TYPE.getKey(e.type).toString()
+                max = e.max
             } else {
-                val type = EntityType.byString(name).orElse(null) ?: return
-                MobHighlight.e1.update { set(modal.entry!!.index, MobHighlight.EntityTyped(type, color, max)) }
+                val e = MobHighlight.e0.value[i]
+                color0 = e.color
+                label = e.name
+                max = e.max
             }
-        } else {
-            if (modal.entry == null) MobHighlight.e0.update { add(MobHighlight.EntityNamed(name, color, max)) }
-            else MobHighlight.e0.update { set(modal.entry!!.index, MobHighlight.EntityNamed(name, color, max)) }
-        }
 
-        recreate()
-        modal.close()
+            val row = rectangle {
+                size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 28))
+                position = FixedPositionConstraint(0, cy)
+                color = if (bool) Mocha.Surface1.argb else Mocha.Surface0.argb
+                border = true
+                borderColor = if (bool) Mocha.Lavender.argb else Mocha.Overlay0.argb
+
+                on<MouseEvent.Press> {
+                    cancel()
+                    if (button != 0) return@on
+
+                    val n = if (entry == i) null else i
+                    if (entry == n) return@on
+
+                    val previous = entry
+                    entry = n
+                    deleting = null
+                    previous?.let(::entry)
+                    n?.let(::entry)
+                    footer()
+                }
+
+                attach(right)
+            }
+
+            val swatch = rectangle {
+                size = FixedSizeConstraint(14, 14)
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 8)
+                color = color0 or 0xFF000000.toInt()
+                border = true
+                borderColor = Mocha.Surface2.argb
+                interact = false
+                attach(row)
+            }
+
+            text {
+                text = label.literal()
+                color = Mocha.Text.argb
+                position = MixedPositionConstraint(AnchorPositionConstraint({ swatch }, PositionAnchor.RIGHT, 8), CenterPositionConstraint())
+                attach(row)
+            }
+
+            rectangle {
+                val hp = if (max == -1) "HP: any" else "HP: $max"
+                val width = client.font.width(hp) + 8
+
+                size = FixedSizeConstraint(width, 14)
+                position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8)
+                color = Mocha.Surface2.argb
+                border = true
+                borderColor = Mocha.Crust.argb
+                interact = false
+
+                attach(row)
+                adopt(text {
+                    text = hp.literal()
+                    color = if (max == -1) Mocha.Subtext0.argb else Mocha.Peach.argb
+                    position = CenterPositionConstraint()
+                })
+            }
+
+            rows1[i] = EntryRow(row, swatch)
+            cy += 32
+        }
     }
 
-    private fun recreate() {
-        entries.clear()
+    private fun entry(index: Int) {
+        val row = rows1[index] ?: return
+        val bool = entry == index
 
-        for ((i, e) in MobHighlight.e0.value.withIndex()) {
-            entries.add(HighlightEntry(i, e.name, e.color, e.max, false))
-        }
+        row.row.color = if (bool) Mocha.Surface1.argb else Mocha.Surface0.argb
+        row.row.borderColor = if (bool) Mocha.Lavender.argb else Mocha.Overlay0.argb
+    }
 
-        for ((i, e) in MobHighlight.e1.value.withIndex()) {
-            entries.add(HighlightEntry(i, BuiltInRegistries.ENTITY_TYPE.getKey(e.type).toString(), e.color, e.max, true))
-        }
+    private fun footer() {
+        val bool0 = entry != null
+        val bool1 = deleting != null
+
+        `highlight$edit`.color = if (bool0) Mocha.Lavender.argb.brighten(0.8f) else Mocha.Surface1.argb
+        `highlight$edit`.borderColor = if (bool0) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Surface0.argb
+        `highlight$text$edit`.color = if (bool0) Mocha.Base.argb else Mocha.Overlay0.argb
+
+        `highlight$delete`.color = if (!bool0) Mocha.Surface1.argb else if (bool1) Mocha.Red.argb.brighten(0.9f) else Mocha.Red.argb.brighten(0.8f)
+        `highlight$delete`.borderColor = if (!bool0) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
+        `highlight$text$delete`.color = if (bool0) Mocha.Base.argb else Mocha.Overlay0.argb
+        `highlight$text$delete`.text = (if (bool1) "✔" else "Delete").literal()
     }
 }

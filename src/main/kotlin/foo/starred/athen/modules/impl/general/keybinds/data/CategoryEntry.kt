@@ -2,12 +2,11 @@
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import foo.starred.athen.ui.base.ICategoryEntry
 
 data class CategoryEntry(
-    override val name: String,
-    override val enabled: Boolean = true
-) : ICategoryEntry {
+    val name: String,
+    val enabled: Boolean = true
+) {
     companion object {
         val CODEC: Codec<CategoryEntry> = RecordCodecBuilder.create { inst ->
             inst.group(

@@ -17,7 +17,6 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.modules.impl.render.highlight.popup.MobHighlightPopup
 import foo.starred.athen.modules.impl.render.highlight.ui.MobHighlightGUI
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
@@ -252,7 +251,7 @@ object MobHighlight : Module(
         val max = a.serverMaxHealth
         val type = a.type
 
-        MobHighlightPopup.open(name, type, max.toInt())
+        MobHighlightGUI.openWith(name, type, max.toInt())
     }
 
     private fun fn1(aabb: AABB, color: Int) {
@@ -263,9 +262,9 @@ object MobHighlight : Module(
 
     data class EntityNamed(
         val name: String,
-        val color: Int = -1,
-        val max: Int = -1
-    ) {
+        override val color: Int = -1,
+        override val max: Int = -1
+    ) : EntityHighlight {
         companion object {
             val CODEC: Codec<EntityNamed> = RecordCodecBuilder.create { i ->
                 i.group(
@@ -279,9 +278,9 @@ object MobHighlight : Module(
 
     data class EntityTyped(
         val type: EntityType<*>,
-        val color: Int = -1,
-        val max: Int = -1
-    ) {
+        override val color: Int = -1,
+        override val max: Int = -1
+    ) : EntityHighlight {
         companion object {
             val CODEC: Codec<EntityTyped> = RecordCodecBuilder.create { i ->
                 i.group(
@@ -291,5 +290,10 @@ object MobHighlight : Module(
                 ).apply(i, ::EntityTyped)
             }
         }
+    }
+
+    interface EntityHighlight {
+        val color: Int
+        val max: Int
     }
 }
