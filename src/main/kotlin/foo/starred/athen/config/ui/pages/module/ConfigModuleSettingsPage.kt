@@ -44,8 +44,9 @@ import net.minecraft.client.gui.GuiGraphics
 
 object ConfigModuleSettingsPage {
     fun fn(feature: ConfigFeatureData) {
-        ConfigUI.right0.children.removeIf { it != ConfigUI.right }
-        ConfigUI.right.children.clear()
+        for (child in ConfigUI.right0.children.filter { it != ConfigUI.right }) child.forEach { it.detach() }
+        for (child in ConfigUI.right.children) child.forEach { it.detach() }
+
         ConfigUI.hide()
         ConfigUI.headerText.text = "<bold><#FDCCDA>A<#FCDDD3>t<#FAEDCB>h<#F0E2D7>e<#E5D8E4>n<#DBCDF0></bold> <gray>I ${feature.name}".parse()
 
@@ -72,7 +73,6 @@ object ConfigModuleSettingsPage {
                 cancel()
 
                 ConfigModules.active = null
-                ConfigUI.right.post(MouseEvent.Scroll(0.0, 0.0, 9999.0, ConfigUI.right))
                 ConfigModules.fn()
             }
 

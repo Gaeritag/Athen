@@ -183,8 +183,6 @@ class ConfigColorPickerElement(
                 })
             }
         })
-
-        attach(ConfigUI.scene)
     }
 
     init {
@@ -230,11 +228,19 @@ class ConfigColorPickerElement(
         })
     }
 
+    override fun detach(): RoundedRectanglePrimitive {
+        expanded = false
+        box.visible = false
+        box.detach()
+        return super.detach()
+    }
+
     private fun fn() {
         expanded = !expanded
         box.visible = expanded
 
         if (expanded) {
+            box.attach(ConfigUI.scene)
             animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
             borderColor = Catppuccin.Mocha.Lavender.argb
 
@@ -242,6 +248,7 @@ class ConfigColorPickerElement(
             return
         }
 
+        box.detach()
         animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
         borderColor = Catppuccin.Mocha.Surface1.argb
     }

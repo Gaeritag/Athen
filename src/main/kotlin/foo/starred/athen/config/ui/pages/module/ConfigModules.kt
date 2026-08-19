@@ -31,10 +31,10 @@ object ConfigModules {
     var active: ConfigFeatureData? = null
 
     fun fn() {
-        ConfigUI.right0.children.removeIf { it != ConfigUI.right }
-        ConfigUI.right.children.clear()
-        ConfigUI.headerText.text = "<bold><#FDCCDA>A<#FCDDD3>t<#FAEDCB>h<#F0E2D7>e<#E5D8E4>n<#DBCDF0>".parse()
+        for (child in ConfigUI.right0.children.filter { it != ConfigUI.right }) child.forEach { it.detach() }
+        for (child in ConfigUI.right.children) child.forEach { it.detach() }
 
+        ConfigUI.headerText.text = "<bold><#FDCCDA>A<#FCDDD3>t<#FAEDCB>h<#F0E2D7>e<#E5D8E4>n<#DBCDF0>".parse()
         if (active != null) return ConfigModuleSettingsPage.fn(active!!)
         if (ConfigCategories.active == Category.INFO) return ConfigInfoPage.fn()
 
