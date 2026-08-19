@@ -19,7 +19,7 @@ public class ConnectionMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;genericsFtw(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;)V"),
             cancellable = true
     )
-    private void athen$channelRead(ChannelHandlerContext context, Packet<?> packet, CallbackInfo ci) {
+    private void athen$channelRead(ChannelHandlerContext ctx, Packet<?> packet, CallbackInfo ci) {
         if (packet instanceof ClientboundPingPacket p && p.getId() != 0) TickEvent.Server.INSTANCE.post();
         if (new PacketEvent.Receive(packet).post()) ci.cancel();
     }
@@ -29,7 +29,7 @@ public class ConnectionMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void athen$sendPacket(Packet<?> packet, ChannelFutureListener channelFutureListener, boolean bl, CallbackInfo ci) {
+    private void athen$sendPacket(Packet<?> packet, ChannelFutureListener listener, boolean flush, CallbackInfo ci) {
         if (new PacketEvent.Send(packet).post()) ci.cancel();
     }
 }

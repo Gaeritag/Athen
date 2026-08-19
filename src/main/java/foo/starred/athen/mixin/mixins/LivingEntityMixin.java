@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
     @Inject(method = "die", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setPose(Lnet/minecraft/world/entity/Pose;)V"))
-    private void athen$die(DamageSource damageSource, CallbackInfo ci) {
+    private void athen$die(DamageSource source, CallbackInfo ci) {
         new EntityEvent.Death(athen$self()).post();
     }
 

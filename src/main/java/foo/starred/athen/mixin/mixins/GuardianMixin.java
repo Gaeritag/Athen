@@ -17,9 +17,9 @@ public class GuardianMixin implements GuardianDuck {
     private int athen$hide = -1;
 
     @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V", ordinal = 1))
-    private void athen$aiStep(Level instance, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original) {
+    private void athen$aiStep(Level instance, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd, Operation<Void> original) {
         if (!EndermanLaserHider.INSTANCE.getEnabled()) {
-            original.call(instance, particle, x, y, z, xSpeed, ySpeed, zSpeed);
+            original.call(instance, particle, x, y, z, xd, yd, zd);
             return;
         }
 
@@ -28,7 +28,7 @@ public class GuardianMixin implements GuardianDuck {
         }
 
         if (athen$hide != 1) {
-            original.call(instance, particle, x, y, z, xSpeed, ySpeed, zSpeed);
+            original.call(instance, particle, x, y, z, xd, yd, zd);
         }
     }
 

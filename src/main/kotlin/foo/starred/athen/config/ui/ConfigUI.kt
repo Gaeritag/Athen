@@ -38,7 +38,7 @@ import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 @Priority
 object ConfigUI : CascadeScreen("Config UI [Athen]") {
@@ -52,7 +52,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
     }
 
     private val tooltip = object : RoundedRectanglePrimitive() {
-        override fun render(graphics: GuiGraphics) {
+        override fun render(graphics: GuiGraphicsExtractor) {
             if (!visible) return
 
             graphics.nextStratum()

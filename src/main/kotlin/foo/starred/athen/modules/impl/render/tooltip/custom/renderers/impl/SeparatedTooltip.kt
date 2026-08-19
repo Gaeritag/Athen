@@ -7,7 +7,7 @@ import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.ITooltipRenderer
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.TooltipContext
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.util.FormattedCharSequence
@@ -36,8 +36,7 @@ object SeparatedTooltip : ITooltipRenderer {
             graphics.extractText(text, textX, dy, CustomTooltip.`text$shadow`)
         }
 
-        //~ if >= 26.1 'renderImage' -> 'extractImage'
-        header.renderImage(font, x, dy, width, height, graphics)
+        header.extractImage(font, x, dy, width, height, graphics)
 
         val bx = x - 4
         val by = hy + headerH + 4
@@ -51,32 +50,30 @@ object SeparatedTooltip : ITooltipRenderer {
         graphics.fade(bx, by, w, bh, sy, bh0)
     }
 
-    private fun GuiGraphics.box(x: Int, y: Int, w: Int, h: Int, bw: Int) {
+    private fun GuiGraphicsExtractor.box(x: Int, y: Int, w: Int, h: Int, bw: Int) {
         if (CustomTooltip.background) rectangle(x, y, w, h, CustomTooltip.`background$color`.rgb)
         if (CustomTooltip.border && bw > 0) outline(x, y, w, h, bw, if (CustomTooltip.`border$rarity`) CustomTooltip.color else CustomTooltip.`border$color`.rgb)
     }
 
-    private fun GuiGraphics.components(font: Font, comps: List<ClientTooltipComponent>, tx: Int, boxX: Int, boxY: Int, boxW: Int, boxH: Int, startY: Int, width: Int, totalHeight: Int) {
+    private fun GuiGraphicsExtractor.components(font: Font, comps: List<ClientTooltipComponent>, tx: Int, boxX: Int, boxY: Int, boxW: Int, boxH: Int, startY: Int, width: Int, totalHeight: Int) {
         enableScissor(boxX, boxY, boxX + boxW, boxY + boxH)
 
         var drawY = startY
         for (c in comps) {
-            //~ if >= 26.1 'renderText' -> 'extractText'
-            c.renderText(this, font, tx, drawY)
+            c.extractText(this, font, tx, drawY)
             drawY += c.getHeight(font)
         }
 
         drawY = startY
         for (c in comps) {
-            //~ if >= 26.1 'renderImage' -> 'extractImage'
-            c.renderImage(font, tx, drawY, width, totalHeight, this)
+            c.extractImage(font, tx, drawY, width, totalHeight, this)
             drawY += c.getHeight(font)
         }
 
         disableScissor()
     }
 
-    private fun GuiGraphics.fade(x: Int, y: Int, w: Int, h: Int, scrollY: Int, contentHeight: Int) {
+    private fun GuiGraphicsExtractor.fade(x: Int, y: Int, w: Int, h: Int, scrollY: Int, contentHeight: Int) {
         val bg = CustomTooltip.`background$color`.rgb or 0xFF000000.toInt()
         val bgT = bg and 0x00FFFFFF
 

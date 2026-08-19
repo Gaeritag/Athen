@@ -42,13 +42,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = ClientPacketListener.class, priority = Integer.MIN_VALUE) // why min value? it's for the features to not break when other mods cancel the packet.
 public class ClientPacketListenerMixin {
-    @WrapOperation(
-            method = "handleBundlePacket",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/network/protocol/Packet;handle(Lnet/minecraft/network/PacketListener;)V"
-            )
-    )
+    @WrapOperation(method = "handleBundlePacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/Packet;handle(Lnet/minecraft/network/PacketListener;)V"))
     private void athen$handleBundlePacket(Packet<?> packet, PacketListener listener, Operation<Void> original) {
         if (new PacketEvent.Process.Pre(packet).post()) return;
         original.call(packet, listener);

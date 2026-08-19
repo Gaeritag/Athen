@@ -26,15 +26,15 @@ public class EditBoxMixin {
     private int athen$version = -1;
 
     @ModifyReturnValue(method = "applyFormat", at = @At("RETURN"))
-    private FormattedCharSequence athen$applyFormat(FormattedCharSequence original, @Local(argsOnly = true) String text, @Local(argsOnly = true) int displayPos) {
+    private FormattedCharSequence athen$applyFormat(FormattedCharSequence original, @Local(argsOnly = true) String text, @Local(argsOnly = true) int offset) {
         if (!VisualWords.INSTANCE.getEnabled()) return original;
         if (VisualWords.words.getMap0().isEmpty()) return original;
 
         final int version = VisualWords.words.getVersion();
-        if (displayPos == this.athen$position && this.athen$version == version && Objects.equals(text, this.athen$last) && this.athen$cached != null) return this.athen$cached;
+        if (offset == this.athen$position && this.athen$version == version && Objects.equals(text, this.athen$last) && this.athen$cached != null) return this.athen$cached;
 
         this.athen$last = text;
-        this.athen$position = displayPos;
+        this.athen$position = offset;
         this.athen$version = version;
         return this.athen$cached = VisualWords.words.fn(original);
     }

@@ -5,7 +5,7 @@ package foo.starred.athen.hud
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.mouseSX
 import foo.starred.snowbird.utils.mouseSY
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 // Defaults to 1080 / 2, intended :eyes:
 object Resolute {
@@ -27,12 +27,12 @@ object Resolute {
         return f / scale
     }
 
-    fun push(graphics: GuiGraphics) {
+    fun push(graphics: GuiGraphicsExtractor) {
         graphics.pose().pushMatrix()
         graphics.pose().scale(scale, scale)
     }
 
-    fun pop(graphics: GuiGraphics) {
+    fun pop(graphics: GuiGraphicsExtractor) {
         graphics.pose().popMatrix()
     }
 

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin {
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
-    private void athen$drop(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
+    private void athen$drop(boolean all, CallbackInfoReturnable<Boolean> cir) {
         final LocalPlayer a = athen$self();
         final ItemStack c = a.inventoryMenu.getSlot(a.getInventory().getSelectedSlot() + 36).getItem();
 

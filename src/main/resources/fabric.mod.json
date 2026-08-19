@@ -32,9 +32,7 @@
   "depends": {
     "fabricloader": ">=0.18",
     "fabric-api": "*",
-    "fabric-language-kotlin": ">=${kotlin}",
-    "hypixel-mod-api": ">=${hm_api}",
-    "skyblock-api": ">=${sb_api}",
+    "fabric-language-kotlin": "*",
     "minecraft": "${minecraft}"
   },
   "custom": {

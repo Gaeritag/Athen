@@ -17,7 +17,7 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectanglePrimitive() {
     private val text = text {
@@ -28,7 +28,7 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
     }
 
     private val tooltip = object : RoundedRectanglePrimitive() {
-        override fun render(graphics: GuiGraphics) {
+        override fun render(graphics: GuiGraphicsExtractor) {
             if (!visible) return
 
             graphics.nextStratum()

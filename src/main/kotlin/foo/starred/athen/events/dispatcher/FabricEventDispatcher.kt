@@ -8,13 +8,11 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-//~ if >= 26.1 'world.WorldRenderEvents' -> 'level.LevelRenderEvents'
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents
 import net.fabricmc.fabric.api.event.player.*
-import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.world.InteractionResult
 
 @Priority
@@ -53,13 +51,9 @@ object FabricEventDispatcher {
             if (client.isSingleplayer) TickEvent.Server.post()
         }
 
-        //~ if >= 26.1 'WorldRenderEvents.END_MAIN' -> 'LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN'
-        WorldRenderEvents.END_MAIN.register { context ->
+        LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN.register { context ->
             WorldRenderEvent.Extract.post()
-
-            //~ if >= 26.1 'matrices' -> 'poseStack'
-            //~ if >= 26.1 'consumers' -> 'bufferSource'
-            WorldRenderEvent.Render(context.matrices(), context.consumers() as? MultiBufferSource.BufferSource ?: return@register).post()
+            WorldRenderEvent.Render(context.poseStack(), context.bufferSource()).post()
         }
 
         ClientReceiveMessageEvents.ALLOW_GAME.register { component, bool ->

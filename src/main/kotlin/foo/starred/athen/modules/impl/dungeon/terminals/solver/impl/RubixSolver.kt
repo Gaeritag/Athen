@@ -8,7 +8,7 @@ import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.font.CascadeFonts
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -24,7 +24,7 @@ object RubixSolver : ITerminal(TerminalType.RUBIX) {
 
     private var last: Int? = null
 
-    override fun render(graphics: GuiGraphics, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+    override fun render(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         val font = CascadeFonts.arial
 
         for (c in list) {

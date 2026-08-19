@@ -124,11 +124,11 @@ public abstract class EntityMixin implements EntityDuck {
     }
 
     @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("TAIL"))
-    private void athen$onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor, CallbackInfo ci) {
+    private void athen$onSyncedDataUpdated(EntityDataAccessor<?> accessor, CallbackInfo ci) {
         Entity entity = self();
 
         if (!(entity instanceof ArmorStand)) return;
-        if (dataAccessor != DATA_CUSTOM_NAME) return;
+        if (accessor != DATA_CUSTOM_NAME) return;
 
         Component component = getCustomName();
         if (component == null) return;

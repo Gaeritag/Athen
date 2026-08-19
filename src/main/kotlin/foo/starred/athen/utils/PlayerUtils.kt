@@ -1,10 +1,9 @@
 ﻿package foo.starred.athen.utils
 
 import foo.starred.snowbird.api.client
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 
-fun guiClick(id: Int, index: Int, button: Int = 0, clickType: ClickType = ClickType.PICKUP) {
+fun guiClick(id: Int, index: Int, button: Int = 0, clickType: ContainerInput = ContainerInput.PICKUP) {
     val player = client.player ?: return
-    //~ if >= 26.1 'handleInventoryMouseClick' -> 'handleContainerInput'
-    client.gameMode?.handleInventoryMouseClick(id, index, button, clickType, player)
+    client.gameMode?.handleContainerInput(id, index, button, clickType, player)
 }

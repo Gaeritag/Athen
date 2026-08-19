@@ -10,7 +10,7 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.pressed
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
@@ -79,7 +79,7 @@ object ScrollableTooltip : Module(
     }
 
     @JvmStatic
-    fun GuiGraphics.fn(font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner, background: Identifier?) {
+    fun GuiGraphicsExtractor.fn(font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner, background: Identifier?) {
         var i = 0
         var j = if (components.size == 1) -2 else 0
 
@@ -119,15 +119,13 @@ object ScrollableTooltip : Module(
         val a = if (b) o + yo.toInt().coerceAtMost(0) else o
         var p = a
         for ((i, c) in l) {
-            //~ if >= 26.1 'renderText' -> 'extractText'
-            c.renderText(this, font, n, p)
+            c.extractText(this, font, n, p)
             p += c.getHeight(font) + if (i == 0) 2 else 0
         }
 
         p = a
         for ((io, c) in l) {
-            //~ if >= 26.1 'renderImage' -> 'extractImage'
-            c.renderImage(font, n, p, i, j, this)
+            c.extractImage(font, n, p, i, j, this)
             p += c.getHeight(font) + if (io == 0) 2 else 0
         }
 

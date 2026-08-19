@@ -7,7 +7,7 @@ import foo.starred.cascade.extensions.rectangle.rectangle
 import foo.starred.cascade.extensions.text.extractText
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.snowbird.api.client
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -76,7 +76,7 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
         }
     }
 
-    override fun render(graphics: GuiGraphics) {
+    override fun render(graphics: GuiGraphicsExtractor) {
         if (!visible) return
         if (root.focused != this) open = false
         val font = client.font ?: return

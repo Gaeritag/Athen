@@ -1,7 +1,7 @@
 package foo.starred.athen.mixin.mixins;
 
 import foo.starred.athen.events.GuiEvent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,17 +12,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
-    //~ if >= 26.1 'renderWithTooltipAndSubtitles' -> 'extractRenderStateWithTooltipAndSubtitles'
-    @Inject(method = "renderWithTooltipAndSubtitles", at = @At("HEAD"), cancellable = true)
-    private void athen$renderWithTooltipAndSubtitles$pre(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At("HEAD"), cancellable = true)
+    private void athen$renderWithTooltipAndSubtitles$pre(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         Screen self = self();
         if ((self instanceof AbstractContainerScreen<?>)) if (new GuiEvent.Render.Container.Pre(guiGraphics).post()) ci.cancel();
         if (new GuiEvent.Render.Screen.Pre(guiGraphics).post()) ci.cancel();
     }
 
-    //~ if >= 26.1 'renderWithTooltipAndSubtitles' -> 'extractRenderStateWithTooltipAndSubtitles'
-    @Inject(method = "renderWithTooltipAndSubtitles", at = @At("TAIL"))
-    private void athen$renderWithTooltipAndSubtitles$post(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At("TAIL"))
+    private void athen$renderWithTooltipAndSubtitles$post(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         new GuiEvent.Render.Screen.Post(guiGraphics).post();
     }
 

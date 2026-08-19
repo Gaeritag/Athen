@@ -20,10 +20,10 @@ import static foo.starred.snowbird.api.ClientKt.getClient;
 @Mixin(AvatarRenderer.class)
 public class AvatarRendererMixin {
     @Inject(method = "scale(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
-    private void athen$scale(AvatarRenderState avatarRenderState, PoseStack poseStack, CallbackInfo ci) {
+    private void athen$scale(AvatarRenderState state, PoseStack poseStack, CallbackInfo ci) {
         if (!CustomScale.INSTANCE.getEnabled()) return;
 
-        Entity entity = ((EntityRenderStateDuck) avatarRenderState).athen$getEntity();
+        Entity entity = ((EntityRenderStateDuck) state).athen$getEntity();
         if (entity == null) return;
         if (!CustomScale.fn(entity)) return;
 
@@ -32,12 +32,12 @@ public class AvatarRendererMixin {
     }
 
     @Inject(method = "shouldShowName(Lnet/minecraft/world/entity/Avatar;D)Z", at = @At("HEAD"), cancellable = true)
-    private void athen$shouldShowName(Avatar avatar, double d, CallbackInfoReturnable<Boolean> cir) {
+    private void athen$shouldShowName(Avatar entity, double distanceToCameraSq, CallbackInfoReturnable<Boolean> cir) {
         if (!RenderTweaks.getNametag()) return;
 
         final LocalPlayer a = getClient().player;
         if (a == null) return;
-        if (a != avatar) return;
+        if (a != entity) return;
 
         cir.setReturnValue(true);
     }

@@ -22,7 +22,7 @@ import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.utils.literal
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 
 class ConfigMultiSelectorElement(
@@ -47,7 +47,7 @@ class ConfigMultiSelectorElement(
     }
 
     private val box = object : RoundedRectanglePrimitive() {
-        override fun render(graphics: GuiGraphics) {
+        override fun render(graphics: GuiGraphicsExtractor) {
             if (!visible) return
             graphics.nextStratum()
             super.render(graphics)

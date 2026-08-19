@@ -12,7 +12,7 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.mouseSX
 import foo.starred.snowbird.utils.mouseSY
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<RadialOverlay>() {
     override var x: Float = 0f
@@ -21,7 +21,7 @@ class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<R
     override var height: Float = 0f
     override var color: Int = -1
 
-    override fun render(graphics: GuiGraphics) {
+    override fun render(graphics: GuiGraphicsExtractor) {
         if (!visible) return
         val working = RadialEditor.working.takeIf { it.isNotEmpty() } ?: return
 
@@ -67,23 +67,20 @@ class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<R
 
         for (i in current.indices) {
             val (sx, sy) = RadialRenderState.anchor(x0, y0, num, RadialMenu.radius1, RadialMenu.radius2, i)
-            //~ if >= 26.1 'renderItem(' -> 'item('
-            graphics.renderItem(current[i].item, sx - 8, sy - 8)
+            graphics.item(current[i].item, sx - 8, sy - 8)
         }
 
         if (!bool && RadialMenu.type == 1 && i0 in working.indices) {
             for (j in working[i0].sub.indices) {
                 val (sx, sy) = RadialRenderState.nested(x0, y0, num, RadialMenu.radius2, i0, j, RadialMenu.thickness)
-                //~ if >= 26.1 'renderItem(' -> 'item('
-                graphics.renderItem(working[i0].sub[j].item, sx - 8, sy - 8)
+                graphics.item(working[i0].sub[j].item, sx - 8, sy - 8)
             }
         }
 
         if (!bool && RadialMenu.type == 2) {
             for ((i, s) in ex) {
                 val (sx, sy) = RadialRenderState.ring(x0, y0, num, RadialMenu.radius2, i, RadialMenu.thickness)
-                //~ if >= 26.1 'renderItem(' -> 'item('
-                graphics.renderItem(s.item, sx - 8, sy - 8)
+                graphics.item(s.item, sx - 8, sy - 8)
             }
         }
 

@@ -23,18 +23,18 @@ public class SynchedEntityDataMixin {
     private Float last;
 
     @Inject(method = "assignValue", at = @At("HEAD"))
-    private <T> void athen$assignValue$pre(SynchedEntityData.DataItem<T> target, SynchedEntityData.DataValue<?> entry, CallbackInfo ci) {
-        if (target.getAccessor() != LivingEntityAccessor.skyblockapi$getDataHealth()) return;
+    private <T> void athen$assignValue$pre(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> item, CallbackInfo ci) {
+        if (dataItem.getAccessor() != LivingEntityAccessor.skyblockapi$getDataHealth()) return;
         if (!(this.entity instanceof LivingEntity living)) return;
         last = living.getHealth();
     }
 
     @Inject(method = "assignValue", at = @At("TAIL"))
-    private <T> void athen$assignValue$post(SynchedEntityData.DataItem<T> target, SynchedEntityData.DataValue<?> entry, CallbackInfo ci) {
-        if (target.getAccessor() != LivingEntityAccessor.skyblockapi$getDataHealth()) return;
+    private <T> void athen$assignValue$post(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> item, CallbackInfo ci) {
+        if (dataItem.getAccessor() != LivingEntityAccessor.skyblockapi$getDataHealth()) return;
         if (!(this.entity instanceof LivingEntity living)) return;
 
-        float v = (Float) entry.value();
+        float v = (Float) item.value();
         boolean b = v >= living.getMaxHealth();
 
         if (!b && (last == null || last.equals(v))) return;

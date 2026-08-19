@@ -20,9 +20,9 @@ public abstract class ClientLanguageMixin {
     private static final int[] athen$unmodified = new int[512];
 
     @ModifyReturnValue(method = "getVisualOrder(Lnet/minecraft/network/chat/FormattedText;)Lnet/minecraft/util/FormattedCharSequence;", at = @At("RETURN"))
-    private FormattedCharSequence athen$getVisualOrder(FormattedCharSequence original, FormattedText text) {
+    private FormattedCharSequence athen$getVisualOrder(FormattedCharSequence original, FormattedText logicalOrderText) {
         if (original == null) return null;
-        if (!(text instanceof Component component)) return original;
+        if (!(logicalOrderText instanceof Component component)) return original;
         if (!VisualWords.INSTANCE.getEnabled()) return original;
         if (VisualWords.words.getMap0().isEmpty()) return original;
 

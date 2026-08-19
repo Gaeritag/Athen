@@ -23,8 +23,8 @@ public class MinecraftMixin {
     public Screen screen;
 
     @Inject(method = "setScreen", at = @At("HEAD"))
-    private void athen$setScreen(Screen guiScreen, CallbackInfo ci) {
-        if (guiScreen == null) {
+    private void athen$setScreen(Screen screen, CallbackInfo ci) {
+        if (screen == null) {
             Screen old = this.screen;
             if (old == null) return;
 
@@ -34,7 +34,7 @@ public class MinecraftMixin {
             return;
         }
 
-        new GuiEvent.Open.Any(guiScreen).post();
-        if (guiScreen instanceof AbstractContainerScreen<?> c) new GuiEvent.Open.Container(c).post();
+        new GuiEvent.Open.Any(screen).post();
+        if (screen instanceof AbstractContainerScreen<?> c) new GuiEvent.Open.Container(c).post();
     }
 }

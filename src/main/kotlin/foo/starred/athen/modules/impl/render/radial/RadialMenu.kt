@@ -274,29 +274,25 @@ object RadialMenu : Module(
             val ring = layout()
             val ringI = if (type == 2 && i1 != -1) ring.getOrNull(i1)?.first ?: -1 else -1
 
-            //~ if >= 26.1 'submitGuiElement' -> 'addGuiElement'
-            graphics.guiRenderState.submitGuiElement(RadialRenderState(graphics, x, y, num, mini, ring, i3 = ringI))
+            graphics.guiRenderState.addGuiElement(RadialRenderState(graphics, x, y, num, mini, ring, i3 = ringI))
             graphics.guiRenderState.nextStratum()
 
             for (i in current.indices) {
                 val (x, y) = RadialRenderState.anchor(x, y, num, radius1, radius2, i)
-                //~ if >= 26.1 'renderItem(' -> 'item('
-                graphics.renderItem(current[i].item, x - 8, y - 8)
+                graphics.item(current[i].item, x - 8, y - 8)
             }
 
             if (type == 1 && i2 in current.indices) {
                 for (j in current[i2].sub.indices) {
                     val (x, y) = RadialRenderState.nested(x, y, num, radius2, i2, j, thickness)
-                    //~ if >= 26.1 'renderItem(' -> 'item('
-                    graphics.renderItem(current[i2].sub[j].item, x - 8, y - 8)
+                    graphics.item(current[i2].sub[j].item, x - 8, y - 8)
                 }
             }
 
             if (type == 2) {
                 for ((i, s) in ring) {
                     val (x, y) = RadialRenderState.ring(x, y, num, radius2, i, thickness)
-                    //~ if >= 26.1 'renderItem(' -> 'item('
-                    graphics.renderItem(s.item, x - 8, y - 8)
+                    graphics.item(s.item, x - 8, y - 8)
                 }
             }
 

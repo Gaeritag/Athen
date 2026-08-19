@@ -8,7 +8,7 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.Observable.Companion.and
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import java.awt.Color
 
 @Load
@@ -46,7 +46,7 @@ object GameTint : Module(
         }.runWhen(_state and gui.state)
     }
 
-    private fun GuiGraphics.tint() {
+    private fun GuiGraphicsExtractor.tint() {
         rectangle(0, 0, guiWidth(), guiHeight(), color)
     }
 }

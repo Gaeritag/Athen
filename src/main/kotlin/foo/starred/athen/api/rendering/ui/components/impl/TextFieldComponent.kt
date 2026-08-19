@@ -11,7 +11,7 @@ import foo.starred.snowbird.api.ZERO_PAIR
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.api.shift
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.lwjgl.glfw.GLFW
 import kotlin.math.abs
 import kotlin.math.max
@@ -220,7 +220,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
         }
     }
 
-    override fun render(graphics: GuiGraphics) {
+    override fun render(graphics: GuiGraphicsExtractor) {
         if (!visible) return
         val f = client.font ?: return
         val b = root.focused == this

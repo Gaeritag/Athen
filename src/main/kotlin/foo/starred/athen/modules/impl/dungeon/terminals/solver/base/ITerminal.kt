@@ -11,9 +11,9 @@ import foo.starred.cascade.font.CascadeFonts
 import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
 import foo.starred.snowbird.api.client
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix3x2f
 import java.util.concurrent.CopyOnWriteArrayList
@@ -40,13 +40,13 @@ abstract class ITerminal(val terminalType: TerminalType) {
 
     protected abstract fun compute(items: List<ItemStack>)
 
-    protected abstract fun render(graphics: GuiGraphics, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?)
+    protected abstract fun render(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?)
 
     protected abstract fun valid(click: Click): Boolean
 
     protected abstract fun forSlot(slot: Int): Click?
 
-    fun main(graphics: GuiGraphics) {
+    fun main(graphics: GuiGraphicsExtractor) {
         val sp = float
         val pad = TerminalSolver.`ui$padding`
         val scale = TerminalSolver.`ui$scale`
@@ -113,14 +113,14 @@ abstract class ITerminal(val terminalType: TerminalType) {
             val screen = client.screen as? ITerminalSim ?: return
             val slot0 = screen.menu.slots.getOrNull(slot) ?: return
 
-            screen.slotClicked(slot0, slot, button, if (button == 0) ClickType.CLONE else ClickType.PICKUP)
+            screen.slotClicked(slot0, slot, button, if (button == 0) ContainerInput.CLONE else ContainerInput.PICKUP)
             TerminalSolver.last = System.currentTimeMillis()
             clicked = true
 
             return
         }
 
-        guiClick(TerminalAPI.id, slot, if (button == 0) 2 else button, if (button == 0) ClickType.CLONE else ClickType.PICKUP)
+        guiClick(TerminalAPI.id, slot, if (button == 0) 2 else button, if (button == 0) ContainerInput.CLONE else ContainerInput.PICKUP)
         TerminalSolver.last = System.currentTimeMillis()
         clicked = true
     }
@@ -129,12 +129,12 @@ abstract class ITerminal(val terminalType: TerminalType) {
         click(slot, button)
     }
 
-    protected fun slot(graphics: GuiGraphics, x: Float, y: Float, w: Float, h: Float, color: Int, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?, radius: RoundedRectangleRadius = RoundedRectangleRadius.of(TerminalSolver.`ui$slots$roundness` * scale)) {
+    protected fun slot(graphics: GuiGraphicsExtractor, x: Float, y: Float, w: Float, h: Float, color: Int, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?, radius: RoundedRectangleRadius = RoundedRectangleRadius.of(TerminalSolver.`ui$slots$roundness` * scale)) {
         if (TerminalSolver.`ui$slots$fill`) RoundedRectangleRenderState.extract(graphics, x, y, w, h, color, radius, pose = pose, scissor = scissor)
         else RoundedRectangleRenderState.extract(graphics, x, y, w, h, color, radius, maxOf(1f, scale), pose = pose, scissor = scissor)
     }
 
-    private fun main(graphics: GuiGraphics, x0: Float, y0: Float, gridW: Float, headerH: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+    private fun main(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, gridW: Float, headerH: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         val titleText = terminalType.name.lowercase().replaceFirstChar { it.uppercase() }
         val font = CascadeFonts.arial
 

@@ -19,7 +19,7 @@ import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.PlayerEquipment
 import net.minecraft.world.inventory.ChestMenu
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
@@ -74,7 +74,7 @@ abstract class ITerminalSim(
         for ((a, b) in i.withIndex()) if (b.item != Items.BLACK_STAINED_GLASS_PANE) PacketEvent.Process.Pre(ClientboundContainerSetSlotPacket(id - 1, 0, a, b)).post()
     }
 
-    public override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ClickType) {
+    public override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ContainerInput) {
         if (slot.container != inv) return
         if (slot.item.item == Items.BLACK_STAINED_GLASS_PANE) return
         if (!c) return

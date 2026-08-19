@@ -16,7 +16,7 @@ import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.pressed
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
@@ -114,7 +114,7 @@ object CustomTooltip : Module(
     }
 
     @JvmStatic
-    fun render(graphics: GuiGraphics, font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner) {
+    fun render(graphics: GuiGraphicsExtractor, font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner) {
         if (color != `border$color`.rgb && (client.screen as? AbstractContainerScreen<*>)?.hovered == null) color = `border$color`.rgb
 
         last = Scheduler.ticks.client

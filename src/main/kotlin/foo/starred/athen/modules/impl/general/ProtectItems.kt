@@ -21,7 +21,7 @@ import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
@@ -62,7 +62,7 @@ object ProtectItems : Module(
 
         on<GuiEvent.Slots.Click> {
             if (slot?.item?.fn() != true) return@on
-            if (move && clickType != ClickType.THROW && !fn0()) return@on
+            if (move && clickType != ContainerInput.THROW && !fn0()) return@on
 
             "Prevented clicking item! <gray>[ProtectItems]".mod()
             cancel()

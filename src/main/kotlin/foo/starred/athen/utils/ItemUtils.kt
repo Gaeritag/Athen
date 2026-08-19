@@ -14,11 +14,7 @@ private fun ItemStack.data(): CompoundTag =
     getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()
 
 fun ItemStack.glint() =
-    //? if >= 26.1 {
-    /*components.get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE) != null
-    *///? } else {
-    componentsPatch.get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE)?.isPresent == true
-    //? }
+    components.get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE) != null
 
 fun ItemStack.etherwarp(): Boolean =
     data().getBoolean("ethermerge").orElse(false)!! || getSkyBlockId() == "ETHERWARP_CONDUIT"

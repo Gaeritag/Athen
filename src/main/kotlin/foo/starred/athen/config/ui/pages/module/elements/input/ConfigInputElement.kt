@@ -23,7 +23,7 @@ import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.api.shift
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.withAlpha
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.lwjgl.glfw.GLFW
 import kotlin.math.abs
 import kotlin.math.max
@@ -271,7 +271,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
         }
     }
 
-    override fun render(graphics: GuiGraphics) {
+    override fun render(graphics: GuiGraphicsExtractor) {
         val bool0 = root.focused != this
         if (bool0) scroll = 0
 

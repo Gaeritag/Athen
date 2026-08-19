@@ -3,13 +3,13 @@ package foo.starred.athen.hud
 import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.ConfigManager
 import foo.starred.snowbird.api.ZERO_PAIR
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 data class HUDElement(
     val id: String,
     val name: String,
     val config: ConfigMainBuilder,
-    var renderer: GuiGraphics.(Boolean) -> Pair<Int, Int>?,
+    var renderer: GuiGraphicsExtractor.(Boolean) -> Pair<Int, Int>?,
     var defaultX: Float = 20f,
     var defaultY: Float = 20f,
     var defaultScale: Float = 1f,
@@ -35,7 +35,7 @@ data class HUDElement(
         ConfigManager.observe(id) { enabled = it as? Boolean ?: false }
     }
 
-    fun render(graphics: GuiGraphics, isPreview: Boolean) {
+    fun render(graphics: GuiGraphicsExtractor, isPreview: Boolean) {
         val (w, h) = graphics.renderer(isPreview) ?: ZERO_PAIR
         width = w
         height = h

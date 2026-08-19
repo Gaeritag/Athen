@@ -33,8 +33,7 @@ public abstract class LivingEntityRendererMixin {
                                     .withSampler("Sampler0")
                                     .withSampler("Sampler1")
                                     .withSampler("Sampler2")
-                                    //~ if >= 26.1 'NEW_ENTITY' -> 'ENTITY'
-                                    .withVertexFormat(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS)
+                                    .withVertexFormat(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS)
                                     .withShaderDefine("ALPHA_CUTOUT", 0.1f)
                                     .build()
                     )
@@ -60,7 +59,7 @@ public abstract class LivingEntityRendererMixin {
     }
 
     @Inject(method = "getRenderType(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;ZZZ)Lnet/minecraft/client/renderer/rendertype/RenderType;", at = @At("HEAD"), cancellable = true)
-    private void athen$getRenderType(LivingEntityRenderState state, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
+    private void athen$getRenderType(LivingEntityRenderState state, boolean isBodyVisible, boolean forceTransparent, boolean appearGlowing, CallbackInfoReturnable<RenderType> cir) {
         if (!(state instanceof EndermanRenderState)) return;
         if (!EndermanPhaseColor.INSTANCE.getEnabled()) return;
 
@@ -70,8 +69,8 @@ public abstract class LivingEntityRendererMixin {
         Integer color = EndermanPhaseColor.get(entity);
         if (color == null) return;
 
-        if (!bodyVisible) return;
-        if (translucent) return;
+        if (!isBodyVisible) return;
+        if (forceTransparent) return;
 
         cir.setReturnValue(athen$renderType);
     }

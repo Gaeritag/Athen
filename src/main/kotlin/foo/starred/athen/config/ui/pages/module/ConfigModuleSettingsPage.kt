@@ -40,7 +40,7 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 object ConfigModuleSettingsPage {
     fun fn(feature: ConfigFeatureData) {
@@ -165,7 +165,7 @@ object ConfigModuleSettingsPage {
             val content = object : ContainerPrimitive() {
                 var bool = true
 
-                override fun render(graphics: GuiGraphics) {
+                override fun render(graphics: GuiGraphicsExtractor) {
                     val v = height > 0f
                     if (bool != v) {
                         bool = v

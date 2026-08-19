@@ -8,7 +8,7 @@ import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class UpdateGUI(
     private val currentVersion: String,
@@ -23,12 +23,12 @@ class UpdateGUI(
         return false
     }
 
-    override fun onScramRender(graphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun onScramRender(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         graphics.rectangle(0, 0, width, height, Mocha.Crust.withAlpha(0.6f))
         graphics.drawPanel((width - 360) / 2, (height - 175) / 2)
     }
 
-    private fun GuiGraphics.drawPanel(px: Int, py: Int) {
+    private fun GuiGraphicsExtractor.drawPanel(px: Int, py: Int) {
         rectangle(px, py, 360, 28, Mocha.Base.argb)
         rectangle(px, py + 28, 360, 175 - 28, Mocha.Mantle.argb)
         outline(px, py, 360, 175, 1, Mocha.Surface0.argb)
@@ -52,7 +52,7 @@ class UpdateGUI(
         drawButton(px + 240, py + 175 - 34, if (booling) "Confirm?" else "Skip Version", Mocha.Red.argb)
     }
 
-    private fun GuiGraphics.drawButton(x: Int, y: Int, label: String, color: Int) {
+    private fun GuiGraphicsExtractor.drawButton(x: Int, y: Int, label: String, color: Int) {
         val b = hovered(x, y, 104, 22, true)
         rectangle(x, y, 104, 22, if (b) color else Mocha.Surface1.argb)
         outline(x, y, 104, 22, 1, color)

@@ -3,42 +3,42 @@
 import foo.starred.athen.events.core.CancellableEvent
 import foo.starred.athen.events.core.Event
 import foo.starred.snowbird.utils.stripped
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 
 sealed class GuiEvent {
     sealed class Render {
         data class Pre(
-            val graphics: GuiGraphics
+            val graphics: GuiGraphicsExtractor
         ) : Event()
 
         data class Main(
-            val graphics: GuiGraphics
+            val graphics: GuiGraphicsExtractor
         ) : Event()
 
         data class Post(
-            val graphics: GuiGraphics
+            val graphics: GuiGraphicsExtractor
         ) : Event()
 
         sealed class Container {
             data class Pre(
-                val graphics: GuiGraphics
+                val graphics: GuiGraphicsExtractor
             ) : CancellableEvent()
         }
 
         sealed class Screen {
             data class Pre(
-                val graphics: GuiGraphics
+                val graphics: GuiGraphicsExtractor
             ) : CancellableEvent()
 
             data class Post(
-                val graphics: GuiGraphics
+                val graphics: GuiGraphicsExtractor
             ) : Event()
         }
     }
@@ -74,31 +74,31 @@ sealed class GuiEvent {
     sealed class Slots {
         sealed class Render {
             data class Pre(
-                val graphics: GuiGraphics,
+                val graphics: GuiGraphicsExtractor,
                 val slot: Slot
             ) : CancellableEvent()
 
             data class Post(
-                val graphics: GuiGraphics,
+                val graphics: GuiGraphicsExtractor,
                 val slot: Slot
             ) : Event()
 
             data class Update(
-                val graphics: GuiGraphics,
+                val graphics: GuiGraphicsExtractor,
                 val slot: Slot,
-                val renders: MutableList<(GuiGraphics, Slot) -> Unit>
+                val renders: MutableList<(GuiGraphicsExtractor, Slot) -> Unit>
             ) : CancellableEvent()
 
             sealed class Hotbar {
                 data class Pre(
-                    val graphics: GuiGraphics,
+                    val graphics: GuiGraphicsExtractor,
                     val item: ItemStack,
                     val x: Int,
                     val y: Int
                 ) : CancellableEvent()
 
                 data class Post(
-                    val graphics: GuiGraphics,
+                    val graphics: GuiGraphicsExtractor,
                     val item: ItemStack,
                     val x: Int,
                     val y: Int
@@ -110,7 +110,7 @@ sealed class GuiEvent {
             val slot: Slot?,
             val slotId: Int,
             val mouseButton: Int,
-            val clickType: ClickType
+            val clickType: ContainerInput
         ) : CancellableEvent()
 
         data class Hover(
@@ -125,14 +125,14 @@ sealed class GuiEvent {
     sealed class Items {
         sealed class Render {
             data class Pre(
-                val graphics: GuiGraphics,
+                val graphics: GuiGraphicsExtractor,
                 val item: ItemStack,
                 val x: Int,
                 val y: Int
             ) : Event()
 
             data class Post(
-                val graphics: GuiGraphics,
+                val graphics: GuiGraphicsExtractor,
                 val item: ItemStack,
                 val x: Int,
                 val y: Int

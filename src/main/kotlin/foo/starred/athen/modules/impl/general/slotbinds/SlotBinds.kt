@@ -27,7 +27,7 @@ import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import org.joml.Matrix3x2f
 import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -240,7 +240,7 @@ object SlotBinds : Module(
             if (g.getOrNull(c)?.item?.isEmpty != false && g.getOrNull(d)?.item?.isEmpty != false) return@on
 
             m1.put(d, c)
-            guiClick(s.menu.containerId, c, e, ClickType.SWAP)
+            guiClick(s.menu.containerId, c, e, ContainerInput.SWAP)
             cancel()
         }
 

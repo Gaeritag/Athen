@@ -13,7 +13,7 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.handlers.Observable.Companion.and
 import foo.starred.snowbird.utils.withAlpha
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
@@ -68,7 +68,7 @@ object ItemRarityBackground : Module(
         }.runWhen(mode.state.map { it == 1 } and hotbar.state)
     }
 
-    private fun GuiGraphics.fn(item: ItemStack, x: Int, y: Int) {
+    private fun GuiGraphicsExtractor.fn(item: ItemStack, x: Int, y: Int) {
         if (item.isEmpty) return
         val a = item.getData(DataTypes.RARITY) ?: return
         val color = a.get()

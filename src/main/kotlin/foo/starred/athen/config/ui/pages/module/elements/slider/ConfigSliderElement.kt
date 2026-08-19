@@ -17,7 +17,7 @@ import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.joml.Matrix3x2f
 import kotlin.math.max
 import kotlin.math.min
@@ -103,7 +103,7 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
         }
     }
 
-    override fun render(graphics: GuiGraphics) {
+    override fun render(graphics: GuiGraphicsExtractor) {
         if (root.focused == self) value(client.mouseHandler.getScaledXPos(client.window))
         super.render(graphics)
 

@@ -14,7 +14,7 @@ import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ImagePrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 object ConfigGroupElement {
     fun of(parent: IPrimitiveElement<*>, config: ConfigGroupElementData, function: (Boolean) -> Unit) {
@@ -25,7 +25,7 @@ object ConfigGroupElement {
                 `animation$float` = AnimatableFloat(if (expanded) -180f else -90f)
             }
 
-            override fun render(graphics: GuiGraphics) {
+            override fun render(graphics: GuiGraphicsExtractor) {
                 rotation = `animation$float`?.value ?: 0f
                 super.render(graphics)
             }

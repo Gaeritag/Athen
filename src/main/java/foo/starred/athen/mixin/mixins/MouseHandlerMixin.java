@@ -18,16 +18,16 @@ public class MouseHandlerMixin {
     private double ypos;
 
     @Inject(method = "onButton", at = @At("HEAD"), cancellable = true)
-    private void athen$onButton(long window, MouseButtonInfo buttonInfo, int action, CallbackInfo ci) {
+    private void athen$onButton(long handle, MouseButtonInfo rawButtonInfo, int action, CallbackInfo ci) {
         if (action == 1) {
-            if (new InputEvent.Mouse.Press(buttonInfo).post()) ci.cancel();
+            if (new InputEvent.Mouse.Press(rawButtonInfo).post()) ci.cancel();
         } else if (action == 0) {
-            new InputEvent.Mouse.Release(buttonInfo).post();
+            new InputEvent.Mouse.Release(rawButtonInfo).post();
         }
     }
 
     @Inject(method = "onMove", at = @At("HEAD"), cancellable = true)
-    private void athen$onMove(long windowPointer, double xpos, double ypos, CallbackInfo ci) {
+    private void athen$onMove(long handle, double xpos, double ypos, CallbackInfo ci) {
         if (!(new InputEvent.Mouse.Move(xpos, ypos).post())) return;
 
         ci.cancel();

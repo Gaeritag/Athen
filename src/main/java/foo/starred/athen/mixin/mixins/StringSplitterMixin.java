@@ -21,11 +21,11 @@ public abstract class StringSplitterMixin {
     private static final long[] athen$widths = new long[512];
 
     @Shadow
-    public abstract float stringWidth(FormattedCharSequence formattedCharSequence);
+    public abstract float stringWidth(FormattedCharSequence text);
 
     @ModifyReturnValue(method = "stringWidth(Lnet/minecraft/network/chat/FormattedText;)F", at = @At("RETURN"))
-    private float athen$stringWidth(float original, FormattedText content) {
-        if (!(content instanceof Component component)) return original;
+    private float athen$stringWidth(float original, FormattedText text) {
+        if (!(text instanceof Component component)) return original;
         if (!VisualWords.INSTANCE.getEnabled()) return original;
         if (VisualWords.words.getMap0().isEmpty()) return original;
 

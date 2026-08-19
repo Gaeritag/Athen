@@ -4,17 +4,16 @@ import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.VertexConsumer
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.data.RadialSlot
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
-//~ if >= 26.1 'gui.render.state.GuiElementRenderState' -> 'renderer.state.gui.GuiElementRenderState'
-import net.minecraft.client.gui.render.state.GuiElementRenderState
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState
 import net.minecraft.client.renderer.RenderPipelines
 import org.joml.Matrix3x2f
 import kotlin.math.*
 
 class RadialRenderState(
-    graphics: GuiGraphics,
+    graphics: GuiGraphicsExtractor,
     private val x: Int,
     private val y: Int,
     private val num: Int,

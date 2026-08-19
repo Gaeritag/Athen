@@ -24,7 +24,7 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.joml.Matrix3x2f
 import java.awt.Color
 
@@ -57,7 +57,7 @@ class ConfigColorPickerElement(
     }
 
     private val box = object : RoundedRectanglePrimitive() {
-        override fun render(graphics: GuiGraphics) {
+        override fun render(graphics: GuiGraphicsExtractor) {
             if (!visible) return
 
             graphics.nextStratum()
@@ -297,7 +297,7 @@ class ConfigColorPickerElement(
         ConfigManager.update(config.key, value)
     }
 
-    private fun pop(graphics: GuiGraphics) {
+    private fun pop(graphics: GuiGraphicsExtractor) {
         val x1 = box.x
         val y1 = box.y
         val pose = Matrix3x2f(graphics.pose())

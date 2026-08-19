@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LavaFogEnvironment.class)
 public class LavaFogEnvironmentMixin {
     @Inject(method = "setupFog", at = @At("HEAD"), cancellable = true)
-    private void athen$setupFog(FogData fogData, Camera camera, ClientLevel level, float renderDistance, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void athen$setupFog(FogData fog, Camera camera, ClientLevel level, float renderDistance, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!RenderOptimiser.getLava()) return;
-        fogData.environmentalStart = Float.MAX_VALUE;
-        fogData.environmentalEnd = Float.MAX_VALUE;
+        fog.environmentalStart = Float.MAX_VALUE;
+        fog.environmentalEnd = Float.MAX_VALUE;
         ci.cancel();
     }
 }

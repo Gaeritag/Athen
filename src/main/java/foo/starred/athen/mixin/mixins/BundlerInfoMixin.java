@@ -48,22 +48,17 @@ import java.util.function.Function;
 public interface BundlerInfoMixin {
 
     @WrapMethod(method = "createForPacket")
-    private static <T extends PacketListener, P extends BundlePacket<? super T>> BundlerInfo athen$createForPacket(
-        final PacketType<@NotNull P> type,
-        final Function<Iterable<Packet<? super T>>, P> bundler,
-        final BundleDelimiterPacket<? super T> delimiter,
-        final Operation<BundlerInfo> original
-    ) {
-        if (type != GamePacketTypes.CLIENTBOUND_BUNDLE) return original.call(type, bundler, delimiter);
+    private static <T extends PacketListener, P extends BundlePacket<? super T>> BundlerInfo athen$createForPacket(final PacketType<@NotNull P> bundlePacketType, final Function<Iterable<Packet<? super T>>, P> constructor, final BundleDelimiterPacket<? super T> delimiterPacket, final Operation<BundlerInfo> original) {
+        if (bundlePacketType != GamePacketTypes.CLIENTBOUND_BUNDLE) return original.call(bundlePacketType, constructor, delimiterPacket);
 
-        return original.call(type, (Function<Iterable<Packet<? super T>>, P>) (iterable) -> {
+        return original.call(bundlePacketType, (Function<Iterable<Packet<? super T>>, P>) (iterable) -> {
             List<Packet<? super T>> packets = new ArrayList<>();
 
             for (var packet : iterable) {
                 if (!new PacketEvent.Receive(packet).post()) packets.add(packet);
             }
 
-            return bundler.apply(packets);
-        }, delimiter);
+            return constructor.apply(packets);
+        }, delimiterPacket);
     }
 }

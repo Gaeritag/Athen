@@ -12,14 +12,9 @@ import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
+import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
 import kotlin.math.sqrt
-
-//? if >= 26.1 {
-/*import net.minecraft.util.LightCoordsUtil
-*///? } else {
-import net.minecraft.client.renderer.LightTexture
-//? }
 
 @LevelRenderer
 object BeamRenderer : ILevelRenderer {
@@ -86,8 +81,7 @@ object BeamRenderer : ILevelRenderer {
             .setColor(color)
             .setUv(u, v)
             .setOverlay(OverlayTexture.NO_OVERLAY)
-            //~ if >= 26.1 'LightTexture' -> 'LightCoordsUtil'
-            .setLight(LightTexture.FULL_BRIGHT)
+            .setLight(LightCoordsUtil.FULL_BRIGHT)
             .setNormal(this, 0f, 1f, 0f)
     }
 }

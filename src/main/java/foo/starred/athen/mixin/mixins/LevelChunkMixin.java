@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LevelChunkMixin {
     @Final
     @Shadow
-    Level level;
+    private Level level;
 
     @Inject(method = "setBlockState", at = @At("HEAD"))
     private void athen$setBlockState(BlockPos pos, BlockState state, int flags, CallbackInfoReturnable<BlockState> cir) {

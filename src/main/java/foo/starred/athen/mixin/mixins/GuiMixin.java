@@ -6,7 +6,7 @@ import foo.starred.athen.modules.impl.render.RenderOptimiser;
 import foo.starred.athen.modules.impl.render.radial.RadialMenu;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,71 +18,54 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {
-    //~ if >= 26.1 'render' -> 'extractRenderState'
-    @Inject(method = "render", at = @At("HEAD"))
-    private void athen$render$pre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        new GuiEvent.Render.Pre(guiGraphics).post();
+    @Inject(method = "extractRenderState", at = @At("HEAD"))
+    private void athen$render$pre(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        new GuiEvent.Render.Pre(graphics).post();
     }
 
-    //~ if >= 26.1 'render' -> 'extractRenderState'
-    //~ if >= 26.1 'renderSleepOverlay' -> 'extractSleepOverlay'
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSleepOverlay(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V"))
-    private void athen$render$main(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        new GuiEvent.Render.Main(guiGraphics).post();
+    @Inject(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;extractSleepOverlay(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V"))
+    private void athen$render$main(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        new GuiEvent.Render.Main(graphics).post();
     }
 
-    //~ if >= 26.1 'render' -> 'extractRenderState'
-    @Inject(method = "render", at = @At("TAIL"))
-    private void athen$render$post(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        new GuiEvent.Render.Post(guiGraphics).post();
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void athen$render$post(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        new GuiEvent.Render.Post(graphics).post();
     }
 
-    //~ if >= 26.1 'renderCrosshair' -> 'extractCrosshair'
-    @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
-    private void athen$renderCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractCrosshair", at = @At("HEAD"), cancellable = true)
+    private void athen$renderCrosshair(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!RadialMenu.INSTANCE.getEnabled()) return;
         if (!RadialMenu.INSTANCE.getOpen().getValue()) return;
 
         ci.cancel();
     }
 
-    //~ if >= 26.1 'renderSlot' -> 'extractSlot'
-    @Inject(method = "renderSlot", at = @At("HEAD"), cancellable = true)
-    private void athen$renderSlot$pre(GuiGraphics guiGraphics, int x, int y, DeltaTracker deltaTracker, Player player, ItemStack stack, int seed, CallbackInfo ci) {
-        if (new GuiEvent.Slots.Render.Hotbar.Pre(guiGraphics, stack, x, y).post()) ci.cancel();
+    @Inject(method = "extractSlot", at = @At("HEAD"), cancellable = true)
+    private void athen$renderSlot$pre(GuiGraphicsExtractor graphics, int x, int y, DeltaTracker deltaTracker, Player player, ItemStack itemStack, int seed, CallbackInfo ci) {
+        if (new GuiEvent.Slots.Render.Hotbar.Pre(graphics, itemStack, x, y).post()) ci.cancel();
     }
 
-    //~ if >= 26.1 'renderSlot' -> 'extractSlot'
-    @Inject(method = "renderSlot", at = @At("TAIL"), cancellable = true)
-    private void athen$renderSlot$post(GuiGraphics guiGraphics, int x, int y, DeltaTracker deltaTracker, Player player, ItemStack stack, int seed, CallbackInfo ci) {
-        if (new GuiEvent.Slots.Render.Hotbar.Post(guiGraphics, stack, x, y).post()) ci.cancel();
+    @Inject(method = "extractSlot", at = @At("TAIL"), cancellable = true)
+    private void athen$renderSlot$post(GuiGraphicsExtractor graphics, int x, int y, DeltaTracker deltaTracker, Player player, ItemStack itemStack, int seed, CallbackInfo ci) {
+        if (new GuiEvent.Slots.Render.Hotbar.Post(graphics, itemStack, x, y).post()) ci.cancel();
     }
 
-    //~ if >= 26.1 'renderEffects' -> 'extractEffects'
-    @Inject(method = "renderEffects", at = @At("HEAD"), cancellable = true)
-    private void athen$renderEffects(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractEffects", at = @At("HEAD"), cancellable = true)
+    private void athen$renderEffects(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!RenderOptimiser.getEffects()) return;
         ci.cancel();
     }
 
-    //~ if >= 26.1 'renderSelectedItemName' -> 'extractSelectedItemName'
-    @Inject(method = "renderSelectedItemName", at = @At("HEAD"), cancellable = true)
-    private void athen$renderSelectedItemName$0(GuiGraphics guiGraphics, CallbackInfo ci) {
+    @Inject(method = "extractSelectedItemName", at = @At("HEAD"), cancellable = true)
+    private void athen$renderSelectedItemName$0(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!ItemNamePosition.INSTANCE.getEnabled()) return;
         if (ItemNamePosition.INSTANCE.getHud().getEnabled()) return;
 
         ci.cancel();
     }
 
-    @ModifyArgs(
-            //~ if >= 26.1 'renderSelectedItemName' -> 'extractSelectedItemName'
-            method = "renderSelectedItemName",
-            at = @At(
-                    value = "INVOKE",
-                    //~ if >= 26.1 'drawStringWithBackdrop' -> 'textWithBackdrop'
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawStringWithBackdrop(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIII)V"
-            )
-    )
+    @ModifyArgs(method = "extractSelectedItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;textWithBackdrop(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIII)V"))
     private void athen$renderSelectedItemName$1(Args args) {
         if (!ItemNamePosition.INSTANCE.getEnabled()) return;
 

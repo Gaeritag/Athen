@@ -7,12 +7,7 @@ import foo.starred.athen.api.rendering.level.internal.annotations.impl.LevelRend
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.Font
 import net.minecraft.client.renderer.MultiBufferSource
-
-//? if >= 26.1 {
-/*import net.minecraft.util.LightCoordsUtil
-*///? } else {
-import net.minecraft.client.renderer.LightTexture
-//? }
+import net.minecraft.util.LightCoordsUtil
 
 @LevelRenderer
 object TextRenderer : ILevelRenderer {
@@ -41,8 +36,7 @@ object TextRenderer : ILevelRenderer {
                 consumers,
                 if (text.depth) Font.DisplayMode.NORMAL else Font.DisplayMode.SEE_THROUGH,
                 text.color1,
-                //~ if >= 26.1 'LightTexture' -> 'LightCoordsUtil'
-                LightTexture.FULL_BRIGHT
+                LightCoordsUtil.FULL_BRIGHT
             )
 
             poseStack.popPose()
