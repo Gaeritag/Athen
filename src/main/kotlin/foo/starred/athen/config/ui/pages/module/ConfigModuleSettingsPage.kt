@@ -185,6 +185,7 @@ object ConfigModuleSettingsPage {
 
             ConfigGroupElement.of(header, first) {
                 content.animateSize(482f, if (it) full else 0f, 0.25f, CascadeAnimations.EASE_OUT)
+                if (!it) content.forEach { a -> (a as? ConfigColorPickerElement)?.close() }
             }
 
             rows(content, block.subList(1, block.size))

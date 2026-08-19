@@ -228,18 +228,27 @@ class ConfigColorPickerElement(
         })
     }
 
-    override fun detach(): RoundedRectanglePrimitive {
+    fun close() {
+        if (!expanded) return
         expanded = false
         box.visible = false
         box.detach()
+        animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
+        borderColor = Catppuccin.Mocha.Surface1.argb
+        if (active === this) active = null
+    }
+
+    override fun detach(): RoundedRectanglePrimitive {
+        close()
         return super.detach()
     }
 
     private fun fn() {
-        expanded = !expanded
-        box.visible = expanded
-
-        if (expanded) {
+        if (!expanded) {
+            if (active !== this) active?.close()
+            active = this
+            expanded = true
+            box.visible = true
             box.attach(ConfigUI.scene)
             animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
             borderColor = Catppuccin.Mocha.Lavender.argb
@@ -248,9 +257,7 @@ class ConfigColorPickerElement(
             return
         }
 
-        box.detach()
-        animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-        borderColor = Catppuccin.Mocha.Surface1.argb
+        close()
     }
 
     private fun fn(x: Float, y: Float) {
@@ -337,6 +344,9 @@ class ConfigColorPickerElement(
             Color(Catppuccin.Mocha.Lavender.argb, true),
             Color(Catppuccin.Mocha.Peach.argb, true)
         )
+
+        var active: ConfigColorPickerElement? = null
+            private set
 
         fun of(parent: IPrimitiveElement<*>, config: ConfigColorPickerElementData): ConfigColorPickerElement {
             return ConfigColorPickerElement(config).apply {
