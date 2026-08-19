@@ -209,6 +209,12 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
     }
 
     override fun onClose() {
+        if (ConfigModules.active != null) {
+            ConfigModules.active = null
+            ConfigModules.fn()
+            return
+        }
+
         super.onClose()
         hide()
         if (last == -1) return
