@@ -55,8 +55,6 @@ dependencies {
     implementation("hypixel-modapi".global)
     implementation("hypixel-modapi-fabric".global)
 
-    shadow("okhttp".global)
-    shadow("okio".global)
     shadow("classgraph".global)
     shadow("autoupdate".global)
     shadow("snowbird".versioned)
