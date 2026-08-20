@@ -20,12 +20,17 @@ import foo.starred.cascade.font.CascadeFonts
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
+import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
+import foo.starred.cascade.primitives.impl.RectanglePrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.brighten
+import foo.starred.snowbird.utils.withAlpha
+import net.minecraft.client.gui.GuiGraphicsExtractor
+import kotlin.math.abs
 
 object ConfigModules {
     var active: ConfigFeatureData? = null
@@ -129,12 +134,52 @@ object ConfigModules {
             if (i % 3 == 0) first = rect
             last = rect
         }
+
+        if (first != null) {
+            container {
+                position = AnchorPositionConstraint({ first }, PositionAnchor.BELOW, 0f, 14f)
+                size = FixedSizeConstraint(1f, 1f)
+                interact = false
+                attach(ConfigUI.right)
+            }
+        }
+
+        val total = (features.size + 2) / 3
+        val max = (28f * total + 10f * (total - 1).coerceAtLeast(0) + 28f) - 318f
+        if (max <= 0f) return
+
+        object : RectanglePrimitive() {
+            override fun render(graphics: GuiGraphicsExtractor) {
+                val parent = parent ?: return
+                val scroll = abs(ConfigUI.right.scroll)
+                val remaining = (max - scroll).coerceAtLeast(0f)
+                val base = Catppuccin.Mocha.Crust.argb
+                val x = parent.x.toInt()
+                val y = parent.y.toInt()
+                val w = parent.width.toInt()
+                val h = parent.height.toInt()
+
+                if (scroll > 1f) {
+                    val alpha = (scroll / 24f).coerceIn(0f, 1f)
+                    graphics.fillGradient(x, y, x + w, y + 23, base.withAlpha(alpha), base.withAlpha(alpha * 0.667f))
+                    graphics.fillGradient(x, y + 23, x + w, y + 46, base.withAlpha(alpha * 0.667f), base.withAlpha(0f))
+                }
+
+                if (remaining > 1f) {
+                    val alpha = (remaining / 24f).coerceIn(0f, 1f)
+                    graphics.fillGradient(x, y + h - 46, x + w, y + h - 23, base.withAlpha(0f), base.withAlpha(alpha * 0.667f))
+                    graphics.fillGradient(x, y + h - 23, x + w, y + h, base.withAlpha(alpha * 0.667f), base.withAlpha(alpha))
+                }
+            }
+        }.apply {
+            color = 0
+            interact = false
+            attach(ConfigUI.right0)
+        }
     }
 
     private fun ConfigFeatureData.matches(query: String): Boolean {
         if (query.isEmpty()) return true
-        return name.contains(query, true) || description.contains(query, true) || options.any {
-            it.name.contains(query, true) || it.description?.contains(query, true) == true
-        }
+        return name.contains(query, true) || description.contains(query, true) || options.any { it.name.contains(query, true) || it.description?.contains(query, true) == true }
     }
 }
