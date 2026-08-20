@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger
 import kotlin.time.Duration.Companion.hours
 
 object Athen : ClientModInitializer {
-    const val modVersion: String = /*$ mod_version*/"0.2.1-b1"
+    const val modVersion: String = /*$ mod_version*/"0.3.0"
     const val modId: String = /*$ mod_id*/"athen"
     const val modName: String = /*$ mod_name*/"Athen"
     const val discordUrl: String = "https://discord.gg/DB5S3DjQVa"
@@ -82,7 +82,7 @@ object Athen : ClientModInitializer {
             onSuccess<String> {
                 val str = it.trim().takeIf { s -> s.isNotBlank() && s != Dev.lastBroadcast } ?: return@onSuccess
 
-                "<hover<${Mocha.Lavender.argb}>Broadcasted message!>$str".mod()
+                "<hover:<${Mocha.Lavender.argb}>Broadcasted message!>$str".mod()
                 Dev.lastBroadcast = str
             }
 
