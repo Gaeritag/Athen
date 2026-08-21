@@ -116,7 +116,7 @@ object ConfigModules {
                 on<MouseEvent.Press> {
                     cancel()
 
-                    if (image.contains(x, y)) {
+                    if (image.contains(x, y + ConfigUI.right.scroll)) {
                         if (options) {
                             active = v
                             fn()
