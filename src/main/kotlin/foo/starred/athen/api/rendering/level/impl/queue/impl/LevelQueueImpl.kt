@@ -22,6 +22,10 @@ object LevelQueueImpl : ILevelQueue {
     override val circles1: ExtractedQueue<ExtractedCircle> = ExtractedQueue()
 
     init {
+        on<WorldRenderEvent.Extract>(Int.MIN_VALUE) {
+            clear()
+        }
+
         on<WorldRenderEvent.Render> {
             //~ if >= 26.2 'mainCamera' -> 'mainCamera()'
             val camera = client.gameRenderer.mainCamera.position()
@@ -32,7 +36,6 @@ object LevelQueueImpl : ILevelQueue {
             for (r in renderers) r.render(pose, pose.last(), consumers)
 
             pose.popPose()
-            clear()
         }
     }
 

@@ -52,6 +52,7 @@ object FabricEventDispatcher {
             if (client.isSingleplayer) TickEvent.Server.post()
         }
 
+        //~ if >= 26.2 'AFTER_TRANSLUCENT_TERRAIN' -> 'COLLECT_SUBMITS'
         LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN.register { context ->
             WorldRenderEvent.Extract.post()
             //~ if >= 26.2 'bufferSource' -> 'submitNodeCollector'

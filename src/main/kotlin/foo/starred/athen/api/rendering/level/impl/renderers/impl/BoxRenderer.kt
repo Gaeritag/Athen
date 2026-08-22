@@ -44,7 +44,6 @@ object BoxRenderer : ILevelRenderer {
         }
     }
 
-
     private fun fn0(pose: PoseStack.Pose, buffer: VertexConsumer, boxes: List<ExtractedBox>) {
         for (box in boxes) {
             val aabb = box.aabb
@@ -98,24 +97,24 @@ object BoxRenderer : ILevelRenderer {
             buff(x2, y2, z2, color)
 
             buff(x1, y1, z1, color)
-            buff(x1, y2, z1, color)
-            buff(x2, y2, z1, color)
             buff(x2, y1, z1, color)
+            buff(x2, y2, z1, color)
+            buff(x1, y2, z1, color)
 
             buff(x2, y1, z2, color)
-            buff(x2, y2, z2, color)
-            buff(x1, y2, z2, color)
             buff(x1, y1, z2, color)
+            buff(x1, y2, z2, color)
+            buff(x2, y2, z2, color)
 
             buff(x1, y1, z1, color)
             buff(x2, y1, z1, color)
             buff(x2, y1, z2, color)
             buff(x1, y1, z2, color)
 
+            buff(x1, y2, z1, color)
             buff(x1, y2, z2, color)
             buff(x2, y2, z2, color)
             buff(x2, y2, z1, color)
-            buff(x1, y2, z1, color)
         }
     }
 }

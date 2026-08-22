@@ -10,8 +10,6 @@ import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.Font
 //~ if >= 26.2 'MultiBufferSource' -> 'SubmitNodeCollector'
 import net.minecraft.client.renderer.MultiBufferSource
-//? if >= 26.2
-//import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.util.LightCoordsUtil
 
 @LevelRenderer
@@ -32,10 +30,10 @@ object TextRenderer : ILevelRenderer {
             poseStack.scale(scale, -scale, scale)
 
             val x = -client.font.width(text.text) / 2f
-            val mode = if (text.depth) Font.DisplayMode.NORMAL else Font.DisplayMode.SEE_THROUGH
+            val mode = if (text.depth) Font.DisplayMode.POLYGON_OFFSET else Font.DisplayMode.SEE_THROUGH
 
             //? if >= 26.2 {
-            //consumers.submitText(poseStack, x, 0f, text.text.visualOrderText, text.shadow, mode, text.color0, text.color1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY)
+            //consumers.submitText(poseStack, x, 0f, text.text.visualOrderText, text.shadow, mode, LightCoordsUtil.FULL_BRIGHT, text.color0, text.color1, 0)
             //? } else {
             client.font.drawInBatch(text.text, x, 0f, text.color0, text.shadow, poseStack.last().pose(), consumers, mode, text.color1, LightCoordsUtil.FULL_BRIGHT)
             //? }
