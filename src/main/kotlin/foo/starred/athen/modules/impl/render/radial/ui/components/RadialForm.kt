@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.radial.ui.components
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.modules.impl.render.radial.actions.IAction
@@ -23,7 +24,6 @@ import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
-import org.lwjgl.glfw.GLFW
 
 class RadialForm(mid: ContainerPrimitive) {
     private val list0 = mutableListOf<RectanglePrimitive>()
@@ -93,7 +93,7 @@ class RadialForm(mid: ContainerPrimitive) {
             placeholder = "Slot name..."
 
             on<KeyEvent.Press> {
-                if (key != GLFW.GLFW_KEY_ENTER) return@on
+                if (key != InputConstants.KEY_RETURN) return@on
 
                 RadialEditor.commit()
                 RadialEditor.unfocus()
@@ -109,7 +109,7 @@ class RadialForm(mid: ContainerPrimitive) {
             placeholder = "minecraft:barrier..."
 
             on<KeyEvent.Press> {
-                if (key != GLFW.GLFW_KEY_ENTER) return@on
+                if (key != InputConstants.KEY_RETURN) return@on
 
                 RadialEditor.commit()
                 RadialEditor.unfocus()
@@ -175,7 +175,7 @@ class RadialForm(mid: ContainerPrimitive) {
             placeholder = "Action value..."
 
             on<KeyEvent.Press> {
-                if (key != GLFW.GLFW_KEY_ENTER) return@on
+                if (key != InputConstants.KEY_RETURN) return@on
 
                 RadialEditor.commit()
                 RadialEditor.unfocus()
@@ -221,7 +221,7 @@ class RadialForm(mid: ContainerPrimitive) {
             placeholder = "Skin texture value..."
 
             on<KeyEvent.Press> {
-                if (key != GLFW.GLFW_KEY_ENTER) return@on
+                if (key != InputConstants.KEY_RETURN) return@on
 
                 RadialEditor.commit()
                 RadialEditor.unfocus()

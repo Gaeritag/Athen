@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general.messageactions.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.modules.impl.general.messageactions.MessageActions
@@ -26,7 +27,6 @@ import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
-import org.lwjgl.glfw.GLFW
 
 object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
     private var category: String? = null
@@ -243,7 +243,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             attach(bar)
 
             on<KeyEvent.Press> {
-                if (key == GLFW.GLFW_KEY_ENTER) {
+                if (key == InputConstants.KEY_RETURN) {
                     val v = value.trim()
                     if (v.isNotEmpty()) MessageActions.add(v)
 
@@ -258,7 +258,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                     return@on
                 }
 
-                if (key != GLFW.GLFW_KEY_ESCAPE) return@on
+                if (key != InputConstants.KEY_ESCAPE) return@on
                 `category$field`.visible = false
                 `category$new`.visible = true
                 `category$toggle`.visible = true

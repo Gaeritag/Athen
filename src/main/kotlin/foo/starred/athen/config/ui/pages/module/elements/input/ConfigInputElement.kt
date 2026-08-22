@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.input
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigTextInputElementData
 import foo.starred.athen.config.ui.pages.module.elements.input.ConfigInputExpandElement.Companion.configExpandButtonElement
@@ -25,7 +26,6 @@ import foo.starred.snowbird.api.shift
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.withAlpha
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import org.lwjgl.glfw.GLFW
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -121,7 +121,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
             val ctrl = ctrl
 
             when (key) {
-                GLFW.GLFW_KEY_LEFT -> {
+                InputConstants.KEY_LEFT -> {
                     if (shift && anchor == -1) {
                         anchor = cursor
                     }
@@ -138,7 +138,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_RIGHT -> {
+                InputConstants.KEY_RIGHT -> {
                     if (shift && anchor == -1) {
                         anchor = cursor
                     }
@@ -155,7 +155,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_HOME -> {
+                InputConstants.KEY_HOME -> {
                     if (shift && anchor == -1) {
                         anchor = cursor
                     }
@@ -169,7 +169,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_END -> {
+                InputConstants.KEY_END -> {
                     if (shift && anchor == -1) {
                         anchor = cursor
                     }
@@ -183,7 +183,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_BACKSPACE -> {
+                InputConstants.KEY_BACKSPACE -> {
                     if (selected) {
                         delete()
                         cancel()
@@ -199,7 +199,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_DELETE -> {
+                InputConstants.KEY_DELETE -> {
                     if (selected) {
                         delete()
                         cancel()
@@ -214,13 +214,13 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_ESCAPE -> {
+                InputConstants.KEY_ESCAPE -> {
                     root.focused = null
                     cancel()
                     return@on
                 }
 
-                GLFW.GLFW_KEY_A -> {
+                InputConstants.KEY_A -> {
                     if (!ctrl) return@on
 
                     anchor = 0
@@ -229,7 +229,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_C -> {
+                InputConstants.KEY_C -> {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
@@ -238,7 +238,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_X -> {
+                InputConstants.KEY_X -> {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
@@ -248,7 +248,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_V -> {
+                InputConstants.KEY_V -> {
                     if (!ctrl) return@on
 
                     delete()

@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.serialization.Codec
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
@@ -24,7 +25,6 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
@@ -41,7 +41,7 @@ object ProtectItems : Module(
 
     private val render = config.switch("Render protected").unique("render")
     private val renderKey by config.switch("Only when key pressed", true)
-    private val renderKeybind by config.keybind("Keybind", GLFW.GLFW_KEY_P)
+    private val renderKeybind by config.keybind("Keybind", InputConstants.KEY_P)
 
     private val json = JsonStore("features/protectItems")
     private val uuids = json.mutableSet("uuid", Codec.STRING)

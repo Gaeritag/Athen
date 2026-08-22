@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.config.Category
@@ -16,7 +17,6 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.pressed
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.inventory.Slot
-import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.utils.extentions.getLore
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
@@ -28,7 +28,7 @@ object LoadoutKeybinds : Module(
     Category.GENERAL
 ) {
     private val cancelAll by config.switch("Cancel all other clicks")
-    private val override by config.keybind("Key override", GLFW.GLFW_KEY_LEFT_CONTROL)
+    private val override by config.keybind("Key override", InputConstants.KEY_LCONTROL)
     private val cancelRender = config.switch("Cancel gui render").unique("cancelRender")
     private val ping by config.slider("Ping", 250, 10, 1000, "ms")
     private val _unused by config.information("Ping is used to estimate internal calculations.")
@@ -45,18 +45,18 @@ object LoadoutKeybinds : Module(
     private val swapKey2 by swaps.selector("Swap slot 2", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9", "Slot 10", "Slot 11", "Slot 12"))
 
     private val slots0 by config.group("Slot keybinds")
-    private val key0 by slots0.keybind("Slot 1", GLFW.GLFW_KEY_1)
-    private val key1 by slots0.keybind("Slot 2", GLFW.GLFW_KEY_2)
-    private val key2 by slots0.keybind("Slot 3", GLFW.GLFW_KEY_3)
-    private val key3 by slots0.keybind("Slot 4", GLFW.GLFW_KEY_4)
-    private val key4 by slots0.keybind("Slot 5", GLFW.GLFW_KEY_5)
-    private val key5 by slots0.keybind("Slot 6", GLFW.GLFW_KEY_6)
-    private val key6 by slots0.keybind("Slot 7", GLFW.GLFW_KEY_7)
-    private val key7 by slots0.keybind("Slot 8", GLFW.GLFW_KEY_8)
-    private val key8 by slots0.keybind("Slot 9", GLFW.GLFW_KEY_9)
-    private val key9 by slots0.keybind("Slot 10", GLFW.GLFW_KEY_UNKNOWN)
-    private val key10 by slots0.keybind("Slot 11", GLFW.GLFW_KEY_UNKNOWN)
-    private val key11 by slots0.keybind("Slot 12", GLFW.GLFW_KEY_UNKNOWN)
+    private val key0 by slots0.keybind("Slot 1", InputConstants.KEY_1)
+    private val key1 by slots0.keybind("Slot 2", InputConstants.KEY_2)
+    private val key2 by slots0.keybind("Slot 3", InputConstants.KEY_3)
+    private val key3 by slots0.keybind("Slot 4", InputConstants.KEY_4)
+    private val key4 by slots0.keybind("Slot 5", InputConstants.KEY_5)
+    private val key5 by slots0.keybind("Slot 6", InputConstants.KEY_6)
+    private val key6 by slots0.keybind("Slot 7", InputConstants.KEY_7)
+    private val key7 by slots0.keybind("Slot 8", InputConstants.KEY_8)
+    private val key8 by slots0.keybind("Slot 9", InputConstants.KEY_9)
+    private val key9 by slots0.keybind("Slot 10", InputConstants.UNKNOWN.value)
+    private val key10 by slots0.keybind("Slot 11", InputConstants.UNKNOWN.value)
+    private val key11 by slots0.keybind("Slot 12", InputConstants.UNKNOWN.value)
 
     private val menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Loadouts$")
     private var currentPage: Int = 0
@@ -106,7 +106,7 @@ object LoadoutKeybinds : Module(
     }
 
     private fun CancellableEvent.fn(key: Int) {
-        if (cancelAll && (!override.bound || !override.pressed) && key != (client.options.keyInventory as KeyMappingAccessor).boundKey.value && key != GLFW.GLFW_KEY_ESCAPE) cancel()
+        if (cancelAll && (!override.bound || !override.pressed) && key != (client.options.keyInventory as KeyMappingAccessor).boundKey.value && key != InputConstants.KEY_ESCAPE) cancel()
 
         if (System.currentTimeMillis() - lastClick < ping) return
         val player = client.player ?: return
@@ -161,7 +161,7 @@ object LoadoutKeybinds : Module(
 
         val value: Int
             get() {
-                if (useHotbar && idx >= 41) return GLFW.GLFW_KEY_UNKNOWN
+                if (useHotbar && idx >= 41) return InputConstants.UNKNOWN.value
                 return if (useHotbar) hotbar.boundKey.value else keybind()
             }
 

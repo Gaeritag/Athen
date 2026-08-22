@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general.keybinds.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.modules.impl.general.keybinds.Keybinds
@@ -30,7 +31,6 @@ import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
-import org.lwjgl.glfw.GLFW
 
 object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
     private var category: String? = null
@@ -247,7 +247,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             attach(bar)
 
             on<KeyEvent.Press> {
-                if (key == GLFW.GLFW_KEY_ENTER) {
+                if (key == InputConstants.KEY_RETURN) {
                     val v = value.trim()
                     if (v.isNotEmpty()) Keybinds.addCategory(v)
 
@@ -262,7 +262,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
                     return@on
                 }
 
-                if (key != GLFW.GLFW_KEY_ESCAPE) return@on
+                if (key != InputConstants.KEY_ESCAPE) return@on
                 `category$field`.visible = false
                 `category$new`.visible = true
                 `category$toggle`.visible = true

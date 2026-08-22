@@ -3,6 +3,7 @@
 package foo.starred.athen.modules.impl.general
 
 import com.google.gson.JsonObject
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn
 import foo.starred.athen.api.items.ItemAPI.`watch$tooltip`
@@ -19,7 +20,6 @@ import foo.starred.snowbird.api.pressed
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.network.chat.Component
-import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.bold
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.color
 import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.italic
@@ -31,7 +31,7 @@ object MissingEnchants : Module(
     "Shows missing enchants on the item you hover over.",
     Category.GENERAL
 ) {
-    private val keybind: Int by config.keybind("Keybind", GLFW.GLFW_KEY_LEFT_SHIFT).`watch$tooltip`()
+    private val keybind: Int by config.keybind("Keybind", InputConstants.KEY_LSHIFT).`watch$tooltip`()
     private val _unused by config.information("You can unbind the keybind to always show.")
 
     private val typeRegex = Regex("""\b(?:COMMON|UNCOMMON|RARE|EPIC|LEGENDARY|MYTHIC|DIVINE|SPECIAL|VERY SPECIAL)\b\s+(?:DUNGEON\s+)?([A-Z]+(?: [A-Z]+)*)""") // https://regex101.com/r/MOQHMf/1

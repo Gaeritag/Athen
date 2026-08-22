@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.tooltip
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.Identifier
-import org.lwjgl.glfw.GLFW
 
 @Load
 object ScrollableTooltip : Module(
@@ -24,7 +24,7 @@ object ScrollableTooltip : Module(
     Category.RENDER
 ) {
     private val horizontal by config.switch("Horizontal", true)
-    private val `horizontal$key` by config.keybind("Horizontal keybind", GLFW.GLFW_KEY_LEFT_SHIFT)
+    private val `horizontal$key` by config.keybind("Horizontal keybind", InputConstants.KEY_LSHIFT)
     private val `horizontal$speed` by config.slider("Horizontal speed", 8, 1, 20, "pixels")
 
     private val vertical by config.switch("Vertical", true)
@@ -32,7 +32,7 @@ object ScrollableTooltip : Module(
     private val `vertical$speed` by config.slider("Vertical speed", 8, 1, 20, "pixels")
 
     private val scale by config.switch("Scale tooltip")
-    private val `scale$key` by config.keybind("Scale keybind", GLFW.GLFW_KEY_LEFT_CONTROL)
+    private val `scale$key` by config.keybind("Scale keybind", InputConstants.KEY_LCONTROL)
     private val `scale$dynamic` by config.switch("Dynamic scale", true)
     private val `scale$dynamic$text` by config.information("Dynamic scale automatically scales the tooltip to fit on your screen!")
 

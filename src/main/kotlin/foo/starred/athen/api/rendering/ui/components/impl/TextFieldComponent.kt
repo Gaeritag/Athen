@@ -1,5 +1,6 @@
 package foo.starred.athen.api.rendering.ui.components.impl
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
@@ -13,7 +14,6 @@ import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.api.shift
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import org.lwjgl.glfw.GLFW
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -77,7 +77,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
             val ctrl = ctrl
 
             when (key) {
-                GLFW.GLFW_KEY_LEFT -> {
+                InputConstants.KEY_LEFT -> {
                     if (shift && anchor == -1) {
                         anchor = cursor
                     }
@@ -94,7 +94,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_RIGHT -> {
+                InputConstants.KEY_RIGHT -> {
                     if (shift && anchor == -1) {
                         anchor = cursor
                     }
@@ -111,7 +111,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_HOME -> {
+                InputConstants.KEY_HOME -> {
                     if (shift && anchor == -1) anchor = cursor
                     if (!shift) anchor = -1
 
@@ -120,7 +120,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_END -> {
+                InputConstants.KEY_END -> {
                     if (shift && anchor == -1) anchor = cursor
                     if (!shift) anchor = -1
 
@@ -129,7 +129,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_BACKSPACE -> {
+                InputConstants.KEY_BACKSPACE -> {
                     if (selected) {
                         delete()
                         cancel()
@@ -145,7 +145,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_DELETE -> {
+                InputConstants.KEY_DELETE -> {
                     if (selected) {
                         delete()
                         cancel()
@@ -160,13 +160,13 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_ESCAPE -> {
+                InputConstants.KEY_ESCAPE -> {
                     root.focused = null
                     cancel()
                     return@on
                 }
 
-                GLFW.GLFW_KEY_A -> {
+                InputConstants.KEY_A -> {
                     if (!ctrl) return@on
 
                     anchor = 0
@@ -175,7 +175,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_C -> {
+                InputConstants.KEY_C -> {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
@@ -185,7 +185,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_X -> {
+                InputConstants.KEY_X -> {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
@@ -196,7 +196,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     return@on
                 }
 
-                GLFW.GLFW_KEY_V -> {
+                InputConstants.KEY_V -> {
                     if (!ctrl) return@on
 
                     delete()

@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.tooltip.custom
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.scheduling.Scheduler
@@ -20,7 +21,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
-import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData
 import java.awt.Color
@@ -36,13 +36,13 @@ object CustomTooltip : Module(
     val customisation by config.group("Tooltip customisation")
     val `scroll$infinite` by customisation.switch("Infinite scroll")
     val `scroll$horizontal` by customisation.switch("Horizontal scroll", true)
-    val `scroll$horizontal$key` by customisation.keybind("Horizontal keybind", GLFW.GLFW_KEY_LEFT_SHIFT)
+    val `scroll$horizontal$key` by customisation.keybind("Horizontal keybind", InputConstants.KEY_LSHIFT)
     val `scroll$horizontal$speed` by customisation.slider("Horizontal scroll speed", 8, 1, 20, "pixels")
     val `scroll$vertical` by customisation.switch("Vertical scroll", true)
     val `scroll$vertical$speed` by customisation.slider("Vertical scroll speed", 8, 1, 20, "pixels")
     val `scroll$reset` by customisation.switch("Reset on hover")
     val `scroll$scale` by customisation.switch("Scale tooltip")
-    val `scroll$scale$key` by customisation.keybind("Scale keybind", GLFW.GLFW_KEY_LEFT_CONTROL)
+    val `scroll$scale$key` by customisation.keybind("Scale keybind", InputConstants.KEY_LCONTROL)
 
     val renderExpandable by config.group("Custom rendering")
     val `tooltip$style` by renderExpandable.selector("Tooltip style", listOf("Combined", "Separated"), 1)

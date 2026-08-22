@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general.keybinds.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.dungeon.enums.DungeonClass
 import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.api.rendering.ui.components.impl.MultiCheckboxComponent
@@ -33,7 +34,6 @@ import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.literal
-import org.lwjgl.glfw.GLFW
 import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 
 class KeybindsPopUp(
@@ -68,7 +68,7 @@ class KeybindsPopUp(
 
         on<KeyEvent.Press> {
             if (!capturing) {
-                if (key == GLFW.GLFW_KEY_ESCAPE) {
+                if (key == InputConstants.KEY_ESCAPE) {
                     onClose()
                     cancel()
                 }
@@ -77,13 +77,13 @@ class KeybindsPopUp(
             }
 
             when {
-                key == GLFW.GLFW_KEY_ENTER && captured.isNotEmpty() -> {
+                key == InputConstants.KEY_RETURN && captured.isNotEmpty() -> {
                     capturing = false
                     unfocus = true
                     binding = captured.toMutableList()
                 }
 
-                key == GLFW.GLFW_KEY_ESCAPE -> {
+                key == InputConstants.KEY_ESCAPE -> {
                     capturing = false
                     unfocus = true
                     captured.clear()

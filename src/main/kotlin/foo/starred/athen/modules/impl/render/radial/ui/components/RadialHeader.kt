@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.radial.ui.components
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
@@ -22,7 +23,6 @@ import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangl
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.utils.literal
-import org.lwjgl.glfw.GLFW
 
 class RadialHeader(side: RectanglePrimitive) {
     var text00: TextPrimitive
@@ -103,13 +103,13 @@ class RadialHeader(side: RectanglePrimitive) {
             visible = false
 
             on<KeyEvent.Press> {
-                if (key == GLFW.GLFW_KEY_ENTER) {
+                if (key == InputConstants.KEY_RETURN) {
                     RadialEditor.rename()
                     cancel()
                     return@on
                 }
 
-                if (key == GLFW.GLFW_KEY_ESCAPE) {
+                if (key == InputConstants.KEY_ESCAPE) {
                     RadialEditor.editing = false
                     field0.visible = false
                     text00.visible = true

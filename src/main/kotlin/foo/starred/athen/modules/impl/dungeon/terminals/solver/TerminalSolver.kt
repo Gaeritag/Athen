@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.dungeon.terminals.solver
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
@@ -22,7 +23,6 @@ import foo.starred.snowbird.utils.mouseSY
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
-import org.lwjgl.glfw.GLFW
 import java.awt.Color
 
 @Load
@@ -44,10 +44,10 @@ object TerminalSolver : Module(
 
     private val melody by config.group("Melody")
     val `melody$num` by melody.switch("Number keys")
-    val `melody$key0` by melody.keybind("Keybind 1", GLFW.GLFW_KEY_1)
-    val `melody$key1` by melody.keybind("Keybind 2", GLFW.GLFW_KEY_2)
-    val `melody$key2` by melody.keybind("Keybind 3", GLFW.GLFW_KEY_3)
-    val `melody$key3` by melody.keybind("Keybind 4", GLFW.GLFW_KEY_4)
+    val `melody$key0` by melody.keybind("Keybind 1", InputConstants.KEY_1)
+    val `melody$key1` by melody.keybind("Keybind 2", InputConstants.KEY_2)
+    val `melody$key2` by melody.keybind("Keybind 3", InputConstants.KEY_3)
+    val `melody$key3` by melody.keybind("Keybind 4", InputConstants.KEY_4)
 
     private val gui by config.group("GUI")
     val `ui$scale` by gui.slider("Scale", 1f, 0.1f, 4f, double = true)

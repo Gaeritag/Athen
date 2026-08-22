@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.highlight.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.modules.impl.render.highlight.MobHighlight
@@ -24,7 +25,6 @@ import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.utils.literal
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.EntityType
-import org.lwjgl.glfw.GLFW
 
 class MobHighlightPopUp(
     private val gui: CascadeScreen,
@@ -49,7 +49,7 @@ class MobHighlightPopUp(
         position = FixedPositionConstraint(0, 0)
 
         on<KeyEvent.Press> {
-            if (key == GLFW.GLFW_KEY_ESCAPE) onClose() else if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) save() else return@on
+            if (key == InputConstants.KEY_ESCAPE) onClose() else if (key == InputConstants.KEY_RETURN) save() else return@on
             cancel()
         }
 

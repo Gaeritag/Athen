@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.keybind
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigKeybindElementData
 import foo.starred.athen.ui.themes.Catppuccin
@@ -19,7 +20,6 @@ import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.snowbird.utils.literal
-import org.lwjgl.glfw.GLFW
 
 class ConfigKeybindElement(
     private val config: ConfigKeybindElementData
@@ -57,8 +57,8 @@ class ConfigKeybindElement(
             cancel()
 
             when (key) {
-                GLFW.GLFW_KEY_ESCAPE -> stop()
-                GLFW.GLFW_KEY_BACKSPACE, GLFW.GLFW_KEY_DELETE -> update(-1)
+                InputConstants.KEY_ESCAPE -> stop()
+                InputConstants.KEY_BACKSPACE, InputConstants.KEY_DELETE -> update(-1)
                 else -> update(key)
             }
         }

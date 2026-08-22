@@ -1,5 +1,6 @@
 package foo.starred.athen.hud
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
@@ -8,7 +9,6 @@ import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import org.lwjgl.glfw.GLFW
 import kotlin.math.roundToInt
 
 @Priority(-1)
@@ -129,55 +129,55 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
     }
 
     override fun onScramKeyPress(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (keyCode == GLFW.GLFW_KEY_G) {
-            if ((modifiers and GLFW.GLFW_MOD_CONTROL) != 0) snappy = !snappy
+        if (keyCode == InputConstants.KEY_G) {
+            if ((modifiers and InputConstants.MOD_CONTROL) != 0) snappy = !snappy
             else grid = !grid
 
             return true
         }
 
-        val step = if ((modifiers and GLFW.GLFW_MOD_SHIFT) != 0) 8f else 1f
+        val step = if ((modifiers and InputConstants.MOD_SHIFT) != 0) 8f else 1f
 
         when (keyCode) {
-            GLFW.GLFW_KEY_H -> {
+            InputConstants.KEY_H -> {
                 val e = active ?: return false
                 e.x = (Resolute.width - e.width * e.scale) / 2f
                 return true
             }
 
-            GLFW.GLFW_KEY_V -> {
+            InputConstants.KEY_V -> {
                 val e = active ?: return false
                 e.y = (Resolute.height - e.height * e.scale) / 2f
                 return true
             }
 
-            GLFW.GLFW_KEY_LEFT -> {
+            InputConstants.KEY_LEFT -> {
                 val e = active ?: return false
                 e.x -= step
                 return true
             }
 
-            GLFW.GLFW_KEY_RIGHT -> {
+            InputConstants.KEY_RIGHT -> {
                 val e = active ?: return false
                 e.x += step
                 return true
             }
 
-            GLFW.GLFW_KEY_UP -> {
+            InputConstants.KEY_UP -> {
                 val e = active ?: return false
                 e.y -= step
                 return true
             }
 
-            GLFW.GLFW_KEY_DOWN -> {
+            InputConstants.KEY_DOWN -> {
                 val e = active ?: return false
                 e.y += step
                 return true
             }
 
-            GLFW.GLFW_KEY_R -> {
-                val ctrl = (modifiers and GLFW.GLFW_MOD_CONTROL) != 0
-                val shift = (modifiers and GLFW.GLFW_MOD_SHIFT) != 0
+            InputConstants.KEY_R -> {
+                val ctrl = (modifiers and InputConstants.MOD_CONTROL) != 0
+                val shift = (modifiers and InputConstants.MOD_SHIFT) != 0
 
                 if (ctrl && shift) {
                     for (e in HUDManager.elements.values) {
@@ -200,9 +200,13 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
         return false
     }
 
-    override fun onScramClose() = HUDManager.set()
+    override fun onScramClose() {
+        HUDManager.set()
+    }
 
-    override fun isPauseScreen(): Boolean = false
+    override fun isPauseScreen(): Boolean {
+        return false
+    }
 
     private object Help {
         private var w = 0

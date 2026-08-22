@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general.slotbinds
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -28,7 +29,6 @@ import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.joml.Matrix3x2f
-import org.lwjgl.glfw.GLFW
 
 object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
     private var deleting: String? = null
@@ -208,7 +208,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             attach(bar)
 
             on<KeyEvent.Press> {
-                if (key == GLFW.GLFW_KEY_ENTER) {
+                if (key == InputConstants.KEY_RETURN) {
                     val v = value.trim()
                     val r = renaming
 
@@ -238,7 +238,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                     return@on
                 }
 
-                if (key != GLFW.GLFW_KEY_ESCAPE) return@on
+                if (key != InputConstants.KEY_ESCAPE) return@on
                 renaming = null
                 `profile$field`.visible = false
                 `profile$new`.visible = true

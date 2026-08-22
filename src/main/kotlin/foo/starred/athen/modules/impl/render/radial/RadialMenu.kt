@@ -3,6 +3,7 @@
 package foo.starred.athen.modules.impl.render.radial
 
 import com.google.gson.reflect.TypeToken
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
@@ -27,8 +28,6 @@ import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.*
-import org.lwjgl.glfw.GLFW
-import tech.thatgravyboat.skyblockapi.helpers.McClient
 import java.awt.Color
 import kotlin.math.hypot
 
@@ -38,7 +37,7 @@ object RadialMenu : Module(
     "Shows a cool radial menu with a ton of options for customisations!",
     Category.RENDER
 ) {
-    private val keybind by config.keybind("Keybind", GLFW.GLFW_KEY_R)
+    private val keybind by config.keybind("Keybind", InputConstants.KEY_R)
     private val releaseClose by config.switch("Release to close", true)
     val direction by config.switch("General direction click")
     private val _unused by config.information("Enabling \"General direction click\" will make your clicks be on the slot closest to the cursor when it's not on a slot.")
@@ -104,7 +103,7 @@ object RadialMenu : Module(
             }
 
             "import" / "radial" {
-                val clipboard = McClient.clipboard
+                val clipboard = client.keyboardHandler.clipboard
                 if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 val map: Map<String, Any> = Athen.GSON.fromJson(clipboard.decompress(), object : TypeToken<Map<String, Any>>() {}.type)
@@ -123,7 +122,7 @@ object RadialMenu : Module(
 
             "export" / "radial" {
                 save()
-                McClient.clipboard = Athen.GSON.toJson(mapOf("name" to active, "slots" to slots)).compress()
+                client.keyboardHandler.clipboard = Athen.GSON.toJson(mapOf("name" to active, "slots" to slots)).compress()
                 "Exported config '$active' to clipboard!".mod()
             }
         }
