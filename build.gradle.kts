@@ -57,6 +57,7 @@ dependencies {
 
     shadow("classgraph".global)
     shadow("autoupdate".global)
+    shadow("kommand".global)
     shadow("snowbird".versioned)
     shadow("cascade".versioned)
 
