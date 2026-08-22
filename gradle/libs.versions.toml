@@ -32,8 +32,8 @@ kommand = "1.0.1"
 snowbird-26-1 = "014+26.1"
 snowbird-26-2 = "014+26.2"
 
-cascade-26-1 = "029+26.1"
-cascade-26-2 = "029+26.2"
+cascade-26-1 = "030+26.1"
+cascade-26-2 = "030+26.2"
 
 hypixel-modapi = "1.0.1"
 hypixel-modapi-fabric = "1.0.1+build.1+mc1.21"
