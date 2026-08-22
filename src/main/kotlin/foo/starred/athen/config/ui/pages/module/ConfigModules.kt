@@ -13,6 +13,7 @@ import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.data.PositionAnchor
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.AnchorPositionConstraint
+import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.events.impl.MouseEvent
@@ -60,75 +61,94 @@ object ConfigModules {
                     else AnchorPositionConstraint({ last0!! }, PositionAnchor.RIGHT, 10f, 0f)
 
                 size = FixedSizeConstraint(154f, 28f)
-                color = if (ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)) Catppuccin.Mocha.Lavender.argb.brighten(0.5f) else Catppuccin.Mocha.Base.argb
+                color = Catppuccin.Mocha.Base.argb
                 radius = RoundedRectangleRadius.of(4f)
                 border = true
                 borderColor = Catppuccin.Mocha.Surface0.argb
                 borderInset = false
-
-                fun colors(bool: Boolean) {
-                    val enabled = ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)
-
-                    animateColor(when {
-                        enabled && bool -> Catppuccin.Mocha.Lavender.argb.brighten(0.65f)
-                        enabled -> Catppuccin.Mocha.Lavender.argb.brighten(0.55f)
-                        bool -> Catppuccin.Mocha.Surface0.argb
-                        else -> Catppuccin.Mocha.Base.argb
-                    }, 0.15f)
-                }
-
-                on<MouseEvent.Move.Enter> {
-                    colors(true)
-                }
-
-                on<MouseEvent.Move.Exit> {
-                    colors(false)
-                }
-
                 attach(ConfigUI.right)
-                adopt(text {
-                    val name = if (CascadeFonts.loaded) CascadeFonts.arial.truncate(v.name, 12f, 115f) else v.name
 
-                    type = CascadeTextPrimitiveRenderer
-                    text = name.parse()
-                    textSize = 12f
-                    color = Catppuccin.Mocha.Text.argb
-                    position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)
+                adopt(roundedRectangle {
+                    position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0f, 0f)
+                    size = FixedSizeConstraint(127f, 28f)
+                    radius = RoundedRectangleRadius(4f, 0f, 4f, 0f)
+
+                    fun colors(bool: Boolean) {
+                        val enabled = ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)
+
+                        animateColor(when {
+                            enabled && bool -> Catppuccin.Mocha.Lavender.argb.brighten(0.65f)
+                            enabled -> Catppuccin.Mocha.Lavender.argb.brighten(0.55f)
+                            bool -> Catppuccin.Mocha.Surface0.argb
+                            else -> Catppuccin.Mocha.Base.argb
+                        }, 0.15f)
+                    }
+
+                    colors(false)
+
+                    on<MouseEvent.Move.Enter> {
+                        colors(true)
+                    }
+
+                    on<MouseEvent.Move.Exit> {
+                        colors(false)
+                    }
+
+                    on<MouseEvent.Press> {
+                        cancel()
+
+                        val bool = ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)
+                        ConfigManager.update(v.configKey, !bool)
+                        colors(hovered)
+                    }
+
+                    adopt(text {
+                        val name = if (CascadeFonts.loaded) CascadeFonts.arial.truncate(v.name, 12f, 115f) else v.name
+
+                        type = CascadeTextPrimitiveRenderer
+                        text = name.parse()
+                        textSize = 12f
+                        color = Catppuccin.Mocha.Text.argb
+                        position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)
+                    })
                 })
 
                 adopt(rectangle {
-                    position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -26f, 0f)
+                    position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -27f, 0f)
                     size = FixedSizeConstraint(1f, 28f)
-                    color = Catppuccin.Mocha.Surface1.argb
+                    color = Catppuccin.Mocha.Surface0.argb
                     interact = false
                 })
 
-                val image = image {
-                    location = ResourceAPI.identify("textures/gui/gear.png")
-                    color = if (options) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface1.argb
-                    position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -6f, 0f)
-                    size = FixedSizeConstraint(14f, 14f)
-                    interact = false
+                adopt(roundedRectangle {
+                    position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0f, 0f)
+                    size = FixedSizeConstraint(27f, 28f)
+                    radius = RoundedRectangleRadius(0f, 4f, 0f, 4f)
+                    color = Catppuccin.Mocha.Base.argb
 
-                    attach(this@roundedRectangle)
-                }
+                    adopt(image {
+                        location = ResourceAPI.identify("textures/gui/gear.png")
+                        color = if (options) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface1.argb
+                        position = CenterPositionConstraint()
+                        size = FixedSizeConstraint(14f, 14f)
+                        interact = false
+                    })
 
-                on<MouseEvent.Press> {
-                    cancel()
-
-                    if (image.contains(x, y + ConfigUI.right.scroll)) {
-                        if (options) {
-                            active = v
-                            fn()
-                        }
-
-                        return@on
+                    if (!options) return@roundedRectangle
+                    on<MouseEvent.Move.Enter> {
+                        animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
                     }
 
-                    val bool = ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)
-                    ConfigManager.update(v.configKey, !bool)
-                    colors(hovered)
-                }
+                    on<MouseEvent.Move.Exit> {
+                        animateColor(Catppuccin.Mocha.Base.argb, 0.15f)
+                    }
+
+                    on<MouseEvent.Press> {
+                        active = v
+                        fn()
+                        cancel()
+                    }
+                })
             }
 
             if (i % 3 == 0) first = rect
