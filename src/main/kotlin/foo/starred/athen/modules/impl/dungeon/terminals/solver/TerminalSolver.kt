@@ -69,9 +69,7 @@ object TerminalSolver : Module(
     val `ui$titleColor` by header.colorPicker("Title color", Color(Mocha.Subtext0.argb, true))
     val `ui$header` by header.colorPicker("Header color", Color(20, 20, 20, 200))
 
-    private val sounds by config.group("Sounds")
-    val `sound$enabled` by sounds.switch("Enable sounds")
-    val clickSound by sounds.sound("Click sound")
+    val clicks by config.sound("Click sound")
 
     private val colors by config.group("Solver colors")
     val `colors$correct` by colors.colorPicker("Colors: Solution", Color(0, 255, 0, 180))
@@ -91,11 +89,11 @@ object TerminalSolver : Module(
 
     init {
         on<PacketEvent.Receive, ClientboundSoundPacket> {
-            if (!`sound$enabled`) return@on
+            if (!clicks.enabled) return@on
             if (sound.value() != SoundEvents.EXPERIENCE_ORB_PICKUP) return@on
 
             it.cancel()
-            clickSound.play()
+            clicks.play()
         }.runWhen(TerminalAPI.opened)
 
         on<GuiEvent.Render.Screen.Pre> {
