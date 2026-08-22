@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl
+package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
@@ -6,7 +6,6 @@ import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.ITooltipRenderer
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.TooltipContext
-import foo.starred.cascade.extensions.scissor.scissor
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip

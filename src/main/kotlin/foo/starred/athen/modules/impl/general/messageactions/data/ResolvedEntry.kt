@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.messageactions.data
+package foo.starred.athen.modules.impl.general.messageactions.data
 
 import foo.starred.athen.modules.impl.general.messageactions.actions.IMessageAction
 import foo.starred.athen.utils.regex

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.profile.data.dungeons
+package foo.starred.athen.api.profile.data.dungeons
 
 import foo.starred.athen.api.profile.data.PlayerProfileStack
 import foo.starred.athen.api.profile.data.inventory.PlayerProfilePet

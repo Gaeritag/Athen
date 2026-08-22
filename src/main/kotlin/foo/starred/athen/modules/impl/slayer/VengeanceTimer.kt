@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.slayer
+package foo.starred.athen.modules.impl.slayer
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.annotations.OnlyIn

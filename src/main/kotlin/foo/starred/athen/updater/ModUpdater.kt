@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.updater
+package foo.starred.athen.updater
 
 import com.google.gson.JsonElement
 import foo.starred.athen.Athen

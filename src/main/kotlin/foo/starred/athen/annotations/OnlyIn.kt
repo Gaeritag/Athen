@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.annotations
+package foo.starred.athen.annotations
 
 import foo.starred.athen.api.location.SkyBlockArea
 import foo.starred.athen.api.location.SkyBlockIsland

@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName", "Unused")
+@file:Suppress("ObjectPrivatePropertyName", "Unused")
 
 package foo.starred.athen.modules.impl.kuudra
 

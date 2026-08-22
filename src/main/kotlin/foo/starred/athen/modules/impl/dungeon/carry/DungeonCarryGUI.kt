@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.carry
+package foo.starred.athen.modules.impl.dungeon.carry
 
 import foo.starred.athen.modules.common.carry.ICarryGUI
 

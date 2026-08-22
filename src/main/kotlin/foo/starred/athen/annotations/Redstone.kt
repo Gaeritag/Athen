@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.annotations
+package foo.starred.athen.annotations
 
 /**
  * Marks a [foo.starred.athen.modules.Module] as always enabled, ignoring config and location checks.

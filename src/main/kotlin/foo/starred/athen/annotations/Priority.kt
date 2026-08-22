@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.annotations
+package foo.starred.athen.annotations
 
 /**
  * Controls class loading order by loading these classes in before any classes with the [Load] annotation.

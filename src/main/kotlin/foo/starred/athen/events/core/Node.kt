@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.events.core
+package foo.starred.athen.events.core
 
 import foo.starred.snowbird.handlers.Observable
 import java.util.concurrent.atomic.AtomicBoolean

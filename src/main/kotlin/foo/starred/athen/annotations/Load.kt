@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.annotations
+package foo.starred.athen.annotations
 
 /**
  * Marks a class to be automatically loaded on startup.

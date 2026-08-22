@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render
+package foo.starred.athen.modules.impl.render
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.Category

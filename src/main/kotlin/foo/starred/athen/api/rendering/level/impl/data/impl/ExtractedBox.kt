@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.impl.data.impl
+package foo.starred.athen.api.rendering.level.impl.data.impl
 
 import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
 import net.minecraft.world.phys.AABB

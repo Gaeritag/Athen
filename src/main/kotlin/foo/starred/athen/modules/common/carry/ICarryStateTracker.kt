@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.common.carry
+package foo.starred.athen.modules.common.carry
 
 import com.google.gson.JsonObject
 import com.mojang.serialization.Codec

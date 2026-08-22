@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers
+package foo.starred.athen.api.slayers
 
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.messaging.impl.MessagingAPI.dev

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.slayer
+package foo.starred.athen.modules.impl.slayer
 
 import com.mojang.serialization.Codec
 import foo.starred.athen.annotations.Load

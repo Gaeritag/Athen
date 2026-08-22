@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.messageactions.data
+package foo.starred.athen.modules.impl.general.messageactions.data
 
 data class ActionEntry(
     val pattern: String,

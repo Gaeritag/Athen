@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.kuudra.enums
+package foo.starred.athen.api.kuudra.enums
 
 import foo.starred.snowbird.api.ZERO_AABB
 import net.minecraft.core.BlockPos

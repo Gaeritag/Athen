@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render.radial.actions.impl
+package foo.starred.athen.modules.impl.render.radial.actions.impl
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.modules.impl.render.radial.actions.ActionType

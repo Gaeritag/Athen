@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPrivatePropertyName", "ObjectPropertyName", "Unused")
+@file:Suppress("ObjectPrivatePropertyName", "ObjectPropertyName", "Unused")
 
 package foo.starred.athen.modules.impl.render.tooltip
 

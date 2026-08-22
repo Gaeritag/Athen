@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.network.websocket
+package foo.starred.athen.api.network.websocket
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser

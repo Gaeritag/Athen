@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.config.modMenu
+package foo.starred.athen.config.modMenu
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory
 import com.terraformersmc.modmenu.api.ModMenuApi

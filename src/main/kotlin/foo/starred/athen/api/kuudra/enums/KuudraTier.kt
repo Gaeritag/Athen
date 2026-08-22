@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.kuudra.enums
+package foo.starred.athen.api.kuudra.enums
 
 enum class KuudraTier(val int: Int) {
     BASIC(1),

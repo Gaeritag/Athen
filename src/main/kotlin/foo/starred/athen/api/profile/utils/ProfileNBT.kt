@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.profile.utils
+package foo.starred.athen.api.profile.utils
 
 import foo.starred.athen.api.profile.data.PlayerProfileStack
 import foo.starred.snowbird.utils.stripped

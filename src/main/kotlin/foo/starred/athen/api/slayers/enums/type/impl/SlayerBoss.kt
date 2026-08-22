@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers.enums.type.impl
+package foo.starred.athen.api.slayers.enums.type.impl
 
 import com.mojang.serialization.Codec
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier

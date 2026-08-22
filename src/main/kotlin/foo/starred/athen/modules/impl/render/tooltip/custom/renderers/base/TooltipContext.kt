@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base
+package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base
 
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor

@@ -1,4 +1,4 @@
-﻿@file:Suppress("FunctionName")
+@file:Suppress("FunctionName")
 
 package foo.starred.athen.ducks.entity
 

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.location
+package foo.starred.athen.api.location
 
 import foo.starred.athen.api.location.area.impl.SkyBlockArea
 

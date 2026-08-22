@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers.enums.tier
+package foo.starred.athen.api.slayers.enums.tier
 
 import com.mojang.serialization.Codec
 import tech.thatgravyboat.skyblockapi.api.data.MayorPerks

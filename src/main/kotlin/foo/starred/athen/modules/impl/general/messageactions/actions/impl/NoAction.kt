@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.messageactions.actions.impl
+package foo.starred.athen.modules.impl.general.messageactions.actions.impl
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.modules.impl.general.messageactions.actions.IMessageAction

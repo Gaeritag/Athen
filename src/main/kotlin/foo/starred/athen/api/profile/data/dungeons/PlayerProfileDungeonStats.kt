@@ -1,4 +1,4 @@
-﻿@file:Suppress("PropertyName")
+@file:Suppress("PropertyName")
 
 package foo.starred.athen.api.profile.data.dungeons
 

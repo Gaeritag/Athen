@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers.data
+package foo.starred.athen.api.slayers.data
 
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.base.ISlayerType

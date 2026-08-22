@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.ui.shapes.rectangle
+package foo.starred.athen.api.rendering.ui.shapes.rectangle
 
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import java.awt.Color

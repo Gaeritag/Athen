@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.events.core
+package foo.starred.athen.events.core
 
 abstract class Event {
     var isCancelled = false

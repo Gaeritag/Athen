@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.updater
+package foo.starred.athen.updater
 
 import com.google.gson.JsonPrimitive
 import com.google.gson.annotations.SerializedName

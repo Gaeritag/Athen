@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.profile.utils
+package foo.starred.athen.api.profile.utils
 
 import com.google.gson.JsonObject
 import foo.starred.athen.api.dungeon.enums.DungeonClass

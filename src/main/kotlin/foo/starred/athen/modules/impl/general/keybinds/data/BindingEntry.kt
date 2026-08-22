@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.keybinds.data
+package foo.starred.athen.modules.impl.general.keybinds.data
 
 data class BindingEntry(
     val index: Int,

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.profile.data
+package foo.starred.athen.api.profile.data
 
 data class PlayerProfileStack(
     val i: Int,

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.messageactions.actions
+package foo.starred.athen.modules.impl.general.messageactions.actions
 
 interface IMessageAction {
     val id: Int

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.utils
+package foo.starred.athen.utils
 
 import com.mojang.blaze3d.platform.InputConstants
 

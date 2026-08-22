@@ -1,4 +1,4 @@
-﻿@file:Suppress("ConstPropertyName")
+@file:Suppress("ConstPropertyName")
 
 package foo.starred.athen.modules.impl.general.messageactions.actions.impl
 

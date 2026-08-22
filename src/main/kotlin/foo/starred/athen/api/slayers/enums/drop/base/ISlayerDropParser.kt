@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers.enums.drop.base
+package foo.starred.athen.api.slayers.enums.drop.base
 
 import net.minecraft.world.item.Item
 

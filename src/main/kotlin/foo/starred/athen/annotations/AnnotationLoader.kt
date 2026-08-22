@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.annotations
+package foo.starred.athen.annotations
 
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.events.core.on

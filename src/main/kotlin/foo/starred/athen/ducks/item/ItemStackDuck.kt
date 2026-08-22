@@ -1,4 +1,4 @@
-﻿@file:Suppress("FunctionName", "ObjectPropertyName", "Cast_Never_Succeeds", "Unused")
+@file:Suppress("FunctionName", "ObjectPropertyName", "Cast_Never_Succeeds", "Unused")
 
 package foo.starred.athen.ducks.item
 

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general
+package foo.starred.athen.modules.impl.general
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod

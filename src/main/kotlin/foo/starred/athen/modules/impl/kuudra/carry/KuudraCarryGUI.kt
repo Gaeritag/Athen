@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.kuudra.carry
+package foo.starred.athen.modules.impl.kuudra.carry
 
 import foo.starred.athen.modules.common.carry.ICarryGUI
 

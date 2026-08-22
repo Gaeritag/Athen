@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.ui.effects.outline
+package foo.starred.athen.api.rendering.ui.effects.outline
 
 import net.minecraft.client.gui.GuiGraphicsExtractor
 

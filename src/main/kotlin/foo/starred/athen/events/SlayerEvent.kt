@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.events
+package foo.starred.athen.events
 
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.events.core.Event

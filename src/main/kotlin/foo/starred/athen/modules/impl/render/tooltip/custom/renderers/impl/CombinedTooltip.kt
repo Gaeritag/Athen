@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl
+package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl
 
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle

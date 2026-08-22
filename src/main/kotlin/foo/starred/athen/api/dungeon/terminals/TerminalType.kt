@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Original work by [CyanQT](https://github.com/cyanqt) and contributors (Unknown License).
  *
  * Modifications:

@@ -1,4 +1,4 @@
-﻿@file:Suppress("UNUSED")
+@file:Suppress("UNUSED")
 
 package foo.starred.athen.modules.impl
 

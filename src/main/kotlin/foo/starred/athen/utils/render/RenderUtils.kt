@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.utils.render
+package foo.starred.athen.utils.render
 
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.literal

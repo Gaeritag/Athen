@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.keybinds.data
+package foo.starred.athen.modules.impl.general.keybinds.data
 
 enum class KeybindWorkIn(val displayName: String) {
     OUTSIDE_GUI("Outside GUI"),

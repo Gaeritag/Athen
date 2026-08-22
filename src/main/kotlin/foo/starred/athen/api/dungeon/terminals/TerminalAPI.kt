@@ -1,4 +1,4 @@
-﻿@file:Suppress("ObjectPropertyName")
+@file:Suppress("ObjectPropertyName")
 
 package foo.starred.athen.api.dungeon.terminals
 

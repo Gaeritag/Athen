@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers.enums.type.base
+package foo.starred.athen.api.slayers.enums.type.base
 
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerDemon

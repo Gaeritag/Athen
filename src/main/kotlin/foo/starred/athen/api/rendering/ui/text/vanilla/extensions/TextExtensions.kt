@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.ui.text.vanilla.extensions
+package foo.starred.athen.api.rendering.ui.text.vanilla.extensions
 
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphicsExtractor

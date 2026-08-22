@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.profile
+package foo.starred.athen.api.profile
 
 import com.google.gson.JsonArray
 import foo.starred.athen.Athen

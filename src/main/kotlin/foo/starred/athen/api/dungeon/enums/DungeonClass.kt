@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Original work by [SkyblockAPI](https://github.com/SkyblockAPI/SkyblockAPI) and contributors (MIT License).
  * The MIT License (MIT)
  *

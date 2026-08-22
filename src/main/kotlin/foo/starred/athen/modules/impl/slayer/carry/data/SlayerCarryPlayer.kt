@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.slayer.carry.data
+package foo.starred.athen.modules.impl.slayer.carry.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder

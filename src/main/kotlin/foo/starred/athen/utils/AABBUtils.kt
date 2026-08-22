@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.utils
+package foo.starred.athen.utils
 
 import net.minecraft.core.BlockPos
 import net.minecraft.world.phys.AABB

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.utils
+package foo.starred.athen.utils
 
 import foo.starred.athen.Athen
 import foo.starred.kommand.IKommand

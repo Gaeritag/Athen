@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.kuudra
+package foo.starred.athen.modules.impl.kuudra
 
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.location.SkyBlockIsland

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.utils
+package foo.starred.athen.utils
 
 const val wsUrl: String = "wss://api.starred.foo/ws"
 const val apiUrl: String = "https://api.starred.foo"

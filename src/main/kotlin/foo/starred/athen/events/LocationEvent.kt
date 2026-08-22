@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.events
+package foo.starred.athen.events
 
 import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.api.location.area.base.ISkyBlockArea

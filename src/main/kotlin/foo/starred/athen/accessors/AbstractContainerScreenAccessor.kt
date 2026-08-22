@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.accessors
+package foo.starred.athen.accessors
 
 import foo.starred.athen.mixin.accessors.AbstractContainerScreenAccessor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen

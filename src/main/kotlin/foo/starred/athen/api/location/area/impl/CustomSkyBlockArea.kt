@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.location.area.impl
+package foo.starred.athen.api.location.area.impl
 
 import foo.starred.athen.api.location.area.base.ISkyBlockArea
 

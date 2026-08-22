@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.impl.queue.base
+package foo.starred.athen.api.rendering.level.impl.queue.base
 
 import foo.starred.athen.api.rendering.level.impl.data.impl.*
 import foo.starred.athen.api.rendering.level.impl.queue.data.ExtractedQueue

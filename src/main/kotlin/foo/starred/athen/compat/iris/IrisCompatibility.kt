@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.compat.iris
+package foo.starred.athen.compat.iris
 
 import foo.starred.athen.Athen
 import foo.starred.athen.annotations.Load

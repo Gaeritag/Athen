@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.dungeon.carry
+package foo.starred.athen.modules.impl.dungeon.carry
 
 import com.google.gson.JsonObject
 import com.mojang.serialization.Codec

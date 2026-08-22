@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.kuudra
+package foo.starred.athen.api.kuudra
 
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.kuudra.enums.*

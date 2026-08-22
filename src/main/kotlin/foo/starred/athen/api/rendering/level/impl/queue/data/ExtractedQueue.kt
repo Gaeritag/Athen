@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.impl.queue.data
+package foo.starred.athen.api.rendering.level.impl.queue.data
 
 import foo.starred.athen.api.rendering.level.impl.data.base.ILevelExtractable
 

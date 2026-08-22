@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.modules.impl.general.messageactions.actions
+package foo.starred.athen.modules.impl.general.messageactions.actions
 
 data class MessageActionType(
     val id: Int,

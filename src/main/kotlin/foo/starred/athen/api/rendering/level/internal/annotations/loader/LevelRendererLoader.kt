@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.internal.annotations.loader
+package foo.starred.athen.api.rendering.level.internal.annotations.loader
 
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.level.impl.queue.impl.LevelQueueImpl

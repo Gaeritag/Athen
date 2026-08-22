@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.events
+package foo.starred.athen.events
 
 import foo.starred.athen.api.dungeon.enums.DungeonPlayer
 import foo.starred.athen.events.core.Event

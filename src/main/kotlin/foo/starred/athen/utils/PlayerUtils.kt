@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.utils
+package foo.starred.athen.utils
 
 import foo.starred.snowbird.api.client
 import net.minecraft.world.inventory.ContainerInput

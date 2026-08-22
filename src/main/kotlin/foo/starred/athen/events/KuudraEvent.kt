@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.events
+package foo.starred.athen.events
 
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.events.core.CancellableEvent

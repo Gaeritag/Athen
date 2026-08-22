@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.slayers.enums.drop.data
+package foo.starred.athen.api.slayers.enums.drop.data
 
 data class SlayerDropChance(
     val xp: Long?,

@@ -1,4 +1,4 @@
-﻿package foo.starred.athen.api.rendering.level.pipelines.impl
+package foo.starred.athen.api.rendering.level.pipelines.impl
 
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import foo.starred.athen.api.rendering.level.pipelines.base.ILevelPipeline

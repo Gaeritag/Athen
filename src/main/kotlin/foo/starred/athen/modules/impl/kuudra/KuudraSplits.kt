@@ -1,4 +1,4 @@
-﻿@file:Suppress("Unused", "ConstPropertyName")
+@file:Suppress("Unused", "ConstPropertyName")
 
 package foo.starred.athen.modules.impl.kuudra
 

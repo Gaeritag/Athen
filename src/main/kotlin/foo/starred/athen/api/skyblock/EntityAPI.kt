@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Very much inspired by how SkyblockAPI handles the entity attachments. This version contains some changes,
  * and fixes that aim to improve over the idea of attaching nametags to entities. However, this version
  * also contains a few changes that may not be stable/tested enough to be in the SkyblockAPI library.
