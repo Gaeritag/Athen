@@ -57,19 +57,21 @@ object SeparatedTooltip : ITooltipRenderer {
     }
 
     private fun GuiGraphicsExtractor.components(font: Font, comps: List<ClientTooltipComponent>, tx: Int, boxX: Int, boxY: Int, boxW: Int, boxH: Int, startY: Int, width: Int, totalHeight: Int) {
-        scissor(boxX, boxY, boxX + boxW, boxY + boxH) {
-            var drawY = startY
-            for (c in comps) {
-                c.extractText(this, font, tx, drawY)
-                drawY += c.getHeight(font)
-            }
+        enableScissor(boxX, boxY, boxX + boxW, boxY + boxH)
 
-            drawY = startY
-            for (c in comps) {
-                c.extractImage(font, tx, drawY, width, totalHeight, this)
-                drawY += c.getHeight(font)
-            }
+        var drawY = startY
+        for (c in comps) {
+            c.extractText(this, font, tx, drawY)
+            drawY += c.getHeight(font)
         }
+
+        drawY = startY
+        for (c in comps) {
+            c.extractImage(font, tx, drawY, width, totalHeight, this)
+            drawY += c.getHeight(font)
+        }
+
+        disableScissor()
     }
 
     private fun GuiGraphicsExtractor.fade(x: Int, y: Int, w: Int, h: Int, scrollY: Int, contentHeight: Int) {
