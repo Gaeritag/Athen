@@ -14,6 +14,7 @@ object LevelPipelineImpl {
 
     val DEBUG_FILLED = DualLevelPipeline("debug_filled") {
         snippet = RenderPipelines.DEBUG_FILLED_SNIPPET
+        cull = false
     }
 
     val TRIANGLE_FAN = DualLevelPipeline("triangle_fan") {
