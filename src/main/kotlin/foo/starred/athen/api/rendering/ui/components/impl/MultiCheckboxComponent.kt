@@ -1,11 +1,11 @@
 package foo.starred.athen.api.rendering.ui.components.impl
 
+import foo.starred.athen.api.rendering.ui.effects.outline.outline
+import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
+import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.extensions.rectangle.outline
-import foo.starred.cascade.extensions.rectangle.rectangle
-import foo.starred.cascade.extensions.scissor.scissor
-import foo.starred.cascade.extensions.text.extractText
+import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphicsExtractor

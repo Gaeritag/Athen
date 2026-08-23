@@ -11,19 +11,19 @@ import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.*
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
-
 
 class ConfigMultiSelectorElement(
     private val config: ConfigMultiSelectorElementData
@@ -40,7 +40,7 @@ class ConfigMultiSelectorElement(
     private var chevron1: ImagePrimitive? = null
 
     private val text0 = text {
-        type = CascadeTextPrimitiveRenderer
+        wrapper = CascadeTextWrapper
         textSize = 8f
         color = Catppuccin.Mocha.Text.argb
         position = CenterPositionConstraint()
@@ -53,12 +53,14 @@ class ConfigMultiSelectorElement(
             super.render(graphics)
         }
     }.apply {
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Base.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface2.argb
-        borderInset = false
         visible = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface2.argb
+            inset = false
+        })
 
         adopt(text0)
         attach(ConfigUI.scene)
@@ -67,11 +69,13 @@ class ConfigMultiSelectorElement(
     init {
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(if (total > 1) 140f else 114f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        })
 
         for (i in 0..2) {
             adopt(container {
@@ -79,7 +83,7 @@ class ConfigMultiSelectorElement(
                 size = FixedSizeConstraint(38f, 14f)
 
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     textSize = 8f
                     color = Catppuccin.Mocha.Subtext0.argb
                     position = CenterPositionConstraint()

@@ -9,9 +9,9 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.font.CascadeFonts
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
+import foo.starred.cascade.graphics.font.CascadeFonts
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.ScrollablePrimitive
@@ -19,6 +19,7 @@ import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrolla
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.plural
@@ -52,12 +53,15 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             size = FixedSizeConstraint(520, 36)
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(main)
 
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = screenName.literal()
                 textSize = 10f
                 color = Mocha.Text.argb
@@ -65,7 +69,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             })
 
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "".literal()
                 textSize = 8f
                 color = Mocha.Subtext0.argb
@@ -77,8 +81,11 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             size = FixedSizeConstraint(520, 250)
             position = FixedPositionConstraint(0, 42)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(main)
         }
 
@@ -92,12 +99,15 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             size = FixedSizeConstraint(520, 30)
             position = FixedPositionConstraint(0, 298)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(main)
 
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "Left click +1/-1 for completed  •  Right click for total".literal()
                 textSize = 8f
                 color = Mocha.Subtext0.argb
@@ -117,7 +127,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
 
         if (entries.isEmpty()) {
             text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "No carries being tracked".literal()
                 textSize = 9f
                 color = Mocha.Subtext0.argb
@@ -136,8 +146,10 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 44))
                 position = FixedPositionConstraint(0, cy)
                 color = Mocha.Surface0.withAlpha(0.35f)
-                border = true
-                borderColor = Mocha.Surface0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface0.argb
+                })
 
                 on<MouseEvent.Move.Enter> {
                     color = Mocha.Surface0.withAlpha(0.6f)
@@ -151,7 +163,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             }
 
             text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = carry.player.literal()
                 textSize = 9f
                 color = Mocha.Text.argb
@@ -164,12 +176,15 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 size = FixedSizeConstraint(width, 14f)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, (CascadeFonts.arial.width(carry.player, 9f) + 18f).toInt(), -7)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface2.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface2.argb
+                })
+
                 attach(row)
 
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = carry.short.literal()
                     textSize = 7.5f
                     color = Mocha.Lavender.argb
@@ -181,7 +196,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 val time = carry.lastCompletionTime.takeIf { it != 0L }?.let { ((now - it) / 1000.0).toDuration() } ?: "N/A"
                 val rate = ((now - carry.firstCompletionTime) / 1000).takeIf { carry.completed > 2 && carry.firstCompletionTime != 0L && it > 0 }?.let { "${carry.completed * 3600 / it}/hr" } ?: "N/A"
 
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "${carry.completed}/${carry.total} completed  •  $time  •  $rate".literal()
                 textSize = 7.5f
                 color = Mocha.Subtext0.argb
@@ -194,8 +209,10 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 size = FixedSizeConstraint(22f, 22f)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset.toInt(), 0)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface2.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface2.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -216,7 +233,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
 
                 attach(row)
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = "×".literal()
                     textSize = 9f
                     color = Mocha.Text.argb
@@ -230,8 +247,10 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 size = FixedSizeConstraint(22f, 22f)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset.toInt(), 0)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface2.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface2.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -261,7 +280,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
 
                 attach(row)
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = "-1".literal()
                     textSize = 7.5f
                     color = Mocha.Text.argb
@@ -275,8 +294,10 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 size = FixedSizeConstraint(22f, 22f)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset.toInt(), 0)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface2.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface2.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -308,7 +329,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
 
                 attach(row)
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = "+1".literal()
                     textSize = 7.5f
                     color = Mocha.Text.argb

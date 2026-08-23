@@ -24,6 +24,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -53,6 +54,7 @@ class KeybindsPopUp(
     private var title: TextPrimitive = TextPrimitive.NONE
     private var field: TextFieldComponent
     private var `keys$box`: RectanglePrimitive
+    private lateinit var `keys$box$outline`: OutlineEffect
     private var `keys$boxText`: TextPrimitive = TextPrimitive.NONE
     private var `keys$hint`: RectanglePrimitive
     private var `checkbox$category`: MultiCheckboxComponent
@@ -121,8 +123,10 @@ class KeybindsPopUp(
             size = FixedSizeConstraint(380, 260)
             position = CenterPositionConstraint()
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
 
             on<MouseEvent.Press> {
                 if (root.focused is MultiCheckboxComponent) root.focused = null
@@ -176,8 +180,10 @@ class KeybindsPopUp(
             size = FixedSizeConstraint(170, 16)
             position = AnchorPositionConstraint({ keys }, PositionAnchor.BELOW, 0, 2)
             color = Mocha.Surface0.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            }.also { `keys$box$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -347,8 +353,10 @@ class KeybindsPopUp(
             size = FixedSizeConstraint(170, 22)
             position = AnchorPositionConstraint({ bottom }, PositionAnchor.BELOW, 16, 8)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Red.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Red.argb
+            })
 
             on<MouseEvent.Press> {
                 if (button == 0) onClose()
@@ -375,8 +383,10 @@ class KeybindsPopUp(
             size = FixedSizeConstraint(170, 22)
             position = AnchorPositionConstraint({ cancel }, PositionAnchor.RIGHT, 8)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Green.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb
+            })
 
             on<MouseEvent.Press> {
                 if (button != 0) return@on cancel()
@@ -414,8 +424,11 @@ class KeybindsPopUp(
             size = FixedSizeConstraint(w, (client.font?.lineHeight ?: 9) + 8)
             position = MixedPositionConstraint(CenterPositionConstraint(), AnchorPositionConstraint({ box }, PositionAnchor.BELOW, 0, 6))
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            })
+
             visible = false
 
             attach(box)
@@ -463,7 +476,7 @@ class KeybindsPopUp(
 
     private fun keys() {
         `keys$box`.color = if (capturing) Mocha.Peach.withAlpha(0.3f) else Mocha.Surface0.argb
-        `keys$box`.borderColor = if (capturing) Mocha.Peach.argb else Mocha.Overlay0.argb
+        `keys$box$outline`.color = if (capturing) Mocha.Peach.argb else Mocha.Overlay0.argb
         `keys$hint`.visible = capturing
 
         `keys$boxText`.text = when {

@@ -30,15 +30,16 @@ import foo.starred.cascade.constraints.impl.size.AnimatedSizeConstraint.Companio
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FlexibleSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.extensions.scissor.scissor
+import foo.starred.cascade.graphics.extensions.scissor.scissor
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -55,11 +56,12 @@ object ConfigModuleSettingsPage {
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.END, -12f, -12f)
             size = FixedSizeConstraint(24f, 24f)
             color = Catppuccin.Mocha.Mantle.argb
-            radius = RoundedRectangleRadius.of(4f)
-            border = true
-            borderColor = Catppuccin.Mocha.Surface0.argb
-            borderInset = false
-            attach(ConfigUI.right0)
+            radius = CascadeGeometricRadius(4f)
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface0.argb
+                inset = false
+            })
 
             on<MouseEvent.Move.Enter> {
                 animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
@@ -77,8 +79,9 @@ object ConfigModuleSettingsPage {
                 ConfigModules.fn()
             }
 
+            attach(ConfigUI.right0)
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 12f
                 color = Catppuccin.Mocha.Subtext0.argb
@@ -123,10 +126,13 @@ object ConfigModuleSettingsPage {
             position = if (above == null) FixedPositionConstraint(14f, 14f) else AnchorPositionConstraint({ above }, PositionAnchor.BELOW, 0f, 14f)
             size = MixedSizeConstraint(FixedSizeConstraint(482f, 0f), FlexibleSizeConstraint(0f))
             color = Catppuccin.Mocha.Mantle.argb
-            radius = RoundedRectangleRadius.of(6f)
-            border = true
-            borderColor = Catppuccin.Mocha.Surface0.argb
-            borderInset = false
+            radius = CascadeGeometricRadius(6f)
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface0.argb
+                inset = false
+            })
+
             attach(ConfigUI.right)
 
             if (first !is ConfigGroupElementData) {
@@ -143,7 +149,7 @@ object ConfigModuleSettingsPage {
                 attach(this@roundedRectangle)
 
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = first.name.parse()
                     textSize = 10f
                     color = Catppuccin.Mocha.Text.argb
@@ -257,7 +263,7 @@ object ConfigModuleSettingsPage {
             attach(parent)
 
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = config.name.parse()
                 textSize = 10f
                 color = Catppuccin.Mocha.Text.argb

@@ -10,9 +10,10 @@ import foo.starred.cascade.constraints.base.IPositionConstraint
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.snowbird.utils.brighten
 
@@ -24,11 +25,13 @@ class ConfigSwitchElement : RoundedRectanglePrimitive() {
     init {
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(28f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        })
 
         on<MouseEvent.Press> {
             if (button != 0) return@on
@@ -54,7 +57,7 @@ class ConfigSwitchElement : RoundedRectanglePrimitive() {
                 override fun y(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = parent.y + 2f
             }
             size = FixedSizeConstraint(10f, 10f)
-            radius = RoundedRectangleRadius.of(4f)
+            radius = CascadeGeometricRadius(4f)
             color = Catppuccin.Mocha.Text.argb
             interact = false
         })

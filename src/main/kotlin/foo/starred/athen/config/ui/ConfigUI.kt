@@ -20,10 +20,10 @@ import foo.starred.cascade.constraints.impl.position.AnchorPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.effects.impl.OutlineEffect
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
@@ -32,6 +32,7 @@ import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrolla
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.api.center
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.lie
@@ -45,7 +46,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
     private var last = -1
 
     private val text = text {
-        type = CascadeTextPrimitiveRenderer
+        wrapper = CascadeTextWrapper
         textSize = 10f
         color = Catppuccin.Mocha.Text.argb
         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.START, 4f, 4f)
@@ -60,9 +61,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
         }
     }.apply {
         color = Catppuccin.Mocha.Base.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         visible = false
         interact = false
 
@@ -70,6 +69,10 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
             override fun width(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = CascadeFonts.arial.width(text.text, 10f) + 8f
             override fun height(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = (CascadeFonts.arial.regular.height * 10f) + 8f
         }
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+        })
 
         adopt(text)
     }
@@ -122,16 +125,18 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
             position = FixedPositionConstraint(0f, 0f)
             size = FixedSizeConstraint(650f, 32f)
             color = Catppuccin.Mocha.Mantle.argb
-            radius = RoundedRectangleRadius(5f, 5f, 0f, 0f)
-            border = true
-            borderColor = Catppuccin.Mocha.Surface0.argb
-            borderInset = false
+            radius = CascadeGeometricRadius(5f, 5f, 0f, 0f)
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface0.argb
+                inset = false
+            })
 
             attach(panel)
         }
 
         headerText = text {
-            type = CascadeTextPrimitiveRenderer
+            wrapper = CascadeTextWrapper
             text = "<bold><#FDCCDA>A<#FCDDD3>t<#FAEDCB>h<#F0E2D7>e<#E5D8E4>n<#DBCDF0>".parse()
             textSize = 16f
             color = Catppuccin.Mocha.Text.argb
@@ -156,10 +161,12 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
             position = AnchorPositionConstraint({ header }, PositionAnchor.BELOW)
             size = FixedSizeConstraint(140f, 318f)
             color = Catppuccin.Mocha.Mantle.argb
-            radius = RoundedRectangleRadius(0f, 0f, 5f, 0f)
-            border = true
-            borderColor = Catppuccin.Mocha.Surface0.argb
-            borderInset = false
+            radius = CascadeGeometricRadius(0f, 0f, 5f, 0f)
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface0.argb
+                inset = false
+            })
 
             attach(panel)
         }
@@ -168,10 +175,12 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
             position = AnchorPositionConstraint({ left }, PositionAnchor.RIGHT)
             size = FixedSizeConstraint(510f, 318f)
             color = Catppuccin.Mocha.Crust.argb
-            radius = RoundedRectangleRadius(0f, 0f, 0f, 5f)
-            border = true
-            borderColor = Catppuccin.Mocha.Surface0.argb
-            borderInset = false
+            radius = CascadeGeometricRadius(0f, 0f, 0f, 5f)
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface0.argb
+                inset = false
+            })
 
             attach(panel)
         }

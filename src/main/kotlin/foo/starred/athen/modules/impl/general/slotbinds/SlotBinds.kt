@@ -16,10 +16,10 @@ import foo.starred.athen.events.PlayerEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.guiClick
-import foo.starred.cascade.extensions.line.line
-import foo.starred.cascade.extensions.rectangle.outline
+import foo.starred.cascade.graphics.extensions.stroke.stroke
 import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.pressed
@@ -259,7 +259,7 @@ object SlotBinds : Module(
                 val b = m.getOrNull(e.intValue) ?: continue
                 val c = m2.get(e.intKey)
 
-                graphics.line(a.x + 8f, a.y + 8f, b.x + 8f, b.y + 8f, c, 1f, pose, screen)
+                graphics.stroke(a.x + 8f, a.y + 8f, b.x + 8f, b.y + 8f, c, 1f, pose, screen)
 
                 graphics.outline(a.x, a.y, 16, 16, 1, c, true)
                 graphics.outline(b.x, b.y, 16, 16, 1, c, true)

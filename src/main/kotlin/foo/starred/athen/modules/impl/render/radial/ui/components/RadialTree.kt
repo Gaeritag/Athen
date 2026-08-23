@@ -10,6 +10,7 @@ import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.ItemPrimitive.Companion.item
@@ -77,8 +78,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         size = FixedSizeConstraint(12, 12)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
                         color = Mocha.Surface1.argb
-                        border = true
-                        borderColor = Mocha.Overlay0.argb
+
+                        effect(OutlineEffect {
+                            color = Mocha.Overlay0.argb
+                        })
 
                         on<MouseEvent.Press> {
                             cancel()
@@ -103,8 +106,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         size = FixedSizeConstraint(12, 12)
                         position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0)
                         color = Mocha.Surface1.argb
-                        border = true
-                        borderColor = Mocha.Overlay0.argb
+
+                        effect(OutlineEffect {
+                            color = Mocha.Overlay0.argb
+                        })
 
                         on<MouseEvent.Press> {
                             cancel()
@@ -129,8 +134,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         size = FixedSizeConstraint(12, 12)
                         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
                         color = Mocha.Surface1.argb
-                        border = true
-                        borderColor = Mocha.Overlay0.argb
+
+                        effect(OutlineEffect {
+                            color = Mocha.Overlay0.argb
+                        })
 
                         on<MouseEvent.Press> {
                             cancel()
@@ -198,8 +205,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                 size = FixedSizeConstraint(12, 12)
                                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
                                 color = Mocha.Surface1.argb
-                                border = true
-                                borderColor = Mocha.Overlay0.argb
+
+                                effect(OutlineEffect {
+                                    color = Mocha.Overlay0.argb
+                                })
 
                                 on<MouseEvent.Press> {
                                     cancel()
@@ -227,8 +236,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                 size = FixedSizeConstraint(12, 12)
                                 position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0)
                                 color = Mocha.Surface1.argb
-                                border = true
-                                borderColor = Mocha.Overlay0.argb
+
+                                effect(OutlineEffect {
+                                    color = Mocha.Overlay0.argb
+                                })
 
                                 on<MouseEvent.Press> {
                                     cancel()
@@ -256,8 +267,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                 size = FixedSizeConstraint(12, 12)
                                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
                                 color = Mocha.Surface1.argb
-                                border = true
-                                borderColor = Mocha.Overlay0.argb
+
+                                effect(OutlineEffect {
+                                    color = Mocha.Overlay0.argb
+                                })
 
                                 on<MouseEvent.Press> {
                                     cancel()
@@ -344,8 +357,10 @@ class RadialTree(private val side0: ScrollablePrimitive) {
             size = MixedSizeConstraint(PercentSizeConstraint(95f, 0f), FixedSizeConstraint(0, 20))
             position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.START, 0, i0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            })
 
             attach(side0)
 

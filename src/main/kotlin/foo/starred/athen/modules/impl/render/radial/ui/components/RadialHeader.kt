@@ -15,6 +15,7 @@ import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -36,8 +37,10 @@ class RadialHeader(side: RectanglePrimitive) {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 24))
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
 
             attach(side)
         }
@@ -46,8 +49,10 @@ class RadialHeader(side: RectanglePrimitive) {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -132,8 +137,10 @@ class RadialHeader(side: RectanglePrimitive) {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -156,8 +163,10 @@ class RadialHeader(side: RectanglePrimitive) {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -189,8 +198,10 @@ class RadialHeader(side: RectanglePrimitive) {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            })
 
             on<MouseEvent.Press> {
                 cancel()

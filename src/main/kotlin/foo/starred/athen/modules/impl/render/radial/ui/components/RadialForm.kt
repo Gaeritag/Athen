@@ -14,6 +14,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -27,6 +28,7 @@ import foo.starred.snowbird.utils.literal
 
 class RadialForm(mid: ContainerPrimitive) {
     private val list0 = mutableListOf<RectanglePrimitive>()
+    private val outlines = mutableListOf<OutlineEffect>()
 
     var name: TextFieldComponent
         private set
@@ -49,8 +51,11 @@ class RadialForm(mid: ContainerPrimitive) {
             size = FillSizeConstraint()
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
 
             attach(mid)
@@ -132,8 +137,10 @@ class RadialForm(mid: ContainerPrimitive) {
                 size = FixedSizeConstraint(58, 18)
                 position = FixedPositionConstraint(i0 * 62, 0)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Overlay0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Overlay0.argb
+                }.also { outlines.add(it) })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -244,7 +251,7 @@ class RadialForm(mid: ContainerPrimitive) {
         for ((k, v) in list0.withIndex()) {
             val b0 = i1 == (list1.getOrNull(k)?.id ?: continue)
             v.color = if (b0) Mocha.Lavender.argb.brighten(0.9f) else Mocha.Surface1.argb
-            v.borderColor = if (b0) Mocha.Lavender.argb.brighten(0.6f) else Mocha.Overlay0.argb
+            outlines.getOrNull(k)?.color = if (b0) Mocha.Lavender.argb.brighten(0.6f) else Mocha.Overlay0.argb
         }
     }
 

@@ -20,6 +20,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -50,10 +51,11 @@ class MessageActionsPopUp(
     private var `value$label`: TextPrimitive = TextPrimitive.NONE
     private var `value$disabled`: RectanglePrimitive
     private var `cancel$box`: RectanglePrimitive
+    private lateinit var `cancel$box$outline`: OutlineEffect
     private lateinit var `cancel$inner`: RectanglePrimitive
 
     data class ActionEntryData(val index: Int, val entry: ActionEntry)
-    data class ActionButton(val rect: RectanglePrimitive, val text: TextPrimitive, val id: Int)
+    data class ActionButton(val rect: RectanglePrimitive, val text: TextPrimitive, val outline: OutlineEffect, val id: Int)
 
     private val actions = mutableListOf<ActionButton>()
 
@@ -83,8 +85,10 @@ class MessageActionsPopUp(
             size = FixedSizeConstraint(380, 260)
             position = CenterPositionConstraint()
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
 
             on<MouseEvent.Press> {
                 if (root.focused is MultiCheckboxComponent) root.focused = null
@@ -167,14 +171,17 @@ class MessageActionsPopUp(
         val all = IMessageAction.all()
         val aw = (354 - (all.size - 1) * 4) / all.size
         for ((idx, a) in all.withIndex()) {
+            lateinit var outline: OutlineEffect
             var label = TextPrimitive.NONE
 
             val rect = rectangle {
                 size = FixedSizeConstraint(aw, 16)
                 position = FixedPositionConstraint(idx * (aw + 4), 0)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Overlay0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Overlay0.argb
+                }.also { outline = it })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -201,7 +208,7 @@ class MessageActionsPopUp(
                 }.also { label = it })
             }
 
-            actions.add(ActionButton(rect, label, a.id))
+            actions.add(ActionButton(rect, label, outline, a.id))
         }
 
         `value$label` = text {
@@ -229,8 +236,11 @@ class MessageActionsPopUp(
             size = FixedSizeConstraint(170, 16)
             position = AnchorPositionConstraint({ `value$label` }, PositionAnchor.BELOW, 0, 2)
             color = Mocha.Crust.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             visible = true
             attach(box)
@@ -257,14 +267,16 @@ class MessageActionsPopUp(
             size = FixedSizeConstraint(14, 14)
             position = AnchorPositionConstraint({ value }, PositionAnchor.BELOW, 0, 9)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            }.also { `cancel$box$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
                 if (button != 0) return@on
                 cancel = !cancel
-                borderColor = if (cancel) Mocha.Red.argb else Mocha.Overlay0.argb
+                `cancel$box$outline`.color = if (cancel) Mocha.Red.argb else Mocha.Overlay0.argb
                 `cancel$inner`.visible = cancel
             }
 
@@ -320,8 +332,10 @@ class MessageActionsPopUp(
             size = FixedSizeConstraint(170, 22)
             position = AnchorPositionConstraint({ bottom }, PositionAnchor.BELOW, 16, 8)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Red.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Red.argb
+            })
 
             on<MouseEvent.Press> {
                 if (button == 0) onClose()
@@ -348,8 +362,10 @@ class MessageActionsPopUp(
             size = FixedSizeConstraint(170, 22)
             position = AnchorPositionConstraint({ cancel0 }, PositionAnchor.RIGHT, 8)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Green.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb
+            })
 
             on<MouseEvent.Press> {
                 if (button != 0) return@on cancel()
@@ -418,7 +434,7 @@ class MessageActionsPopUp(
         updateActionButtons()
         updateValueState()
 
-        `cancel$box`.borderColor = if (cancel) Mocha.Red.argb else Mocha.Overlay0.argb
+        `cancel$box$outline`.color = if (cancel) Mocha.Red.argb else Mocha.Overlay0.argb
         `cancel$inner`.visible = cancel
 
         gui.scene.focused = this
@@ -428,7 +444,7 @@ class MessageActionsPopUp(
         for (btn in actions) {
             val selected = btn.id == action
             btn.rect.color = if (selected) Mocha.Lavender.argb else Mocha.Surface1.argb
-            btn.rect.borderColor = if (selected) Mocha.Lavender.argb else Mocha.Overlay0.argb
+            btn.outline.color = if (selected) Mocha.Lavender.argb else Mocha.Overlay0.argb
             btn.text.color = if (selected) Mocha.Base.argb else Mocha.Text.argb
         }
     }

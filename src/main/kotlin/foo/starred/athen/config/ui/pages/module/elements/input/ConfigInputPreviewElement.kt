@@ -9,19 +9,20 @@ import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.handlers.parser.parse
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectanglePrimitive() {
     private val text = text {
-        type = CascadeTextPrimitiveRenderer
+        wrapper = CascadeTextWrapper
         textSize = 10f
         color = Catppuccin.Mocha.Text.argb
         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.START, 4f, 4f)
@@ -36,11 +37,13 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
         }
     }.apply {
         color = Catppuccin.Mocha.Base.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         visible = false
         interact = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+        })
 
         size = object : ISizeConstraint {
             override fun width(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = text.width + 8f
@@ -52,13 +55,15 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
 
     init {
         size = FixedSizeConstraint(14f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+        })
 
         adopt(text {
-            type = CascadeTextPrimitiveRenderer
+            wrapper = CascadeTextWrapper
             text = "?".literal()
             textSize = 10f
             color = Catppuccin.Mocha.Text.argb

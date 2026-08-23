@@ -10,25 +10,28 @@ import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.literal
 
 class ConfigKeybindElement(
     private val config: ConfigKeybindElementData
 ) : ContainerPrimitive() {
+    private lateinit var outline: OutlineEffect
+
     private var listening = false
     private var value: Int = ConfigManager.get(config.key) as? Int ?: config.default
 
     private val key = text {
-        type = CascadeTextPrimitiveRenderer
+        wrapper = CascadeTextWrapper
         text = value.keyName.literal()
         textSize = 8f
         color = Catppuccin.Mocha.Text.argb
@@ -38,11 +41,13 @@ class ConfigKeybindElement(
     private val main = roundedRectangle {
         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0f, 0f)
         size = FixedSizeConstraint(82f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        }.also { outline = it })
 
         on<MouseEvent.Press> {
             if (button != 0) return@on
@@ -88,14 +93,16 @@ class ConfigKeybindElement(
         adopt(roundedRectangle {
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0f, 0f)
             size = FixedSizeConstraint(14f, 14f)
-            radius = RoundedRectangleRadius.of(4f)
+            radius = CascadeGeometricRadius(4f)
             color = Catppuccin.Mocha.Surface0.argb
-            border = true
-            borderColor = Catppuccin.Mocha.Surface1.argb
-            borderInset = false
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface1.argb
+                inset = false
+            })
 
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 8f
                 color = Catppuccin.Mocha.Subtext0.argb
@@ -125,7 +132,7 @@ class ConfigKeybindElement(
         key.color = Catppuccin.Mocha.Crust.argb
 
         main.animateColor(Catppuccin.Mocha.Peach.argb, 0.15f)
-        main.borderColor = Catppuccin.Mocha.Peach.argb
+        outline.color = Catppuccin.Mocha.Peach.argb
     }
 
     private fun stop() {
@@ -135,7 +142,7 @@ class ConfigKeybindElement(
 
         key.color = Catppuccin.Mocha.Text.argb
         main.animateColor(if (main.hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-        main.borderColor = Catppuccin.Mocha.Surface1.argb
+        outline.color = Catppuccin.Mocha.Surface1.argb
     }
 
     private fun update(newKey: Int) {

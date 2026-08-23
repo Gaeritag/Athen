@@ -9,15 +9,16 @@ import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 
@@ -26,7 +27,7 @@ class ConfigSelectorElement(
 ) : RoundedRectanglePrimitive() {
     private var value: Int = ConfigManager.get(config.key) as? Int ?: config.default
     private val text = text {
-        type = CascadeTextPrimitiveRenderer
+        wrapper = CascadeTextWrapper
         text = CascadeFonts.arial.truncate(config.options.getOrNull(value) ?: "Unknown", 8f, 60f, "…").literal()
         textSize = 8f
         color = Catppuccin.Mocha.Text.argb
@@ -36,11 +37,13 @@ class ConfigSelectorElement(
     init {
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(100f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        })
 
         adopt(image {
             location = ResourceAPI.identify("textures/gui/chevron.png")

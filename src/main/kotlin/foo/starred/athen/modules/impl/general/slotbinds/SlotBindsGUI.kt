@@ -14,9 +14,10 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.extensions.line.line
+import foo.starred.cascade.graphics.extensions.stroke.stroke
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
@@ -42,12 +43,15 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
     private var `profile$new`: RectanglePrimitive
     private var `profile$rename`: RectanglePrimitive
     private var `profile$delete`: RectanglePrimitive
+    private lateinit var `profile$new$outline`: OutlineEffect
+    private lateinit var `profile$rename$outline`: OutlineEffect
+    private lateinit var `profile$delete$outline`: OutlineEffect
     private var `profile$field`: TextFieldComponent
     private lateinit var `profile$text$rename`: TextPrimitive
     private lateinit var `profile$text$delete`: TextPrimitive
 
     private data class ProfileRow(val row: RectanglePrimitive, val label: TextPrimitive)
-    private data class SlotCell(val cell: RectanglePrimitive, val label: TextPrimitive)
+    private data class SlotCell(val cell: RectanglePrimitive, val label: TextPrimitive, val outline: OutlineEffect)
 
     private val rows = LinkedHashMap<String, ProfileRow>()
     private val cells = LinkedHashMap<Int, SlotCell>()
@@ -70,8 +74,11 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             size = FixedSizeConstraint(110, 160)
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -86,8 +93,11 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 24))
             position = FixedPositionConstraint(0, 136)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(side)
         }
 
@@ -95,8 +105,10 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 2)
             color = Mocha.Green.argb.brighten(0.8f)
-            border = true
-            borderColor = Mocha.Green.argb.brighten(0.5f)
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb.brighten(0.5f)
+            }.also { `profile$new$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -133,8 +145,10 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = CenterPositionConstraint()
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `profile$rename$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -164,8 +178,10 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -2)
             color = Mocha.Red.argb.brighten(0.8f)
-            border = true
-            borderColor = Mocha.Red.argb.brighten(0.5f)
+
+            effect(OutlineEffect {
+                color = Mocha.Red.argb.brighten(0.5f)
+            }.also { `profile$delete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -263,7 +279,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 for (e in SlotBinds.m0.int2IntEntrySet()) {
                     val a = pos(e.intKey, x0, y0, y1) ?: continue
                     val b = pos(e.intValue, x0, y0, y1) ?: continue
-                    graphics.line(a.first.toFloat(), a.second.toFloat(), b.first.toFloat(), b.second.toFloat(), SlotBinds.m2.get(e.intKey), 1f, pose, scissor)
+                    graphics.stroke(a.first.toFloat(), a.second.toFloat(), b.first.toFloat(), b.second.toFloat(), SlotBinds.m2.get(e.intKey), 1f, pose, scissor)
                 }
             }
 
@@ -278,8 +294,11 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             size = FixedSizeConstraint(210, 160)
             position = FixedPositionConstraint(116, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -402,7 +421,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             val i0 = if (b0) SlotBinds.sc(id) else 0
 
             cell.cell.color = if (b1) Mocha.Surface1.argb else if (b0) Mocha.Surface2.argb else Mocha.Surface0.argb
-            cell.cell.borderColor = if (b1) Mocha.Lavender.argb else if (b0) i0 else Mocha.Overlay0.argb
+            cell.outline.color = if (b1) Mocha.Lavender.argb else if (b0) i0 else Mocha.Overlay0.argb
             cell.label.color = if (b1) Mocha.Lavender.argb else if (b0) i0 else Mocha.Subtext0.argb
         }
 
@@ -414,11 +433,11 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
         val b1 = SlotBinds.map0.size > 1
 
         `profile$rename`.color = Mocha.Lavender.argb.brighten(0.8f)
-        `profile$rename`.borderColor = Mocha.Lavender.argb.brighten(0.5f)
+        `profile$rename$outline`.color = Mocha.Lavender.argb.brighten(0.5f)
         `profile$text$rename`.color = Mocha.Base.argb
 
         `profile$delete`.color = if (!b1) Mocha.Surface1.argb else if (b0) Mocha.Red.argb.brighten(0.9f) else Mocha.Red.argb.brighten(0.8f)
-        `profile$delete`.borderColor = if (!b1) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
+        `profile$delete$outline`.color = if (!b1) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
         `profile$text$delete`.color = if (!b1) Mocha.Overlay0.argb else Mocha.Base.argb
         `profile$text$delete`.text = (if (b0) "✔" else "\uD83D\uDDD1").literal()
     }
@@ -429,12 +448,16 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
 
     private fun slot(slot: Int, x: Int, y: Int) {
         var label0 = TextPrimitive.NONE
+        lateinit var cellOutline: OutlineEffect
+
         val cell = rectangle {
             size = FixedSizeConstraint(18, 18)
             position = FixedPositionConstraint(x, y)
             color = Mocha.Surface0.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            }.also { cellOutline = it })
 
             on<MouseEvent.Press> {
                 if (button == 1) {
@@ -482,6 +505,6 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             }.also { label0 = it })
         }
 
-        cells[slot] = SlotCell(cell, label0)
+        cells[slot] = SlotCell(cell, label0, cellOutline)
     }
 }

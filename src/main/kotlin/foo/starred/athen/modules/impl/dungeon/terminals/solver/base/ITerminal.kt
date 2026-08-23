@@ -7,9 +7,10 @@ import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminal
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.guiClick
-import foo.starred.cascade.font.CascadeFonts
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
+import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
+import foo.starred.cascade.graphics.extensions.rectangle.rounded.roundedRectangle
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
@@ -66,15 +67,15 @@ abstract class ITerminal(val terminalType: TerminalType) {
 
         val pose = Matrix3x2f(graphics.pose())
         val scissor = graphics.scissorStack.peek()
-        val radius = RoundedRectangleRadius.of(TerminalSolver.`ui$roundness` * scale)
+        val radius = CascadeGeometricRadius(TerminalSolver.`ui$roundness` * scale)
 
         val x1 = x0 * scale
         val y1 = (y0 + headerH + padding) * scale
         val w1 = gridW * scale
         val h1 = gridH * scale
 
-        RoundedRectangleRenderState.extract(graphics, x1, y1, w1, h1, TerminalSolver.`ui$bg`.rgb, radius, pose = pose, scissor = scissor)
-        RoundedRectangleRenderState.extract(graphics, x1, y1, w1, h1, TerminalSolver.`ui$border`.rgb, radius, maxOf(1f, scale / 2f), pose = pose, scissor = scissor)
+        graphics.roundedRectangle(x1, y1, w1, h1, TerminalSolver.`ui$bg`.rgb, radius, pose, scissor)
+        graphics.hollowRectangle(x1, y1, w1, h1, maxOf(1f, scale / 2f), TerminalSolver.`ui$border`.rgb, radius, pose, scissor)
 
         main(graphics, x0, y0, gridW, headerH, scale, pose, scissor)
         render(graphics, x0 - int1 * sp + pad + inset - 1f, y0 + headerH + padding - sp + pad + inset - 1f, 0f, scale, pose, scissor)
@@ -130,9 +131,9 @@ abstract class ITerminal(val terminalType: TerminalType) {
         click(slot, button)
     }
 
-    protected fun slot(graphics: GuiGraphicsExtractor, x: Float, y: Float, w: Float, h: Float, color: Int, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?, radius: RoundedRectangleRadius = RoundedRectangleRadius.of(TerminalSolver.`ui$slots$roundness` * scale)) {
-        if (TerminalSolver.`ui$slots$fill`) RoundedRectangleRenderState.extract(graphics, x, y, w, h, color, radius, pose = pose, scissor = scissor)
-        else RoundedRectangleRenderState.extract(graphics, x, y, w, h, color, radius, maxOf(1f, scale), pose = pose, scissor = scissor)
+    protected fun slot(graphics: GuiGraphicsExtractor, x: Float, y: Float, w: Float, h: Float, color: Int, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?, radius: CascadeGeometricRadius = CascadeGeometricRadius(TerminalSolver.`ui$slots$roundness` * scale)) {
+        if (TerminalSolver.`ui$slots$fill`) graphics.roundedRectangle(x, y, w, h, color, radius, pose, scissor)
+        else graphics.hollowRectangle(x, y, w, h, maxOf(1f, scale), color, radius, pose, scissor)
     }
 
     private fun main(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, gridW: Float, headerH: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
@@ -144,14 +145,14 @@ abstract class ITerminal(val terminalType: TerminalType) {
             return
         }
 
-        val radius = RoundedRectangleRadius.of(TerminalSolver.`ui$roundness` * scale)
+        val radius = CascadeGeometricRadius(TerminalSolver.`ui$roundness` * scale)
         val x1 = x0 * scale
         val y1 = y0 * scale
         val width = gridW * scale
         val height = headerH * scale
 
-        RoundedRectangleRenderState.extract(graphics, x1, y1, width, height, TerminalSolver.`ui$header`.rgb, radius, pose = pose, scissor = scissor)
-        RoundedRectangleRenderState.extract(graphics, x1, y1, width, height, TerminalSolver.`ui$border`.rgb, radius, maxOf(1f, scale / 2f), pose = pose, scissor = scissor)
+        graphics.roundedRectangle(x1, y1, width, height, TerminalSolver.`ui$header`.rgb, radius, pose, scissor)
+        graphics.hollowRectangle(x1, y1, width, height, maxOf(1f, scale / 2f), TerminalSolver.`ui$border`.rgb, radius, pose, scissor)
 
         val size = 11f * scale
         font.extract(graphics, titleText, (x0 + gridW / 2) * scale - font.width(titleText, size) / 2, (y0 + headerH / 2) * scale - (font.regular.height * size) / 2, Mocha.Text.rgba, false, size)

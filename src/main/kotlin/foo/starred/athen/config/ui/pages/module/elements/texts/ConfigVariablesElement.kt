@@ -9,14 +9,15 @@ import foo.starred.cascade.constraints.impl.data.PositionAnchor
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.AnchorPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.handlers.parser.parse
 
@@ -29,7 +30,7 @@ class ConfigVariablesElement(
 
         val text0 = "<gray>${config.name}:".parse()
         adopt(text {
-            type = CascadeTextPrimitiveRenderer
+            wrapper = CascadeTextWrapper
             text = text0
             textSize = 10f
             color = Catppuccin.Mocha.Subtext0.argb
@@ -46,11 +47,13 @@ class ConfigVariablesElement(
             last = roundedRectangle {
                 position = if (last0 == null) AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, start, 0f) else AnchorPositionConstraint({ last0 }, PositionAnchor.RIGHT, 4f, 0f)
                 size = FixedSizeConstraint(CascadeFonts.arial.width(parsed, 9.5f) + 10f, 16f)
-                radius = RoundedRectangleRadius.of(3f)
+                radius = CascadeGeometricRadius(3f)
                 color = Catppuccin.Mocha.Surface0.argb
-                border = true
-                borderColor = Catppuccin.Mocha.Surface1.argb
-                borderInset = false
+
+                effect(OutlineEffect {
+                    color = Catppuccin.Mocha.Surface1.argb
+                    inset = false
+                })
 
                 on<MouseEvent.Move.Enter> {
                     animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
@@ -77,7 +80,7 @@ class ConfigVariablesElement(
                 }
 
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = parsed
                     textSize = 9.5f
                     color = Catppuccin.Mocha.Lavender.argb

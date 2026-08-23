@@ -14,6 +14,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -41,6 +42,8 @@ class MobHighlightPopUp(
     private var `maxHp$field`: TextFieldComponent
     private var `tab$named`: RectanglePrimitive
     private var `tab$typed`: RectanglePrimitive
+    private lateinit var `tab$named$outline`: OutlineEffect
+    private lateinit var `tab$typed$outline`: OutlineEffect
     private lateinit var `tab$named$text`: TextPrimitive
     private lateinit var `tab$typed$text`: TextPrimitive
 
@@ -69,8 +72,10 @@ class MobHighlightPopUp(
             size = FixedSizeConstraint(300, 198)
             position = CenterPositionConstraint()
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -108,8 +113,10 @@ class MobHighlightPopUp(
             size = FixedSizeConstraint(140, 18)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Lavender.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Lavender.argb
+            }.also { `tab$named$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -131,8 +138,10 @@ class MobHighlightPopUp(
             size = FixedSizeConstraint(140, 18)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
             color = Mocha.Surface0.argb
-            border = true
-            borderColor = Mocha.Overlay0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Overlay0.argb
+            }.also { `tab$typed$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -181,8 +190,11 @@ class MobHighlightPopUp(
             size = FixedSizeConstraint(16, 16)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
             color = 0xFFFF0000.toInt()
-            border = true
-            borderColor = Mocha.Surface2.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface2.argb
+            })
+
             interact = false
             attach(`color$row`)
         }
@@ -226,8 +238,10 @@ class MobHighlightPopUp(
             size = FixedSizeConstraint(138, 20)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Red.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Red.argb
+            })
 
             on<MouseEvent.Press> {
                 if (button != 0) return@on
@@ -255,8 +269,10 @@ class MobHighlightPopUp(
             size = FixedSizeConstraint(138, 20)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Green.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb
+            })
 
             on<MouseEvent.Press> {
                 if (button != 0) return@on
@@ -338,11 +354,11 @@ class MobHighlightPopUp(
 
     private fun tabs() {
         `tab$named`.color = if (!typed) Mocha.Surface1.argb else Mocha.Surface0.argb
-        `tab$named`.borderColor = if (!typed) Mocha.Lavender.argb else Mocha.Overlay0.argb
+        `tab$named$outline`.color = if (!typed) Mocha.Lavender.argb else Mocha.Overlay0.argb
         `tab$named$text`.color = if (!typed) Mocha.Lavender.argb else Mocha.Subtext0.argb
 
         `tab$typed`.color = if (typed) Mocha.Surface1.argb else Mocha.Surface0.argb
-        `tab$typed`.borderColor = if (typed) Mocha.Lavender.argb else Mocha.Overlay0.argb
+        `tab$typed$outline`.color = if (typed) Mocha.Lavender.argb else Mocha.Overlay0.argb
         `tab$typed$text`.color = if (typed) Mocha.Lavender.argb else Mocha.Subtext0.argb
 
         `target$label`.text = (if (typed) "Entity ID" else "Name").literal()

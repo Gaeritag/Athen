@@ -4,8 +4,9 @@ import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
+import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
+import foo.starred.cascade.graphics.extensions.rectangle.rounded.roundedRectangle
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.item.ItemStack
@@ -38,7 +39,7 @@ object MelodySolver : ITerminal(TerminalType.MELODY) {
         val y1 = (row * float + y0 + height + 1f) * scale
         val size = 16f * scale
         val sp = float * scale
-        val radius = RoundedRectangleRadius.of(TerminalSolver.`ui$slots$roundness` * scale)
+        val radius = CascadeGeometricRadius(TerminalSolver.`ui$slots$roundness` * scale)
 
         for (i in 0 until 5) {
             val x = x1 + i * sp
@@ -46,16 +47,16 @@ object MelodySolver : ITerminal(TerminalType.MELODY) {
 
             when (i) {
                 current -> {
-                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, TerminalSolver.`melody$fill`.rgb, radius, pose = pose, scissor = scissor)
-                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, color, radius, outline = scale, pose = pose, scissor = scissor)
+                    graphics.roundedRectangle(x, y1, size, size, TerminalSolver.`melody$fill`.rgb, radius, pose, scissor)
+                    graphics.hollowRectangle(x, y1, size, size, scale, color, radius, pose, scissor)
                 }
 
                 correct -> {
-                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, TerminalSolver.`melody$correct`.rgb, radius, outline = scale, pose = pose, scissor = scissor)
+                    graphics.hollowRectangle(x, y1, size, size, scale, TerminalSolver.`melody$correct`.rgb, radius, pose, scissor)
                 }
 
                 else -> {
-                    RoundedRectangleRenderState.extract(graphics, x, y1, size, size, TerminalSolver.`melody$wrong`.rgb, radius, outline = scale, pose = pose, scissor = scissor)
+                    graphics.hollowRectangle(x, y1, size, size, scale, TerminalSolver.`melody$wrong`.rgb, radius, pose, scissor)
                 }
             }
         }

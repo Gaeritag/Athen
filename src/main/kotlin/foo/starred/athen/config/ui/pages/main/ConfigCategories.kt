@@ -12,13 +12,13 @@ import foo.starred.cascade.constraints.impl.position.AnchorPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.literal
 
 object ConfigCategories {
@@ -40,7 +40,7 @@ object ConfigCategories {
                     attach(left)
 
                     adopt(text {
-                        type = CascadeTextPrimitiveRenderer
+                        wrapper = CascadeTextWrapper
                         text = "Categories".literal()
                         textSize = 9f
                         color = Catppuccin.Mocha.Surface0.argb
@@ -61,7 +61,7 @@ object ConfigCategories {
                 position = if (last1 == null) FixedPositionConstraint(8f, 8f) else if (a == Category.GENERAL) AnchorPositionConstraint({ last1 }, PositionAnchor.BELOW, 0f, 6f) else AnchorPositionConstraint({ last1 }, PositionAnchor.BELOW, 0f, 4f)
                 size = FixedSizeConstraint(124f, 22f)
                 color = if (bool) Catppuccin.Mocha.Surface0.argb else Catppuccin.Mocha.Mantle.argb
-                radius = RoundedRectangleRadius.of(4f)
+                radius = CascadeGeometricRadius(4f)
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -94,7 +94,7 @@ object ConfigCategories {
 
                 attach(left)
                 adopt(text {
-                    type = CascadeTextPrimitiveRenderer
+                    wrapper = CascadeTextWrapper
                     text = a.displayName.literal()
                     textSize = 12f
                     color = if (bool) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb

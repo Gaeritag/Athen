@@ -12,12 +12,13 @@ import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.literal
 import kotlin.math.min
 
@@ -27,10 +28,12 @@ class ConfigInputExpandElement(
 ) : RoundedRectanglePrimitive() {
     init {
         size = FixedSizeConstraint(14f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+        })
 
         adopt(text {
             text = "⛶".literal()
@@ -66,21 +69,25 @@ class ConfigInputExpandElement(
         val pop = roundedRectangle {
             position = CenterPositionConstraint()
             size = FixedSizeConstraint(400f, 30f)
-            radius = RoundedRectangleRadius.of(8f)
+            radius = CascadeGeometricRadius(8f)
             color = Catppuccin.Mocha.Base.argb
-            border = true
-            borderColor = Catppuccin.Mocha.Surface1.argb
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface1.argb
+            })
 
             attach(main)
         }
 
         roundedRectangle {
             size = FixedSizeConstraint(18f, 18f)
-            radius = RoundedRectangleRadius.of(4f)
+            radius = CascadeGeometricRadius(4f)
             color = Catppuccin.Mocha.Surface0.argb
-            border = true
-            borderColor = Catppuccin.Mocha.Surface1.argb
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -4f, 0f)
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface1.argb
+            })
 
             on<MouseEvent.Move.Enter> {
                 animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
@@ -97,7 +104,7 @@ class ConfigInputExpandElement(
 
             attach(pop)
             adopt(text {
-                type = CascadeTextPrimitiveRenderer
+                wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 10f
                 color = Catppuccin.Mocha.Red.argb

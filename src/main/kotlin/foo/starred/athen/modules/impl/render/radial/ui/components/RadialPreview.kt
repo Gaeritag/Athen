@@ -8,6 +8,7 @@ import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive
@@ -25,8 +26,11 @@ class RadialPreview(main: ContainerPrimitive) {
             size = FixedSizeConstraint(320, 320)
             position = FixedPositionConstraint(586, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(main)
 
             on<MouseEvent.Press> {

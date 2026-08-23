@@ -10,14 +10,15 @@ import foo.starred.cascade.animation.data.AnimatableColor.Companion.animateColor
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.extensions.rectangle.rectangle
-import foo.starred.cascade.extensions.scissor.scissor
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
+import foo.starred.cascade.graphics.extensions.scissor.scissor
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.snowbird.api.ZERO_PAIR
 import foo.starred.snowbird.api.client
@@ -69,19 +70,22 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
 
     init {
         color = Catppuccin.Mocha.Surface0.argb
-        radius = RoundedRectangleRadius.of(4f)
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+        radius = CascadeGeometricRadius(4f)
+
+        var outline: OutlineEffect
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        }.also { outline = it })
 
         on<FocusEvent.Gain> {
             animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
-            borderColor = Catppuccin.Mocha.Lavender.argb.brighten(0.6f)
+            outline.color = Catppuccin.Mocha.Lavender.argb.brighten(0.6f)
         }
 
         on<FocusEvent.Lose> {
             animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-            borderColor = Catppuccin.Mocha.Surface1.argb
+            outline.color = Catppuccin.Mocha.Surface1.argb
         }
 
         on<MouseEvent.Move.Enter> {
@@ -323,7 +327,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
             val i0 = max(10, width - 6)
             while (_cursor - scroll > i0) scroll += 10
             while (_cursor - scroll < 0 && scroll > 0) scroll = max(0, scroll - 10)
-            
+
             val totalWidth = font.width(value, 12f)
             val maxScroll = max(0, (totalWidth - i0).toInt())
             if (scroll > maxScroll) scroll = maxScroll

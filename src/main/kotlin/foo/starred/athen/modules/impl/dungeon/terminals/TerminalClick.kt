@@ -11,8 +11,8 @@ import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
-import foo.starred.cascade.extensions.circle.circle
-import foo.starred.cascade.extensions.line.line
+import foo.starred.cascade.graphics.extensions.circle.circle
+import foo.starred.cascade.graphics.extensions.stroke.stroke
 import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.mouseSX
 import foo.starred.snowbird.utils.mouseSY
@@ -52,7 +52,7 @@ object TerminalClick : Module(
                 val c2 = cs[i + 1]
                 val color = (if (c1.button == 0) `color$mouse$left`.rgb else `color$mouse$right`.rgb)
 
-                graphics.line(c1.x, c1.y, c2.x, c2.y, color, thickness.toFloat(), pose, scissor)
+                graphics.stroke(c1.x, c1.y, c2.x, c2.y, color, thickness.toFloat(), pose, scissor)
             }
 
             for (c in cs) {

@@ -7,7 +7,7 @@ import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.graphics.font.CascadeFonts
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.world.item.ItemStack

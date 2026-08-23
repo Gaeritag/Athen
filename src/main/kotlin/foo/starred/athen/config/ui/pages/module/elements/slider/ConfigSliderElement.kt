@@ -7,13 +7,14 @@ import foo.starred.cascade.animation.data.AnimatableColor.Companion.animateColor
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.font.CascadeFonts
+import foo.starred.cascade.graphics.extensions.rectangle.rounded.roundedRectangle
+import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
-import foo.starred.cascade.primitives.states.RoundedRectangleRenderState
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
@@ -56,20 +57,23 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
 
     init {
         color = Catppuccin.Mocha.Surface0.argb
-        radius = RoundedRectangleRadius.of(4f)
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+        radius = CascadeGeometricRadius(4f)
         unfocus = false
+
+        var outline: OutlineEffect
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        }.also { outline = it })
 
         on<FocusEvent.Gain> {
             animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
-            borderColor = Catppuccin.Mocha.Lavender.argb.brighten(0.6f)
+            outline.color = Catppuccin.Mocha.Lavender.argb.brighten(0.6f)
         }
 
         on<FocusEvent.Lose> {
             animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-            borderColor = Catppuccin.Mocha.Surface1.argb
+            outline.color = Catppuccin.Mocha.Surface1.argb
         }
 
         on<MouseEvent.Press> {
@@ -111,7 +115,7 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
         if (value0 > 0f) {
             val pose = Matrix3x2f(graphics.pose())
             val scissor = graphics.scissorStack.peek()
-            RoundedRectangleRenderState.extract(graphics, x, y, width * value0, height, Catppuccin.Mocha.Lavender.argb.brighten(0.6f), radius, 0f, 0f, pose, scissor)
+            graphics.roundedRectangle(x, y, width * value0, height, Catppuccin.Mocha.Lavender.argb.brighten(0.6f), radius, pose, scissor)
         }
 
         val font = CascadeFonts.arial

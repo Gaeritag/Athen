@@ -12,6 +12,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive
@@ -35,11 +36,13 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
     private var footer: RectanglePrimitive
     private var `carry$complete`: RectanglePrimitive
     private var `carry$delete`: RectanglePrimitive
+    private lateinit var `carry$complete$outline`: OutlineEffect
+    private lateinit var `carry$delete$outline`: OutlineEffect
     private lateinit var `carry$complete$text`: TextPrimitive
     private lateinit var `carry$delete$text`: TextPrimitive
 
     private data class FilterRow(val row: RectanglePrimitive, val label: TextPrimitive)
-    private data class CarryRow(val row: RectanglePrimitive)
+    private data class CarryRow(val row: RectanglePrimitive, val outline: OutlineEffect)
 
     private val rows0 = LinkedHashMap<SlayerBoss?, FilterRow>()
     private val rows1 = LinkedHashMap<Int, CarryRow>()
@@ -62,8 +65,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             size = FixedSizeConstraint(110, 300)
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -78,8 +84,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             size = FixedSizeConstraint(460, 260)
             position = FixedPositionConstraint(116, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -94,8 +103,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             size = FixedSizeConstraint(460, 34)
             position = FixedPositionConstraint(116, 266)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -104,8 +116,10 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             size = PercentSizeConstraint(49f, 78f)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `carry$complete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -140,8 +154,10 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             size = PercentSizeConstraint(49f, 78f)
             position = AnchorPositionConstraint({ `carry$complete` }, PositionAnchor.RIGHT, 3)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `carry$delete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -262,13 +278,16 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
         var cy = 0
         for ((index, carry) in kv) {
             val b1 = selected == index
+            lateinit var outline: OutlineEffect
 
             val row = rectangle {
                 size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 28))
                 position = FixedPositionConstraint(0, cy)
                 color = if (b1) Mocha.Surface1.argb else Mocha.Surface0.argb
-                border = true
-                borderColor = if (b1) Mocha.Lavender.argb else Mocha.Overlay0.argb
+
+                effect(OutlineEffect {
+                    color = if (b1) Mocha.Lavender.argb else Mocha.Overlay0.argb
+                }.also { outline = it })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -295,8 +314,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 size = FixedSizeConstraint(w, 16)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 8)
                 color = Mocha.Surface2.argb
-                border = true
-                borderColor = Mocha.Crust.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Crust.argb
+                })
+
                 interact = false
 
                 attach(row)
@@ -319,8 +341,10 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 size = FixedSizeConstraint(16, 16)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface0.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -360,8 +384,10 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 size = FixedSizeConstraint(16, 16)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface0.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -401,8 +427,10 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 size = FixedSizeConstraint(16, 16)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface0.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -442,8 +470,10 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 size = FixedSizeConstraint(16, 16)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, offset)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface0.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface0.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -478,7 +508,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 attach(row)
             }
 
-            rows1[index] = CarryRow(row)
+            rows1[index] = CarryRow(row, outline)
             cy += 32
         }
     }
@@ -496,7 +526,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
         val b1 = selected == index
 
         row.row.color = if (b1) Mocha.Surface1.argb else Mocha.Surface0.argb
-        row.row.borderColor = if (b1) Mocha.Lavender.argb else Mocha.Overlay0.argb
+        row.outline.color = if (b1) Mocha.Lavender.argb else Mocha.Overlay0.argb
     }
 
     private fun footer() {
@@ -504,11 +534,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
         val b2 = b && deleting == selected
 
         `carry$complete`.color = if (b) Mocha.Green.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `carry$complete`.borderColor = if (b) Mocha.Green.argb.brighten(0.5f) else Mocha.Surface0.argb
+        `carry$complete$outline`.color = if (b) Mocha.Green.argb.brighten(0.5f) else Mocha.Surface0.argb
         `carry$complete$text`.color = if (b) Mocha.Base.argb else Mocha.Overlay0.argb
 
         `carry$delete`.color = if (!b) Mocha.Surface1.argb else if (b2) Mocha.Red.argb.brighten(0.9f) else Mocha.Red.argb.brighten(0.8f)
-        `carry$delete`.borderColor = if (!b) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
+        `carry$delete$outline`.color = if (!b) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
         `carry$delete$text`.color = if (b) Mocha.Base.argb else Mocha.Overlay0.argb
         `carry$delete$text`.text = (if (b2) "Confirm?" else "Delete").literal()
     }

@@ -18,6 +18,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -45,17 +46,21 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
     private var `category$new`: RectanglePrimitive
     private var `category$toggle`: RectanglePrimitive
     private var `category$delete`: RectanglePrimitive
+    private lateinit var `category$toggle$outline`: OutlineEffect
+    private lateinit var `category$delete$outline`: OutlineEffect
     private var `category$field`: TextFieldComponent
     private lateinit var `category$text$toggle`: TextPrimitive
     private lateinit var `category$text$delete`: TextPrimitive
 
     private var `keybind$edit`: RectanglePrimitive
     private var `keybind$delete`: RectanglePrimitive
+    private lateinit var `keybind$edit$outline`: OutlineEffect
+    private lateinit var `keybind$delete$outline`: OutlineEffect
     private lateinit var `keybind$edit$text`: TextPrimitive
     private lateinit var `keybind$delete$text`: TextPrimitive
 
     private data class CategoryRow(val row: RectanglePrimitive, val label: TextPrimitive)
-    private data class EntryRow(val row: RectanglePrimitive, val toggle: RectanglePrimitive)
+    private data class EntryRow(val row: RectanglePrimitive, val toggle: RectanglePrimitive, val outline: OutlineEffect)
 
     private val rows0 = LinkedHashMap<String?, CategoryRow>()
     private val rows1 = LinkedHashMap<Int, EntryRow>()
@@ -78,8 +83,11 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = FixedSizeConstraint(110, 300)
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -94,8 +102,11 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = FixedSizeConstraint(460, 260)
             position = FixedPositionConstraint(116, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -110,8 +121,11 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = FixedSizeConstraint(460, 34)
             position = FixedPositionConstraint(116, 266)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -130,8 +144,11 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 24))
             position = FixedPositionConstraint(0, 276)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(side0)
         }
 
@@ -139,8 +156,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 2)
             color = Mocha.Green.argb.brighten(0.8f)
-            border = true
-            borderColor = Mocha.Green.argb.brighten(0.5f)
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb.brighten(0.5f)
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -176,8 +195,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = CenterPositionConstraint()
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `category$toggle$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -206,8 +227,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -2)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `category$delete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -278,8 +301,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = PercentSizeConstraint(32.2f, 78f)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
             color = Mocha.Green.argb.brighten(0.8f)
-            border = true
-            borderColor = Mocha.Green.argb.brighten(0.5f)
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb.brighten(0.5f)
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -310,8 +335,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = PercentSizeConstraint(32.8f, 78f)
             position = AnchorPositionConstraint({ create }, PositionAnchor.RIGHT, 3)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `keybind$edit$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -343,8 +370,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
             size = PercentSizeConstraint(32.2f, 78f)
             position = AnchorPositionConstraint({ `keybind$edit` }, PositionAnchor.RIGHT, 3)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `keybind$delete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -460,13 +489,16 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
         for (entry in list) {
             val b0 = entry.binding.enabled && (entry.binding.category.isEmpty() || Keybinds.categories.value.find { it.name == entry.binding.category }?.enabled != false)
             val b1 = KeybindsGUI.entry == entry.index
+            lateinit var outline: OutlineEffect
 
             val row = rectangle {
                 size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 28))
                 position = FixedPositionConstraint(0, cy)
                 color = if (b1) Mocha.Surface1.argb else if (!b0) Mocha.Red.withAlpha(0.15f) else Mocha.Surface0.argb
-                border = true
-                borderColor = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+
+                effect(OutlineEffect {
+                    color = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+                }.also { outline = it })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -490,8 +522,10 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
                 size = FixedSizeConstraint(14, 14)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 8)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface2.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface2.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -519,8 +553,11 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
                 size = FixedSizeConstraint(client.font?.width(str)?.plus(8) ?: 20, 16)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 30)
                 color = Mocha.Surface2.argb
-                border = true
-                borderColor = Mocha.Crust.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Crust.argb
+                })
+
                 interact = false
 
                 attach(row)
@@ -538,7 +575,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
                 })
             }
 
-            rows1[entry.index] = EntryRow(row, a)
+            rows1[entry.index] = EntryRow(row, a, outline)
             cy += 32
         }
     }
@@ -558,11 +595,11 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
         val b2 = b0 && deleting == category
 
         `category$toggle`.color = if (!b0) Mocha.Surface1.argb else if (b1) Mocha.Lavender.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `category$toggle`.borderColor = if (!b0) Mocha.Surface0.argb else if (b1) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Overlay0.argb
+        `category$toggle$outline`.color = if (!b0) Mocha.Surface0.argb else if (b1) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Overlay0.argb
         `category$text$toggle`.color = if (!b0) Mocha.Overlay0.argb else Mocha.Base.argb
 
         `category$delete`.color = if (!b0) Mocha.Surface1.argb else if (b2) Mocha.Red.argb.brighten(0.9f) else Mocha.Red.argb.brighten(0.8f)
-        `category$delete`.borderColor = if (!b0) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
+        `category$delete$outline`.color = if (!b0) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
         `category$text$delete`.color = if (!b0) Mocha.Overlay0.argb else Mocha.Base.argb
         `category$text$delete`.text = (if (b2) "✔" else "\uD83D\uDDD1").literal()
     }
@@ -574,17 +611,17 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]") {
         val b1 = entry == index
 
         row.row.color = if (b1) Mocha.Surface1.argb else if (!b0) Mocha.Red.withAlpha(0.15f) else Mocha.Surface0.argb
-        row.row.borderColor = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+        row.outline.color = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
     }
 
     private fun footer() {
         val b = entry != null
         `keybind$edit`.color = if (b) Mocha.Lavender.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `keybind$edit`.borderColor = if (b) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Surface0.argb
+        `keybind$edit$outline`.color = if (b) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Surface0.argb
         `keybind$edit$text`.color = if (b) Mocha.Base.argb else Mocha.Overlay0.argb
 
         `keybind$delete`.color = if (b) Mocha.Red.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `keybind$delete`.borderColor = if (b) Mocha.Red.argb.brighten(0.5f) else Mocha.Surface0.argb
+        `keybind$delete$outline`.color = if (b) Mocha.Red.argb.brighten(0.5f) else Mocha.Surface0.argb
         `keybind$delete$text`.color = if (b) Mocha.Base.argb else Mocha.Overlay0.argb
     }
 

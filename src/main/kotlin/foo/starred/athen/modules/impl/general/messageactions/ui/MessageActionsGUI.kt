@@ -14,6 +14,7 @@ import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -41,17 +42,21 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
     private var `category$new`: RectanglePrimitive
     private var `category$toggle`: RectanglePrimitive
     private var `category$delete`: RectanglePrimitive
+    private lateinit var `category$toggle$outline`: OutlineEffect
+    private lateinit var `category$delete$outline`: OutlineEffect
     private var `category$field`: TextFieldComponent
     private lateinit var `category$text$toggle`: TextPrimitive
     private lateinit var `category$text$delete`: TextPrimitive
 
     private var `action$edit`: RectanglePrimitive
     private var `action$delete`: RectanglePrimitive
+    private lateinit var `action$edit$outline`: OutlineEffect
+    private lateinit var `action$delete$outline`: OutlineEffect
     private lateinit var `action$edit$text`: TextPrimitive
     private lateinit var `action$delete$text`: TextPrimitive
 
     private data class CategoryRow(val row: RectanglePrimitive, val label: TextPrimitive)
-    private data class EntryRow(val row: RectanglePrimitive, val toggle: RectanglePrimitive)
+    private data class EntryRow(val row: RectanglePrimitive, val toggle: RectanglePrimitive, val outline: OutlineEffect)
 
     private val rows0 = LinkedHashMap<String?, CategoryRow>()
     private val rows1 = LinkedHashMap<Int, EntryRow>()
@@ -74,8 +79,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = FixedSizeConstraint(110, 300)
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -90,8 +98,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = FixedSizeConstraint(460, 260)
             position = FixedPositionConstraint(116, 0)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -106,8 +117,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = FixedSizeConstraint(460, 34)
             position = FixedPositionConstraint(116, 266)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             interact = false
             attach(main)
         }
@@ -126,8 +140,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 24))
             position = FixedPositionConstraint(0, 276)
             color = Mocha.Base.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            })
+
             attach(side0)
         }
 
@@ -135,8 +152,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 2)
             color = Mocha.Green.argb.brighten(0.8f)
-            border = true
-            borderColor = Mocha.Green.argb.brighten(0.5f)
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb.brighten(0.5f)
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -172,8 +191,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = CenterPositionConstraint()
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `category$toggle$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -202,8 +223,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = PercentSizeConstraint(31f, 84f)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -2)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `category$delete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -274,8 +297,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = PercentSizeConstraint(32.2f, 78f)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
             color = Mocha.Green.argb.brighten(0.8f)
-            border = true
-            borderColor = Mocha.Green.argb.brighten(0.5f)
+
+            effect(OutlineEffect {
+                color = Mocha.Green.argb.brighten(0.5f)
+            })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -306,8 +331,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = PercentSizeConstraint(32.8f, 78f)
             position = AnchorPositionConstraint({ create }, PositionAnchor.RIGHT, 3)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `action$edit$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -339,8 +366,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
             size = PercentSizeConstraint(32.2f, 78f)
             position = AnchorPositionConstraint({ `action$edit` }, PositionAnchor.RIGHT, 3)
             color = Mocha.Surface1.argb
-            border = true
-            borderColor = Mocha.Surface0.argb
+
+            effect(OutlineEffect {
+                color = Mocha.Surface0.argb
+            }.also { `action$delete$outline` = it })
 
             on<MouseEvent.Press> {
                 cancel()
@@ -456,13 +485,16 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
         for ((index, actionEntry) in filtered) {
             val b0 = actionEntry.enabled && (actionEntry.category.isEmpty() || MessageActions.categories.find { it.name == actionEntry.category }?.enabled != false)
             val b1 = entry == index
+            lateinit var outline: OutlineEffect
 
             val row = rectangle {
                 size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 28))
                 position = FixedPositionConstraint(0, cy)
                 color = if (b1) Mocha.Surface1.argb else if (!b0) Mocha.Red.withAlpha(0.15f) else Mocha.Surface0.argb
-                border = true
-                borderColor = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+
+                effect(OutlineEffect {
+                    color = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+                }.also { outline = it })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -486,8 +518,10 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                 size = FixedSizeConstraint(14, 14)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 8)
                 color = Mocha.Surface1.argb
-                border = true
-                borderColor = Mocha.Surface2.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Surface2.argb
+                })
 
                 on<MouseEvent.Press> {
                     cancel()
@@ -515,8 +549,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                 size = FixedSizeConstraint(client.font?.width(str)?.plus(8) ?: 20, 16)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 30)
                 color = Mocha.Surface2.argb
-                border = true
-                borderColor = Mocha.Crust.argb
+
+                effect(OutlineEffect {
+                    color = Mocha.Crust.argb
+                })
+
                 interact = false
 
                 attach(row)
@@ -534,8 +571,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                     size = FixedSizeConstraint(cw, 16)
                     position = AnchorPositionConstraint({ b }, PositionAnchor.RIGHT, 4)
                     color = Mocha.Red.withAlpha(0.2f)
-                    border = true
-                    borderColor = Mocha.Red.withAlpha(0.6f)
+
+                    effect(OutlineEffect {
+                        color = Mocha.Red.withAlpha(0.6f)
+                    })
+
                     interact = false
 
                     attach(row)
@@ -556,7 +596,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
                 attach(row)
             }
 
-            rows1[index] = EntryRow(row, a)
+            rows1[index] = EntryRow(row, a, outline)
             cy += 32
         }
     }
@@ -576,11 +616,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
         val b2 = b0 && deleting == category
 
         `category$toggle`.color = if (!b0) Mocha.Surface1.argb else if (b1) Mocha.Lavender.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `category$toggle`.borderColor = if (!b0) Mocha.Surface0.argb else if (b1) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Overlay0.argb
+        `category$toggle$outline`.color = if (!b0) Mocha.Surface0.argb else if (b1) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Overlay0.argb
         `category$text$toggle`.color = if (!b0) Mocha.Overlay0.argb else Mocha.Base.argb
 
         `category$delete`.color = if (!b0) Mocha.Surface1.argb else if (b2) Mocha.Red.argb.brighten(0.9f) else Mocha.Red.argb.brighten(0.8f)
-        `category$delete`.borderColor = if (!b0) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
+        `category$delete$outline`.color = if (!b0) Mocha.Surface0.argb else Mocha.Red.argb.brighten(0.5f)
         `category$text$delete`.color = if (!b0) Mocha.Overlay0.argb else Mocha.Base.argb
         `category$text$delete`.text = (if (b2) "✔" else "\uD83D\uDDD1").literal()
     }
@@ -592,17 +632,17 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]") {
         val b1 = entry == index
 
         row.row.color = if (b1) Mocha.Surface1.argb else if (!b0) Mocha.Red.withAlpha(0.15f) else Mocha.Surface0.argb
-        row.row.borderColor = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
+        row.outline.color = if (b1) Mocha.Lavender.argb else if (!b0) Mocha.Red.withAlpha(0.6f) else Mocha.Overlay0.argb
     }
 
     private fun footer() {
         val b = entry != null
         `action$edit`.color = if (b) Mocha.Lavender.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `action$edit`.borderColor = if (b) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Surface0.argb
+        `action$edit$outline`.color = if (b) Mocha.Lavender.argb.brighten(0.5f) else Mocha.Surface0.argb
         `action$edit$text`.color = if (b) Mocha.Base.argb else Mocha.Overlay0.argb
 
         `action$delete`.color = if (b) Mocha.Red.argb.brighten(0.8f) else Mocha.Surface1.argb
-        `action$delete`.borderColor = if (b) Mocha.Red.argb.brighten(0.5f) else Mocha.Surface0.argb
+        `action$delete$outline`.color = if (b) Mocha.Red.argb.brighten(0.5f) else Mocha.Surface0.argb
         `action$delete$text`.color = if (b) Mocha.Base.argb else Mocha.Overlay0.argb
     }
 }

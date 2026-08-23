@@ -10,18 +10,19 @@ import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.MouseEvent
-import foo.starred.cascade.extensions.circle.circle
-import foo.starred.cascade.extensions.rectangle.gradientRectangle
-import foo.starred.cascade.extensions.rectangle.rectangle
+import foo.starred.cascade.graphics.extensions.circle.circle
+import foo.starred.cascade.graphics.extensions.rectangle.gradient.gradientRectangle
+import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
-import foo.starred.cascade.primitives.data.text.impl.CascadeTextPrimitiveRenderer
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -40,16 +41,18 @@ class ConfigColorPickerElement(
     private var brightness: Float = 1f
     private var alpha: Float = 1f
 
+    private var outline: OutlineEffect
+
     private val swatch = roundedRectangle {
         position = FixedPositionConstraint(0f, 0f)
         size = FixedSizeConstraint(28f, 14f)
-        radius = RoundedRectangleRadius(4f, 0f, 4f, 0f)
+        radius = CascadeGeometricRadius(4f, 0f, 4f, 0f)
         color = value.rgb
         interact = false
     }
 
     private val hex = text {
-        type = CascadeTextPrimitiveRenderer
+        wrapper = CascadeTextWrapper
         text = value.hex().literal()
         textSize = 8f
         color = Catppuccin.Mocha.Text.argb
@@ -66,13 +69,15 @@ class ConfigColorPickerElement(
         }
     }.apply {
         size = FixedSizeConstraint(140f, 128f)
-        radius = RoundedRectangleRadius.of(6f)
+        radius = CascadeGeometricRadius(6f)
         color = Catppuccin.Mocha.Base.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface2.argb
-        borderInset = false
         visible = false
         unfocus = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface2.argb
+            inset = false
+        })
 
         on<MouseEvent.Press> {
             if (button != 0) return@on
@@ -137,12 +142,14 @@ class ConfigColorPickerElement(
             adopt(roundedRectangle {
                 position = FixedPositionConstraint(0f, 0f)
                 size = FixedSizeConstraint(124f, 16f)
-                radius = RoundedRectangleRadius.of(4f)
-                color = 0x00000000
-                border = true
-                borderColor = Catppuccin.Mocha.Surface2.argb
-                borderInset = false
+                radius = CascadeGeometricRadius(4f)
+                color = 0
                 interact = false
+
+                effect(OutlineEffect {
+                    color = Catppuccin.Mocha.Surface2.argb
+                    inset = false
+                })
             })
 
             for (k in 0..3) {
@@ -151,7 +158,7 @@ class ConfigColorPickerElement(
                 adopt(roundedRectangle {
                     position = FixedPositionConstraint(k * 31f, 0f)
                     size = FixedSizeConstraint(31f, 16f)
-                    radius = if (k == 0) RoundedRectangleRadius(4f, 0f, 4f, 0f) else if (k == 3) RoundedRectangleRadius(0f, 4f, 0f, 4f) else RoundedRectangleRadius.ZERO
+                    radius = if (k == 0) CascadeGeometricRadius(4f, 0f, 4f, 0f) else if (k == 3) CascadeGeometricRadius(0f, 4f, 0f, 4f) else CascadeGeometricRadius.ZERO
                     color = color0.rgb
 
                     on<MouseEvent.Press> {
@@ -188,11 +195,13 @@ class ConfigColorPickerElement(
     init {
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(84f, 14f)
-        radius = RoundedRectangleRadius.of(4f)
+        radius = CascadeGeometricRadius(4f)
         color = Catppuccin.Mocha.Surface0.argb
-        border = true
-        borderColor = Catppuccin.Mocha.Surface1.argb
-        borderInset = false
+
+        effect(OutlineEffect {
+            color = Catppuccin.Mocha.Surface1.argb
+            inset = false
+        }.also { outline = it })
 
         on<MouseEvent.Press> {
             if (button != 0) return@on
@@ -234,7 +243,7 @@ class ConfigColorPickerElement(
         box.visible = false
         box.detach()
         animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-        borderColor = Catppuccin.Mocha.Surface1.argb
+        outline.color = Catppuccin.Mocha.Surface1.argb
         if (active === this) active = null
     }
 
@@ -251,7 +260,7 @@ class ConfigColorPickerElement(
             box.visible = true
             box.attach(ConfigUI.scene)
             animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
-            borderColor = Catppuccin.Mocha.Lavender.argb
+            outline.color = Catppuccin.Mocha.Lavender.argb
 
             box.position = FixedPositionConstraint(x + width - 140f, if (y + 146f > ConfigUI.scene.height) y - 132f else y + 18f)
             return
@@ -304,13 +313,13 @@ class ConfigColorPickerElement(
         val scissor = graphics.scissorStack.peek()
 
         val hue1 = Color.HSBtoRGB(hue, 1f, 1f) or (0xFF shl 24)
-        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, 0xFFFFFFFF.toInt(), hue1, 0xFFFFFFFF.toInt(), hue1, pose, scissor)
-        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, 0x00000000, 0x00000000, 0xFF000000.toInt(), 0xFF000000.toInt(), pose, scissor)
+        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, -1, hue1, -1, hue1, pose, scissor)
+        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, 0, 0, Int.MIN_VALUE, Int.MIN_VALUE, pose, scissor)
 
         val x2 = x1 + 8f + saturation * 124f
         val y2 = y1 + 8f + (1f - brightness) * 64f
-        graphics.circle(x2, y2, 3.5f, 0xFF000000.toInt(), pose, scissor)
-        graphics.circle(x2, y2, 2.5f, 0xFFFFFFFF.toInt(), pose, scissor)
+        graphics.circle(x2, y2, 3.5f, Int.MIN_VALUE, pose, scissor)
+        graphics.circle(x2, y2, 2.5f, -1, pose, scissor)
 
         val x3 = x1 + 8f
         val y3 = y1 + 76f
@@ -321,20 +330,20 @@ class ConfigColorPickerElement(
         }
 
         val x4 = x3 + hue * 124f
-        graphics.rectangle(x4 - 1.5f, y3 - 1f, 3f, 10f, 0xFFFFFFFF.toInt(), pose, scissor)
-        graphics.rectangle(x4 - 0.5f, y3, 1f, 8f, 0xFF000000.toInt(), pose, scissor)
+        graphics.rectangle(x4 - 1.5f, y3 - 1f, 3f, 10f, -1, pose, scissor)
+        graphics.rectangle(x4 - 0.5f, y3, 1f, 8f, Int.MIN_VALUE, pose, scissor)
 
         val x5 = x1 + 8f
         val y5 = y1 + 88f
         val rgba = (value.rgb and 0x00FFFFFF) or (0xFF shl 24)
-        val rgb = (value.rgb and 0x00FFFFFF)
+        val rgb = value.rgb and 0x00FFFFFF
 
         graphics.rectangle(x5, y5, 124f, 8f, Catppuccin.Mocha.Surface0.argb, pose, scissor)
         graphics.gradientRectangle(x5, y5, 124f, 8f, rgb, rgba, rgb, rgba, pose, scissor)
 
         val x6 = x5 + alpha * 124f
-        graphics.rectangle(x6 - 1.5f, y5 - 1f, 3f, 10f, 0xFFFFFFFF.toInt(), pose, scissor)
-        graphics.rectangle(x6 - 0.5f, y5, 1f, 8f, 0xFF000000.toInt(), pose, scissor)
+        graphics.rectangle(x6 - 1.5f, y5 - 1f, 3f, 10f, -1, pose, scissor)
+        graphics.rectangle(x6 - 0.5f, y5, 1f, 8f, Int.MIN_VALUE, pose, scissor)
     }
 
     companion object {

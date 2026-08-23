@@ -12,9 +12,10 @@ import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
+import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.data.roundedrectangle.RoundedRectangleRadius
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
@@ -30,11 +31,13 @@ class ConfigHUDElement(
         adopt(roundedRectangle {
             position = FixedPositionConstraint(0f, 0f)
             size = FixedSizeConstraint(14f, 14f)
-            radius = RoundedRectangleRadius.of(4f)
+            radius = CascadeGeometricRadius(4f)
             color = Catppuccin.Mocha.Surface0.argb
-            border = true
-            borderColor = Catppuccin.Mocha.Surface1.argb
-            borderInset = false
+
+            effect(OutlineEffect {
+                color = Catppuccin.Mocha.Surface1.argb
+                inset = false
+            })
 
             on<MouseEvent.Press> {
                 if (button != 0) return@on
