@@ -50,11 +50,8 @@ class ConfigKeybindElement(
         }.also { outline = it })
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (listening) update(button) else start()
             cancel()
-
-            if (listening) update(button)
-            else start()
         }
 
         on<KeyEvent.Press> {
