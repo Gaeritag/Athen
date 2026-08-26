@@ -2,10 +2,10 @@
 
 package foo.starred.athen.api.rendering.level.pipelines.depth
 
-import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.pipeline.DepthStencilState
+import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.platform.CompareOp
-import java.util.Optional
+import java.util.*
 
 enum class LevelPipelineDepth(val vanilla: Optional<DepthStencilState>) {
     NONE(Optional.empty()),

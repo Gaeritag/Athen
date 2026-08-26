@@ -8,6 +8,7 @@ import foo.starred.athen.Athen
 import foo.starred.athen.Athen.GSON
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GameEvent
@@ -16,7 +17,6 @@ import foo.starred.athen.events.PlayerEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
-import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.guiClick
 import foo.starred.cascade.graphics.extensions.stroke.stroke

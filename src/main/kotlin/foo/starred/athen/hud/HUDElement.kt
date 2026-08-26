@@ -1,7 +1,7 @@
 package foo.starred.athen.hud
 
-import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.ConfigManager
+import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.snowbird.api.ZERO_PAIR
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
