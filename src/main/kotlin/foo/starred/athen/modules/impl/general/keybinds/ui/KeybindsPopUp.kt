@@ -210,11 +210,11 @@ class KeybindsPopUp(
             label = "Category"
             items = listOf("Uncategorized")
 
-            selected = {
+            selected {
                 if (it == 0) category.isEmpty() else categories.getOrNull(it - 1) == category
             }
 
-            onSelect = {
+            select {
                 category = if (it == 0) "" else categories.getOrElse(it - 1) { "" }
                 `checkbox$category`.text = category.ifEmpty { "Uncategorized" }
             }
@@ -228,11 +228,11 @@ class KeybindsPopUp(
             label = "Work In"
             items = KeybindWorkIn.entries.map { it.displayName }
 
-            selected = {
+            selected {
                 condition.workIn == KeybindWorkIn.entries[it]
             }
 
-            onSelect = {
+            select {
                 condition.workIn = KeybindWorkIn.entries[it]
                 `checkbox$workIn`.text = condition.workIn.displayName
             }
@@ -246,12 +246,12 @@ class KeybindsPopUp(
             label = "Islands"
             items = listOf("Any") + SkyBlockIsland.entries.map { it.displayName }
 
-            selected = {
+            selected {
                 if (it == 0) condition.islands.isEmpty()
                 else condition.islands.contains(SkyBlockIsland.entries[it - 1])
             }
 
-            onSelect = {
+            select {
                 if (it == 0) {
                     condition.islands.clear()
                 } else {
@@ -271,12 +271,12 @@ class KeybindsPopUp(
             label = "Dungeon Floors"
             items = listOf("Any") + DungeonFloor.entries.map { it.name }
 
-            selected = {
+            selected {
                 if (it == 0) condition.floors.isEmpty()
                 else condition.floors.contains(DungeonFloor.entries[it - 1])
             }
 
-            onSelect = {
+            select {
                 if (it == 0) {
                     condition.floors.clear()
                 } else {
@@ -298,12 +298,12 @@ class KeybindsPopUp(
             label = "Dungeon Classes"
             items = listOf("Any") + all.map { it.displayName }
 
-            selected = {
+            selected {
                 if (it == 0) condition.classes.isEmpty()
                 else condition.classes.contains(all[it - 1])
             }
 
-            onSelect = {
+            select {
                 if (it == 0) {
                     condition.classes.clear()
                 } else {
@@ -323,12 +323,12 @@ class KeybindsPopUp(
             label = "F7 Phases"
             items = listOf("Any") + all.map { "Phase $it" }
 
-            selected = {
+            selected {
                 if (it == 0) condition.phases.isEmpty()
                 else condition.phases.contains(all[it - 1])
             }
 
-            onSelect = {
+            select {
                 if (it == 0) {
                     condition.phases.clear()
                 } else {

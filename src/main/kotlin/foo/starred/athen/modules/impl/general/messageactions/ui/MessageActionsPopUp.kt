@@ -143,11 +143,11 @@ class MessageActionsPopUp(
             position = AnchorPositionConstraint({ pattern0 }, PositionAnchor.BELOW, 184, 2)
             items = MatchType.entries.map { it.displayName }
 
-            selected = {
+            selected {
                 match == MatchType.entries[it]
             }
 
-            onSelect = {
+            select {
                 match = MatchType.entries[it]
                 `checkbox$match`.text = match.displayName
             }
@@ -251,11 +251,11 @@ class MessageActionsPopUp(
             position = AnchorPositionConstraint({ `value$label` }, PositionAnchor.BELOW, 184, 2)
             items = listOf("Uncategorized")
 
-            selected = {
+            selected {
                 if (it == 0) category.isEmpty() else categories.getOrNull(it - 1) == category
             }
 
-            onSelect = {
+            select {
                 category = if (it == 0) "" else categories.getOrElse(it - 1) { "" }
                 `checkbox$category`.text = category.ifEmpty { "Uncategorized" }
             }

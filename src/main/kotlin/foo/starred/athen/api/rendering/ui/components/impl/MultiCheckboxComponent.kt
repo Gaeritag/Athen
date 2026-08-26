@@ -13,6 +13,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() {
+    private var selected: (Int) -> Boolean = { false }
+    private var select: (Int) -> Unit = {}
     private var _height1: Int? = null
 
     override var x: Float = 0f
@@ -23,8 +25,6 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
 
     var label: String = ""
     var text: String = ""
-    var selected: (Int) -> Boolean = { false }
-    var onSelect: (Int) -> Unit = {}
     var scroll: Int = 0
     var open: Boolean = false
 
@@ -51,7 +51,7 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
 
             if (hovered1 && open) {
                 val i = ((hoverY - (y0 + height) + scroll) / 14).toInt()
-                if (i in items.indices) onSelect(i)
+                if (i in items.indices) select(i)
                 return@on cancel()
             }
 
@@ -141,6 +141,14 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
         hovered1 = true
         hoverY = y
         return true
+    }
+
+    fun selected(block: (Int) -> Boolean) {
+        selected = block
+    }
+
+    fun select(block: (Int) -> Unit) {
+        select = block
     }
 
     companion object {
