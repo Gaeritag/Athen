@@ -25,7 +25,7 @@ class ResolvedEntry(src: ActionEntry) {
         }
     }
 
-    fun action(): IMessageAction? {
+    fun action(text: String): IMessageAction? {
         if (action == null) return null
         if (!groups) return action
 
@@ -33,6 +33,11 @@ class ResolvedEntry(src: ActionEntry) {
         var v = source.value
 
         for (i in r.groupValues.indices.reversed()) {
+            if (i == 0) {
+                v = text
+                continue
+            }
+
             v = v.replace("$$i", r.groupValues[i])
         }
 

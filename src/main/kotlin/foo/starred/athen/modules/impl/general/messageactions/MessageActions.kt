@@ -20,6 +20,7 @@ import foo.starred.athen.modules.impl.general.messageactions.data.MatchType
 import foo.starred.athen.modules.impl.general.messageactions.data.ResolvedEntry
 import foo.starred.athen.modules.impl.general.messageactions.ui.MessageActionsGUI
 import foo.starred.athen.utils.command
+import foo.starred.snowbird.utils.colorCoded
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
@@ -70,24 +71,26 @@ object MessageActions : Module(
         }
 
         on<MessageEvent.Chat.Intercept> {
+            var text: String? = null
+
             for (entry in a0) {
                 if (!entry.matches(stripped, set)) continue
                 cancel()
 
                 if (entry.action == NoAction) return@on
-                val action = entry.action() ?: continue
-                if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() }
-                else action.run()
+                val action = entry.action(text ?: message.colorCoded().also { text = it }) ?: continue
+                if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() } else action.run()
             }
         }
 
         on<MessageEvent.Chat.Receive> {
+            var text: String? = null
+
             for (entry in a1) {
                 if (!entry.matches(stripped, set)) continue
 
-                val action = entry.action() ?: continue
-                if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() }
-                else action.run()
+                val action = entry.action(text ?: message.colorCoded().also { text = it }) ?: continue
+                if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() } else action.run()
             }
         }
 
