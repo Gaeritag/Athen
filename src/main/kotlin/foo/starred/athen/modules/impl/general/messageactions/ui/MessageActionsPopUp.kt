@@ -265,7 +265,7 @@ class MessageActionsPopUp(
 
         `cancel$box` = rectangle {
             size = FixedSizeConstraint(14, 14)
-            position = AnchorPositionConstraint({ value }, PositionAnchor.BELOW, 0, 9)
+            position = AnchorPositionConstraint({ `value$label` }, PositionAnchor.BELOW, 0, 27)
             color = Mocha.Base.argb
 
             effect(OutlineEffect {
@@ -299,7 +299,7 @@ class MessageActionsPopUp(
 
         delay = textField {
             size = FixedSizeConstraint(170, 16)
-            position = AnchorPositionConstraint({ this@MessageActionsPopUp.value }, PositionAnchor.BELOW, 184, 8)
+            position = AnchorPositionConstraint({ `value$label` }, PositionAnchor.BELOW, 184, 26)
             placeholder = "Delay (seconds)"
 
             on<KeyEvent.Type> {
