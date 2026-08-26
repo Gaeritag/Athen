@@ -18,27 +18,29 @@ import java.util.List;
 @Mixin(ClientLanguage.class)
 public abstract class ClientLanguageMixin {
     @Unique
-    private static int snowbird$last = -1;
+    private static int athen$last = -1;
 
     @Unique
-    private static final LongOpenHashSet snowbird$unmodified = new LongOpenHashSet(1024);
+    private static final LongOpenHashSet athen$unmodified = new LongOpenHashSet(1024);
 
     @ModifyReturnValue(method = "getVisualOrder(Lnet/minecraft/network/chat/FormattedText;)Lnet/minecraft/util/FormattedCharSequence;", at = @At("RETURN"))
     private FormattedCharSequence athen$getVisualOrder(FormattedCharSequence original, FormattedText logicalOrderText) {
         if (original == null) return null;
         if (!(logicalOrderText instanceof Component component)) return original;
+        if (!VisualWords.INSTANCE.getEnabled()) return original;
+        if (VisualWords.words.getMap0().isEmpty()) return original;
 
         final int version = VisualWords.words.getVersion();
-        if (snowbird$last != version) {
-            snowbird$unmodified.clear();
-            snowbird$last = version;
+        if (athen$last != version) {
+            athen$unmodified.clear();
+            athen$last = version;
         }
 
         final String string = component.getString();
-        final int hash0 = snowbird$hash(component);
+        final int hash0 = athen$hash(component);
         final long key = ((long) string.hashCode() << 32) | (hash0 & 0xFFFFFFFFL);
 
-        if (snowbird$unmodified.contains(key)) {
+        if (athen$unmodified.contains(key)) {
             return original;
         }
 
@@ -50,8 +52,8 @@ public abstract class ClientLanguageMixin {
 
         final Component replaced = VisualWords.words.fn(component);
         if (replaced == component) {
-            if (snowbird$unmodified.size() >= 4096) snowbird$unmodified.clear();
-            snowbird$unmodified.add(key);
+            if (athen$unmodified.size() >= 4096) athen$unmodified.clear();
+            athen$unmodified.add(key);
             return original;
         }
 
@@ -64,19 +66,19 @@ public abstract class ClientLanguageMixin {
     }
 
     @Unique
-    private static int snowbird$hash(Component component) {
-        int hash = snowbird$hash(component.getStyle());
+    private static int athen$hash(Component component) {
+        int hash = athen$hash(component.getStyle());
         final List<Component> siblings = component.getSiblings();
 
         for (Component sibling : siblings) {
-            hash = 31 * hash + snowbird$hash(sibling);
+            hash = 31 * hash + athen$hash(sibling);
         }
 
         return hash;
     }
 
     @Unique
-    private static int snowbird$hash(Style style) {
+    private static int athen$hash(Style style) {
         if (style.isEmpty()) return 0;
         int flags = (style.isBold() ? 1 : 0) | (style.isItalic() ? 2 : 0) | (style.isUnderlined() ? 4 : 0) | (style.isStrikethrough() ? 8 : 0) | (style.isObfuscated() ? 16 : 0);
         int color = style.getColor() != null ? style.getColor().getValue() : -1;

@@ -26,9 +26,11 @@ public abstract class StringSplitterMixin {
     @ModifyReturnValue(method = "stringWidth(Lnet/minecraft/network/chat/FormattedText;)F", at = @At("RETURN"))
     private float athen$stringWidth(float original, FormattedText text) {
         if (!(text instanceof Component component)) return original;
+        if (!VisualWords.INSTANCE.getEnabled()) return original;
+        if (VisualWords.words.getMap0().isEmpty()) return original;
 
         final String string = component.getString();
-        final int hash0 = snowbird$hash(component);
+        final int hash0 = athen$hash(component);
         final int hash1 = (string.hashCode() ^ hash0) & 4095;
 
         final int version = VisualWords.words.getVersion();
@@ -51,19 +53,19 @@ public abstract class StringSplitterMixin {
     }
 
     @Unique
-    private static int snowbird$hash(Component component) {
-        int hash = snowbird$hash(component.getStyle());
+    private static int athen$hash(Component component) {
+        int hash = athen$hash(component.getStyle());
         final List<Component> siblings = component.getSiblings();
 
         for (Component sibling : siblings) {
-            hash = 31 * hash + snowbird$hash(sibling);
+            hash = 31 * hash + athen$hash(sibling);
         }
 
         return hash;
     }
 
     @Unique
-    private static int snowbird$hash(Style style) {
+    private static int athen$hash(Style style) {
         if (style.isEmpty()) return 0;
         int flags = (style.isBold() ? 1 : 0) | (style.isItalic() ? 2 : 0) | (style.isUnderlined() ? 4 : 0) | (style.isStrikethrough() ? 8 : 0) | (style.isObfuscated() ? 16 : 0);
         int color = style.getColor() != null ? style.getColor().getValue() : -1;
