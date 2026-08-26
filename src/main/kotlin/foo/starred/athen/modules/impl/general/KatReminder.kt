@@ -15,9 +15,9 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.handlers.time.Task
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.data.tasks.base.SchedulerTask
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.fromLongDuration
 import foo.starred.snowbird.utils.showTitle
 import foo.starred.snowbird.utils.toDurationFromMillis
@@ -49,7 +49,7 @@ object KatReminder : Module(
     private val durationRemindRegex = Regex("^\\[NPC] Kat: You can pick it up in (?<duration>.+)\\.$")
 
     private var `warning$kat$sentOnce` = false
-    private var task: Task? = null
+    private var task: SchedulerTask? = null
 
     init {
         fn()
@@ -79,7 +79,7 @@ object KatReminder : Module(
             if (time <= 0) return@on
             if (time > System.currentTimeMillis()) return@on
 
-            Scheduler.schedule(10.client) {
+            Scheduler.schedule(10.clientTicks) {
                 fn0()
             }
         }

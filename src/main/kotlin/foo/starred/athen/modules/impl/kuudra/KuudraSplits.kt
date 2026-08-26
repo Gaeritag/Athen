@@ -23,8 +23,8 @@ import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.toDuration
 import foo.starred.snowbird.utils.toDurationFromMillis
 import net.minecraft.network.chat.Component
@@ -136,7 +136,7 @@ object KuudraSplits : Module(
             PB.set(tier, null, splits.sumOf { it.durTime })
 
             if (!chat) return@on
-            Scheduler.schedule(2.client) {
+            Scheduler.schedule(2.clientTicks) {
                 "Split breakdown:".mod()
 
                 for (s in splits) {

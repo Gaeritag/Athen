@@ -8,7 +8,7 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.literal
+import foo.starred.snowbird.api.text.parser.impl.parse
 
 @Load
 object Dev {
@@ -25,9 +25,6 @@ object Dev {
 
     @JvmStatic
     var debug: Boolean by file.boolean("enabled")
-
-    @JvmStatic
-    var clickUiHelperCollapsed: Boolean by file.boolean("clickUiHelperCollapsed")
 
     init {
         command {
@@ -52,8 +49,8 @@ object Dev {
                 val actionBar = bool("actionbar")
                 val message = string("message")
 
-                if (actionBar) MessageEvent.ActionBar(message.literal()).post()
-                else MessageEvent.Chat.Receive(message.literal()).post()
+                if (actionBar) MessageEvent.ActionBar(message.parse()).post()
+                else MessageEvent.Chat.Receive(message.parse()).post()
 
                 "<gray>Simulated ($actionBar): <red>$message".mod()
             }

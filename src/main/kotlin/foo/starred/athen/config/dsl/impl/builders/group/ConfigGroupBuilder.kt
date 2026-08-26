@@ -5,7 +5,7 @@ import foo.starred.athen.config.data.impl.ConfigGroupElementData
 import foo.starred.athen.config.dsl.base.ConfigScope
 import foo.starred.athen.config.dsl.base.ElementBuilder
 import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

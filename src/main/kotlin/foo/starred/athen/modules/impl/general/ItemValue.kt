@@ -8,7 +8,7 @@ import foo.starred.athen.api.skyblock.PriceAPI.price
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.abbreviate
 import foo.starred.snowbird.utils.formatted
 import net.minecraft.network.chat.Component

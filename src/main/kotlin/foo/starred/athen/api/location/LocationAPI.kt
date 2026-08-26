@@ -40,7 +40,7 @@ import foo.starred.athen.events.ScoreboardEvent
 import foo.starred.athen.events.TabListEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.utils.stripped
 import net.hypixel.data.type.GameType
 import tech.thatgravyboat.skyblockapi.helpers.McClient

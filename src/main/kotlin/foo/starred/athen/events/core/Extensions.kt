@@ -5,7 +5,7 @@ package foo.starred.athen.events.core
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.SlayerEvent
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import net.minecraft.network.protocol.Packet
 
 inline fun <reified T : Event> on(

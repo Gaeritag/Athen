@@ -18,7 +18,7 @@ import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.formatted
 import foo.starred.snowbird.utils.stripped
 import foo.starred.snowbird.utils.toDuration

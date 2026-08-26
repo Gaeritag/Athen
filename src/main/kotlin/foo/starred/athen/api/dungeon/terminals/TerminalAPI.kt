@@ -13,10 +13,10 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.handlers.Observable
-import foo.starred.snowbird.handlers.Observable.Companion.and
-import foo.starred.snowbird.handlers.Observable.Companion.or
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.data.Observable
+import foo.starred.snowbird.api.data.Observable.Companion.and
+import foo.starred.snowbird.api.data.Observable.Companion.or
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.protocol.game.*
@@ -85,7 +85,7 @@ object TerminalAPI {
         }.runWhen(state1)
 
         on<PacketEvent.Process.Pre, ClientboundContainerClosePacket> {
-            Scheduler.schedule(1.client, ::reset)
+            Scheduler.schedule(1.clientTicks, ::reset)
         }.runWhen(state1)
 
         on<PacketEvent.Send, ServerboundContainerClickPacket> {

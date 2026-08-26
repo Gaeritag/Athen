@@ -11,7 +11,7 @@ import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.markerAABB
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import net.minecraft.core.BlockPos
 import net.minecraft.world.phys.AABB
 import java.awt.Color
@@ -150,6 +150,5 @@ object TerminalWaypoints : Module(
         DungeonClass.TANK -> "§7[§aTank§7]"
         DungeonClass.HEALER -> "§7[§dHealer§7]"
         DungeonClass.BERSERK -> "§7[§4Berserk§7]"
-        else -> "§7[§8 ??? §7]"
     }
 }

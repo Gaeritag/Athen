@@ -3,7 +3,7 @@ package foo.starred.athen.mixin.mixins.compat.entityculling;
 import dev.tr7zw.entityculling.EntityCullingModBase;
 import foo.starred.athen.api.messaging.impl.MessagingAPI;
 import foo.starred.athen.modules.impl.ModSettings;
-import foo.starred.snowbird.handlers.parser.ParserKt;
+import foo.starred.snowbird.api.text.parser.impl.ParserKt;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,6 @@
 package foo.starred.athen.events.core
 
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Node<T : Event>(

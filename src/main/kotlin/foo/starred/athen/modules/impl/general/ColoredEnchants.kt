@@ -17,7 +17,7 @@ import foo.starred.athen.utils.command
 import foo.starred.athen.utils.data
 import foo.starred.athen.utils.enchants
 import foo.starred.snowbird.api.EMPTY_COMPONENT
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.stripped
@@ -76,7 +76,7 @@ object ColoredEnchants : Module(
 
     init {
         "enchants.json".data.request {
-            onSuccess<Map<String, Any>> { str ->
+            success<Map<String, Any>> { str ->
                 for ((a, b) in str) {
                     val c = b as? Map<String, Map<String, Any?>> ?: continue
                     for ((d, e) in c) {

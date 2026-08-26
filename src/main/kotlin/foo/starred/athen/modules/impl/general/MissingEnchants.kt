@@ -42,7 +42,7 @@ object MissingEnchants : Module(
 
     init {
         "enchants.json".data.request {
-            onSuccess<JsonObject> { json ->
+            success<JsonObject> { json ->
                 val map = HashMap<String, MutableList<String>>()
 
                 for (category in listOf("NORMAL", "STACKING", "ULTIMATE")) {

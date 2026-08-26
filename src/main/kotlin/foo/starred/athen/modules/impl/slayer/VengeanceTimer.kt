@@ -12,8 +12,8 @@ import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
+import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.api.held
-import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.toDuration
 import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
 import tech.thatgravyboat.skyblockapi.api.datatype.getData

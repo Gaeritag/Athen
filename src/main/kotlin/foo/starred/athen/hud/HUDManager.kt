@@ -9,7 +9,7 @@ import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
 
 @Priority(-2)
 object HUDManager {
@@ -45,7 +45,7 @@ object HUDManager {
 
     fun register(element: HUDElement) {
         elements[element.id] = element
-        Scheduler.schedule(1.client){ get(element.id) }
+        Scheduler.schedule(1.clientTicks) { get(element.id) }
     }
 
     fun set() {

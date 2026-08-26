@@ -43,7 +43,7 @@ fletchingTable {
 dependencies {
     minecraft("com.mojang:minecraft:$ver")
 
-    runtimeOnly("devauth".global)
+    localRuntime("devauth".global)
     compileOnly("entityculling".versioned)
     compileOnly("exordium".versioned)
     compileOnly("iris".versioned)

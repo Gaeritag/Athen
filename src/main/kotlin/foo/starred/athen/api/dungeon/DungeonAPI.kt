@@ -40,9 +40,9 @@ import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
+import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.api.name
 import foo.starred.snowbird.api.player
-import foo.starred.snowbird.handlers.Observable
 import foo.starred.snowbird.utils.stripped
 import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find

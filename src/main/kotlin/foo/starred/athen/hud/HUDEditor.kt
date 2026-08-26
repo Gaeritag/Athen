@@ -4,15 +4,18 @@ import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
+import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.input.KeyEvent
+import net.minecraft.client.input.MouseButtonEvent
 import kotlin.math.roundToInt
 
 @Priority(-1)
-object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
+object HUDEditor : Screen("HUD Editor [Athen]".literal()) {
     private var grid = false
     private var snappy = false
     private var dragging: HUDElement? = null
@@ -28,7 +31,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
     private val active: HUDElement?
         get() = dragging ?: _act.filter { it.render }.asReversed().firstOrNull { it.isHovered(mx, my) }
 
-    override fun onScramRender(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         mx = Resolute.mx
         my = Resolute.my
 
@@ -96,9 +99,11 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
 
         Help.render(graphics)
         Resolute.pop(graphics)
+
+        super.extractRenderState(graphics, mouseX, mouseY, delta)
     }
 
-    override fun onScramMouseClick(mouseX: Int, mouseY: Int, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
         if (Help.hovered(mx, my)) {
             Help.dragging = true
             Help.x0 = mx - Help.x
@@ -106,7 +111,7 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
             return true
         }
 
-        val hovered = active ?: return false
+        val hovered = active ?: return super.mouseClicked(event, doubleClick)
 
         dragging = hovered
         x0 = mx - hovered.x
@@ -114,31 +119,31 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
         return true
     }
 
-    override fun onScramMouseRelease(mouseX: Int, mouseY: Int, button: Int): Boolean {
+    override fun mouseReleased(event: MouseButtonEvent): Boolean {
         dragging = null
         Help.dragging = false
         return false
     }
 
-    override fun onScramMouseScroll(mouseX: Int, mouseY: Int, horizontal: Double, vertical: Double): Boolean {
-        val hovered = active ?: return false
+    override fun mouseScrolled(x: Double, y: Double, scrollX: Double, scrollY: Double): Boolean {
+        val hovered = active ?: return super.mouseScrolled(x, y, scrollX, scrollY)
 
-        val scaleDelta = if (vertical > 0) 0.1f else -0.1f
+        val scaleDelta = if (scrollY > 0) 0.1f else -0.1f
         hovered.scale = (hovered.scale + scaleDelta).coerceIn(0.2f, 5.0f)
         return true
     }
 
-    override fun onScramKeyPress(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (keyCode == InputConstants.KEY_G) {
-            if ((modifiers and InputConstants.MOD_CONTROL) != 0) snappy = !snappy
+    override fun keyPressed(event: KeyEvent): Boolean {
+        if (event.key() == InputConstants.KEY_G) {
+            if ((event.modifiers() and InputConstants.MOD_CONTROL) != 0) snappy = !snappy
             else grid = !grid
 
             return true
         }
 
-        val step = if ((modifiers and InputConstants.MOD_SHIFT) != 0) 8f else 1f
+        val step = if ((event.modifiers() and InputConstants.MOD_SHIFT) != 0) 8f else 1f
 
-        when (keyCode) {
+        when (event.key()) {
             InputConstants.KEY_H -> {
                 val e = active ?: return false
                 e.x = (Resolute.width - e.width * e.scale) / 2f
@@ -176,8 +181,8 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
             }
 
             InputConstants.KEY_R -> {
-                val ctrl = (modifiers and InputConstants.MOD_CONTROL) != 0
-                val shift = (modifiers and InputConstants.MOD_SHIFT) != 0
+                val ctrl = (event.modifiers() and InputConstants.MOD_CONTROL) != 0
+                val shift = (event.modifiers() and InputConstants.MOD_SHIFT) != 0
 
                 if (ctrl && shift) {
                     for (e in HUDManager.elements.values) {
@@ -200,7 +205,8 @@ object HUDEditor : MultiVersionScreen("HUD Editor [Athen]") {
         return false
     }
 
-    override fun onScramClose() {
+    override fun onClose() {
+        super.onClose()
         HUDManager.set()
     }
 

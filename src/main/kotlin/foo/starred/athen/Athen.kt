@@ -17,8 +17,8 @@ import foo.starred.snowbird.api.EMPTY_COMPONENT
 import foo.starred.snowbird.api.center
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.literal
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -47,8 +47,8 @@ object Athen : ClientModInitializer {
         AnnotationLoader.load()
 
         on<LocationEvent.Server.Connect> {
-            Scheduler.schedule(20.client) { li() }
-            Scheduler.schedule(60.client) { broadcast() }
+            Scheduler.schedule(20.clientTicks) { li() }
+            Scheduler.schedule(60.clientTicks) { broadcast() }
             Scheduler.repeat(1.hours) { broadcast() }
         }.once()
     }
@@ -79,14 +79,14 @@ object Athen : ClientModInitializer {
 
     private fun broadcast() {
         "broadcast.txt".data.request {
-            onSuccess<String> {
-                val str = it.trim().takeIf { s -> s.isNotBlank() && s != Dev.lastBroadcast } ?: return@onSuccess
+            success<String> {
+                val str = it.trim().takeIf { s -> s.isNotBlank() && s != Dev.lastBroadcast } ?: return@success
 
                 "<hover:<${Mocha.Lavender.argb}>Broadcasted message!>$str".mod()
                 Dev.lastBroadcast = str
             }
 
-            onError {
+            error {
                 "Failed to read broadcast: ${it.message}".dev()
             }
         }

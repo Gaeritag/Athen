@@ -37,8 +37,9 @@ import foo.starred.snowbird.api.center
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.literal
+import foo.starred.snowbird.utils.open
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 @Priority

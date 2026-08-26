@@ -10,7 +10,7 @@ import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.sizedText
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.alert
 import foo.starred.snowbird.utils.literal
 import net.minecraft.network.chat.Component

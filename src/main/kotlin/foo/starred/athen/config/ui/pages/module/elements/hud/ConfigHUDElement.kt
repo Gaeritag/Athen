@@ -19,6 +19,7 @@ import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
+import foo.starred.snowbird.utils.open
 
 class ConfigHUDElement(
     private val config: ConfigHudElementData

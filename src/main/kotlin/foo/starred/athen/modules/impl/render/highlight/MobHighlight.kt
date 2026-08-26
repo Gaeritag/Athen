@@ -26,7 +26,7 @@ import foo.starred.snowbird.api.center
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity

@@ -41,7 +41,7 @@ import foo.starred.athen.ducks.entity.EntityDuck
 import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.core.on
 import foo.starred.snowbird.api.level
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
@@ -137,9 +137,9 @@ object EntityAPI {
 
         fun tick() {
             if (ent.customName != null) return attach(ent)
-            if (tries++ < 3) Scheduler.schedule(1.client) { tick() }
+            if (tries++ < 3) Scheduler.schedule(1.clientTicks) { tick() }
         }
 
-        Scheduler.schedule(2.client) { tick() }
+        Scheduler.schedule(2.clientTicks) { tick() }
     }
 }

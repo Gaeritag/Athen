@@ -11,7 +11,7 @@ import foo.starred.athen.config.Category
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.render.fcs
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.formatted
 import net.minecraft.util.FormattedCharSequence
 import tech.thatgravyboat.skyblockapi.api.area.mining.Commission

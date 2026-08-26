@@ -30,7 +30,7 @@
  */
 package foo.starred.athen.api.location
 
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import tech.thatgravyboat.skyblockapi.utils.extentions.toFormattedName
 
 enum class SkyBlockIsland(val id: String, displayName: String? = null) {

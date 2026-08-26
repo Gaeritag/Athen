@@ -5,7 +5,7 @@ package foo.starred.athen.modules.impl.general.messageactions.actions.impl
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.modules.impl.general.messageactions.actions.IMessageAction
 import foo.starred.athen.modules.impl.general.messageactions.actions.MessageActionType
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.showTitle
 
 @Load

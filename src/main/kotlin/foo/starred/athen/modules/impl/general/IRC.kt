@@ -15,10 +15,13 @@ import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.athen.utils.command
+import foo.starred.kommand.IKommand
+import foo.starred.kommand.scopes.KommandCommandScope
 import foo.starred.snowbird.api.*
-import foo.starred.snowbird.handlers.Observable
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.kommand.ICommand
+import foo.starred.snowbird.api.data.Observable
+import foo.starred.snowbird.api.text.parser.impl.parse
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.network.protocol.game.ServerboundChatPacket
 
 @Load
@@ -27,7 +30,9 @@ object IRC : Module(
     "Enables the IRC by default on launch if the module is enabled.",
     Category.GENERAL,
     true
-), IWebSocket, ICommand {
+), IWebSocket, IKommand<FabricClientCommandSource> {
+    override val loader: KommandCommandScope<FabricClientCommandSource> = KommandCommandScope()
+
     private val _unused by config.information("Run <red>\"/athen irc help\" <r>to view all commands!")
     private val help by config.switch("Help message", true)
     private val format0 by config.input("Message format", "<#A6E3A1>#name <dark_gray>➤ <white>#message")
@@ -57,7 +62,7 @@ object IRC : Module(
             }
         }
 
-        command(Athen.modId) {
+        command {
             "irc" / "chat" / greedyString("message") {
                 if (!auth) return@greedyString er0()
                 if (!enabled) return@greedyString er1()

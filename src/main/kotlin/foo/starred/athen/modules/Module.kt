@@ -10,30 +10,20 @@ import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.Event
 import foo.starred.athen.events.core.runWhen
 import foo.starred.snowbird.api.ALWAYS_TRUE
-import foo.starred.snowbird.handlers.Observable
-import foo.starred.snowbird.handlers.Observable.Companion.and
-import foo.starred.snowbird.handlers.delegate.Deferred
+import foo.starred.snowbird.api.data.Observable
+import foo.starred.snowbird.api.data.Observable.Companion.and
+import foo.starred.snowbird.api.lazy.CallbackLazy
 import foo.starred.snowbird.utils.toCamelCase
 import net.minecraft.network.protocol.Packet
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
 open class Module(
-    name: String? = null,
-    description: String? = null,
-    category: Category? = null,
+    name: String,
+    description: String,
+    category: Category,
     default: Boolean = false
 ) {
-    private val _config: ConfigMainBuilder? by lazy {
-        ConfigMainBuilder(
-            configKey ?: return@lazy null,
-            name ?: return@lazy null,
-            description ?: return@lazy null,
-            category ?: return@lazy null,
-            default
-        ).also { it.module = this }
-    }
-
     private val _location: Observable<Boolean> = run {
         val onlyIn = this::class.findAnnotation<OnlyIn>() ?: return@run ALWAYS_TRUE
         when {
@@ -45,16 +35,18 @@ open class Module(
         }
     }
 
-    val observable: Observable<Boolean> by Deferred(::fn0) { if (redstone) ALWAYS_TRUE else config.state and _location }
+    val observable: Observable<Boolean> by CallbackLazy(::fn0) {
+        if (redstone) ALWAYS_TRUE else config.state and _location
+    }
 
-    val configKey: String? =
-        name?.toCamelCase()
+    val configKey: String =
+        name.toCamelCase()
 
     val redstone: Boolean =
         this::class.hasAnnotation<Redstone>()
 
-    val config: ConfigMainBuilder
-        get() = _config ?: error("Config not initialized")
+    val config: ConfigMainBuilder =
+        ConfigMainBuilder(configKey, name, description, category, default).also { it.module = this }
 
     var enabled: Boolean = false
         private set

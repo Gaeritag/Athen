@@ -11,7 +11,8 @@ import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.mainThread
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.snowbird.utils.open
 import moe.nea.libautoupdate.CurrentVersion
 import moe.nea.libautoupdate.PotentialUpdate
 import moe.nea.libautoupdate.UpdateContext
@@ -53,7 +54,7 @@ object ModUpdater {
         }
 
         on<LocationEvent.Server.Connect> {
-            Scheduler.schedule(60.client) { checkAndNotify() }
+            Scheduler.schedule(60.clientTicks) { checkAndNotify() }
         }.once()
     }
 

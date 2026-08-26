@@ -14,8 +14,8 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.*
-import foo.starred.snowbird.handlers.minecraft.AbstractWords
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
+import foo.starred.snowbird.api.text.replacer.AbstractTextReplacer
 import foo.starred.snowbird.utils.literal
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
@@ -38,7 +38,7 @@ object VisualWords : Module(
     private var stored by json.map("words", Codec.STRING, ComponentSerialization.CODEC.xmap({ it.visualOrderText }, { seq -> seq.toComponent() }))
 
     @JvmField
-    val words = object : AbstractWords() {}.also { it.skips = SKIP }
+    val words = object : AbstractTextReplacer() {}.also { it.skips = SKIP }
 
     init {
         observable.onChange {

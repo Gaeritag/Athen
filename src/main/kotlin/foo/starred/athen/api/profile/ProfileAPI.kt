@@ -26,7 +26,7 @@ object ProfileAPI {
         "hypixel?names=$names".api.request {
             if (inventory) headers("Include-Inventory" to "true")
 
-            onSuccess<JsonArray> { array ->
+            success<JsonArray> { array ->
                 onSuccess(buildMap {
                     for (element in array) {
                         val obj = element.asJsonObject
@@ -38,7 +38,7 @@ object ProfileAPI {
                 })
             }
 
-            onError {
+            error {
                 Athen.LOGGER.error("Failed to batch fetch profile stats for $usernames", it)
                 onSuccess(usernames.associateWith { a -> PlayerProfileStats(a) })
             }

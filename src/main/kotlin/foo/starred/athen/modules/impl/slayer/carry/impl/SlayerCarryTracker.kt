@@ -27,9 +27,9 @@ import foo.starred.athen.utils.command
 import foo.starred.athen.utils.render.fcs
 import foo.starred.athen.utils.render.renderBoundingBox
 import foo.starred.snowbird.api.*
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.handlers.time.client
-import foo.starred.snowbird.utils.Request
+import foo.starred.snowbird.api.network.data.HttpRequest
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.toDuration
 import net.minecraft.world.entity.LivingEntity
@@ -257,7 +257,7 @@ object SlayerCarryTracker : Module(
 
                 if (list.isEmpty()) return@findThenNull
 
-                Scheduler.schedule(1.client) {
+                Scheduler.schedule(1.clientTicks) {
                     if (list.size == 1) {
                         val (boss, tier, count) = list[0]
 
@@ -324,7 +324,7 @@ object SlayerCarryTracker : Module(
             }
 
             if (`webhook$each` && webhook) {
-                `webhook$url`.request(Request.POST) {
+                `webhook$url`.request(HttpRequest.POST) {
                     body(mapOf("content" to "Completed ${result.done}/${result.max} ${carry.type} carries for $name"))
                 }
             }
@@ -334,7 +334,7 @@ object SlayerCarryTracker : Module(
                 "<${Mocha.Green.argb}>Completed bosses for <aqua>$name <gray>[${type.short}${if (carry.tier == null) " Any" else " T${slayerInfo.tier?.int}"}]<r> in <yellow>$time".mod()
 
                 if (webhook) {
-                    `webhook$url`.request(Request.POST) {
+                    `webhook$url`.request(HttpRequest.POST) {
                         body(mapOf("content" to "Completed ${result.done}x ${carry.type} carries for $name ($time)"))
                     }
                 }

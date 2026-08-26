@@ -15,7 +15,7 @@ import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.Simulator
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl.*
 import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 
 @Load
 object TerminalSimulator : Module(

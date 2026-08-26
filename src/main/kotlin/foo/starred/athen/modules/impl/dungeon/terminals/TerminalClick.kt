@@ -13,7 +13,7 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.graphics.extensions.circle.circle
 import foo.starred.cascade.graphics.extensions.stroke.stroke
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.utils.mouseSX
 import foo.starred.snowbird.utils.mouseSY
 import org.joml.Matrix3x2f

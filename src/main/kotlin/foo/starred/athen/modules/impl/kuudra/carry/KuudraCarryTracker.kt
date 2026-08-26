@@ -27,9 +27,9 @@ import foo.starred.athen.utils.render.renderBoundingBox
 import foo.starred.snowbird.api.center
 import foo.starred.snowbird.api.command
 import foo.starred.snowbird.api.lie
+import foo.starred.snowbird.api.network.data.HttpRequest
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.utils.Request
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.toDuration
 import tech.thatgravyboat.skyblockapi.helpers.McClient
@@ -156,7 +156,7 @@ object KuudraCarryTracker : Module(
                 "Completed run for <aqua>${teammate.name}".mod()
                 if (announceInParty) "pc ${teammate.name}: ${result.current}/${result.total}".command(false)
                 if (webhookEach && webhook) {
-                    webhookUrl.request(Request.POST) {
+                    webhookUrl.request(HttpRequest.POST) {
                         body(mapOf("content" to "Completed ${result.amount}/${result.total} ${tier.str} carries for ${teammate.name}"))
                     }
                 }
@@ -166,7 +166,7 @@ object KuudraCarryTracker : Module(
                     "<${Mocha.Green.argb}>Completed carries for <${TextColor.AQUA}>${teammate.name} <${TextColor.GRAY}>[${tier.str}] <r>in <${TextColor.YELLOW}>$time".mod()
 
                     if (webhook) {
-                        webhookUrl.request(Request.POST) {
+                        webhookUrl.request(HttpRequest.POST) {
                             body(mapOf("content" to "Completed ${result.amount}x ${tier.str} carries for ${teammate.name} ($time)"))
                         }
                     }

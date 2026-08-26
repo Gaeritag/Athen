@@ -8,7 +8,7 @@ import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.utils.api
-import foo.starred.snowbird.handlers.time.Task
+import foo.starred.snowbird.api.scheduling.scheduler.data.tasks.base.SchedulerTask
 import foo.starred.snowbird.utils.asJsonObjectOrNull
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import net.minecraft.world.item.ItemStack
@@ -21,7 +21,7 @@ object PriceAPI {
     private val auctions = Int2ObjectOpenHashMap<Auction>(8192)
     private val bazaar = Int2ObjectOpenHashMap<Bazaar>(2048)
 
-    private var task: Task? = null
+    private var task: SchedulerTask? = null
 
     init {
         fn()
@@ -48,9 +48,9 @@ object PriceAPI {
 
     private fun fn() {
         "prices".api.request(log = false) {
-            onSuccess<JsonObject> {
-                val ah = it["auction_house"].asJsonObjectOrNull ?: return@onSuccess
-                val bz = it["bazaar"].asJsonObjectOrNull ?: return@onSuccess
+            success<JsonObject> {
+                val ah = it["auction_house"].asJsonObjectOrNull ?: return@success
+                val bz = it["bazaar"].asJsonObjectOrNull ?: return@success
 
                 auctions.clear()
                 for ((k, v) in ah.entrySet()) {

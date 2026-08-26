@@ -3,10 +3,10 @@ package foo.starred.athen.api.scheduling
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.on
-import foo.starred.snowbird.handlers.time.AbstractChronos
+import foo.starred.snowbird.api.scheduling.scheduler.impl.AbstractScheduler
 
 @Priority
-object Scheduler : AbstractChronos() {
+object Scheduler : AbstractScheduler() {
     init {
         on<TickEvent.Client.Start> {
             client0()

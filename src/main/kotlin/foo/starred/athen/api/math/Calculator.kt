@@ -5,12 +5,16 @@ import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.kommand.ICommand
+import foo.starred.kommand.IKommand
+import foo.starred.kommand.scopes.KommandCommandScope
 import foo.starred.snowbird.utils.formatted
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import kotlin.math.pow
 
 @Load
-object Calculator : ICommand {
+object Calculator : IKommand<FabricClientCommandSource> {
+    override val loader: KommandCommandScope<FabricClientCommandSource> = KommandCommandScope()
+
     private val tokenRegex = Regex("""\d+(\.\d+)?|[+\-*/x^()]""")
     private val priority = mapOf("+" to 1, "-" to 1, "*" to 2, "x" to 2, "/" to 2, "^" to 3)
 

@@ -28,7 +28,7 @@ import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangl
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.withAlpha
 import net.minecraft.client.gui.GuiGraphicsExtractor

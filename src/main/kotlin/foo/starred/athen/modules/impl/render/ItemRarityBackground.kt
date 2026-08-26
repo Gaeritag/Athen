@@ -11,7 +11,7 @@ import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.handlers.Observable.Companion.and
+import foo.starred.snowbird.api.data.Observable.Companion.and
 import foo.starred.snowbird.utils.withAlpha
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.RenderPipelines

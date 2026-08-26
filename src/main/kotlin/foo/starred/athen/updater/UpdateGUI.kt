@@ -4,11 +4,13 @@ import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.rendering.ui.effects.outline.outline
 import foo.starred.athen.api.rendering.ui.shapes.rectangle.rectangle
 import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
-import foo.starred.athen.api.screen.MultiVersionScreen
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
+import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.input.MouseButtonEvent
 
 class UpdateGUI(
     private val currentVersion: String,
@@ -16,14 +18,14 @@ class UpdateGUI(
     private val onUpdate: () -> Unit,
     private val onSkip: () -> Unit,
     private val onRemind: () -> Unit
-) : MultiVersionScreen("Update GUI [Athen]") {
+) : Screen("Update GUI [Athen]".literal()) {
     private var booling = false
 
     override fun isPauseScreen(): Boolean {
         return false
     }
 
-    override fun onScramRender(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         graphics.rectangle(0, 0, width, height, Mocha.Crust.withAlpha(0.6f))
         graphics.drawPanel((width - 360) / 2, (height - 175) / 2)
     }
@@ -59,8 +61,8 @@ class UpdateGUI(
         extractText(label, x + (104 - client.font.width(label)) / 2, y + (22 - client.font.lineHeight) / 2 + 1, false, if (b) Mocha.Base.argb else color)
     }
 
-    override fun onScramMouseClick(mouseX: Int, mouseY: Int, button: Int): Boolean {
-        if (button != 0) return super.onScramMouseClick(mouseX, mouseY, button)
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+        if (event.button() != 0) return super.mouseClicked(event, doubleClick)
 
         val x = (width - 360) / 2 + 16
         val y = (height - 175) / 2 + 141
@@ -73,8 +75,7 @@ class UpdateGUI(
         when {
             fn(0) -> {
                 onUpdate()
-                //~ if >= 26.2 'client.setScreen' -> 'client.gui.setScreen'
-                client.setScreen(null)
+                onClose()
             }
 
             fn(1) -> {
@@ -83,25 +84,23 @@ class UpdateGUI(
                     return true
                 }
 
-                onRemind()
                 "Will remind to update for version $newVersion on next launch".mod()
-                //~ if >= 26.2 'client.setScreen' -> 'client.gui.setScreen'
-                client.setScreen(null)
+                onRemind()
+                onClose()
             }
 
             fn(2) -> {
                 if (booling) {
-                    onSkip()
                     "Skipped update for version $newVersion".mod()
-                    //~ if >= 26.2 'client.setScreen' -> 'client.gui.setScreen'
-                    client.setScreen(null)
+                    onSkip()
+                    onClose()
                     return true
                 }
 
                 booling = true
             }
 
-            else -> return super.onScramMouseClick(mouseX, mouseY, button)
+            else -> return super.mouseClicked(event, doubleClick)
         }
 
         return true

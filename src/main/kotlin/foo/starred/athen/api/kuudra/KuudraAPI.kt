@@ -6,11 +6,11 @@ import foo.starred.athen.api.location.SkyBlockIsland
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
+import foo.starred.snowbird.api.data.Observable
+import foo.starred.snowbird.api.lazy.RefreshableLazy
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.api.name
 import foo.starred.snowbird.api.player
-import foo.starred.snowbird.handlers.Observable
-import foo.starred.snowbird.handlers.delegate.Expirable
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.entity.monster.Giant
 //~ if >= 26.2 'monster.MagmaCube' -> 'monster.cubemob.MagmaCube'
@@ -38,7 +38,7 @@ object KuudraAPI {
     private val set0 = setOf(KuudraSupply.supply, KuudraSupply.fuel)
     val set = setOf(KuudraPhase.Supply, KuudraPhase.Fuel)
 
-    private val _k = Expirable(::fn) { !it.isAlive }
+    private val _k = RefreshableLazy(::fn) { !it.isAlive }
 
     @JvmStatic
     var buildProgress: Observable<Int> = Observable(0)

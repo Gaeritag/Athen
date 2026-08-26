@@ -48,8 +48,8 @@ object SnapTap : Module(
         }
 
         on<TickEvent.Client.End> {
-            val options = client.options ?: return@on
-            with (pairs) {
+            val options = client.options
+            with(pairs) {
                 add(Pair(options.keyLeft, options.keyRight))
                 add(Pair(options.keyRight, options.keyLeft))
                 add(Pair(options.keyUp, options.keyDown))

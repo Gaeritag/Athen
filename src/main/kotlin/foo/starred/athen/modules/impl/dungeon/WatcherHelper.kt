@@ -20,7 +20,7 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.fcs
 import foo.starred.snowbird.api.level
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.alert
 import foo.starred.snowbird.utils.stripped
 import foo.starred.snowbird.utils.toDuration

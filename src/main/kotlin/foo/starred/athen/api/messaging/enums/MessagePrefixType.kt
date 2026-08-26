@@ -1,6 +1,6 @@
 package foo.starred.athen.api.messaging.enums
 
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
 
 enum class MessagePrefixType(val component: Component) {

@@ -32,7 +32,7 @@ package foo.starred.athen.api.location.area.impl
 
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.api.location.area.base.ISkyBlockArea
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 
 enum class SkyBlockArea(val key: String, val displayName: String, override val string: String = displayName) : ISkyBlockArea {
     NONE("none", "None"),

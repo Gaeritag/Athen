@@ -16,7 +16,7 @@ import foo.starred.athen.utils.command
 import foo.starred.athen.utils.wsUrl
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.name
-import foo.starred.snowbird.handlers.time.Task
+import foo.starred.snowbird.api.scheduling.scheduler.data.tasks.base.SchedulerTask
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ object WebSocket {
     private val http = HttpClient.newHttpClient()
 
     private var ws: JavaWebSocket? = null
-    private var rc: Task? = null
+    private var rc: SchedulerTask? = null
     private val out: Channel<JsonObject> = Channel(Channel.UNLIMITED)
     private val inn: Channel<String> = Channel(Channel.UNLIMITED)
     private val buffer = StringBuilder()

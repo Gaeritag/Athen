@@ -16,8 +16,8 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.*
-import foo.starred.snowbird.handlers.parser.parse
-import foo.starred.snowbird.handlers.time.server
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.serverTicks
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.*
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import net.minecraft.network.chat.HoverEvent
@@ -142,7 +142,7 @@ object PartyFinderJoinStats : Module(
         "Kicked <aqua>$name<r>: $reason".mod()
 
         if (!`kick$message$party`) return
-        Scheduler.schedule(`kick$message$party$delay`.server) {
+        Scheduler.schedule(`kick$message$party$delay`.serverTicks) {
             "party chat [Athen] Kicked $name: $reason".command()
         }
     }

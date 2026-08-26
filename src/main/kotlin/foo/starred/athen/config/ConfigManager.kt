@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive
 import foo.starred.athen.annotations.Priority
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.data.feature.ConfigFeatureData
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 import java.awt.Color
 
 @Priority(-4)

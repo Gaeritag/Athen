@@ -17,7 +17,7 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.render.renderPos
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.abbreviate
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.toDuration

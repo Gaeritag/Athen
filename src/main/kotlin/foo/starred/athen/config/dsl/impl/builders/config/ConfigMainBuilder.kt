@@ -5,7 +5,7 @@ import foo.starred.athen.config.Category
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.dsl.base.ConfigScope
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.handlers.Observable
+import foo.starred.snowbird.api.data.Observable
 
 class ConfigMainBuilder(
     val configKey: String,

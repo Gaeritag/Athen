@@ -10,7 +10,7 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.command
 import foo.starred.snowbird.api.name
-import foo.starred.snowbird.handlers.time.client
+import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
 import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
@@ -38,7 +38,7 @@ object KuudraQueuer : Module(
             if (PartyAPI.leader?.name?.equals(name) ?: false) return@on
             if (bool) return@on ::bool.set(false)
 
-            Scheduler.schedule(delay.client) {
+            Scheduler.schedule(delay.clientTicks) {
                 "instancerequeue".command()
             }
         }

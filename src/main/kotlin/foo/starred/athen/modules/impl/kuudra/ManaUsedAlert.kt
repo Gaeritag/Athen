@@ -9,8 +9,7 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.command
-import foo.starred.snowbird.handlers.parser.parse
-import tech.thatgravyboat.skyblockapi.helpers.McLevel
+import foo.starred.snowbird.api.text.parser.impl.parse
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 
 @Load
@@ -25,11 +24,12 @@ object ManaUsedAlert : Module(
 
     init {
         on<MessageEvent.Chat.Receive> {
+            val level = client.level ?: return@on
             val p = client.player ?: return@on
             val i0 = regex.findGroup(stripped, "int")?.toIntOrNull() ?: return@on
             var i1 = 0
 
-            for (a in McLevel.players) {
+            for (a in level.players()) {
                 if (a == p) continue
                 if (a.uuid.version() != 4) continue
                 if (p.distanceToSqr(a) > 25) continue

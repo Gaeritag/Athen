@@ -2,16 +2,16 @@ package foo.starred.athen.api.slayers.data
 
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
+import foo.starred.snowbird.api.lazy.RefreshableLazy
 import foo.starred.snowbird.api.level
 import foo.starred.snowbird.api.name
-import foo.starred.snowbird.handlers.delegate.Expirable
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.entity.Entity
 
 data class SlayerInfo(val entity: Entity) {
-    val owner by Expirable(::fn0, true)
-    val type by Expirable(::fn1, true)
-    val tier by Expirable(::fn2, true)
+    val owner by RefreshableLazy(::fn0, true)
+    val type by RefreshableLazy(::fn1, true)
+    val tier by RefreshableLazy(::fn2, true)
 
     val string: String
         get() = "${type}_T${tier?.int}"

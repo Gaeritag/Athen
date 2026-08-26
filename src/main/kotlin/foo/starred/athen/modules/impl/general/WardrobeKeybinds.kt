@@ -122,15 +122,14 @@ object WardrobeKeybinds : Module(
 
         if (System.currentTimeMillis() - lastClick < ping) return
         val player = client.player ?: return
-        val container = player.containerMenu ?: return
 
         if (key == prevPage) {
-            if (currentPage > 1) guiClick(container.containerId, 45)
+            if (currentPage > 1) guiClick(player.containerMenu.containerId, 45)
             return
         }
 
         if (key == nextPage) {
-            if (currentPage < maxPage) guiClick(container.containerId, 53)
+            if (currentPage < maxPage) guiClick(player.containerMenu.containerId, 53)
             return
         }
 
@@ -140,7 +139,7 @@ object WardrobeKeybinds : Module(
             val slot2 = wardrobeSlots.find { it.idx == swapKey2 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
             val s = if (slot1.equipped) slot2.idx else slot1.idx
 
-            guiClick(container.containerId, s)
+            guiClick(player.containerMenu.containerId, s)
             lastClick = System.currentTimeMillis()
             cancel()
             return
@@ -149,7 +148,7 @@ object WardrobeKeybinds : Module(
         val slot = wardrobeSlots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
         if (slot.equipped && preventUnequip) return
 
-        guiClick(container.containerId, slot.idx)
+        guiClick(player.containerMenu.containerId, slot.idx)
         lastClick = System.currentTimeMillis()
         cancel()
     }

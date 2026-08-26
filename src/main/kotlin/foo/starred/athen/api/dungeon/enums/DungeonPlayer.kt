@@ -34,8 +34,8 @@
 package foo.starred.athen.api.dungeon.enums
 
 import foo.starred.athen.Athen
+import foo.starred.snowbird.api.lazy.RefreshableLazy
 import foo.starred.snowbird.api.level
-import foo.starred.snowbird.handlers.delegate.Expirable
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.entity.Entity
 
@@ -48,7 +48,7 @@ class DungeonPlayer(
     var dungeonClass: DungeonClass? = dungeonClass
         internal set
 
-    val entity by Expirable(::d) { !it.isAlive }
+    val entity by RefreshableLazy(::d) { !it.isAlive }
 
     init {
         Athen.LOGGER.debug("Created DungeonPlayer with entity: {}", entity)

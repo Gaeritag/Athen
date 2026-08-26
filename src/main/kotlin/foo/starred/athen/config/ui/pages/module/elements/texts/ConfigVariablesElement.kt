@@ -19,7 +19,7 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.handlers.parser.parse
+import foo.starred.snowbird.api.text.parser.impl.parse
 
 class ConfigVariablesElement(
     config: ConfigVariablesElementData
