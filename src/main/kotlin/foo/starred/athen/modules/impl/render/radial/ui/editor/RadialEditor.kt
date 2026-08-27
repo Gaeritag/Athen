@@ -2,6 +2,8 @@
 
 package foo.starred.athen.modules.impl.render.radial.ui.editor
 
+import foo.starred.athen.events.GuiEvent
+import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.actions.IAction
 import foo.starred.athen.modules.impl.render.radial.data.RadialSlot
@@ -21,12 +23,14 @@ import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.containe
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrollable
 import foo.starred.cascade.screen.CascadeScreen
+import foo.starred.snowbird.api.client
 
 object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
     private var head: RadialHeader
     private var tree: RadialTree
     private var form: RadialForm
     private var view: RadialPreview
+    private var last = -1
 
     val working = mutableListOf<RadialSlot>()
     val collapsed = mutableSetOf<Int>()
@@ -57,6 +61,14 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         }
 
     init {
+        on<GuiEvent.Close.Any> {
+            if (screen !== this@RadialEditor) return@on
+            if (last == -1) return@on
+
+            client.options.guiScale().set(last)
+            last = -1
+        }
+
         container {
             size = FillSizeConstraint()
             position = FixedPositionConstraint(0, 0)
@@ -101,10 +113,15 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
 
     override fun init() {
         super.init()
+
         working.clear()
         working.addAll(RadialMenu.slots)
         collapsed.clear()
         reload(0, -1)
+
+        if (last != -1) return
+        last = client.options.guiScale().get()
+        client.options.guiScale().set(2)
     }
 
     override fun onClose() {
@@ -113,6 +130,7 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         RadialMenu.slots.addAll(working)
         RadialMenu.save()
         RadialMenu.disk()
+
         super.onClose()
     }
 
