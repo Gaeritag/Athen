@@ -19,8 +19,8 @@ object LineRenderer : ILevelRenderer {
         forDepth(LevelQueueImpl.lines) { depth, lines ->
             val type = if (depth) LevelRenderTypeImpl.LINES.depth else LevelRenderTypeImpl.LINES.depthless
             //? if >= 26.2 {
-            //consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn(pose, buffer, lines) }
-            //? } else {
+            /*consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn(pose, buffer, lines) }
+            *///? } else {
             fn(pose, consumers.getBuffer(type), lines)
             //? }
         }

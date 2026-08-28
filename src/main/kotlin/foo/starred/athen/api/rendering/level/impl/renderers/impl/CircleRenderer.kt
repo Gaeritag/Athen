@@ -24,8 +24,8 @@ object CircleRenderer : ILevelRenderer {
         forDepth(LevelQueueImpl.circles0) { depth, circles ->
             val type = if (depth) LevelRenderTypeImpl.LINES.depth else LevelRenderTypeImpl.LINES.depthless
             //? if >= 26.2 {
-            //consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn0(pose, buffer, circles) }
-            //? } else {
+            /*consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn0(pose, buffer, circles) }
+            *///? } else {
             fn0(pose, consumers.getBuffer(type), circles)
             //? }
         }
@@ -34,8 +34,8 @@ object CircleRenderer : ILevelRenderer {
             val type = if (depth) LevelRenderTypeImpl.TRIANGLE_FAN.depth else LevelRenderTypeImpl.TRIANGLE_FAN.depthless
             for (circle in circles) {
                 //? if >= 26.2 {
-                //consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn1(pose, buffer, circle) }
-                //? } else {
+                /*consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn1(pose, buffer, circle) }
+                *///? } else {
                 fn1(pose, consumers.getBuffer(type), circle)
                 consumers.endBatch(type)
                 //? }

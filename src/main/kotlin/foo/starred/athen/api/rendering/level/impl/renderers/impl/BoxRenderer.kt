@@ -28,8 +28,8 @@ object BoxRenderer : ILevelRenderer {
         forDepth(LevelQueueImpl.boxes0) { depth, boxes ->
             val renderType = if (depth) LevelRenderTypeImpl.LINES.depth else LevelRenderTypeImpl.LINES.depthless
             //? if >= 26.2 {
-            //consumers.submitCustomGeometry(poseStack, renderType) { pose, buffer -> fn0(pose, buffer, boxes) }
-            //? } else {
+            /*consumers.submitCustomGeometry(poseStack, renderType) { pose, buffer -> fn0(pose, buffer, boxes) }
+            *///? } else {
             fn0(pose, consumers.getBuffer(renderType), boxes)
             //? }
         }
@@ -37,8 +37,8 @@ object BoxRenderer : ILevelRenderer {
         forDepth(LevelQueueImpl.boxes1) { depth, boxes ->
             val type = if (depth) LevelRenderTypeImpl.DEBUG_FILLED.depth else LevelRenderTypeImpl.DEBUG_FILLED.depthless
             //? if >= 26.2 {
-            //consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn1(pose, buffer, boxes) }
-            //? } else {
+            /*consumers.submitCustomGeometry(poseStack, type) { pose, buffer -> fn1(pose, buffer, boxes) }
+            *///? } else {
             fn1(pose, consumers.getBuffer(type), boxes)
             //? }
         }

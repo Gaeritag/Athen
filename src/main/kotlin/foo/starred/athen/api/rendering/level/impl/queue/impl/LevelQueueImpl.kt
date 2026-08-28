@@ -8,6 +8,7 @@ import foo.starred.athen.api.rendering.level.impl.renderers.base.ILevelRenderer
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.events.core.on
 import foo.starred.snowbird.api.client
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 
 @Load
 object LevelQueueImpl : ILevelQueue {
@@ -22,7 +23,7 @@ object LevelQueueImpl : ILevelQueue {
     override val circles1: ExtractedQueue<ExtractedCircle> = ExtractedQueue()
 
     init {
-        on<WorldRenderEvent.Extract>(Int.MIN_VALUE) {
+        LevelRenderEvents.START_MAIN.register {
             clear()
         }
 

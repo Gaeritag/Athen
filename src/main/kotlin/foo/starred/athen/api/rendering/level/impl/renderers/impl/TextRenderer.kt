@@ -33,8 +33,8 @@ object TextRenderer : ILevelRenderer {
             val mode = if (text.depth) Font.DisplayMode.POLYGON_OFFSET else Font.DisplayMode.SEE_THROUGH
 
             //? if >= 26.2 {
-            //consumers.submitText(poseStack, x, 0f, text.text.visualOrderText, text.shadow, mode, LightCoordsUtil.FULL_BRIGHT, text.color0, text.color1, 0)
-            //? } else {
+            /*consumers.submitText(poseStack, x, 0f, text.text.visualOrderText, text.shadow, mode, LightCoordsUtil.FULL_BRIGHT, text.color0, text.color1, 0)
+            *///? } else {
             client.font.drawInBatch(text.text, x, 0f, text.color0, text.shadow, poseStack.last().pose(), consumers, mode, text.color1, LightCoordsUtil.FULL_BRIGHT)
             //? }
 
