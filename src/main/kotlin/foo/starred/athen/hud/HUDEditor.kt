@@ -202,7 +202,7 @@ object HUDEditor : Screen("HUD Editor [Athen]".literal()) {
             }
         }
 
-        return false
+        return super.keyPressed(event)
     }
 
     override fun onClose() {
