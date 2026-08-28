@@ -97,8 +97,8 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         head = RadialHeader(side)
 
         tree = RadialTree(scrollable {
-            size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 296))
-            position = FixedPositionConstraint(0, 24)
+            size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 298))
+            position = FixedPositionConstraint(0, 20)
             attach(side)
         })
 
@@ -124,14 +124,9 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         client.options.guiScale().set(2)
     }
 
-    override fun onClose() {
-        commit()
-        RadialMenu.slots.clear()
-        RadialMenu.slots.addAll(working)
-        RadialMenu.save()
-        RadialMenu.disk()
-
-        super.onClose()
+    override fun removed() {
+        save()
+        super.removed()
     }
 
     fun extra(): List<Pair<Int, RadialSlot>> {
@@ -154,6 +149,10 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         unfocus()
 
         val s = slot ?: run {
+            form.name.value = ""
+            form.item.value = ""
+            form.value.value = ""
+            form.texture.value = ""
             head.fn()
             tree.fn()
             form.fn()
@@ -161,17 +160,10 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         }
 
         form.name.value = s.name
-        form.name.cursor = s.name.length
         form.item.value = s.itemId
-        form.item.cursor = s.itemId.length
-
         type = s.action.id
         form.value.value = s.action.serializable
-        form.value.cursor = s.action.serializable.length
-
-        val tex = s.text ?: ""
-        form.texture.value = tex
-        form.texture.cursor = tex.length
+        form.texture.value = s.text ?: ""
 
         head.fn()
         tree.fn()
@@ -186,13 +178,18 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         s.action = IAction.create(type, form.value.value)
     }
 
+    fun sync() {
+        commit()
+        tree.fn()
+    }
+
     fun unfocus() {
         scene.focused = null
         editing = false
     }
 
     fun rename() {
-        val n = head.field0.value.trim()
+        val n = head.title.value.trim()
         if (n.isBlank() || n == RadialMenu.active || n in names) {
             editing = false
             head.fn()

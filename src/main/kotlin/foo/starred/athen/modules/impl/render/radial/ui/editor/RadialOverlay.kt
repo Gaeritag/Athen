@@ -7,22 +7,20 @@ import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.cascade.primitives.impl.RectanglePrimitive
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.hovered
 import foo.starred.snowbird.utils.mouseSX
 import foo.starred.snowbird.utils.mouseSY
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
-class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<RadialOverlay>() {
+class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement<RadialOverlay>() {
     override var x: Float = 0f
     override var y: Float = 0f
     override var width: Float = 0f
     override var height: Float = 0f
     override var color: Int = -1
 
-    override fun render(graphics: GuiGraphicsExtractor) {
-        if (!visible) return
+    override fun draw(graphics: GuiGraphicsExtractor) {
         val working = RadialEditor.working.takeIf { it.isNotEmpty() } ?: return
 
         val i0 = RadialEditor.main
@@ -103,7 +101,5 @@ class RadialOverlay(private val panel: RectanglePrimitive) : IPrimitiveElement<R
             graphics.outline(lmx - 5, lmy - 5, tw + 10, client.font.lineHeight + 10, 1, Mocha.Lavender.argb)
             graphics.extractText(label, lmx, lmy, false, Mocha.Text.argb)
         }
-
-        super.render(graphics)
     }
 }

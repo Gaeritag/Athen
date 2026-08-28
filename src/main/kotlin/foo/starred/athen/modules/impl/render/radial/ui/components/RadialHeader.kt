@@ -2,41 +2,40 @@
 
 package foo.starred.athen.modules.impl.render.radial.ui.components
 
-import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
-import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent.Companion.textField
+import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
+import foo.starred.athen.modules.impl.render.radial.ui.components.RadialEditableText.Companion.radialEditableText
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
+import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
-import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
+import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
-import foo.starred.cascade.primitives.impl.RectanglePrimitive
-import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
-import foo.starred.cascade.primitives.impl.TextPrimitive
+import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
+import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
+import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.literal
 
-class RadialHeader(side: RectanglePrimitive) {
-    var text00: TextPrimitive
-        private set
-
-    var field0: TextFieldComponent
+class RadialHeader(side: IPrimitiveElement<*>) {
+    var title: RadialEditableText
         private set
 
     init {
-        val head = rectangle {
-            size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 24))
+        val head = roundedRectangle {
+            size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 20))
             position = FixedPositionConstraint(0, 0)
             color = Mocha.Base.argb
+            radius = CascadeGeometricRadius.ZERO
 
             effect(OutlineEffect {
                 color = Mocha.Surface0.argb
@@ -45,17 +44,18 @@ class RadialHeader(side: RectanglePrimitive) {
             attach(side)
         }
 
-        rectangle {
+        roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
             color = Mocha.Surface1.argb
+            radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
                 color = Mocha.Overlay0.argb
             })
 
             on<MouseEvent.Press> {
-                cancel()
+                this.cancel()
                 if (button != 0) return@on
 
                 RadialEditor.save()
@@ -64,63 +64,32 @@ class RadialHeader(side: RectanglePrimitive) {
             }
 
             attach(head)
-            adopt(text {
-                text = "<".literal()
+            adopt(image {
+                location = ResourceAPI.identify("textures/gui/chevron.png")
+                rotation = -90f
                 color = Mocha.Text.argb
                 position = CenterPositionConstraint()
+                size = FixedSizeConstraint(6f, 6f)
+                interact = false
             })
         }
 
         val box0 = container {
-            size = FixedSizeConstraint(70, 24)
+            size = FixedSizeConstraint(70, 20)
             position = FixedPositionConstraint(16, 0)
 
             attach(head)
         }
 
-        text00 = text {
-            text = RadialMenu.active.literal()
-            color = Mocha.Lavender.argb
-            position = CenterPositionConstraint()
-            interact = true
+        title = radialEditableText {
+            size = FillSizeConstraint()
+            position = FixedPositionConstraint(0, 0)
+            textSize = 8.5f
+            color0 = Mocha.Lavender.argb
+            value = RadialMenu.active
 
-            on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
-                if (RadialEditor.editing) return@on RadialEditor.rename()
-
-                RadialEditor.unfocus()
-                RadialEditor.editing = true
-                field0.value = RadialMenu.active
-                field0.cursor = field0.value.length
-                field0.visible = true
-                text00.visible = false
-                RadialEditor.scene.focused = field0
-            }
-
-            attach(box0)
-        }
-
-        field0 = textField {
-            size = MixedSizeConstraint(PercentSizeConstraint(90f, 0f), FixedSizeConstraint(0, 16))
-            position = CenterPositionConstraint()
-            placeholder = "Config..."
-            visible = false
-
-            on<KeyEvent.Press> {
-                if (key == InputConstants.KEY_RETURN) {
-                    RadialEditor.rename()
-                    cancel()
-                    return@on
-                }
-
-                if (key == InputConstants.KEY_ESCAPE) {
-                    RadialEditor.editing = false
-                    field0.visible = false
-                    text00.visible = true
-                    RadialEditor.scene.focused = null
-                    cancel()
-                }
+            commit {
+                RadialEditor.rename()
             }
 
             attach(box0)
@@ -133,10 +102,11 @@ class RadialHeader(side: RectanglePrimitive) {
             attach(head)
         }
 
-        rectangle {
+        roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
+            radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
                 color = Mocha.Overlay0.argb
@@ -152,17 +122,21 @@ class RadialHeader(side: RectanglePrimitive) {
             }
 
             attach(box1)
-            adopt(text {
-                text = ">".literal()
+            adopt(image {
+                location = ResourceAPI.identify("textures/gui/chevron.png")
+                rotation = 90f
                 color = Mocha.Text.argb
                 position = CenterPositionConstraint()
+                size = FixedSizeConstraint(6f, 6f)
+                interact = false
             })
         }
 
-        rectangle {
+        roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
+            radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
                 color = Mocha.Overlay0.argb
@@ -188,16 +162,19 @@ class RadialHeader(side: RectanglePrimitive) {
 
             attach(box1)
             adopt(text {
+                wrapper = CascadeTextWrapper
                 text = "+".literal()
+                textSize = 9f
                 color = Mocha.Green.argb
                 position = CenterPositionConstraint()
             })
         }
 
-        rectangle {
+        roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
             color = Mocha.Surface1.argb
+            radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
                 color = Mocha.Overlay0.argb
@@ -219,7 +196,9 @@ class RadialHeader(side: RectanglePrimitive) {
 
             attach(box1)
             adopt(text {
+                wrapper = CascadeTextWrapper
                 text = "×".literal()
+                textSize = 8.5f
                 color = Mocha.Red.argb
                 position = CenterPositionConstraint()
             })
@@ -227,8 +206,7 @@ class RadialHeader(side: RectanglePrimitive) {
     }
 
     fun fn() {
-        text00.text = RadialMenu.active.literal()
-        text00.visible = !RadialEditor.editing
-        field0.visible = RadialEditor.editing
+        if (title.editing) return
+        title.value = RadialMenu.active
     }
 }
