@@ -172,7 +172,7 @@ object ConfigModules {
         if (max <= 0f) return
 
         object : RectanglePrimitive() {
-            override fun render(graphics: GuiGraphicsExtractor) {
+            override fun draw(graphics: GuiGraphicsExtractor) {
                 val parent = parent ?: return
                 val scroll = abs(ConfigUI.right.scroll)
                 val remaining = (max - scroll).coerceAtLeast(0f)

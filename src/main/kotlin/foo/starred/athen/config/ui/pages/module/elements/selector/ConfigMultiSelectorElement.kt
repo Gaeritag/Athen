@@ -47,10 +47,9 @@ class ConfigMultiSelectorElement(
     }
 
     private val box = object : RoundedRectanglePrimitive() {
-        override fun render(graphics: GuiGraphicsExtractor) {
-            if (!visible) return
+        override fun draw(graphics: GuiGraphicsExtractor) {
             graphics.nextStratum()
-            super.render(graphics)
+            super.draw(graphics)
         }
     }.apply {
         radius = CascadeGeometricRadius(4f)

@@ -221,8 +221,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
         }
     }
 
-    override fun render(graphics: GuiGraphicsExtractor) {
-        if (!visible) return
+    override fun draw(graphics: GuiGraphicsExtractor) {
         val f = client.font ?: return
         val b = root.focused == this
 
@@ -261,8 +260,6 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                 graphics.rectangle(x0 + x1, y + 2, 1, height - 4, Catppuccin.Mocha.Lavender.argb)
             }
         }
-
-        super.render(graphics)
     }
 
     fun reset(v: Boolean = false) {

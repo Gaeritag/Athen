@@ -172,7 +172,7 @@ object ConfigModuleSettingsPage {
             val content = object : ContainerPrimitive() {
                 var bool = true
 
-                override fun render(graphics: GuiGraphicsExtractor) {
+                override fun draw(graphics: GuiGraphicsExtractor) {
                     val v = height > 0f
                     if (bool != v) {
                         bool = v
@@ -181,7 +181,7 @@ object ConfigModuleSettingsPage {
 
                     if (!v) return
                     graphics.scissor(x, y, width, height) {
-                        super.render(graphics)
+                        super.draw(graphics)
                     }
                 }
             }.apply {

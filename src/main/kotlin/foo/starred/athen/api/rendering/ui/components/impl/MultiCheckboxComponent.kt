@@ -77,8 +77,7 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
         }
     }
 
-    override fun render(graphics: GuiGraphicsExtractor) {
-        if (!visible) return
+    override fun draw(graphics: GuiGraphicsExtractor) {
         if (root.focused != this) open = false
         val font = client.font ?: return
 
@@ -118,8 +117,6 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
                 }
             }
         }
-
-        super.render(graphics)
     }
 
     override fun contains(x: Double, y: Double): Boolean {

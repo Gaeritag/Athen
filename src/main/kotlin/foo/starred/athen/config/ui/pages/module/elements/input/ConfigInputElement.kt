@@ -276,11 +276,11 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
         }
     }
 
-    override fun render(graphics: GuiGraphicsExtractor) {
+    override fun draw(graphics: GuiGraphicsExtractor) {
         val bool0 = root.focused != this
         if (bool0) scroll = 0
 
-        super.render(graphics)
+        super.draw(graphics)
 
         val font = CascadeFonts.arial
         val x0 = x.toInt()

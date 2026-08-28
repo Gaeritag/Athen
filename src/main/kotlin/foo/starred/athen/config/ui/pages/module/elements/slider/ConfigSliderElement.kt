@@ -107,9 +107,9 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
         }
     }
 
-    override fun render(graphics: GuiGraphicsExtractor) {
+    override fun draw(graphics: GuiGraphicsExtractor) {
         if (root.focused == self) value(client.mouseHandler.getScaledXPos(client.window))
-        super.render(graphics)
+        super.draw(graphics)
 
         val value0 = if (max > min) ((value - min) / (max - min)).toFloat() else 0f
         if (value0 > 0f) {

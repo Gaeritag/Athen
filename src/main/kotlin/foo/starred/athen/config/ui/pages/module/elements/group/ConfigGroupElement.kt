@@ -25,9 +25,9 @@ object ConfigGroupElement {
                 `animation$float` = AnimatableFloat(if (expanded) -180f else -90f)
             }
 
-            override fun render(graphics: GuiGraphicsExtractor) {
+            override fun draw(graphics: GuiGraphicsExtractor) {
                 rotation = `animation$float`?.value ?: 0f
-                super.render(graphics)
+                super.draw(graphics)
             }
         }.apply {
             location = ResourceAPI.identify("textures/gui/chevron.png")

@@ -56,11 +56,9 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
     }
 
     private val tooltip = object : RoundedRectanglePrimitive() {
-        override fun render(graphics: GuiGraphicsExtractor) {
-            if (!visible) return
-
+        override fun draw(graphics: GuiGraphicsExtractor) {
             graphics.nextStratum()
-            super.render(graphics)
+            super.draw(graphics)
         }
     }.apply {
         color = Catppuccin.Mocha.Base.argb

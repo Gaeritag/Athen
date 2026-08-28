@@ -14,8 +14,8 @@ class RubixSimulator : ITerminalSim(TerminalType.RUBIX) {
     //? if <= 26.1 {
     private val items = listOf(Items.ORANGE_STAINED_GLASS_PANE, Items.YELLOW_STAINED_GLASS_PANE, Items.GREEN_STAINED_GLASS_PANE, Items.BLUE_STAINED_GLASS_PANE, Items.RED_STAINED_GLASS_PANE)
     //?} else {
-    //private val items = listOf(Items.STAINED_GLASS_PANE.orange(), Items.STAINED_GLASS_PANE.yellow(), Items.STAINED_GLASS_PANE.green(), Items.STAINED_GLASS_PANE.blue(), Items.STAINED_GLASS_PANE.red())
-    //?}
+    /*private val items = listOf(Items.STAINED_GLASS_PANE.orange(), Items.STAINED_GLASS_PANE.yellow(), Items.STAINED_GLASS_PANE.green(), Items.STAINED_GLASS_PANE.blue(), Items.STAINED_GLASS_PANE.red())
+    *///?}
 
     override fun s(): Map<Int, ItemStack> = buildMap {
         for (row in 1..3) for (col in 3..5) put(row * 9 + col, items.random().pane())

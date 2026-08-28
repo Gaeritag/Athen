@@ -266,8 +266,8 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
         }
 
         preview = object : RectanglePrimitive() {
-            override fun render(graphics: GuiGraphicsExtractor) {
-                super.render(graphics)
+            override fun draw(graphics: GuiGraphicsExtractor) {
+                super.draw(graphics)
 
                 val x0 = x.toInt() + 16
                 val y0 = y.toInt() + 48
