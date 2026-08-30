@@ -32,6 +32,15 @@ vec2 project(vec3 ray, vec2 tan, float strength, float cap) {
 void main() {
     vec2 ndc = texCoord * 2.0 - 1.0;
     vec2 tan = Params.zw;
+
+    float depth = texture(DepthSampler, texCoord).r;
+    float linear = DepthParams.x / max(depth * DepthParams.y + DepthParams.z, 0.00001);
+
+    if (linear < 0.115) {
+        fragColor = texture(InSampler, texCoord);
+        return;
+    }
+
     vec2 velocity = vec2(0.0);
 
     if (Params.x > 0.0) {
@@ -41,8 +50,6 @@ void main() {
     }
 
     if (Movement.w > 0.0) {
-        float depth = texture(DepthSampler, texCoord).r;
-        float linear = DepthParams.x / max(depth * DepthParams.y + DepthParams.z, 0.00001);
         vec3 ray = vec3(ndc * tan, -1.0) * linear + Movement.xyz;
 
         velocity += project(ray, tan, Movement.w, DepthParams.w);
