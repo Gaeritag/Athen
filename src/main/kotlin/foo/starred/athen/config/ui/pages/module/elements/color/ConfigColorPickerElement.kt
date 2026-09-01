@@ -260,7 +260,8 @@ class ConfigColorPickerElement(
             animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
             outline.color = Catppuccin.Mocha.Lavender.argb
 
-            box.position = FixedPositionConstraint(x + width - 140f, if (y + 146f > ConfigUI.scene.height) y - 132f else y + 18f)
+            val y0 = y - ConfigUI.right.scroll
+            box.position = FixedPositionConstraint(x + width - 140f, if (y0 + 146f > ConfigUI.scene.height) y0 - 132f else y0 + 18f)
             return
         }
 
