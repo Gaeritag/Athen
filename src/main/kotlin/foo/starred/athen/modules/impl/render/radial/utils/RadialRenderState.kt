@@ -26,7 +26,7 @@ class RadialRenderState(
 ) : GuiElementRenderState {
     private val thickness = RadialMenu.thickness
 
-    private val pose = graphics.pose()
+    private val pose = Matrix3x2f(graphics.pose())
     private val rect = graphics.scissorStack.peek()
     private val bounds = run {
         val r = (RadialMenu.radius2 + sub.size * (3f + thickness) + 10f).toInt()

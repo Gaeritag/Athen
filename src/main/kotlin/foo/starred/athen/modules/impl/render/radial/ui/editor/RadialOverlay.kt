@@ -8,9 +8,6 @@ import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.hovered
-import foo.starred.snowbird.utils.mouseSX
-import foo.starred.snowbird.utils.mouseSY
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement<RadialOverlay>() {
@@ -29,8 +26,8 @@ class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement
         val x0 = panel.x.toInt() + 160
         val y0 = panel.y.toInt() + 160
 
-        val mx = mouseSX
-        val my = mouseSY
+        val mx = mouseX
+        val my = mouseY
 
         val bool = RadialMenu.type == 0 && i1 >= 0 && i0 in working.indices
         val current = if (bool) working[i0].sub else working
@@ -92,7 +89,7 @@ class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement
             else current.getOrNull(main)?.name
         }
 
-        if (label != null && hovered(panel.x, panel.y, 320, 320, true)) {
+        if (label != null && panel.hovered) {
             val tw = client.font.width(label)
             val lmx = mx.toInt() + 12
             val lmy = my.toInt() - 4

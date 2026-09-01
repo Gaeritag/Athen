@@ -14,8 +14,6 @@ import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.RenderStatePrimitive.Companion.renderState
-import foo.starred.snowbird.utils.mouseSX
-import foo.starred.snowbird.utils.mouseSY
 
 class RadialPreview(main: ContainerPrimitive) {
     var panel: RectanglePrimitive
@@ -116,8 +114,8 @@ class RadialPreview(main: ContainerPrimitive) {
                 val cur0 = if (b0) list0[s0].sub else list0
                 val num0 = maxOf(1, cur0.size)
 
-                val x2 = mouseSX - x1
-                val y2 = mouseSY - y1
+                val x2 = mouseX - x1
+                val y2 = mouseY - y1
                 val d0 = x2 * x2 + y2 * y2
 
                 val ex0 = if (b0) emptyList() else RadialEditor.extra()
@@ -128,15 +126,15 @@ class RadialPreview(main: ContainerPrimitive) {
                 if (d0 >= 225f) {
                     if (!b0 && s0 in list0.indices) {
                         h1 = when (RadialMenu.type) {
-                            2 -> RadialRenderState.hitRing(mouseSX, mouseSY, x1, y1, num0, RadialMenu.radius2, ex0.map { it.first }, false, RadialMenu.thickness)
-                            1 -> RadialRenderState.hitNested(mouseSX, mouseSY, x1, y1, num0, RadialMenu.radius2, s0, list0[s0].sub.size, false, RadialMenu.thickness)
+                            2 -> RadialRenderState.hitRing(mouseX, mouseY, x1, y1, num0, RadialMenu.radius2, ex0.map { it.first }, false, RadialMenu.thickness)
+                            1 -> RadialRenderState.hitNested(mouseX, mouseY, x1, y1, num0, RadialMenu.radius2, s0, list0[s0].sub.size, false, RadialMenu.thickness)
                             else -> -1
                         }
 
                         if (h1 != -1 && RadialMenu.type == 1) h0 = s0
                     }
 
-                    if (h0 == -1 && h1 == -1) h0 = RadialRenderState.hit(mouseSX, mouseSY, x1, y1, num0, RadialMenu.radius1, RadialMenu.radius2)
+                    if (h0 == -1 && h1 == -1) h0 = RadialRenderState.hit(mouseX, mouseY, x1, y1, num0, RadialMenu.radius1, RadialMenu.radius2)
                 }
 
                 val mini0 = if (RadialMenu.type == 1 && s0 in list0.indices) list0[s0].sub else emptyList()
