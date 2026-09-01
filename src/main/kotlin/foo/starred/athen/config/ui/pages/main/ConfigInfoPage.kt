@@ -1,7 +1,9 @@
 package foo.starred.athen.config.ui.pages.main
 
+import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.ui.ConfigUI.right
 import foo.starred.athen.ui.themes.Catppuccin
+import foo.starred.athen.utils.data
 import foo.starred.cascade.animation.data.AnimatableColor.Companion.animateColor
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.data.PositionAnchor
@@ -16,6 +18,7 @@ import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
+import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.api.text.parser.impl.parse
@@ -23,7 +26,12 @@ import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.open
 
 object ConfigInfoPage {
+    private var changelogs: List<String> = emptyList()
+    private val texts = mutableListOf<TextPrimitive>()
+
     fun fn() {
+        get()
+
         val links = container {
             position = FixedPositionConstraint(14f, 14f)
             size = FixedSizeConstraint(482f, 28f)
@@ -136,29 +144,34 @@ object ConfigInfoPage {
                 position = FixedPositionConstraint(14f, 14f)
             })
 
-            adopt(text {
-                wrapper = CascadeTextWrapper
-                text = "- Changelog 1".literal()
-                textSize = 12f
-                color = Catppuccin.Mocha.Subtext0.argb
-                position = FixedPositionConstraint(14f, 40f)
-            })
+            texts.clear()
+            val list = changelogs.ifEmpty { listOf("Loading changelogs...", "Loading changelogs...", "Loading changelogs...") }
+            var y0 = 40f
 
-            adopt(text {
-                wrapper = CascadeTextWrapper
-                text = "- Changelog 2".literal()
-                textSize = 12f
-                color = Catppuccin.Mocha.Subtext0.argb
-                position = FixedPositionConstraint(14f, 56f)
-            })
+            for (log in list.take(3)) {
+                adopt(text {
+                    wrapper = CascadeTextWrapper
+                    text = "- $log".literal()
+                    textSize = 12f
+                    color = Catppuccin.Mocha.Subtext0.argb
+                    position = FixedPositionConstraint(14f, y0)
+                }.also { texts.add(it) })
 
-            adopt(text {
-                wrapper = CascadeTextWrapper
-                text = "- Changelog 3".literal()
-                textSize = 12f
-                color = Catppuccin.Mocha.Subtext0.argb
-                position = FixedPositionConstraint(14f, 72f)
-            })
+                y0 += 16f
+            }
+        }
+    }
+
+    private fun get() {
+        if (changelogs.isNotEmpty()) return
+        "athen/changelogs.json".data.request {
+            success<List<String>> {
+                changelogs = it
+
+                for ((k, v) in it.take(3).withIndex()) {
+                    texts.getOrNull(k)?.text = "- $v".literal()
+                }
+            }
         }
     }
 }
