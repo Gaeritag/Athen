@@ -135,7 +135,7 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
 
         val list0 = working[main].sub
         val n = list0.size
-        val m = maxOf(3, working.size)
+        val m = maxOf(1, working.size)
         val p = main
 
         return List(n) { i ->

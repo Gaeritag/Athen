@@ -49,7 +49,7 @@ class RadialPreview(main: ContainerPrimitive) {
 
                 val b0 = RadialMenu.type == 0 && s1 >= 0 && s0 in list0.indices
                 val cur0 = if (b0) list0[s0].sub else list0
-                val num0 = maxOf(3, cur0.size)
+                val num0 = maxOf(1, cur0.size)
 
                 val x2 = x0 - x1
                 val y2 = y0 - y1
@@ -114,7 +114,7 @@ class RadialPreview(main: ContainerPrimitive) {
 
                 val b0 = RadialMenu.type == 0 && s1 >= 0 && s0 in list0.indices
                 val cur0 = if (b0) list0[s0].sub else list0
-                val num0 = maxOf(3, cur0.size)
+                val num0 = maxOf(1, cur0.size)
 
                 val x2 = mouseSX - x1
                 val y2 = mouseSY - y1

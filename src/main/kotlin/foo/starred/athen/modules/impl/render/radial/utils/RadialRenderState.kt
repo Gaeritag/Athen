@@ -54,6 +54,7 @@ class RadialRenderState(
         if (num == 0) return
 
         val step = TAU / num
+        val gap = if (num == 1) 0f else GAP
 
         val r01 = RadialMenu.radius1
         val r02 = RadialMenu.radius2
@@ -72,7 +73,7 @@ class RadialRenderState(
             val r1 = r02 + if (b0 && !b1) 2f else 0f
             val color0 = if (b0) hover else color
 
-            arc(vc, pose, x.toFloat(), y.toFloat(), r0, r1, angle0, angle1, color0)
+            arc(vc, pose, x.toFloat(), y.toFloat(), r0, r1, angle0, angle1, color0, gap)
 
             if (i != i2) continue
             if (sub.isEmpty()) continue
@@ -82,7 +83,7 @@ class RadialRenderState(
                 val so = si + thickness
                 val c2 = if (j == i1) hover else color
 
-                arc(vc, pose, x.toFloat(), y.toFloat(), si, so, angle0, angle1, c2)
+                arc(vc, pose, x.toFloat(), y.toFloat(), si, so, angle0, angle1, c2, gap)
             }
         }
 
@@ -99,7 +100,7 @@ class RadialRenderState(
                 val i1 = bo + if (b) 2f else 0f
                 val c0 = if (b) hover else color
 
-                arc(vc, pose, x.toFloat(), y.toFloat(), i0, i1, angle2, angle3, c0)
+                arc(vc, pose, x.toFloat(), y.toFloat(), i0, i1, angle2, angle3, c0, gap)
             }
         }
 
@@ -160,7 +161,7 @@ class RadialRenderState(
             val dist = hypot(x2.toDouble(), y2.toDouble())
 
             val step = TAU / num
-            val gap = GAP / dist
+            val gap = (if (num == 1) 0f else GAP) / dist
             val angle1 = i0 * step + gap * 0.5 + ORIGIN
             val angle2 = (i0 + 1) * step - gap * 0.5 + ORIGIN
 
@@ -190,7 +191,7 @@ class RadialRenderState(
             val bo = bi + subThickness + 2f
 
             val step = TAU / num
-            val gap = GAP / dist
+            val gap = (if (num == 1) 0f else GAP) / dist
 
             for ((i, v) in pos.withIndex()) {
                 val angle0 = normalize(v * step + gap * 0.5 + ORIGIN)
