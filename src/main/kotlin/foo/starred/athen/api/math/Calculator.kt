@@ -8,6 +8,7 @@ import foo.starred.athen.utils.command
 import foo.starred.kommand.IKommand
 import foo.starred.kommand.scopes.KommandCommandScope
 import foo.starred.snowbird.utils.formatted
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import kotlin.math.pow
 
@@ -19,6 +20,10 @@ object Calculator : IKommand<FabricClientCommandSource> {
     private val priority = mapOf("+" to 1, "-" to 1, "*" to 2, "x" to 2, "/" to 2, "^" to 3)
 
     init {
+        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
+            loader.register(dispatcher)
+        }
+
         command {
             "calc" / greedyString("operation") {
                 val string = string("operation")

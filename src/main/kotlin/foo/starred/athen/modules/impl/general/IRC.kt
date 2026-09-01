@@ -21,6 +21,7 @@ import foo.starred.kommand.scopes.KommandCommandScope
 import foo.starred.snowbird.api.*
 import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.api.text.parser.impl.parse
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.network.protocol.game.ServerboundChatPacket
 
@@ -43,6 +44,10 @@ object IRC : Module(
     private var cc: String = ""
 
     init {
+        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
+            loader.register(dispatcher)
+        }
+
         command("airc") {
             greedyString("message") {
                 if (!auth) return@greedyString er0()
