@@ -15,7 +15,6 @@ import foo.starred.cascade.graphics.font.CascadeFonts
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
-import foo.starred.snowbird.api.client
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -108,7 +107,7 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
     }
 
     override fun draw(graphics: GuiGraphicsExtractor) {
-        if (root.focused == self) value(client.mouseHandler.getScaledXPos(client.window))
+        if (root.focused == self) value(mouseX.toDouble())
         super.draw(graphics)
 
         val value0 = if (max > min) ((value - min) / (max - min)).toFloat() else 0f

@@ -7,8 +7,6 @@ import foo.starred.athen.config.ui.pages.main.ConfigCategories
 import foo.starred.athen.config.ui.pages.module.ConfigModules
 import foo.starred.athen.config.ui.pages.module.elements.input.ConfigInputElement
 import foo.starred.athen.config.ui.pages.module.elements.input.ConfigInputElement.Companion.configInputElement
-import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.events.core.on
 import foo.starred.athen.hud.HUDEditor
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.ui.themes.Catppuccin
@@ -25,6 +23,7 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.graphics.font.CascadeFonts
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
+import foo.starred.cascade.graphics.geometry.CascadeGeometricResolution
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
@@ -36,7 +35,6 @@ import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.api.center
-import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.api.text.parser.impl.parse
@@ -45,9 +43,7 @@ import foo.starred.snowbird.utils.open
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 @Priority
-object ConfigUI : CascadeScreen("Config UI [Athen]") {
-    private var last = -1
-
+object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.FHD.of(2f)) {
     private val text = text {
         wrapper = CascadeTextWrapper
         textSize = 10f
@@ -113,14 +109,6 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
             "hud" {
                 HUDEditor.open()
             }
-        }
-
-        on<GuiEvent.Close.Any> {
-            if (screen !== this@ConfigUI) return@on
-            if (last == -1) return@on
-
-            client.options.guiScale().set(last)
-            last = -1
         }
 
         val panel = container {
@@ -217,14 +205,6 @@ object ConfigUI : CascadeScreen("Config UI [Athen]") {
 
     fun hide() {
         tooltip.visible = false
-    }
-
-    override fun init() {
-        super.init()
-
-        if (last != -1) return
-        last = client.options.guiScale().get()
-        client.options.guiScale().set(2)
     }
 
     override fun onClose() {

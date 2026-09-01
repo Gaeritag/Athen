@@ -2,8 +2,6 @@
 
 package foo.starred.athen.modules.impl.render.radial.ui.editor
 
-import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.actions.IAction
 import foo.starred.athen.modules.impl.render.radial.data.RadialSlot
@@ -19,13 +17,13 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
+import foo.starred.cascade.graphics.geometry.CascadeGeometricResolution
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrollable
 import foo.starred.cascade.screen.CascadeScreen
-import foo.starred.snowbird.api.client
 
-object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
+object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]", CascadeGeometricResolution.FHD.of(2f)) {
     private var head: RadialHeader
     private var tree: RadialTree
     private var form: RadialForm
@@ -61,14 +59,6 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         }
 
     init {
-        on<GuiEvent.Close.Any> {
-            if (screen !== this@RadialEditor) return@on
-            if (last == -1) return@on
-
-            client.options.guiScale().set(last)
-            last = -1
-        }
-
         container {
             size = FillSizeConstraint()
             position = FixedPositionConstraint(0, 0)
@@ -118,10 +108,6 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]") {
         working.addAll(RadialMenu.slots)
         collapsed.clear()
         reload(0, -1)
-
-        if (last != -1) return
-        last = client.options.guiScale().get()
-        client.options.guiScale().set(2)
     }
 
     override fun removed() {
