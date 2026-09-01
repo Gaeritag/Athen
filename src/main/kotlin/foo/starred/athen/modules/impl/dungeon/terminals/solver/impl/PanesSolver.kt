@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -17,7 +17,7 @@ object PanesSolver : ITerminalSolver(TerminalType.PANES) {
     override val int1 = 2
 
     override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
-        val color = TerminalSolver.`panes$correct`.rgb
+        val color = TerminalSolvers.`panes$correct`.rgb
 
         for ((slot) in list) {
             val x = (slot % 9 * float + x + 1f) * scale

@@ -11,7 +11,7 @@
 
 package foo.starred.athen.api.dungeon.terminals
 
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.*
 
@@ -32,7 +32,7 @@ enum class TerminalType(val slots: Int, val regex: Regex, val actual: String? = 
             NUMBERS -> 3
             PANES -> 4
             RUBIX -> 5
-        } in TerminalSolver.solve
+        } in TerminalSolvers.solve
 
     val impl: ITerminalSolver
         get() = when (this) {

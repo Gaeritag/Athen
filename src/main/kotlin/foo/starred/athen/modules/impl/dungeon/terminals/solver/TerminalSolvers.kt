@@ -25,8 +25,8 @@ import net.minecraft.sounds.SoundEvents
 import java.awt.Color
 
 @Load
-object TerminalSolver : Module(
-    "Terminal solver",
+object TerminalSolvers : Module(
+    "Terminal solvers",
     "Shows solutions for F7/M7 terminals in a nice custom gui!",
     Category.DUNGEONS
 ) {
@@ -41,7 +41,7 @@ object TerminalSolver : Module(
     val solve by settings.multiSelector("Enabled solvers", listOf("Colors", "Melody", "Name", "Numbers", "Panes", "Rubix"), listOf(0, 1, 2, 3, 4, 5))
 
     private val rubix by config.group("Rubix")
-    val `rubix$left` by rubix.switch("Left click only")
+    val `rubix$left` by rubix.switch("Left click only", true)
 
     private val melody by config.group("Melody")
     val `melody$prevent` by melody.switch("Prevent wrong clicks", true)

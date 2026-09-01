@@ -2,7 +2,7 @@ package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.utils.glint
@@ -15,7 +15,7 @@ import org.joml.Matrix3x2f
 
 object NameSolver : ITerminalSolver(TerminalType.NAME) {
     override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
-        val color = TerminalSolver.`names$correct`.rgb
+        val color = TerminalSolvers.`names$correct`.rgb
 
         for ((slot) in list) {
             val x = (slot % 9 * float + x + 1f) * scale

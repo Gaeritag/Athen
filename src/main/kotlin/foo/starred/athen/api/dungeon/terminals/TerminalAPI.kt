@@ -11,7 +11,7 @@ import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.api.data.Observable.Companion.and
@@ -41,7 +41,7 @@ object TerminalAPI {
 
     init {
         val state = (LocationAPI.isOnSkyBlock or TerminalSimulator.s) or TerminalSimulator.s0
-        val state0 = state and TerminalSolver.observable
+        val state0 = state and TerminalSolvers.observable
         val state1 = state and opened
 
         opened.onChange {
@@ -88,7 +88,7 @@ object TerminalAPI {
 
         on<PacketEvent.Send, ServerboundContainerClickPacket> {
             if (terminal == TerminalType.MELODY) return@on
-            if (System.currentTimeMillis() - open >= TerminalSolver.firstClick) return@on
+            if (System.currentTimeMillis() - open >= TerminalSolvers.firstClick) return@on
 
             it.cancel()
         }.runWhen(state0 and opened)

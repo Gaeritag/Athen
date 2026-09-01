@@ -3,7 +3,7 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -35,7 +35,7 @@ object RubixSolver : ITerminalSolver(TerminalType.RUBIX) {
             val x = (slot % 9 * float + x + 1f) * scale
             val y = ((slot / 9) * float + y + height + 1f) * scale
 
-            val color = if (button > 0) TerminalSolver.`rubix$positive`.rgb else TerminalSolver.`rubix$negative`.rgb
+            val color = if (button > 0) TerminalSolvers.`rubix$positive`.rgb else TerminalSolvers.`rubix$negative`.rgb
             slot(x, y, 16f * scale, 16f * scale, color, scale, pose, scissor)
 
             val string = button.toString()
@@ -51,7 +51,7 @@ object RubixSolver : ITerminalSolver(TerminalType.RUBIX) {
 
     override fun valid(click: TerminalClick): Boolean {
         val click0 = list.find { it.slot == click.slot } ?: return false
-        return TerminalSolver.`rubix$left` || (click0.button > 0 && click.button == 0) || (click0.button < 0 && click.button == 1)
+        return TerminalSolvers.`rubix$left` || (click0.button > 0 && click.button == 0) || (click0.button < 0 && click.button == 1)
     }
 
     override fun predict(click: TerminalClick) {

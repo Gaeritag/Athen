@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
@@ -20,7 +20,7 @@ object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
     override val int2: Int = 4
 
     override val float: Float
-        get() = 16f + TerminalSolver.`ui$melodyGap`
+        get() = 16f + TerminalSolvers.`ui$melodyGap`
 
     var button: Int? = null
     var current: Int? = null
@@ -30,7 +30,7 @@ object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
         // if (int !in 1..3) return
         if (int !in 1..4) return
         val b = button ?: return
-        if (TerminalSolver.`melody$prevent` && (b != int - 1 || current == null || current != correct)) return
+        if (TerminalSolvers.`melody$prevent` && (b != int - 1 || current == null || current != correct)) return
         click(16 + (int - 1) * 9, 0)
     }
 
@@ -45,24 +45,24 @@ object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
         val y0 = (row * float + y + height + 1f) * scale
         val size = 16f * scale
         val spacing = float * scale
-        val radius = CascadeGeometricRadius(TerminalSolver.`ui$slots$roundness` * scale)
+        val radius = CascadeGeometricRadius(TerminalSolvers.`ui$slots$roundness` * scale)
 
         for (i in 0 until 5) {
             val x1 = x0 + i * spacing
-            val color = if (i == correct) TerminalSolver.`melody$correct`.rgb else TerminalSolver.`melody$wrong`.rgb
+            val color = if (i == correct) TerminalSolvers.`melody$correct`.rgb else TerminalSolvers.`melody$wrong`.rgb
 
             when (i) {
                 current -> {
-                    roundedRectangle(x1, y0, size, size, TerminalSolver.`melody$fill`.rgb, radius, pose, scissor)
+                    roundedRectangle(x1, y0, size, size, TerminalSolvers.`melody$fill`.rgb, radius, pose, scissor)
                     hollowRectangle(x1, y0, size, size, scale, color, radius, pose, scissor)
                 }
 
                 correct -> {
-                    hollowRectangle(x1, y0, size, size, scale, TerminalSolver.`melody$correct`.rgb, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, TerminalSolvers.`melody$correct`.rgb, radius, pose, scissor)
                 }
 
                 else -> {
-                    hollowRectangle(x1, y0, size, size, scale, TerminalSolver.`melody$wrong`.rgb, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, TerminalSolvers.`melody$wrong`.rgb, radius, pose, scissor)
                 }
             }
         }
@@ -81,16 +81,16 @@ object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
 
             when {
                 slot == button * 9 + 16 -> {
-                    slot(x, y, size, size, TerminalSolver.`melody$correct`.rgb, scale, pose, scissor)
+                    slot(x, y, size, size, TerminalSolvers.`melody$correct`.rgb, scale, pose, scissor)
                 }
 
                 slot in slots -> {
-                    slot(x, y, size, size, TerminalSolver.`melody$wrong`.rgb, scale, pose, scissor)
+                    slot(x, y, size, size, TerminalSolvers.`melody$wrong`.rgb, scale, pose, scissor)
                 }
 
                 i0 != row -> {
                     if (i1 !in 1..5) continue
-                    slot(x, y, size, size, TerminalSolver.`melody$other`.rgb, scale, pose, scissor)
+                    slot(x, y, size, size, TerminalSolvers.`melody$other`.rgb, scale, pose, scissor)
                 }
             }
         }
@@ -99,7 +99,7 @@ object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
     override fun find(slot: Int): TerminalClick? {
         if (slot !in slots) return null
         val b = button ?: return null
-        if (TerminalSolver.`melody$prevent` && (slot != b * 9 + 16 || current == null || current != correct)) return null
+        if (TerminalSolvers.`melody$prevent` && (slot != b * 9 + 16 || current == null || current != correct)) return null
         click(slot, 0)
         return null
     }

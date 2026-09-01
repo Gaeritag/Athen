@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -31,7 +31,7 @@ object NumbersSolver : ITerminalSolver(TerminalType.NUMBERS) {
 
             slot(x, y, 16f * scale, 16f * scale, color, scale, pose, scissor)
 
-            if (!TerminalSolver.`ui$numbers$showText`) continue
+            if (!TerminalSolvers.`ui$numbers$showText`) continue
             val a = counts[c.slot]?.toString() ?: continue
             val b = 11f * scale
             val d = font.width(a, b)
@@ -66,9 +66,9 @@ object NumbersSolver : ITerminalSolver(TerminalType.NUMBERS) {
     }
 
     private fun Int.get(): Int? = when (this) {
-        0 -> TerminalSolver.`numbers$first`.rgb
-        1 -> TerminalSolver.`numbers$second`.rgb
-        2 -> TerminalSolver.`numbers$third`.rgb
+        0 -> TerminalSolvers.`numbers$first`.rgb
+        1 -> TerminalSolvers.`numbers$second`.rgb
+        2 -> TerminalSolvers.`numbers$third`.rgb
         else -> null
     }
 }
