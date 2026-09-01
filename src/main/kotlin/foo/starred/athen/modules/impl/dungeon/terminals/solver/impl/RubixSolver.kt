@@ -4,8 +4,8 @@ package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.graphics.font.CascadeFonts
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -15,48 +15,71 @@ import net.minecraft.world.item.Items
 import org.joml.Matrix3x2f
 import kotlin.math.abs
 
-object RubixSolver : ITerminal(TerminalType.RUBIX) {
+object RubixSolver : ITerminalSolver(TerminalType.RUBIX) {
     private val ints = intArrayOf(12, 13, 14, 21, 22, 23, 30, 31, 32)
     //? if <= 26.1 {
     private val colors = listOf(Items.RED_STAINED_GLASS_PANE, Items.ORANGE_STAINED_GLASS_PANE, Items.YELLOW_STAINED_GLASS_PANE, Items.GREEN_STAINED_GLASS_PANE, Items.BLUE_STAINED_GLASS_PANE)
     //? } else {
-    //private val colors = listOf(Items.STAINED_GLASS_PANE.red(), Items.STAINED_GLASS_PANE.orange(), Items.STAINED_GLASS_PANE.yellow(), Items.STAINED_GLASS_PANE.green(), Items.STAINED_GLASS_PANE.blue())
-    //? }
+    /*private val colors = listOf(Items.STAINED_GLASS_PANE.red(), Items.STAINED_GLASS_PANE.orange(), Items.STAINED_GLASS_PANE.yellow(), Items.STAINED_GLASS_PANE.green(), Items.STAINED_GLASS_PANE.blue())
+    *///? }
 
     override val int0 = 3
     override val int1 = 3
 
     private var last: Int? = null
 
-    override fun render(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+    override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         val font = CascadeFonts.arial
 
-        for (c in list) {
-            val x1 = (c.slot % 9 * float + x0 + 1f) * scale
-            val y1 = ((c.slot / 9) * float + y0 + height + 1f) * scale
+        for ((slot, button) in list) {
+            val x = (slot % 9 * float + x + 1f) * scale
+            val y = ((slot / 9) * float + y + height + 1f) * scale
 
-            val color = if (c.button > 0) TerminalSolver.`rubix$positive`.rgb else TerminalSolver.`rubix$negative`.rgb
-            slot(graphics, x1, y1, 16f * scale, 16f * scale, color, scale, pose, scissor)
+            val color = if (button > 0) TerminalSolver.`rubix$positive`.rgb else TerminalSolver.`rubix$negative`.rgb
+            slot(x, y, 16f * scale, 16f * scale, color, scale, pose, scissor)
 
-            val string = c.button.toString()
+            val string = button.toString()
             val size = 11f * scale
             val width = font.width(string, size)
-            font.extract(graphics, string, x1 + 8f * scale - width / 2, y1 + 3f * scale, Mocha.Text.rgba, false, size)
+            font.extract(this, string, x + 8f * scale - width / 2, y + 3f * scale, Mocha.Text.rgba, false, size)
         }
     }
 
-    override fun forSlot(slot: Int): Click? {
-        return list.find { it.slot == slot }?.button?.let { Click(slot, if (it > 0) 0 else 1) }
+    override fun find(slot: Int): TerminalClick? {
+        return list.find { it.slot == slot }?.button?.let { TerminalClick(slot, if (it > 0) 0 else 1) }
     }
 
-    override fun valid(click: Click): Boolean {
-        val sol = list.find { it.slot == click.slot }
-        return sol != null && ((sol.button > 0 && click.button == 0) || (sol.button < 0 && click.button == 1))
+    override fun valid(click: TerminalClick): Boolean {
+        val click0 = list.find { it.slot == click.slot } ?: return false
+        return TerminalSolver.`rubix$left` || (click0.button > 0 && click.button == 0) || (click0.button < 0 && click.button == 1)
     }
 
-    override fun onClose() {
+    override fun predict(click: TerminalClick) {
+        val i0 = list.find { it.slot == click.slot } ?: return
+        val i1 = if (i0.button > 0) i0.button - 1 else i0.button + 1
+
+        if (i1 == 0) {
+            list.remove(i0)
+            clicked.add(click.slot)
+            return
+        }
+
+        list[list.indexOf(i0)] = TerminalClick(click.slot, i1)
+    }
+
+    override fun open() {
         last = null
-        super.onClose()
+        super.open()
+    }
+
+    override fun close() {
+        last = null
+        super.close()
+    }
+
+    override fun resync() {
+        last = null
+        super.resync()
     }
 
     override fun compute(items: List<ItemStack>) {
@@ -104,7 +127,7 @@ object RubixSolver : ITerminal(TerminalType.RUBIX) {
             var diff = o - idx
             if (diff > 2) diff -= 5 else if (diff < -2) diff += 5
 
-            list.add(Click(slots[i], diff))
+            list.add(TerminalClick(slots[i], diff))
         }
     }
 }

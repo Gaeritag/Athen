@@ -15,7 +15,6 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
-import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.ctrl
 import foo.starred.snowbird.utils.mouseSX
@@ -32,7 +31,9 @@ object TerminalSolver : Module(
     Category.DUNGEONS
 ) {
     private val settings by config.group("Settings")
-    val fcDelay by settings.slider("First click delay", 350, 150, 1000, "ms")
+    val firstClick by settings.slider("First click delay", 350, 150, 1000, "ms")
+    val clickDelay by settings.slider("Click delay", 100, 0, 500, "ms")
+    private val info by settings.information("Click delay only affects \"Panes\" terminal type.")
     val resync by settings.slider("Resync timeout", 800, 0, 2000, "ms")
     val dropKey by settings.switch("Allow using drop key", true)
     val keybindL by settings.keybind("Keybind left click")
@@ -43,6 +44,7 @@ object TerminalSolver : Module(
     val `rubix$left` by rubix.switch("Left click only")
 
     private val melody by config.group("Melody")
+    val `melody$prevent` by melody.switch("Prevent wrong clicks", true)
     val `melody$num` by melody.switch("Number keys")
     val `melody$key0` by melody.keybind("Keybind 1", InputConstants.KEY_1)
     val `melody$key1` by melody.keybind("Keybind 2", InputConstants.KEY_2)
@@ -51,39 +53,44 @@ object TerminalSolver : Module(
 
     private val gui by config.group("GUI")
     val `ui$scale` by gui.slider("Scale", 1f, 0.1f, 4f, double = true)
-    val `ui$roundness` by gui.slider("Roundness", 0f, 0f, 10f, double = true)
+    val `ui$roundness` by gui.slider("Roundness", 4f, 0f, 10f, double = true)
+    val `ui$borderWidth` by gui.slider("Border width", 1f, 0.5f, 5f, double = true)
+    val `ui$blur` by gui.switch("Blur menu", true)
     val `ui$padding` by gui.slider("Padding", 5f, 0f, 20f, double = true)
     val `ui$gap` by gui.slider("Slot gap", 2f, 0f, 10f, double = true)
     val `ui$melodyGap` by gui.slider("Melody gap", 2f, 0f, 10f, double = true)
-    val `ui$bg` by gui.colorPicker("Background color", Color(0, 0, 0, 150))
-    val `ui$border` by gui.colorPicker("Border color", Color(Mocha.Lavender.argb, true))
+    val `ui$bg` by gui.colorPicker("Background color", Color(12, 12, 15, 175))
+    val `ui$border` by gui.colorPicker("Border color", Color(0, 0, 0, 220))
 
     private val slots by config.group("Slots")
-    val `ui$slots$fill` by slots.switch("Fill")
-    val `ui$slots$roundness` by slots.slider("Roundness", 0f, 0f, 10f, double = true)
+    val `ui$slots$fill` by slots.switch("Fill", true)
+    val `ui$slots$roundness` by slots.slider("Roundness", 3f, 0f, 10f, double = true)
     val `ui$numbers$showText` by slots.switch("Numbers: Show text", true)
 
     private val header by config.group("Header")
     val `ui$hideHeader` by header.switch("Hide header", true)
     val `ui$hideTitle` by header.switch("Hide title", true)
-    val `ui$titleColor` by header.colorPicker("Title color", Color(Mocha.Subtext0.argb, true))
-    val `ui$header` by header.colorPicker("Header color", Color(20, 20, 20, 200))
+    val `ui$titleColor` by header.colorPicker("Title color", Color(240, 240, 245, 230))
+    val `ui$header` by header.colorPicker("Header color", Color(10, 10, 12, 200))
 
     val clicks by config.sound("Click sound")
 
     private val colors by config.group("Solver colors")
-    val `colors$correct` by colors.colorPicker("Colors: Solution", Color(0, 255, 0, 180))
-    val `names$correct` by colors.colorPicker("Names: Solution", Color(0, 255, 0, 180))
-    val `panes$correct` by colors.colorPicker("Panes: Solution", Color(0, 255, 0, 180))
-    val `numbers$first` by colors.colorPicker("Numbers: 1st", Color(0, 255, 0, 180))
-    val `numbers$second` by colors.colorPicker("Numbers: 2nd", Color(0, 200, 0, 180))
-    val `numbers$third` by colors.colorPicker("Numbers: 3rd", Color(0, 150, 0, 180))
-    val `rubix$positive` by colors.colorPicker("Rubix: Positive", Color(0, 114, 255, 180))
-    val `rubix$negative` by colors.colorPicker("Rubix: Negative", Color(205, 0, 0, 180))
-    val `melody$fill` by colors.colorPicker("Melody: Fill", Color(Mocha.Lavender.argb, true))
-    val `melody$correct` by colors.colorPicker("Melody: Correct", Color(0, 255, 0, 180))
-    val `melody$wrong` by colors.colorPicker("Melody: Wrong", Color(205, 0, 0, 180))
-    val `melody$other` by colors.colorPicker("Melody: Other", Color(Mocha.Base.argb, true))
+    val `colors$correct` by colors.colorPicker("Colors: Solution", Color(46, 204, 113, 220))
+    val `names$correct` by colors.colorPicker("Names: Solution", Color(46, 204, 113, 220))
+    val `panes$correct` by colors.colorPicker("Panes: Solution", Color(46, 204, 113, 220))
+    val `numbers$first` by colors.colorPicker("Numbers: 1st", Color(46, 204, 113, 220))
+    val `numbers$second` by colors.colorPicker("Numbers: 2nd", Color(241, 196, 15, 220))
+    val `numbers$third` by colors.colorPicker("Numbers: 3rd", Color(231, 76, 60, 220))
+    val `rubix$positive` by colors.colorPicker("Rubix: Positive", Color(52, 152, 219, 220))
+    val `rubix$negative` by colors.colorPicker("Rubix: Negative", Color(231, 76, 60, 220))
+    val `melody$fill` by colors.colorPicker("Melody: Fill", Color(155, 89, 182, 220))
+    val `melody$correct` by colors.colorPicker("Melody: Correct", Color(46, 204, 113, 220))
+    val `melody$wrong` by colors.colorPicker("Melody: Wrong", Color(231, 76, 60, 220))
+    val `melody$other` by colors.colorPicker("Melody: Other", Color(24, 24, 28, 200))
+
+    val scale: Float
+        get() = `ui$scale` * maxOf(1f, 4f / client.window.guiScale.toFloat())
 
     var last: Long = 0
 
@@ -105,16 +112,14 @@ object TerminalSolver : Module(
 
         on<GuiEvent.Input.Mouse.Press> {
             val term = TerminalAPI.terminal ?: return@on
-            if (client.player?.containerMenu?.containerId != TerminalAPI.id) return@on
 
             cancel()
-            if (System.currentTimeMillis() - TerminalAPI.open >= fcDelay) c(mouse = keyEvent.button())
+            if (System.currentTimeMillis() - TerminalAPI.open >= firstClick) c(mouse = keyEvent.button())
         }.runWhen(TerminalAPI.opened)
 
         on<GuiEvent.Input.Key.Press> {
             val t = TerminalAPI.terminal ?: return@on
-            if (client.player?.containerMenu?.containerId != TerminalAPI.id) return@on
-            if (System.currentTimeMillis() - TerminalAPI.open < fcDelay) return@on
+            if (System.currentTimeMillis() - TerminalAPI.open < firstClick) return@on
 
             when (keyEvent.key) {
                 `melody$key0` if t == TerminalType.MELODY -> {
@@ -155,13 +160,13 @@ object TerminalSolver : Module(
             val b = a.impl
 
             if (resync == 0) return@on
-            if (!b.clicked) return@on
+            if (!b.pending) return@on
             if (System.currentTimeMillis() - last <= resync) return@on
 
-            b.clicked = false
+            b.pending = false
+            b.resync()
             //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             b.update((client.screen as? AbstractContainerScreen<*>)?.menu?.items?.subList(0, a.slots) ?: return@on)
-            b.onResync()
         }.runWhen(TerminalAPI.opened)
 
         on<DungeonEvent.Terminal.Update> {
@@ -169,17 +174,17 @@ object TerminalSolver : Module(
         }
 
         on<DungeonEvent.Terminal.Open> {
-            for (a in TerminalType.entries) a.impl.onOpen()
+            for (a in TerminalType.entries) a.impl.open()
         }
 
         on<DungeonEvent.Terminal.Close> {
-            for (a in TerminalType.entries) a.impl.onClose()
+            for (a in TerminalType.entries) a.impl.close()
         }
     }
 
     private fun c(mouse: Int) {
         val solver = TerminalAPI.terminal?.impl ?: return
-        val scale = `ui$scale`
+        val scale = scale
         val mx = mouseSX / scale
         val my = mouseSY / scale
 

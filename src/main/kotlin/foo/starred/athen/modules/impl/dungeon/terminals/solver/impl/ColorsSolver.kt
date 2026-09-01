@@ -3,8 +3,8 @@ package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.utils.glint
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -13,49 +13,57 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.joml.Matrix3x2f
 
-object ColorsSolver : ITerminal(TerminalType.COLORS) {
-    override fun render(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
-        for (c in list) {
-            val x1 = (c.slot % 9 * float + x0 + 1f) * scale
-            val y1 = ((c.slot / 9) * float + y0 + height + 1f) * scale
-            slot(graphics, x1, y1, 16f * scale, 16f * scale, TerminalSolver.`colors$correct`.rgb, scale, pose, scissor)
+object ColorsSolver : ITerminalSolver(TerminalType.COLORS) {
+    private val aliases = mapOf(
+        "black" to listOf("black", "ink"),
+        "blue" to listOf("blue", "lapis"),
+        "brown" to listOf("brown", "cocoa"),
+        "white" to listOf("white", "bone", "wool"),
+        "green" to listOf("green", "cactus", "lime"),
+        "red" to listOf("red", "rose", "poppy"),
+        "yellow" to listOf("yellow", "dandelion", "sunflower"),
+        "silver" to listOf("silver", "light gray")
+    )
+
+    override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+        val color = TerminalSolver.`colors$correct`.rgb
+
+        for ((slot) in list) {
+            val x = (slot % 9 * float + x + 1f) * scale
+            val y = ((slot / 9) * float + y + height + 1f) * scale
+
+            slot(x, y, 16f * scale, 16f * scale, color, scale, pose, scissor)
         }
     }
 
-    override fun forSlot(slot: Int): Click? {
+    override fun find(slot: Int): TerminalClick? {
         return list.find { it.slot == slot }
     }
 
-    override fun valid(click: Click): Boolean {
+    override fun valid(click: TerminalClick): Boolean {
         return list.any { it.button == click.button }
     }
 
     override fun compute(items: List<ItemStack>) {
         list.clear()
 
-        val str = TerminalType.COLORS.regex.matchEntire(TerminalAPI.title)?.groupValues?.get(1)?.replace("SILVER", "LIGHT GRAY")?.lowercase() ?: return
+        val str = TerminalType.COLORS.regex.matchEntire(TerminalAPI.title)?.groupValues?.get(1)?.lowercase() ?: return
+        val set = aliases[str] ?: listOf(str)
+
         for (i in items.indices) {
             val s = items[i]
             //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
             if (s.item == Items.BLACK_STAINED_GLASS_PANE) continue
             if (s.glint()) continue
-            if (!s.matches(str)) continue
+            if (!s.matches(set)) continue
 
-            list.add(Click(i, 0))
+            list.add(TerminalClick(i, 0))
         }
     }
 
-    private fun ItemStack.matches(str: String): Boolean {
-        return item.getName(item.defaultInstance).stripped().lowercase().startsWith(str) || hoverName.stripped().lowercase().startsWith(str) || when (str) {
-            "black" -> item == Items.INK_SAC
-            "blue" -> item == Items.LAPIS_LAZULI
-            "brown" -> item == Items.COCOA_BEANS
-            //~ if >= 26.2 'Items.WHITE_WOOL' -> 'Items.WOOL.white()'
-            "white" -> item == Items.BONE_MEAL || item == Items.WHITE_WOOL
-            "green" -> item == Items.CACTUS
-            "red" -> item == Items.POPPY
-            "yellow" -> item == Items.DANDELION
-            else -> false
-        }
+    private fun ItemStack.matches(keywords: List<String>): Boolean {
+        val hover = hoverName.stripped().lowercase()
+        val name = item.getName(item.defaultInstance).stripped().lowercase()
+        return keywords.any { hover.startsWith(it) || name.startsWith(it) }
     }
 }

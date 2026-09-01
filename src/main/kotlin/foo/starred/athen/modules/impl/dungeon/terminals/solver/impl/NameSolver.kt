@@ -3,8 +3,8 @@ package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.athen.utils.glint
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -13,37 +13,24 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.joml.Matrix3x2f
 
-object NameSolver : ITerminal(TerminalType.NAME) {
-    private val i = mutableSetOf<Int>()
+object NameSolver : ITerminalSolver(TerminalType.NAME) {
+    override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+        val color = TerminalSolver.`names$correct`.rgb
 
-    override fun render(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
-        for (c in list) {
-            val x1 = (c.slot % 9 * float + x0 + 1f) * scale
-            val y1 = ((c.slot / 9) * float + y0 + height + 1f) * scale
-            slot(graphics, x1, y1, 16f * scale, 16f * scale, TerminalSolver.`names$correct`.rgb, scale, pose, scissor)
+        for ((slot) in list) {
+            val x = (slot % 9 * float + x + 1f) * scale
+            val y = ((slot / 9) * float + y + height + 1f) * scale
+
+            slot(x, y, 16f * scale, 16f * scale, color, scale, pose, scissor)
         }
     }
 
-    override fun forSlot(slot: Int): Click? {
+    override fun find(slot: Int): TerminalClick? {
         return list.find { it.slot == slot }
     }
 
-    override fun valid(click: Click): Boolean {
+    override fun valid(click: TerminalClick): Boolean {
         return list.any { it.button == click.button }
-    }
-
-    override fun click(slot: Int, button: Int) {
-        i.add(slot)
-        super.click(slot, button)
-    }
-
-    override fun onClose() {
-        i.clear()
-        super.onClose()
-    }
-
-    override fun onResync() {
-        i.clear()
     }
 
     override fun compute(items: List<ItemStack>) {
@@ -54,14 +41,13 @@ object NameSolver : ITerminal(TerminalType.NAME) {
 
         for (i0 in items.indices) {
             val s = items[i0]
-            if (i0 in i) continue
             if (s.isEmpty) continue
             //~ if >= 26.2 'Items.BLACK_STAINED_GLASS_PANE' -> 'Items.STAINED_GLASS_PANE.black()'
             if (s.item == Items.BLACK_STAINED_GLASS_PANE) continue
-            if (s.glint()) continue
+            if (s.glint() && s.item != Items.GOLDEN_APPLE && !s.item.defaultInstance.glint()) continue
             if (!s.hoverName.stripped().lowercase().startsWith(targetLetter, true)) continue
 
-            list.add(Click(i0, 0))
+            list.add(TerminalClick(i0, 0))
         }
     }
 }

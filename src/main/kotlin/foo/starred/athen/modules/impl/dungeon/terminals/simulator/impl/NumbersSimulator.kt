@@ -11,11 +11,13 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
 class NumbersSimulator : ITerminalSim(TerminalType.NUMBERS) {
+    // private val ints = (1..10).shuffled()
     private val ints = (1..14).shuffled()
 
     override fun s(): Map<Int, ItemStack> {
         var i = 0
         return buildMap {
+            // for (row in 1..2) for (col in 2..6) put(row * 9 + col, pane(ints[i++]))
             for (row in 1..2) for (col in 1..7) put(row * 9 + col, pane(ints[i++]))
         }
     }

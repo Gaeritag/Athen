@@ -2,8 +2,8 @@ package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolver
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.Click
-import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminal
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
+import foo.starred.athen.modules.impl.dungeon.terminals.solver.base.ITerminalSolver
 import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
 import foo.starred.cascade.graphics.extensions.rectangle.rounded.roundedRectangle
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
@@ -13,8 +13,11 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.joml.Matrix3x2f
 
-object MelodySolver : ITerminal(TerminalType.MELODY) {
+object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
+    // private val slots = setOf(16, 25, 34)
+    // override val int2: Int = 3
     private val slots = setOf(16, 25, 34, 43)
+    override val int2: Int = 4
 
     override val float: Float
         get() = 16f + TerminalSolver.`ui$melodyGap`
@@ -24,78 +27,92 @@ object MelodySolver : ITerminal(TerminalType.MELODY) {
     var correct: Int? = null
 
     fun click(int: Int) {
+        // if (int !in 1..3) return
         if (int !in 1..4) return
+        val b = button ?: return
+        if (TerminalSolver.`melody$prevent` && (b != int - 1 || current == null || current != correct)) return
         click(16 + (int - 1) * 9, 0)
     }
 
-    override fun render(graphics: GuiGraphicsExtractor, x0: Float, y0: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
+    override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
         val button = button ?: return
         val current = current ?: return
         val correct = correct ?: return
         val float = float
 
         val row = button + 1
-        val x1 = (float + x0 + 1f) * scale
-        val y1 = (row * float + y0 + height + 1f) * scale
+        val x0 = (float + x + 1f) * scale
+        val y0 = (row * float + y + height + 1f) * scale
         val size = 16f * scale
-        val sp = float * scale
+        val spacing = float * scale
         val radius = CascadeGeometricRadius(TerminalSolver.`ui$slots$roundness` * scale)
 
         for (i in 0 until 5) {
-            val x = x1 + i * sp
+            val x1 = x0 + i * spacing
             val color = if (i == correct) TerminalSolver.`melody$correct`.rgb else TerminalSolver.`melody$wrong`.rgb
 
             when (i) {
                 current -> {
-                    graphics.roundedRectangle(x, y1, size, size, TerminalSolver.`melody$fill`.rgb, radius, pose, scissor)
-                    graphics.hollowRectangle(x, y1, size, size, scale, color, radius, pose, scissor)
+                    roundedRectangle(x1, y0, size, size, TerminalSolver.`melody$fill`.rgb, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, color, radius, pose, scissor)
                 }
 
                 correct -> {
-                    graphics.hollowRectangle(x, y1, size, size, scale, TerminalSolver.`melody$correct`.rgb, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, TerminalSolver.`melody$correct`.rgb, radius, pose, scissor)
                 }
 
                 else -> {
-                    graphics.hollowRectangle(x, y1, size, size, scale, TerminalSolver.`melody$wrong`.rgb, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, TerminalSolver.`melody$wrong`.rgb, radius, pose, scissor)
                 }
             }
         }
 
-        val rows = terminalType.slots / 9
-        val buttonSlot = button * 9 + 16
+        for (slot in 0 until type.slots) {
+            val i0 = slot / 9
+            val i1 = slot % 9
 
-        for (slot in 0 until terminalType.slots) {
-            val r = slot / 9
-            val c = slot % 9
-            if (r == 0 || r == rows - 1 || c == 0 || c == 8) continue
+            // if (i0 !in 1..3) continue
+            if (i0 !in 1..4) continue
+            if (i1 == 0) continue
+            if (i1 == 8) continue
 
-            val x = (c * float + x0 + 1f) * scale
-            val y = (r * float + y0 + height + 1f) * scale
+            val x = (i1 * float + x + 1f) * scale
+            val y = (i0 * float + y + height + 1f) * scale
 
             when {
-                slot == buttonSlot -> slot(graphics, x, y, size, size, TerminalSolver.`melody$correct`.rgb, scale, pose, scissor)
-                slot in slots -> slot(graphics, x, y, size, size, TerminalSolver.`melody$wrong`.rgb, scale, pose, scissor)
-                r in 1..4 && r != row -> {
-                    if (c !in 1..5) continue
-                    slot(graphics, x, y, size, size, TerminalSolver.`melody$other`.rgb, scale, pose, scissor)
+                slot == button * 9 + 16 -> {
+                    slot(x, y, size, size, TerminalSolver.`melody$correct`.rgb, scale, pose, scissor)
+                }
+
+                slot in slots -> {
+                    slot(x, y, size, size, TerminalSolver.`melody$wrong`.rgb, scale, pose, scissor)
+                }
+
+                i0 != row -> {
+                    if (i1 !in 1..5) continue
+                    slot(x, y, size, size, TerminalSolver.`melody$other`.rgb, scale, pose, scissor)
                 }
             }
         }
     }
 
-    override fun forSlot(slot: Int): Click? {
-        return (slot in slots).also { if (it) click(slot, 0) }.let { null }
+    override fun find(slot: Int): TerminalClick? {
+        if (slot !in slots) return null
+        val b = button ?: return null
+        if (TerminalSolver.`melody$prevent` && (slot != b * 9 + 16 || current == null || current != correct)) return null
+        click(slot, 0)
+        return null
     }
 
-    override fun valid(click: Click): Boolean {
+    override fun valid(click: TerminalClick): Boolean {
         return false
     }
 
-    override fun onClose() {
+    override fun close() {
         button = null
         correct = null
         current = null
-        super.onClose()
+        super.close()
     }
 
     override fun compute(items: List<ItemStack>) {

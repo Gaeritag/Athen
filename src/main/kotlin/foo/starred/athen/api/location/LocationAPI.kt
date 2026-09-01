@@ -106,7 +106,6 @@ object LocationAPI {
             val newIsland = if (isOnSkyBlock.value && mode != null) SkyBlockIsland.getByKey(mode) else null
             val oldIsland = island.value
 
-            println("Island change: $newIsland")
             island.value = newIsland
             LocationEvent.Hypixel.Island(oldIsland, newIsland).post()
             serverId = name
