@@ -22,6 +22,7 @@ import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.api.client
+import foo.starred.snowbird.api.nextTick
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 import net.minecraft.core.registries.BuiltInRegistries
@@ -244,7 +245,9 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]") {
 
     fun pop(name: String?, type: EntityType<*>?, max: Int = -1) {
         open()
-        popup.open(name, type, max)
+        nextTick {
+            popup.open(name, type, max)
+        }
     }
 
     override fun init() {
