@@ -44,7 +44,7 @@ object TerminalSolvers : Module(
     val `rubix$left` by rubix.switch("Left click only", true)
 
     private val melody by config.group("Melody")
-    val `melody$prevent` by melody.switch("Prevent wrong clicks", true)
+    val `melody$prevent` by melody.switch("Prevent wrong clicks")
     val `melody$num` by melody.switch("Number keys")
     val `melody$key0` by melody.keybind("Keybind 1", InputConstants.KEY_1)
     val `melody$key1` by melody.keybind("Keybind 2", InputConstants.KEY_2)
@@ -73,7 +73,7 @@ object TerminalSolvers : Module(
     val `ui$titleColor` by header.colorPicker("Title color", Color(240, 240, 245, 230))
     val `ui$header` by header.colorPicker("Header color", Color(10, 10, 12, 200))
 
-    val clicks by config.sound("Click sound")
+    val clicks by config.sound("Click sound", enabled = false )
 
     private val colors by config.group("Solver colors")
     val `colors$correct` by colors.colorPicker("Colors: Solution", Color(46, 204, 113, 220))
