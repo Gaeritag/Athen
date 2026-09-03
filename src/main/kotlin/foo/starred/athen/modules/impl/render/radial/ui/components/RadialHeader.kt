@@ -4,8 +4,9 @@ package foo.starred.athen.modules.impl.render.radial.ui.components
 
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
-import foo.starred.athen.modules.impl.render.radial.ui.components.RadialEditableText.Companion.radialEditableText
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
+import foo.starred.athen.api.rendering.ui.components.impl.EditableTextComponent
+import foo.starred.athen.api.rendering.ui.components.impl.EditableTextComponent.Companion.editableText
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
@@ -27,7 +28,7 @@ import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.utils.literal
 
 class RadialHeader(side: IPrimitiveElement<*>) {
-    var title: RadialEditableText
+    var title: EditableTextComponent
         private set
 
     init {
@@ -81,7 +82,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             attach(head)
         }
 
-        title = radialEditableText {
+        title = editableText {
             size = FillSizeConstraint()
             position = FixedPositionConstraint(0, 0)
             textSize = 8.5f

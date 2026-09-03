@@ -1,6 +1,6 @@
 @file:Suppress("ObjectPrivatePropertyName", "Unused")
 
-package foo.starred.athen.modules.impl.render.radial.ui.components
+package foo.starred.athen.api.rendering.ui.components.impl
 
 import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -21,7 +21,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-open class RadialEditableText : IPrimitiveElement<RadialEditableText>() {
+open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
     private var initial: String = ""
     private var _cursor: Float = 0f
     private var _selection0: Float = 0f
@@ -95,7 +95,7 @@ open class RadialEditableText : IPrimitiveElement<RadialEditableText>() {
 
             val font = CascadeFonts.arial
             val width1 = font.width(value, textSize)
-            val x1 = this@RadialEditableText.x + (width - width1) / 2f
+            val x1 = this@EditableTextComponent.x + (width - width1) / 2f
             val x2 = x.toFloat() - x1
 
             var i0 = 0
@@ -314,6 +314,7 @@ open class RadialEditableText : IPrimitiveElement<RadialEditableText>() {
     private fun fn0() {
         val font = CascadeFonts.arial
         _cursor = font.width(value.substring(0, min(cursor, value.length)), textSize)
+
         if (!selected) return
         _selection0 = font.width(value.substring(0, min(range.first, value.length)), textSize)
         _selection1 = font.width(value.substring(0, min(range.second, value.length)), textSize)
@@ -335,8 +336,8 @@ open class RadialEditableText : IPrimitiveElement<RadialEditableText>() {
     }
 
     companion object {
-        inline fun radialEditableText(block: RadialEditableText.() -> Unit): RadialEditableText {
-            return RadialEditableText().apply(block)
+        inline fun editableText(block: EditableTextComponent.() -> Unit): EditableTextComponent {
+            return EditableTextComponent().apply(block)
         }
     }
 }
