@@ -4,6 +4,7 @@ import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.dsl.impl.builders.group.ConfigGroupBuilder
+import foo.starred.snowbird.api.mainThread
 import foo.starred.snowbird.utils.play
 import foo.starred.snowbird.utils.sound
 import net.minecraft.sounds.SoundEvent
@@ -41,7 +42,10 @@ class ConfigSoundOption(
 
     fun play(volume0: Float = volume, pitch0: Float = pitch) {
         if (!enabled) return
-        event?.play(volume0, pitch0)
+
+        mainThread {
+            event?.play(volume0, pitch0)
+        }
     }
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ReadOnlyProperty<Any?, ConfigSoundOption> {
