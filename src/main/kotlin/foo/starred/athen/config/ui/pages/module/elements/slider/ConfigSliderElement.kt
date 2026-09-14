@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.slider
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigSliderElementData
 import foo.starred.athen.ui.themes.Catppuccin
@@ -77,14 +78,14 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
         }
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             root.focused = self
             value(x)
             cancel()
         }
 
         on<MouseEvent.Release> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             if (root.focused != self) return@on
             root.focused = null
             cancel()

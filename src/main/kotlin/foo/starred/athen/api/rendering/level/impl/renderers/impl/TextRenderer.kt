@@ -26,6 +26,7 @@ object TextRenderer : ILevelRenderer {
 
             val scale = text.scale * 0.025f
             poseStack.translate(text.pos.x, text.pos.y, text.pos.z)
+            //~ if >= 26.3 'mulPose' -> 'rotate'
             poseStack.mulPose(a)
             poseStack.scale(scale, -scale, scale)
 

@@ -24,6 +24,7 @@ import foo.starred.athen.utils.command
 import foo.starred.snowbird.api.center
 import foo.starred.snowbird.api.client
 import foo.starred.snowbird.api.data.Observable
+import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.api.text.parser.impl.parse
@@ -147,7 +148,7 @@ object RadialMenu : Module(
         on<InputEvent.Keyboard.Press> {
             //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
-            if (keyEvent.key != keybind) return@on
+            if (keyEvent.key != keybind.value) return@on
 
             react(releaseClose || !open.value, true)
         }
@@ -155,7 +156,7 @@ object RadialMenu : Module(
         on<InputEvent.Keyboard.Release> {
             //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
-            if (keyEvent.key != keybind) return@on
+            if (keyEvent.key != keybind.value) return@on
             if (!open.value) return@on
             if (!releaseClose) return@on
 
@@ -166,7 +167,7 @@ object RadialMenu : Module(
         on<InputEvent.Mouse.Press> {
             //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
-            if (buttonInfo.button() != keybind) return@on
+            if (buttonInfo.button() != keybind.value) return@on
             if (open.value) return@on
 
             react(releaseClose || !open.value, true)
@@ -175,7 +176,7 @@ object RadialMenu : Module(
         on<InputEvent.Mouse.Release> {
             //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (client.screen != null) return@on
-            if (buttonInfo.button() != keybind) return@on
+            if (buttonInfo.button() != keybind.value) return@on
             if (!open.value) return@on
             if (!releaseClose) return@on
 
@@ -224,7 +225,7 @@ object RadialMenu : Module(
 
             if (type == 0 && slot.sub.isNotEmpty()) {
                 stack.addLast(slot.sub)
-                i0 = RadialRenderState.hit(mouseSX, mouseSY, x1, y1, maxOf(1, stack.last().size), radius1, radius2)
+                i0 = RadialRenderState.hit(MouseInputState.Position.Scaled.x, MouseInputState.Position.Scaled.y, x1, y1, maxOf(1, stack.last().size), radius1, radius2)
                 return@on cancel()
             }
 
@@ -235,6 +236,9 @@ object RadialMenu : Module(
 
         on<InputEvent.Mouse.Move> {
             cancel()
+
+            val x0 = MouseInputState.Position.Scaled.x
+            val y0 = MouseInputState.Position.Scaled.y
 
             val x1 = client.window.guiScaledWidth / 2
             val y1 = client.window.guiScaledHeight / 2
@@ -247,7 +251,7 @@ object RadialMenu : Module(
 
             if (type == 2 && i2 in current.indices) {
                 val ring = layout()
-                val hit = RadialRenderState.hitRing(mouseSX, mouseSY, x1, y1, maxOf(1, current.size), radius2, ring.map { it.first }, direction, thickness)
+                val hit = RadialRenderState.hitRing(x0, y0, x1, y1, maxOf(1, current.size), radius2, ring.map { it.first }, direction, thickness)
                 if (hit != -1) {
                     i1 = hit
                     return@on
@@ -255,7 +259,7 @@ object RadialMenu : Module(
             }
 
             if (type == 1 && i2 in current.indices) {
-                val hit = RadialRenderState.hitNested(mouseSX, mouseSY, x1, y1, maxOf(1, current.size), radius2, i2, current[i2].sub.size, direction, thickness)
+                val hit = RadialRenderState.hitNested(x0, y0, x1, y1, maxOf(1, current.size), radius2, i2, current[i2].sub.size, direction, thickness)
                 if (hit != -1) {
                     i0 = i2
                     i1 = hit
@@ -264,7 +268,7 @@ object RadialMenu : Module(
             }
 
             i1 = -1
-            i0 = RadialRenderState.hit(mouseSX, mouseSY, x1, y1, maxOf(1, current.size), radius1, radius2, direction || (type == 2 && i2 != -1))
+            i0 = RadialRenderState.hit(x0, y0, x1, y1, maxOf(1, current.size), radius1, radius2, direction || (type == 2 && i2 != -1))
         }.runWhen(open)
 
         on<GuiEvent.Render.Any.Post> {
@@ -309,11 +313,11 @@ object RadialMenu : Module(
             }
 
             val label = if (bool0) (if (bool1) "Back" else "Exit") else hovered?.name ?: return@on
-            val tooltipX = mouseSX.toInt() + 12
-            val tooltipY = mouseSY.toInt() - 4
+            val x1 = MouseInputState.Position.Scaled.x.toInt() + 12
+            val y1 = MouseInputState.Position.Scaled.y.toInt() - 4
 
-            graphics.rectangle(tooltipX - 5, tooltipY - 5, client.font.width(label) + 10, client.font.lineHeight + 10, Catppuccin.Mocha.Base.argb)
-            graphics.extractText(label, tooltipX, tooltipY, false, Catppuccin.Mocha.Text.argb)
+            graphics.rectangle(x1 - 5, y1 - 5, client.font.width(label) + 10, client.font.lineHeight + 10, Catppuccin.Mocha.Base.argb)
+            graphics.extractText(label, x1, y1, false, Catppuccin.Mocha.Text.argb)
         }.runWhen(open)
 
         on<GuiEvent.Open.Any> {
@@ -360,7 +364,7 @@ object RadialMenu : Module(
     }
 
     private fun dist(x1: Int, y1: Int): Double {
-        return hypot((mouseSX - x1).toDouble(), (mouseSY - y1).toDouble())
+        return hypot((MouseInputState.Position.Scaled.x - x1).toDouble(), (MouseInputState.Position.Scaled.y - y1).toDouble())
     }
 
     private fun back() {

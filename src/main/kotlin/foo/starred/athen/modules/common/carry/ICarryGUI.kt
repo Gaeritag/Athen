@@ -1,5 +1,6 @@
 package foo.starred.athen.modules.common.carry
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
@@ -216,8 +217,8 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
                 })
 
                 on<MouseEvent.Press> {
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     cancel()
-                    if (button != 0) return@on
                     remove(carry.player)
                     persist()
                     add(carry.player, 0, TooltipEntry.ActionType.CARRY_REMOVED)

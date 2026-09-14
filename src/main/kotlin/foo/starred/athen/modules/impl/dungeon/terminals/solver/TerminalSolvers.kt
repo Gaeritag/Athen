@@ -16,9 +16,8 @@ import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.ctrl
-import foo.starred.snowbird.utils.mouseSX
-import foo.starred.snowbird.utils.mouseSY
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
+import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
@@ -120,7 +119,7 @@ object TerminalSolvers : Module(
             val t = TerminalAPI.terminal ?: return@on
             if (System.currentTimeMillis() - TerminalAPI.open < firstClick) return@on
 
-            when (keyEvent.key) {
+            when (KeyboardInputState.vanilla(keyEvent.key)) {
                 `melody$key0` if t == TerminalType.MELODY -> {
                     MelodySolver.click(1)
                 }
@@ -147,8 +146,8 @@ object TerminalSolvers : Module(
                     cancel()
                 }
 
-                (client.options.keyDrop as? KeyMappingAccessor)?.boundKey?.value if (dropKey) -> {
-                    c(mouse = if (!ctrl) 0 else 1)
+                (client.options.keyDrop as? KeyMappingAccessor)?.boundKey if (dropKey) -> {
+                    c(mouse = if (!KeyboardInputState.States.control()) 0 else 1)
                     cancel()
                 }
             }
@@ -184,8 +183,8 @@ object TerminalSolvers : Module(
     private fun c(mouse: Int) {
         val solver = TerminalAPI.terminal?.impl ?: return
         val scale = scale
-        val mx = mouseSX / scale
-        val my = mouseSY / scale
+        val mx = MouseInputState.Position.Scaled.x / scale
+        val my = MouseInputState.Position.Scaled.y / scale
 
         val width = client.window.guiScaledWidth.toFloat() / scale
         val height = client.window.guiScaledHeight.toFloat() / scale

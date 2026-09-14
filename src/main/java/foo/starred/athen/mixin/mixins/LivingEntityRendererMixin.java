@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import foo.starred.athen.api.storage.ResourceAPI;
@@ -35,6 +36,7 @@ public abstract class LivingEntityRendererMixin {
                                     //? if >= 26.2 {
                                     /*.withBindGroupLayout(net.minecraft.client.renderer.BindGroupLayouts.SAMPLER0_SAMPLER1_SAMPLER2)
                                     .withVertexBinding(0, DefaultVertexFormat.ENTITY)
+                                    //~ if >= 26.3 'blaze3d' -> 'renderpearl.api.pipeline'
                                     .withPrimitiveTopology(com.mojang.blaze3d.PrimitiveTopology.QUADS)
                                     *///?} else {
                                     .withSampler("Sampler0")

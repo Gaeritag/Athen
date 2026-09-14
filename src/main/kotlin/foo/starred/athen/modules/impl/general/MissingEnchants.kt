@@ -15,8 +15,7 @@ import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.athen.utils.data
 import foo.starred.athen.utils.enchants
 import foo.starred.snowbird.api.EMPTY_COMPONENT
-import foo.starred.snowbird.api.bound
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.network.chat.Component
@@ -28,7 +27,7 @@ object MissingEnchants : Module(
     "Shows missing enchants on the item you hover over.",
     Category.GENERAL
 ) {
-    private val keybind: Int by config.keybind("Keybind", InputConstants.KEY_LSHIFT).`watch$tooltip`()
+    private val keybind by config.keybind("Keybind", InputConstants.KEY_LSHIFT).`watch$tooltip`()
     private val _unused by config.information("You can unbind the keybind to always show.")
 
     private val typeRegex = Regex("""\b(?:COMMON|UNCOMMON|RARE|EPIC|LEGENDARY|MYTHIC|DIVINE|SPECIAL|VERY SPECIAL)\b\s+(?:DUNGEON\s+)?([A-Z]+(?: [A-Z]+)*)""") // https://regex101.com/r/MOQHMf/1
@@ -58,7 +57,7 @@ object MissingEnchants : Module(
         }
 
         on<GuiEvent.Tooltip.Update> {
-            if (keybind.bound && !keybind.pressed) return@on
+            if (GenericInputState.bound(keybind.value) && !GenericInputState.pressed(keybind)) return@on
 
             val a = all ?: return@on
             val b = pools ?: return@on

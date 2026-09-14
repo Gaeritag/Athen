@@ -14,8 +14,7 @@ import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.snowbird.api.ZERO_PAIR
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.ctrl
-import foo.starred.snowbird.api.shift
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
 import foo.starred.snowbird.utils.withAlpha
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.abs
@@ -78,7 +77,7 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
         }
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             cancel()
 
             val bool = editing
@@ -111,15 +110,15 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
                 i0 = i
             }
 
-            anchor = if (shift) anchor.takeIf { it != -1 } ?: cursor else -1
+            anchor = if (KeyboardInputState.States.shift()) anchor.takeIf { it != -1 } ?: cursor else -1
             cursor = i0
         }
 
         on<KeyEvent.Press> {
             if (!editing) return@on
 
-            val shift = shift
-            val ctrl = ctrl
+            val shift = KeyboardInputState.States.shift()
+            val ctrl = KeyboardInputState.States.control()
 
             when (key) {
                 InputConstants.KEY_RETURN, InputConstants.KEY_NUMPADENTER -> {

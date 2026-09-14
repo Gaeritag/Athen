@@ -2,6 +2,7 @@
 
 package foo.starred.athen.api.items
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.config.dsl.impl.builders.option.ConfigOptionBuilder
@@ -52,7 +53,7 @@ object ItemAPI { // TODO: make this check the parent config of added keys if the
         }
     }
 
-    fun ConfigOptionBuilder<Int>.`watch$tooltip`(): ConfigOptionBuilder<Int> = apply {
-        resolve { `watched$tooltip`.add { it.value } }
+    fun ConfigOptionBuilder<InputConstants.Key>.`watch$tooltip`(): ConfigOptionBuilder<InputConstants.Key> = apply {
+        resolve { `watched$tooltip`.add { it.value.value } }
     }
 }

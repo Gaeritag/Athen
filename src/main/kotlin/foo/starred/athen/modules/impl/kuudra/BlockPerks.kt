@@ -7,8 +7,7 @@ import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.bound
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import foo.starred.snowbird.utils.stripped
 
 @Load
@@ -54,8 +53,7 @@ object BlockPerks : Module(
 
         on<GuiEvent.Slots.Render.Any.Pre> {
             if (!menu) return@on
-            if (!key.bound) return@on
-            if (key.pressed) return@on
+            if (GenericInputState.pressed(key)) return@on
 
             val name = slot.item.hoverName.stripped().substringBeforeLast(" ").takeIf { it.isNotEmpty() } ?: return@on
             if (name !in blocked) return@on
@@ -65,8 +63,7 @@ object BlockPerks : Module(
 
         on<GuiEvent.Slots.Input.Click> {
             if (!menu) return@on
-            if (!key.bound) return@on
-            if (key.pressed) return@on
+            if (GenericInputState.pressed(key)) return@on
 
             val name = slot?.item?.hoverName?.stripped()?.substringBeforeLast(" ")?.takeIf { it.isNotEmpty() } ?: return@on
             if (name !in blocked) return@on

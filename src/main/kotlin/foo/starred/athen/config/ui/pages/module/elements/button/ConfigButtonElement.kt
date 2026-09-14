@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.button
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.data.impl.ConfigButtonElementData
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.animation.data.AnimatableColor.Companion.animateColor
@@ -33,7 +34,7 @@ class ConfigButtonElement : RoundedRectanglePrimitive() {
         })
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             cancel()
             action()
             animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb.brighten(0.9f)), 0.15f) {

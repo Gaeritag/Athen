@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.slayer.carry.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.modules.impl.slayer.carry.impl.SlayerCarryTracker
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
@@ -123,8 +124,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             }.also { `carry$complete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val idx = selected ?: return@on
 
                 SlayerCarryTracker.complete(idx)
@@ -132,6 +132,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 deleting = null
                 list()
                 footer()
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -161,8 +162,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
             }.also { `carry$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val idx = selected ?: return@on
 
                 if (deleting != idx) {
@@ -176,6 +176,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 deleting = null
                 list()
                 footer()
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -221,8 +222,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 color = CascadeGeometricColor(if (b0) Mocha.Surface0.argb else Mocha.Base.argb)
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (filter == k) return@on
 
                     val p = filter
@@ -233,6 +233,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                     filter(k)
                     list()
                     footer()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -291,8 +292,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 }.also { outline = it })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     val n = if (selected == index) null else index
                     if (selected == n) return@on
@@ -303,6 +303,7 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                     previous?.let(::entry)
                     n?.let(::entry)
                     footer()
+                    cancel()
                 }
 
                 attach(right)
@@ -347,11 +348,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     SlayerCarryTracker.update(index, carry.name, carry.type, carry.tier, carry.max + 1, carry.done)
                     list()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -390,12 +391,12 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (carry.max <= 1) return@on
 
                     SlayerCarryTracker.update(index, carry.name, carry.type, carry.tier, carry.max - 1, carry.done)
                     list()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -433,11 +434,11 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     SlayerCarryTracker.update(index, carry.name, carry.type, carry.tier, carry.max, carry.done + 1)
                     list()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -476,12 +477,12 @@ object SlayerCarryGUI : CascadeScreen("Slayer Carries [Athen]") {
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (carry.done <= 0) return@on
 
                     SlayerCarryTracker.update(index, carry.name, carry.type, carry.tier, carry.max, carry.done - 1)
                     list()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {

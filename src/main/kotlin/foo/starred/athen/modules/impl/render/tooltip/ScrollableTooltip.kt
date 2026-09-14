@@ -8,8 +8,7 @@ import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.bound
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
@@ -59,14 +58,16 @@ object ScrollableTooltip : Module(
         }
 
         on<GuiEvent.Input.Mouse.Scroll> {
-            if (last != Scheduler.ticks.client) return@on
+            if (last != Scheduler.ticks.client) {
+                return@on
+            }
 
-            if (scale && `scale$key`.bound && `scale$key`.pressed) {
+            if (scale && GenericInputState.pressed(`scale$key`)) {
                 sc = (sc + amount * 0.1).coerceIn(0.5, 3.0)
                 return@on
             }
 
-            if (horizontal && `horizontal$key`.bound && `horizontal$key`.pressed) {
+            if (horizontal && GenericInputState.pressed(`horizontal$key`)) {
                 xo += amount * `horizontal$speed`
                 return@on
             }

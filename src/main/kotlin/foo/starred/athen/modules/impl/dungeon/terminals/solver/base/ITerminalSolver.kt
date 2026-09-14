@@ -1,5 +1,6 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.solver.base
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
@@ -73,14 +74,14 @@ abstract class ITerminalSolver(val type: TerminalType) {
             val screen = client.screen as? ITerminalSim ?: return
             val slot0 = screen.menu.slots.getOrNull(slot) ?: return
 
-            screen.slotClicked(slot0, slot, button, if (button == 0) ContainerInput.CLONE else ContainerInput.PICKUP)
+            screen.slotClicked(slot0, slot, button, if (button == InputConstants.MOUSE_BUTTON_LEFT) ContainerInput.CLONE else ContainerInput.PICKUP)
             TerminalSolvers.last = System.currentTimeMillis()
             pending = true
 
             return
         }
 
-        ServerboundContainerClickPacket(TerminalAPI.id, client.player?.containerMenu?.stateId ?: return, slot.toShort(), (if (button == 0) 2 else button).toByte(), if (button == 0) ContainerInput.CLONE else ContainerInput.PICKUP, Int2ObjectOpenHashMap(), HashedStack.create(ItemStack.EMPTY, client.connection?.decoratedHashOpsGenenerator() ?: return)).send()
+        ServerboundContainerClickPacket(TerminalAPI.id, client.player?.containerMenu?.stateId ?: return, slot.toShort(), (if (button == InputConstants.MOUSE_BUTTON_LEFT) 2 else button).toByte(), if (button == InputConstants.MOUSE_BUTTON_LEFT) ContainerInput.CLONE else ContainerInput.PICKUP, Int2ObjectOpenHashMap(), HashedStack.create(ItemStack.EMPTY, client.connection?.decoratedHashOpsGenenerator() ?: return)).send()
         TerminalSolvers.last = System.currentTimeMillis()
         pending = true
     }

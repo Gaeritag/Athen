@@ -9,6 +9,7 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.modules.Module
+//~ if >= 26.3 'EnderMan' -> 'Enderman'
 import net.minecraft.world.entity.monster.EnderMan
 import net.minecraft.world.entity.monster.Guardian
 import kotlin.math.abs
@@ -21,10 +22,12 @@ object EndermanLaserHider : Module(
     Category.SLAYER
 ) {
     private val carry by config.switch("Show for carries", true)
+    //~ if >= 26.3 'EnderMan' -> 'Enderman'
     private val set: MutableSet<EnderMan> = mutableSetOf()
 
     init {
         on<SlayerEvent.Boss.Spawn>(Int.MAX_VALUE) {
+            //~ if >= 26.3 'EnderMan' -> 'Enderman'
             if (entity !is EnderMan) return@on
             if (slayerInfo.owned) return@on
             if (!carry && entity.carry != null) return@on

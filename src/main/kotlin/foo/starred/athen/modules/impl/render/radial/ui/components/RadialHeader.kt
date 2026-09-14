@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.radial.ui.components
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
@@ -57,12 +58,12 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             })
 
             on<MouseEvent.Press> {
-                this.cancel()
-                if (button != 0) return@on
+                button != InputConstants.MOUSE_BUTTON_LEFT
 
                 RadialEditor.save()
                 val list0 = RadialEditor.names
                 RadialEditor.switch(list0[(list0.indexOf(RadialMenu.active) - 1 + list0.size) % list0.size])
+                cancel()
             }
 
             attach(head)
@@ -115,12 +116,12 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 RadialEditor.save()
                 val list0 = RadialEditor.names
                 RadialEditor.switch(list0[(list0.indexOf(RadialMenu.active) + 1) % list0.size])
+                cancel()
             }
 
             attach(box1)
@@ -145,8 +146,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 RadialEditor.save()
 
                 var s0 = "New"
@@ -160,6 +160,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
                 RadialEditor.working.clear()
                 RadialEditor.working.addAll(RadialMenu.slots)
                 RadialEditor.reload(0, -1)
+                cancel()
             }
 
             attach(box1)
@@ -183,8 +184,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 if (RadialEditor.names.size <= 1) return@on
 
                 RadialEditor.commit()
@@ -194,6 +194,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
                 RadialEditor.working.clear()
                 RadialEditor.working.addAll(RadialMenu.slots)
                 RadialEditor.reload(0, -1)
+                cancel()
             }
 
             attach(box1)

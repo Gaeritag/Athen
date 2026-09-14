@@ -112,8 +112,8 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             }.also { `profile$new$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 deleting = null
                 renaming = null
                 visible = false
@@ -123,6 +123,8 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 `profile$field`.reset(true)
                 `profile$field`.visible = true
                 scene.focused = `profile$field`
+
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -152,8 +154,8 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             }.also { `profile$rename$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 deleting = null
                 renaming = SlotBinds.active
                 visible = false
@@ -164,6 +166,8 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 `profile$field`.cursor = SlotBinds.active.length
                 `profile$field`.visible = true
                 scene.focused = `profile$field`
+
+                cancel()
             }
 
             attach(bar)
@@ -185,10 +189,9 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             }.also { `profile$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
-                val active = SlotBinds.active
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
+                val active = SlotBinds.active
                 if (deleting != active) {
                     deleting = active
                     buttons()
@@ -205,6 +208,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 profiles()
                 slots()
                 buttons()
+                cancel()
             }
 
             attach(bar)
@@ -377,8 +381,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 color = CascadeGeometricColor(if (b0) Mocha.Surface0.argb else Mocha.Base.argb)
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (name == SlotBinds.active) return@on
 
                     SlotBinds.save()
@@ -389,6 +392,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                     profiles()
                     slots()
                     buttons()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -461,7 +465,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
             }.also { cellOutline = it })
 
             on<MouseEvent.Press> {
-                if (button == 1) {
+                if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
                     if (fn(slot)) SlotBinds.unbind(slot)
                     selected = null
                     slots()
@@ -469,7 +473,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                     return@on
                 }
 
-                if (button != 0) {
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) {
                     cancel()
                     return@on
                 }

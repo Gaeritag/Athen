@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.render.highlight.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.modules.impl.render.highlight.MobHighlight
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
@@ -140,10 +141,11 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 deleting = null
                 popup.open(category)
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -173,11 +175,12 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
             }.also { `highlight$edit$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val idx = entry ?: return@on
+
                 deleting = null
                 popup.open(category, idx)
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -207,8 +210,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
             }.also { `highlight$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val idx = entry ?: return@on
 
                 if (deleting != idx) {
@@ -225,6 +227,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
                 categories()
                 list()
                 footer()
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -283,8 +286,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
                 color = CascadeGeometricColor(if (b0) Mocha.Surface0.argb else Mocha.Base.argb)
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (category == k) return@on
 
                     val p = category
@@ -295,6 +297,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
                     category(k)
                     list()
                     footer()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -374,8 +377,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
                 }.also { outline = it })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     val n = if (entry == i) null else i
                     if (entry == n) return@on
@@ -386,6 +388,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
                     previous?.let(::entry)
                     n?.let(::entry)
                     footer()
+                    cancel()
                 }
 
                 attach(right)

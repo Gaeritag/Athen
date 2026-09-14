@@ -1,3 +1,4 @@
+//? if <= 26.2 {
 package foo.starred.athen.mixin.mixins;
 
 import foo.starred.athen.events.PlayerEvent;
@@ -25,3 +26,4 @@ public class LocalPlayerMixin {
         return (LocalPlayer) (Object) this;
     }
 }
+//? }

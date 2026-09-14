@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.toggle
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigSwitchElementData
 import foo.starred.athen.ui.themes.Catppuccin
@@ -35,7 +36,7 @@ class ConfigSwitchElement : RoundedRectanglePrimitive() {
         })
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             cancel()
 
             set(!active)

@@ -39,7 +39,11 @@ public class GuiGraphicsExtractorMixin {
     }
 
     @Inject(method = "tooltip", at = @At("HEAD"), cancellable = true)
+    //? if >= 26.3 {
+    /*private void athen$renderTooltip(Font font, List<ClientTooltipComponent> lines, int x, int y, ClientTooltipPositioner positioner, Identifier style, boolean extraSpaceAfterFirstLine, CallbackInfo ci) {
+    *///? } else {
     private void athen$renderTooltip(Font font, List<ClientTooltipComponent> lines, int x, int y, ClientTooltipPositioner positioner, Identifier style, CallbackInfo ci) {
+    //? }
         boolean a = CustomTooltip.INSTANCE.getEnabled();
         boolean b = ScrollableTooltip.INSTANCE.getEnabled();
 

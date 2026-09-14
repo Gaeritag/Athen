@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.input
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigTextInputElementData
 import foo.starred.athen.config.ui.ConfigUI
@@ -47,13 +48,13 @@ class ConfigInputExpandElement(
         on<MouseEvent.Move.Enter> {
             animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
-        
+
         on<MouseEvent.Move.Exit> {
             animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
-        
+
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             popup()
         }
     }

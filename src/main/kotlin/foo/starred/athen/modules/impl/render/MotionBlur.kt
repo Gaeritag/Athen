@@ -2,12 +2,17 @@
 
 package foo.starred.athen.modules.impl.render
 
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.pipeline.*
+//~ if >= 26.3 'blaze3d.shaders' -> 'renderpearl.api.pipeline'
 import com.mojang.blaze3d.shaders.UniformType
+//~ if >= 26.3 'blaze3d.systems' -> 'renderpearl.api.commands'
 import com.mojang.blaze3d.systems.CommandEncoder
 import com.mojang.blaze3d.systems.RenderSystem
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.textures.FilterMode
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.textures.GpuTextureView
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.storage.ResourceAPI
@@ -26,9 +31,16 @@ import java.util.*
 import kotlin.math.abs
 
 //? if >= 26.2 {
-/*import com.mojang.blaze3d.GpuFormat
+/*//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
+import com.mojang.blaze3d.GpuFormat
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.pipeline.BindGroupLayout
 import java.util.Optional
+*///? }
+
+//? if >= 26.3 {
+/*import com.mojang.renderpearl.api.pipeline.RenderPipeline
+import com.mojang.renderpearl.api.pipeline.ColorTargetState
 *///? }
 
 @Load
@@ -54,7 +66,13 @@ object MotionBlur : Module(
             .withLocation(Identifier.fromNamespaceAndPath("athen", "motion_blur"))
             .withVertexShader(ResourceAPI.minecraft("core/screenquad"))
             .withFragmentShader(ResourceAPI.identify("core/level/blur/motion_blur"))
-            //? if >= 26.2 {
+            //? if >= 26.3 {
+            /*.withBindGroupLayout(BindGroupLayout.builder()
+                .withUniform("InSampler", UniformType.COMBINED_IMAGE_SAMPLER)
+                .withUniform("DepthSampler", UniformType.COMBINED_IMAGE_SAMPLER)
+                .withUniform("MotionBlurConfig", UniformType.UNIFORM_BUFFER)
+                .build())
+            *///?} elif 26.2 {
             /*.withBindGroupLayout(BindGroupLayout.builder()
                 .withSampler("InSampler")
                 .withSampler("DepthSampler")
@@ -64,7 +82,7 @@ object MotionBlur : Module(
             .withSampler("InSampler")
             .withSampler("DepthSampler")
             .withUniform("MotionBlurConfig", UniformType.UNIFORM_BUFFER)
-            //? }
+            //?}
             .withColorTargetState(ColorTargetState.DEFAULT)
             .withCull(false)
             .build()
@@ -132,8 +150,13 @@ object MotionBlur : Module(
         if (current != null && current.width == width && current.height == height) return current
 
         current?.destroyBuffers()
-        //~ if >= 26.2 ', false)' -> ', false, GpuFormat.RGBA8_UNORM)'
+        //? if >= 26.3 {
+        /*val created = TextureTarget("Motion Blur Scratch", width, height, GpuFormat.RGBA8_UNORM, null)
+        *///?} elif 26.2 {
+        /*val created = TextureTarget("Motion Blur Scratch", width, height, false, GpuFormat.RGBA8_UNORM)
+        *///?} else {
         val created = TextureTarget("Motion Blur Scratch", width, height, false)
+        //?}
         scratch = created
         return created
     }
@@ -186,9 +209,12 @@ object MotionBlur : Module(
     private fun CommandEncoder.extract(buffer: GpuBuffer, target: GpuTextureView, color: GpuTextureView, depth: GpuTextureView) {
         //~ if >= 26.2 'OptionalInt' -> 'Optional'
         val pass = createRenderPass({ "Motion Blur Render Pass" }, target, OptionalInt.empty())
+        //~ if >= 26.3 'pass.setPipeline(PIPELINE)' -> 'pass.setPipeline(RenderSystem.getCompiledPipeline(PIPELINE))'
         pass.setPipeline(PIPELINE)
         RenderSystem.bindDefaultUniforms(pass)
+        //~ if >= 26.3 'bindTexture' -> 'setUniform'
         pass.bindTexture("InSampler", color, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR))
+        //~ if >= 26.3 'bindTexture' -> 'setUniform'
         pass.bindTexture("DepthSampler", depth, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST))
         pass.setUniform("MotionBlurConfig", buffer.slice())
         //~ if >= 26.2 'pass.draw(0, 3)' -> 'pass.draw(3, 1, 0, 0)'

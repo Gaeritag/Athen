@@ -1,4 +1,6 @@
 #version 330
+//? if >= 26.3
+//#extension GL_ARB_separate_shader_objects : require
 
 uniform sampler2D InSampler;
 uniform sampler2D DepthSampler;
@@ -10,7 +12,9 @@ layout(std140) uniform MotionBlurConfig {
     vec4 DepthParams;
 };
 
+//$ layout '0' 'in' >> vec
 in vec2 texCoord;
+//$ layout '0' 'out' >> vec
 out vec4 fragColor;
 
 float noise(vec2 pos) {

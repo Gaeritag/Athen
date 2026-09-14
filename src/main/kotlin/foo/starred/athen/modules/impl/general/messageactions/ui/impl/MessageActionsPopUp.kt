@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.general.messageactions.ui.impl
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.rendering.ui.components.impl.MultiCheckboxComponent
 import foo.starred.athen.api.rendering.ui.components.impl.MultiCheckboxComponent.Companion.multiCheckbox
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
@@ -184,7 +185,7 @@ class MessageActionsPopUp(
                 }.also { outline = it })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     cancel()
 
                     action = type.id
@@ -280,7 +281,8 @@ class MessageActionsPopUp(
             }.also { `cancel$box$outline` = it })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 cancel()
                 cancel = !cancel
                 `cancel$box$outline`.color = CascadeGeometricColor(if (cancel) Mocha.Green.argb else Mocha.Red.argb)
@@ -328,7 +330,7 @@ class MessageActionsPopUp(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 cancel()
                 onClose()
@@ -360,7 +362,7 @@ class MessageActionsPopUp(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on cancel()
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on cancel()
 
                 val pattern = pattern.value.trim()
                 if (pattern.isEmpty()) return@on cancel()

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigKeybindElementData
 import foo.starred.athen.ui.themes.Catppuccin
-import foo.starred.athen.utils.keyName
 import foo.starred.cascade.animation.data.AnimatableColor.Companion.animateColor
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
@@ -21,6 +20,8 @@ import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
 import foo.starred.snowbird.utils.literal
 
 class ConfigKeybindElement(
@@ -29,11 +30,15 @@ class ConfigKeybindElement(
     private lateinit var outline: OutlineEffect
 
     private var listening = false
-    private var value: Int = ConfigManager.get(config.key) as? Int ?: config.default
+    private var value: InputConstants.Key = when (val v = ConfigManager.get(config.key)) {
+        is InputConstants.Key -> v
+        is String -> runCatching { InputConstants.getKey(v) }.getOrNull()
+        else -> null
+    } ?: config.default
 
     private val key = text {
         wrapper = CascadeTextWrapper
-        text = value.keyName.literal()
+        text = GenericInputState.name(value).literal()
         textSize = 8f
         color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
         position = CenterPositionConstraint()
@@ -51,7 +56,7 @@ class ConfigKeybindElement(
         }.also { outline = it })
 
         on<MouseEvent.Press> {
-            if (listening) update(button) else start()
+            if (listening) update(InputConstants.Type.MOUSE.getOrCreate(button)) else start()
             cancel()
         }
 
@@ -61,8 +66,9 @@ class ConfigKeybindElement(
 
             when (key) {
                 InputConstants.KEY_ESCAPE -> stop()
-                InputConstants.KEY_BACKSPACE, InputConstants.KEY_DELETE -> update(-1)
-                else -> update(key)
+                InputConstants.KEY_BACKSPACE, InputConstants.KEY_DELETE -> update(InputConstants.UNKNOWN)
+                //~ if >= 26.3 'KEYSYM' -> 'KEYBOARD'
+                else -> update(KeyboardInputState.vanilla(key))
             }
         }
 
@@ -108,9 +114,10 @@ class ConfigKeybindElement(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
+                update(InputConstants.UNKNOWN)
                 cancel()
-                update(-1)
             }
 
             on<MouseEvent.Move.Enter> {
@@ -136,15 +143,15 @@ class ConfigKeybindElement(
     private fun stop() {
         listening = false
         if (root.focused == main) root.focused = null
-        key.text = value.keyName.literal()
+        key.text = GenericInputState.name(value).literal()
 
         key.color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
         main.animateColor(CascadeGeometricColor(if (main.hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb), 0.15f)
         outline.color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
     }
 
-    private fun update(newKey: Int) {
-        value = newKey
+    private fun update(key1: InputConstants.Key) {
+        value = key1
         ConfigManager.update(config.key, value)
         stop()
     }

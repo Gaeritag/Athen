@@ -1,7 +1,12 @@
 package foo.starred.athen.api.rendering.level.pipelines
 
-//~ if >= 26.2 'import com.mojang.blaze3d.vertex.VertexFormat' -> 'import com.mojang.blaze3d.PrimitiveTopology'
+//? if >= 26.3 {
+/*import com.mojang.renderpearl.api.pipeline.PrimitiveTopology
+*///?} elif 26.2 {
+/*import com.mojang.blaze3d.PrimitiveTopology
+*///?} else {
 import com.mojang.blaze3d.vertex.VertexFormat
+//?}
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.rendering.level.pipelines.impl.DualLevelPipeline
 import net.minecraft.client.renderer.RenderPipelines
@@ -19,8 +24,11 @@ object LevelPipelineImpl {
 
     val TRIANGLE_FAN = DualLevelPipeline("triangle_fan") {
         snippet = RenderPipelines.DEBUG_FILLED_SNIPPET
-        //~ if >= 26.2 'VertexFormat.Mode.TRIANGLE_FAN' -> 'PrimitiveTopology.TRIANGLE_FAN'
+        //? if >= 26.2 {
+        /*vertexMode = PrimitiveTopology.TRIANGLE_FAN
+        *///?} else {
         vertexMode = VertexFormat.Mode.TRIANGLE_FAN
+        //?}
         cull = false
     }
 }

@@ -14,9 +14,8 @@ import foo.starred.athen.events.core.CancellableEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.render.renderPos
-import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
@@ -59,7 +58,7 @@ object StunHelper : Module(
 
             val item = client.player?.getItemInHand(InteractionHand.MAIN_HAND) ?: return@on
             if (item.getData(DataTypes.COOLDOWN_ABILITY)?.first != "Pickobulus") return@on
-            if (blockOverride.bound && blockOverride.pressed) return@on
+            if (GenericInputState.pressed(blockOverride)) return@on
 
             val tier = KuudraAPI.tier?.int ?: return@on
             if (tier < KuudraTier.BURNING.int) return@on

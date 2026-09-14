@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.hud
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigHudElementData
@@ -42,7 +43,7 @@ class ConfigHUDElement(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 cancel()
                 HUDEditor.open()
             }

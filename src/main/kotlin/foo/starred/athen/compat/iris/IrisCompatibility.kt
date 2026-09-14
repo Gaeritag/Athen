@@ -1,3 +1,4 @@
+//? <= 26.2 {
 package foo.starred.athen.compat.iris
 
 import foo.starred.athen.Athen
@@ -30,3 +31,4 @@ object IrisCompatibility {
         }
     }
 }
+//? }

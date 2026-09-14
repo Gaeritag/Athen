@@ -12,9 +12,9 @@ import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.guiClick
-import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Items
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
@@ -44,24 +44,18 @@ object WardrobeKeybinds : Module(
     private val swapKey1 by swaps.selector("Swap slot 1", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9"))
     private val swapKey2 by swaps.selector("Swap slot 2", listOf("Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Slot 8", "Slot 9"))
 
-    private val slots by config.group("Slot keybinds")
-    private val key0 by slots.keybind("Slot 1", InputConstants.KEY_1)
-    private val key1 by slots.keybind("Slot 2", InputConstants.KEY_2)
-    private val key2 by slots.keybind("Slot 3", InputConstants.KEY_3)
-    private val key3 by slots.keybind("Slot 4", InputConstants.KEY_4)
-    private val key4 by slots.keybind("Slot 5", InputConstants.KEY_5)
-    private val key5 by slots.keybind("Slot 6", InputConstants.KEY_6)
-    private val key6 by slots.keybind("Slot 7", InputConstants.KEY_7)
-    private val key7 by slots.keybind("Slot 8", InputConstants.KEY_8)
-    private val key8 by slots.keybind("Slot 9", InputConstants.KEY_9)
+    private val slots0 by config.group("Slot keybinds")
+    private val key0 by slots0.keybind("Slot 1", InputConstants.KEY_1)
+    private val key1 by slots0.keybind("Slot 2", InputConstants.KEY_2)
+    private val key2 by slots0.keybind("Slot 3", InputConstants.KEY_3)
+    private val key3 by slots0.keybind("Slot 4", InputConstants.KEY_4)
+    private val key4 by slots0.keybind("Slot 5", InputConstants.KEY_5)
+    private val key5 by slots0.keybind("Slot 6", InputConstants.KEY_6)
+    private val key6 by slots0.keybind("Slot 7", InputConstants.KEY_7)
+    private val key7 by slots0.keybind("Slot 8", InputConstants.KEY_8)
+    private val key8 by slots0.keybind("Slot 9", InputConstants.KEY_9)
 
-    private var menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Armor Sets$")
-    private var currentPage: Int = 0
-    private var maxPage: Int = 0
-    private var lastClick: Long = 0
-    var inMenu: Boolean = false
-
-    val wardrobeSlots = listOf(
+    private val slots = listOf(
         WardrobeSlot(36, { acc(0) }, { key0 }),
         WardrobeSlot(37, { acc(1) }, { key1 }),
         WardrobeSlot(38, { acc(2) }, { key2 }),
@@ -73,30 +67,18 @@ object WardrobeKeybinds : Module(
         WardrobeSlot(44, { acc(8) }, { key8 })
     )
 
-    data class WardrobeSlot(
-        val idx: Int,
-        val acc: () -> KeyMappingAccessor,
-        val keybind: () -> Int
-    ) {
-        val hotbar by lazy(acc)
-
-        val value: Int
-            get() = if (useHotbar) hotbar.boundKey.value else keybind()
-
-        val slot: Slot?
-            get() = client.player?.containerMenu?.slots?.getOrNull(idx)
-
-        val equipped: Boolean
-            //~ if >= 26.2 'Items.LIME_DYE' -> 'Items.DYE.pick(net.minecraft.world.item.DyeColor.LIME)'
-            get() = slot?.item?.item == Items.LIME_DYE
-    }
+    private var menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Armor Sets$")
+    private var current: Int = 0
+    private var max: Int = 0
+    private var last: Long = 0
+    private var open: Boolean = false
 
     init {
         on<GuiEvent.Open.Container> {
             menuRegex.findOrNull(stripped, "cur", "max") { (cur, max) ->
-                inMenu = true
-                currentPage = cur.toInt()
-                maxPage = max.toInt()
+                open = true
+                current = cur.toInt()
+                WardrobeKeybinds.max = max.toInt()
             }
         }
 
@@ -105,51 +87,57 @@ object WardrobeKeybinds : Module(
         }
 
         on<GuiEvent.Input.Key.Press> {
-            if (inMenu) fn(keyEvent.key)
+            if (!open) return@on
+            fn(KeyboardInputState.vanilla(keyEvent.key))
         }
 
         on<GuiEvent.Input.Mouse.Press> {
-            if (inMenu) fn(keyEvent.button())
+            if (!open) return@on
+            fn(KeyboardInputState.vanilla(keyEvent.button()))
         }
 
         on<GuiEvent.Render.Screen.Pre> {
-            if (inMenu) cancel()
+            if (!open) return@on
+            cancel()
         }.runWhen(cancelRender.state)
     }
 
-    private fun CancellableEvent.fn(key: Int) {
-        if (cancelAll && (!override.bound || !override.pressed) && key != (client.options.keyInventory as KeyMappingAccessor).boundKey.value && key != InputConstants.KEY_ESCAPE) cancel()
+    private fun CancellableEvent.fn(key: InputConstants.Key) {
+        val bool0 = GenericInputState.pressed(override)
+        val bool1 = key == (client.options.keyInventory as KeyMappingAccessor).boundKey
+        val bool2 = key.value == InputConstants.KEY_ESCAPE
+        if (cancelAll && !bool0 && !bool1 && !bool2) cancel()
 
-        if (System.currentTimeMillis() - lastClick < ping) return
+        if (System.currentTimeMillis() - last < ping) return
         val player = client.player ?: return
 
         if (key == prevPage) {
-            if (currentPage > 1) guiClick(player.containerMenu.containerId, 45)
+            if (current > 1) guiClick(player.containerMenu.containerId, 45)
             return
         }
 
         if (key == nextPage) {
-            if (currentPage < maxPage) guiClick(player.containerMenu.containerId, 53)
+            if (current < max) guiClick(player.containerMenu.containerId, 53)
             return
         }
 
         if (swapKey && key == swapKeybind) {
             if (swapKey1 == swapKey2) return
-            val slot1 = wardrobeSlots.find { it.idx == swapKey1 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
-            val slot2 = wardrobeSlots.find { it.idx == swapKey2 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
+            val slot1 = slots.find { it.idx == swapKey1 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
+            val slot2 = slots.find { it.idx == swapKey2 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
             val s = if (slot1.equipped) slot2.idx else slot1.idx
 
             guiClick(player.containerMenu.containerId, s)
-            lastClick = System.currentTimeMillis()
+            last = System.currentTimeMillis()
             cancel()
             return
         }
 
-        val slot = wardrobeSlots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
+        val slot = slots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
         if (slot.equipped && preventUnequip) return
 
         guiClick(player.containerMenu.containerId, slot.idx)
-        lastClick = System.currentTimeMillis()
+        last = System.currentTimeMillis()
         cancel()
     }
 
@@ -157,9 +145,27 @@ object WardrobeKeybinds : Module(
         client.options.keyHotbarSlots[idx] as KeyMappingAccessor
 
     private fun reset() {
-        inMenu = false
-        currentPage = 0
-        maxPage = 0
-        lastClick = 0
+        open = false
+        current = 0
+        max = 0
+        last = 0
+    }
+
+    private data class WardrobeSlot(
+        val idx: Int,
+        val acc: () -> KeyMappingAccessor,
+        val keybind: () -> InputConstants.Key
+    ) {
+        val hotbar by lazy(acc)
+
+        val value: InputConstants.Key
+            get() = if (useHotbar) hotbar.boundKey else keybind()
+
+        val slot: Slot?
+            get() = client.player?.containerMenu?.slots?.getOrNull(idx)
+
+        val equipped: Boolean
+            //~ if >= 26.2 'Items.LIME_DYE' -> 'Items.DYE.lime()'
+            get() = slot?.item?.item == Items.LIME_DYE
     }
 }

@@ -174,12 +174,12 @@ class RadialForm(mid: ContainerPrimitive) {
                 }.also { outlines.add(it) })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     RadialEditor.type = act0.id
                     RadialEditor.commit()
                     buttons()
+                    cancel()
                     fn()
                 }
 

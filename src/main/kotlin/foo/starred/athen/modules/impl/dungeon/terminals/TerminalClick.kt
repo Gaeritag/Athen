@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.dungeon.terminals
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.annotations.Load
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.scheduling.Scheduler
@@ -14,8 +15,7 @@ import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.cascade.graphics.extensions.circle.circle
 import foo.starred.cascade.graphics.extensions.stroke.stroke
 import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.utils.mouseSX
-import foo.starred.snowbird.utils.mouseSY
+import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import org.joml.Matrix3x2f
 import kotlin.time.Duration.Companion.seconds
 
@@ -36,7 +36,7 @@ object TerminalClick : Module(
 
     init {
         on<GuiEvent.Input.Mouse.Press> {
-            clicks.add(Click(mouseSX, mouseSY, keyEvent.button()))
+            clicks.add(Click(MouseInputState.Position.Scaled.x, MouseInputState.Position.Scaled.y, keyEvent.button()))
         }.runWhen(TerminalAPI.opened)
 
         on<GuiEvent.Render.Any.Post> {
@@ -49,13 +49,13 @@ object TerminalClick : Module(
             for (i in 0 until cs.size - 1) {
                 val c1 = cs[i]
                 val c2 = cs[i + 1]
-                val color = (if (c1.button == 0) `color$mouse$left` else `color$mouse$right`)
+                val color = (if (c1.button == InputConstants.MOUSE_BUTTON_LEFT) `color$mouse$left` else `color$mouse$right`)
 
                 graphics.stroke(c1.x, c1.y, c2.x, c2.y, color, thickness.toFloat(), pose, scissor)
             }
 
             for (c in cs) {
-                val color = (if (c.button == 0) `color$mouse$left` else `color$mouse$right`)
+                val color = (if (c.button == InputConstants.MOUSE_BUTTON_LEFT) `color$mouse$left` else `color$mouse$right`)
                 graphics.circle(c.x, c.y, radius.toFloat(), color, pose, scissor)
             }
         }.runWhen(render)

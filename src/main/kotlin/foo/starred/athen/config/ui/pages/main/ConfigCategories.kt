@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.main
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.Category
 import foo.starred.athen.config.ui.ConfigUI.left
 import foo.starred.athen.config.ui.pages.module.ConfigModules
@@ -67,7 +68,7 @@ object ConfigCategories {
                 on<MouseEvent.Press> {
                     cancel()
 
-                    if (button != 0) {
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) {
                         return@on
                     }
 

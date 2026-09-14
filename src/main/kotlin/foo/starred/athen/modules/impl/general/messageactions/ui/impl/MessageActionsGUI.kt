@@ -160,8 +160,8 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 deleting = null
                 visible = false
 
@@ -170,6 +170,8 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                 `category$field`.reset(true)
                 `category$field`.visible = true
                 scene.focused = `category$field`
+
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -199,13 +201,13 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
             }.also { `category$toggle$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val name = category ?: return@on
 
                 MessageActions.toggle(name)
                 rows0[name]?.label?.color = CascadeGeometricColor(if (MessageActions.categories.find { it.name == name }?.enabled != true) Mocha.Overlay0.argb else Mocha.Lavender.argb)
                 buttons()
+                cancel()
 
                 for ((index, action) in MessageActions.actions.withIndex()) {
                     if (action.category == name) entry(index)
@@ -231,8 +233,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
             }.also { `category$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 val name = category ?: return@on
                 if (deleting != name) {
@@ -248,6 +249,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                 list()
                 footer()
                 buttons()
+                cancel()
             }
 
             attach(bar)
@@ -305,11 +307,11 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 popup.visible = true
                 popup.open(null, category)
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -339,12 +341,13 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
             }.also { `action$edit$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val current = entry ?: return@on
                 val actionEntry = MessageActions.actions.getOrNull(current) ?: return@on
+
                 popup.visible = true
                 popup.open(MessageActionsPopUp.ActionEntryData(current, actionEntry), category)
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -374,14 +377,14 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
             }.also { `action$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 if (entry == null) return@on
 
                 entry?.let { MessageActions.remove(it) }
                 entry = null
                 list()
                 footer()
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -427,8 +430,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                 color = CascadeGeometricColor(if (b0) Mocha.Surface0.argb else Mocha.Base.argb)
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (category == k) return@on
 
                     val p = category
@@ -440,6 +442,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                     list()
                     footer()
                     buttons()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -499,8 +502,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                 }.also { outline = it })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     val n = if (entry == index) null else index
                     if (entry == n) return@on
@@ -510,6 +512,7 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                     previous?.let(::entry)
                     n?.let(::entry)
                     footer()
+                    cancel()
                 }
 
                 attach(right)
@@ -526,13 +529,13 @@ object MessageActionsGUI : CascadeScreen("Message Actions [Athen]", CascadeGeome
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     val current = MessageActions.actions.getOrNull(index) ?: return@on
 
                     MessageActions.update(index, current.copy(enabled = !current.enabled))
                     rows1[index]?.toggle?.visible = !current.enabled
                     entry(index)
+                    cancel()
                 }
 
                 attach(row)

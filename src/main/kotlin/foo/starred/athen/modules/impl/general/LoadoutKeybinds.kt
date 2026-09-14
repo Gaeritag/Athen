@@ -13,9 +13,10 @@ import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.guiClick
 import foo.starred.athen.utils.lore
-import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
+import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.world.inventory.Slot
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
@@ -58,13 +59,7 @@ object LoadoutKeybinds : Module(
     private val key10 by slots0.keybind("Slot 11", InputConstants.UNKNOWN.value)
     private val key11 by slots0.keybind("Slot 12", InputConstants.UNKNOWN.value)
 
-    private val menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Loadouts$")
-    private var currentPage: Int = 0
-    private var maxPage: Int = 0
-    private var lastClick: Long = 0
-    var open: Boolean = false
-
-    val slots = listOf(
+    private val slots = listOf(
         LoadoutSlot(0, 14, { acc(0) }, { key0 }),
         LoadoutSlot(1, 15, { acc(1) }, { key1 }),
         LoadoutSlot(2, 16, { acc(2) }, { key2 }),
@@ -79,12 +74,18 @@ object LoadoutKeybinds : Module(
         LoadoutSlot(11, 43, { acc(8) }, { key11 })
     )
 
+    private val menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Loadouts$")
+    private var current: Int = 0
+    private var max: Int = 0
+    private var last: Long = 0
+    private var open: Boolean = false
+
     init {
         on<GuiEvent.Open.Container> {
             menuRegex.findOrNull(stripped, "cur", "max") { (cur, max) ->
                 open = true
-                currentPage = cur.toInt()
-                maxPage = max.toInt()
+                current = cur.toInt()
+                LoadoutKeybinds.max = max.toInt()
             }
         }
 
@@ -93,32 +94,38 @@ object LoadoutKeybinds : Module(
         }
 
         on<GuiEvent.Input.Key.Press> {
-            if (open) fn(keyEvent.key)
+            if (!open) return@on
+            fn(KeyboardInputState.vanilla(keyEvent.key))
         }
 
         on<GuiEvent.Input.Mouse.Press> {
-            if (open) fn(keyEvent.button())
+            if (!open) return@on
+            fn(MouseInputState.vanilla(keyEvent.button()))
         }
 
         on<GuiEvent.Render.Screen.Pre> {
-            if (open) cancel()
+            if (!open) return@on
+            cancel()
         }.runWhen(cancelRender.state)
     }
 
-    private fun CancellableEvent.fn(key: Int) {
-        if (cancelAll && (!override.bound || !override.pressed) && key != (client.options.keyInventory as KeyMappingAccessor).boundKey.value && key != InputConstants.KEY_ESCAPE) cancel()
+    private fun CancellableEvent.fn(key: InputConstants.Key) {
+        val bool0 = GenericInputState.pressed(override)
+        val bool1 = key == (client.options.keyInventory as KeyMappingAccessor).boundKey
+        val bool2 = key.value == InputConstants.KEY_ESCAPE
+        if (cancelAll && !bool0 && !bool1 && !bool2) cancel()
 
-        if (System.currentTimeMillis() - lastClick < ping) return
+        if (System.currentTimeMillis() - last < ping) return
         val player = client.player ?: return
         val container = player.containerMenu
 
         if (key == prevPage) {
-            if (currentPage > 1) guiClick(container.containerId, 17)
+            if (current > 1) guiClick(container.containerId, 17)
             return
         }
 
         if (key == nextPage) {
-            if (currentPage < maxPage) guiClick(container.containerId, 44)
+            if (current < max) guiClick(container.containerId, 44)
             return
         }
 
@@ -129,7 +136,7 @@ object LoadoutKeybinds : Module(
             val s = if (slot1.equipped) slot2.idx else slot1.idx
 
             guiClick(container.containerId, s)
-            lastClick = System.currentTimeMillis()
+            last = System.currentTimeMillis()
             cancel()
             return
         }
@@ -137,7 +144,7 @@ object LoadoutKeybinds : Module(
         val slot = slots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
 
         guiClick(container.containerId, slot.idx)
-        lastClick = System.currentTimeMillis()
+        last = System.currentTimeMillis()
         cancel()
     }
 
@@ -146,23 +153,23 @@ object LoadoutKeybinds : Module(
 
     private fun reset() {
         open = false
-        currentPage = 0
-        maxPage = 0
-        lastClick = 0
+        current = 0
+        max = 0
+        last = 0
     }
 
-    data class LoadoutSlot(
+    private data class LoadoutSlot(
         val index: Int,
         val idx: Int,
         val acc: () -> KeyMappingAccessor,
-        val keybind: () -> Int
+        val keybind: () -> InputConstants.Key
     ) {
         val hotbar by lazy(acc)
 
-        val value: Int
+        val value: InputConstants.Key
             get() {
-                if (useHotbar && idx >= 41) return InputConstants.UNKNOWN.value
-                return if (useHotbar) hotbar.boundKey.value else keybind()
+                if (useHotbar && idx >= 41) return InputConstants.UNKNOWN
+                return if (useHotbar) hotbar.boundKey else keybind()
             }
 
         val slot: Slot?

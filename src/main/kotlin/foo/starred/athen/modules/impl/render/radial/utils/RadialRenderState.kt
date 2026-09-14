@@ -1,5 +1,6 @@
 package foo.starred.athen.modules.impl.render.radial.utils
 
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.VertexConsumer
 import foo.starred.athen.modules.impl.render.radial.RadialMenu

@@ -1,5 +1,6 @@
 package foo.starred.athen.modules.impl.render.radial.ui.components
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.modules.impl.render.radial.data.RadialSlot
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
@@ -52,9 +53,9 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
+                    cancel()
                     RadialEditor.commit()
                     RadialEditor.reload(i1, -1)
                 }
@@ -98,8 +99,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         })
 
                         on<MouseEvent.Press> {
-                            cancel()
-                            if (button != 0) return@on
+                            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                             if (i1 <= 0) return@on
 
                             RadialEditor.commit()
@@ -107,6 +107,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             list0[i1] = list0[i1 - 1]
                             list0[i1 - 1] = tmp0
                             RadialEditor.reload(i1 - 1, -1)
+                            cancel()
                         }
 
                         adopt(image {
@@ -130,8 +131,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         })
 
                         on<MouseEvent.Press> {
-                            cancel()
-                            if (button != 0) return@on
+                            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                             if (i1 >= list0.lastIndex) return@on
 
                             RadialEditor.commit()
@@ -139,6 +139,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             list0[i1] = list0[i1 + 1]
                             list0[i1 + 1] = tmp0
                             RadialEditor.reload(i1 + 1, -1)
+                            cancel()
                         }
 
                         adopt(image {
@@ -162,11 +163,12 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         })
 
                         on<MouseEvent.Press> {
-                            cancel()
-                            if (button != 0) return@on
+                            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                             RadialEditor.commit()
                             list0.removeAt(i1)
                             RadialEditor.reload(maxOf(0, i1 - 1), -1)
+                            cancel()
                         }
 
                         adopt(text {
@@ -197,10 +199,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                         })
 
                         on<MouseEvent.Press> {
-                            cancel()
-                            if (button != 0) return@on
+                            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                             RadialEditor.commit()
                             RadialEditor.reload(i1, i2)
+                            cancel()
                         }
 
                         on<MouseEvent.Move.Enter> {
@@ -243,8 +246,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                 })
 
                                 on<MouseEvent.Press> {
-                                    cancel()
-                                    if (button != 0) return@on
+                                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                                     if (i2 <= 0) return@on
 
                                     RadialEditor.commit()
@@ -255,6 +257,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                     list2[i2 - 1] = tmp1
                                     parent0.sub = list2
                                     RadialEditor.reload(i1, i2 - 1)
+                                    cancel()
                                 }
 
                                 adopt(image {
@@ -278,8 +281,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                 })
 
                                 on<MouseEvent.Press> {
-                                    cancel()
-                                    if (button != 0) return@on
+                                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                                     if (i2 >= list0[i1].sub.lastIndex) return@on
 
                                     RadialEditor.commit()
@@ -290,6 +292,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                     list2[i2 + 1] = tmp1
                                     parent0.sub = list2
                                     RadialEditor.reload(i1, i2 + 1)
+                                    cancel()
                                 }
 
                                 adopt(image {
@@ -313,14 +316,15 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                 })
 
                                 on<MouseEvent.Press> {
-                                    cancel()
-                                    if (button != 0) return@on
+                                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                                     RadialEditor.commit()
                                     val parent0 = list0[i1]
                                     val list2 = parent0.sub.toMutableList()
                                     list2.removeAt(i2)
                                     parent0.sub = list2
                                     RadialEditor.reload(i1, if (parent0.sub.isEmpty()) -1 else maxOf(0, i2 - 1))
+                                    cancel()
                                 }
 
                                 adopt(text {
@@ -361,8 +365,9 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     attach(side0)
 
                     on<MouseEvent.Press> {
+                        if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                         cancel()
-                        if (button != 0) return@on
                         RadialEditor.commit()
                         val parent0 = list0.getOrNull(i1) ?: return@on
                         if (parent0.sub.size >= m0) return@on
@@ -415,11 +420,12 @@ class RadialTree(private val side0: ScrollablePrimitive) {
             attach(side0)
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 RadialEditor.commit()
                 list0.add(RadialSlot("New Slot"))
                 RadialEditor.reload(list0.lastIndex, -1)
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {

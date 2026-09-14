@@ -1,5 +1,7 @@
 package foo.starred.athen.config.dsl.base
 
+import com.mojang.blaze3d.platform.InputConstants
+
 import foo.starred.athen.config.data.base.IConfigElementData
 import foo.starred.athen.config.data.impl.*
 import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
@@ -9,6 +11,7 @@ import foo.starred.athen.config.dsl.impl.builders.option.ConfigOptionBuilder
 import foo.starred.athen.config.dsl.impl.builders.sound.ConfigSoundOption
 import foo.starred.athen.hud.HUDElement
 import foo.starred.athen.hud.HUDManager
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 interface ConfigScope {
@@ -35,8 +38,12 @@ interface ConfigScope {
         return option(default.toInt(), ConfigColorPickerElementData(name, "", default.toInt()))
     }
 
-    fun keybind(name: String, default: Int = -1): ConfigOptionBuilder<Int> {
+    fun keybind(name: String, default: InputConstants.Key = InputConstants.UNKNOWN): ConfigOptionBuilder<InputConstants.Key> {
         return option(default, ConfigKeybindElementData(name, "", default))
+    }
+
+    fun keybind(name: String, default: Int): ConfigOptionBuilder<InputConstants.Key> {
+        return keybind(name, KeyboardInputState.vanilla(default))
     }
 
     fun multiSelector(name: String, options: List<String>, default: List<Int> = emptyList()): ConfigOptionBuilder<List<Int>> {

@@ -11,9 +11,8 @@ import foo.starred.athen.config.Category
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.runWhen
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.colorCoded
 import foo.starred.snowbird.utils.literal
@@ -98,7 +97,7 @@ object ItemTweaks : Module(
         }
 
         on<GuiEvent.Tooltip.Update> {
-            if (`showItemHex$keybind`.bound && !`showItemHex$keybind`.pressed) return@on
+            if (!GenericInputState.pressed(`showItemHex$keybind`)) return@on
 
             val rgb = item.get(DataComponents.DYED_COLOR)?.rgb ?: return@on
             tooltip.add(1, rgb.hex())

@@ -7,9 +7,8 @@ import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.snowbird.api.client
+import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.mouseSX
-import foo.starred.snowbird.utils.mouseSY
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.input.KeyEvent
@@ -34,8 +33,8 @@ object HUDEditor : Screen("HUD Editor [Athen]".literal()) {
         get() = dragging ?: _act.filter { it.render }.asReversed().firstOrNull { it.isHovered(mx, my) }
 
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
-        mx = mouseSX / HUDManager.scale
-        my = mouseSY / HUDManager.scale
+        mx = MouseInputState.Position.Scaled.x / HUDManager.scale
+        my = MouseInputState.Position.Scaled.y / HUDManager.scale
 
         dragging?.apply {
             x = mx - x0

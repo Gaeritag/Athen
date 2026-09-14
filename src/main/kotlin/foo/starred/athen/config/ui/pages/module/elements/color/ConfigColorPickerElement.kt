@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.color
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigColorPickerElementData
 import foo.starred.athen.config.ui.ConfigUI
@@ -62,7 +63,7 @@ class ConfigColorPickerElement(
         value = this@ConfigColorPickerElement.value.hex()
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             if (!expanded) fn()
         }
 
@@ -97,7 +98,7 @@ class ConfigColorPickerElement(
         })
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             cancel()
             root.focused = this@apply
 
@@ -123,7 +124,7 @@ class ConfigColorPickerElement(
         }
 
         on<MouseEvent.Release> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
             if (root.focused == this@apply) {
                 root.focused = null
@@ -179,7 +180,7 @@ class ConfigColorPickerElement(
                     color = CascadeGeometricColor(color0)
 
                     on<MouseEvent.Press> {
-                        if (button != 0) return@on
+                        if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                         cancel()
                         value = color0
@@ -221,7 +222,7 @@ class ConfigColorPickerElement(
         }.also { outline = it })
 
         on<MouseEvent.Press> {
-            if (button != 0) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
             cancel()
             fn()
         }

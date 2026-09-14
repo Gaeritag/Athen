@@ -13,9 +13,8 @@ import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.Toolt
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl.CombinedTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl.SeparatedTooltip
 import foo.starred.athen.ui.themes.Catppuccin
-import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -82,8 +81,8 @@ object CustomTooltip : Module(
         }
 
         on<GuiEvent.Input.Key.Press> {
-            if (!onlyName.bound) return@on
-            if (keyEvent.key != onlyName) return@on
+            if (!GenericInputState.bound(onlyName.value)) return@on
+            if (keyEvent.key != onlyName.value) return@on
             if (last != Scheduler.ticks.client) return@on
 
             name = !name
@@ -94,13 +93,13 @@ object CustomTooltip : Module(
             if (last != Scheduler.ticks.client) return@on
             if (name) return@on
 
-            if (`scroll$scale` && `scroll$scale$key`.bound && `scroll$scale$key`.pressed) {
+            if (`scroll$scale` && GenericInputState.pressed(`scroll$scale$key`)) {
                 scale += amount * 0.1
                 scale = scale.coerceIn(0.5, 3.0)
                 return@on
             }
 
-            if (`scroll$horizontal` && `scroll$horizontal$key`.bound && `scroll$horizontal$key`.pressed) {
+            if (`scroll$horizontal` && GenericInputState.pressed(`scroll$horizontal$key`)) {
                 xo += amount * `scroll$horizontal$speed`
                 return@on
             }

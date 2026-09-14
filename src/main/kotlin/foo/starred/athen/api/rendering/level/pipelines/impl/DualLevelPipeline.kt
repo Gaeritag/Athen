@@ -1,5 +1,6 @@
 package foo.starred.athen.api.rendering.level.pipelines.impl
 
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import foo.starred.athen.api.rendering.level.pipelines.base.ILevelPipeline
 import foo.starred.athen.api.rendering.level.pipelines.base.LevelPipelineBuilder

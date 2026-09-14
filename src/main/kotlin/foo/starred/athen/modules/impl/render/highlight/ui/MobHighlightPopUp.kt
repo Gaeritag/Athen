@@ -120,11 +120,12 @@ class MobHighlightPopUp(
             }.also { `tab$named$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 if (!typed) return@on
+
                 typed = false
                 tabs()
+                cancel()
             }
 
             attach(tabs)
@@ -145,11 +146,12 @@ class MobHighlightPopUp(
             }.also { `tab$typed$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 if (typed) return@on
+
                 typed = true
                 tabs()
+                cancel()
             }
 
             attach(tabs)
@@ -245,7 +247,8 @@ class MobHighlightPopUp(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 cancel()
                 onClose()
             }
@@ -276,7 +279,7 @@ class MobHighlightPopUp(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 cancel()
                 save()

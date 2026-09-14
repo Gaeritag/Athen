@@ -2,6 +2,7 @@
 
 package foo.starred.athen.modules.impl.dungeon.terminals.solver.impl
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.data.TerminalClick
@@ -51,7 +52,7 @@ object RubixSolver : ITerminalSolver(TerminalType.RUBIX) {
 
     override fun valid(click: TerminalClick): Boolean {
         val click0 = list.find { it.slot == click.slot } ?: return false
-        return TerminalSolvers.`rubix$left` || (click0.button > 0 && click.button == 0) || (click0.button < 0 && click.button == 1)
+        return TerminalSolvers.`rubix$left` || (click0.button > 0 && click.button == InputConstants.MOUSE_BUTTON_LEFT) || (click0.button < 0 && click.button == InputConstants.MOUSE_BUTTON_RIGHT)
     }
 
     override fun predict(click: TerminalClick) {

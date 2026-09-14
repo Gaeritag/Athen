@@ -20,9 +20,8 @@ import foo.starred.athen.ui.themes.Catppuccin
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.guiClick
 import foo.starred.cascade.graphics.extensions.stroke.stroke
-import foo.starred.snowbird.api.bound
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.pressed
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.safely
@@ -185,8 +184,8 @@ object SlotBinds : Module(
             val r = if (f == -1) m1.get(h) else -1
             if (lock.value && (f != -1 || r != -1)) cancel()
 
-            val b0 = bind.bound && bind.pressed
-            val b1 = swap.bound && swap.pressed
+            val b0 = GenericInputState.pressed(bind)
+            val b1 = GenericInputState.pressed(swap)
             if (!b0 && !b1) return@on
 
             if (b0) {
@@ -225,7 +224,7 @@ object SlotBinds : Module(
                 return@on
             }
 
-            if (mouseButton != 0) return@on
+            if (mouseButton != InputConstants.MOUSE_BUTTON_LEFT) return@on
             val b = m0.get(h).takeIf { it != -1 } ?: m1.get(h)
             if (b == -1) return@on
 

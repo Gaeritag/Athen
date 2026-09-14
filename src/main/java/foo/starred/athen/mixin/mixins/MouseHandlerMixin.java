@@ -33,13 +33,18 @@ public class MouseHandlerMixin {
     }
 
     @Inject(method = "onMove", at = @At("HEAD"), cancellable = true)
+    //? if >= 26.3 {
+    /*private void athen$onMove(long handle, double xpos, double ypos, double dx, double dy, CallbackInfo ci) {
+    *///?} else {
     private void athen$onMove(long handle, double xpos, double ypos, CallbackInfo ci) {
+    //?}
         if (!(new InputEvent.Mouse.Move(xpos, ypos).post())) return;
 
         ci.cancel();
         this.xpos = xpos;
         this.ypos = ypos;
     }
+
 
     @Inject(method = "getScaledXPos(Lcom/mojang/blaze3d/platform/Window;D)D", at = @At("HEAD"), cancellable = true)
     private static void athen$getScaledXPos(Window window, double x, CallbackInfoReturnable<Double> cir) {

@@ -11,7 +11,6 @@ import foo.starred.athen.modules.impl.general.keybinds.Keybinds.update
 import foo.starred.athen.modules.impl.general.keybinds.data.BindingEntry
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
-import foo.starred.athen.utils.keyName
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.data.PositionAnchor
 import foo.starred.cascade.constraints.impl.position.*
@@ -32,6 +31,8 @@ import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.snowbird.api.client
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.literal
 
@@ -164,8 +165,8 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
+
                 deleting = null
                 visible = false
 
@@ -174,6 +175,8 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                 `category$field`.reset(true)
                 `category$field`.visible = true
                 scene.focused = `category$field`
+
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -203,13 +206,13 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
             }.also { `category$toggle$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val name = category ?: return@on
 
                 Keybinds.toggleCategory(name)
                 rows0[name]?.label?.color = CascadeGeometricColor(if (Keybinds.categories.value.find { it.name == name }?.enabled != true) Mocha.Overlay0.argb else Mocha.Lavender.argb)
                 buttons()
+                cancel()
 
                 for ((index, binding) in Keybinds.bindings.value.withIndex()) {
                     if (binding.category == name) entry(index)
@@ -235,8 +238,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
             }.also { `category$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 val name = category ?: return@on
                 if (deleting != name) {
@@ -252,6 +254,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                 list()
                 footer()
                 buttons()
+                cancel()
             }
 
             attach(bar)
@@ -309,9 +312,9 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
             })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
+                cancel()
                 popup.visible = true
                 popup.open(null, category)
             }
@@ -343,12 +346,13 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
             }.also { `keybind$edit$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 val current = entry ?: return@on
                 val entry = Keybinds.bindings.value.mapIndexed { i, b -> BindingEntry(i, b) }.find { it.index == current } ?: return@on
+
                 popup.visible = true
                 popup.open(entry, category)
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -378,14 +382,14 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
             }.also { `keybind$delete$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 if (entry == null) return@on
 
                 entry?.remove()
                 entry = null
                 list()
                 footer()
+                cancel()
             }
 
             on<MouseEvent.Move.Enter> {
@@ -431,8 +435,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                 color = CascadeGeometricColor(if (b0) Mocha.Surface0.argb else Mocha.Base.argb)
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (category == k) return@on
 
                     val p = category
@@ -444,6 +447,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                     list()
                     footer()
                     buttons()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -503,8 +507,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                 }.also { outline = it })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     val n = if (KeybindsGUI.entry == entry.index) null else entry.index
                     if (KeybindsGUI.entry == n) return@on
@@ -514,6 +517,7 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                     previous?.let(::entry)
                     n?.let(::entry)
                     footer()
+                    cancel()
                 }
 
                 attach(right)
@@ -530,13 +534,13 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
                 })
 
                 on<MouseEvent.Press> {
-                    cancel()
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     val current = Keybinds.bindings.value.getOrNull(entry.index) ?: return@on
 
                     entry.index.update(current.keys, current.command, !current.enabled, current.category, current.condition)
                     rows1[entry.index]?.toggle?.visible = !current.enabled
                     entry(entry.index)
+                    cancel()
                 }
 
                 attach(row)
@@ -628,6 +632,6 @@ object KeybindsGUI : CascadeScreen("Keybinds Manager [Athen]", CascadeGeometricR
 
     fun Iterable<Int>.str(): String {
         if (!iterator().hasNext()) return "None"
-        return joinToString(" + ") { it.keyName }
+        return joinToString(" + ") { GenericInputState.name(KeyboardInputState.vanilla(it)) }
     }
 }

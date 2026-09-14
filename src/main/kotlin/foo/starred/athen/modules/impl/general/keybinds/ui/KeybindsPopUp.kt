@@ -187,14 +187,14 @@ class KeybindsPopUp(
             }.also { `keys$box$outline` = it })
 
             on<MouseEvent.Press> {
-                cancel()
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                 capturing = true
                 this@KeybindsPopUp.unfocus = false
                 captured.clear()
                 gui.scene.focused = this@KeybindsPopUp
                 keys()
+                cancel()
             }
 
             attach(box)
@@ -360,7 +360,7 @@ class KeybindsPopUp(
             })
 
             on<MouseEvent.Press> {
-                if (button == 0) onClose()
+                if (button == InputConstants.MOUSE_BUTTON_LEFT) onClose()
                 cancel()
             }
 
@@ -390,7 +390,7 @@ class KeybindsPopUp(
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on cancel()
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on cancel()
 
                 val str = field.value.trim()
                 if (str.isEmpty()) return@on cancel()

@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.texts
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.data.impl.ConfigVariablesElementData
 import foo.starred.athen.config.ui.ConfigUI
@@ -67,7 +68,7 @@ class ConfigVariablesElement(
                 }.also { labels.add(it) })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     cancel()
 
                     val token = config.tokens.getOrNull(page * 3 + i) ?: return@on
@@ -120,7 +121,7 @@ class ConfigVariablesElement(
                 }.also { chevron0 = it })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (page <= 0) return@on
 
                     page--
@@ -161,7 +162,7 @@ class ConfigVariablesElement(
                 }.also { chevron1 = it })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (page >= total - 1) return@on
 
                     page++

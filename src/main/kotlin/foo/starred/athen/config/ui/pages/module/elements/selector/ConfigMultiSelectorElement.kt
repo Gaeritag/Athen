@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.selector
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigMultiSelectorElementData
@@ -90,8 +91,7 @@ class ConfigMultiSelectorElement(
                 }.also { labels.add(it) })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
-                    cancel()
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
 
                     val index = page * 3 + i
                     if (index >= config.options.size) return@on
@@ -99,6 +99,7 @@ class ConfigMultiSelectorElement(
                     if (selected.contains(index)) selected.remove(index) else selected.add(index)
                     ConfigManager.update(config.key, selected.toList())
                     update()
+                    cancel()
                 }
 
                 on<MouseEvent.Move.Enter> {
@@ -157,7 +158,7 @@ class ConfigMultiSelectorElement(
                 }.also { chevron0 = it })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (page <= 0) return@on
 
                     page--
@@ -197,7 +198,7 @@ class ConfigMultiSelectorElement(
                 }.also { chevron1 = it })
 
                 on<MouseEvent.Press> {
-                    if (button != 0) return@on
+                    if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                     if (page >= total - 1) return@on
 
                     page++

@@ -51,7 +51,7 @@ public class AbstractContainerScreenMixin {
         new GuiEvent.Slots.Render.Any.Post(graphics, slot).post();
     }
 
-    @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "slotClicked*", at = @At("HEAD"), cancellable = true)
     private void athen$slotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
         if (slotId == -999 && containerInput == ContainerInput.PICKUP) {
             if (new PlayerEvent.Drop(this.menu.getCarried(), true).post()) ci.cancel();

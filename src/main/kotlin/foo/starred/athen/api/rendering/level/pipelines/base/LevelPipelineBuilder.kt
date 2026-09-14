@@ -1,13 +1,18 @@
 package foo.starred.athen.api.rendering.level.pipelines.base
 
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.pipeline.RenderPipeline
+//~ if >= 26.3 'blaze3d' -> 'renderpearl.api'
 import com.mojang.blaze3d.vertex.VertexFormat
 import foo.starred.athen.Athen
 import foo.starred.athen.api.rendering.level.pipelines.depth.LevelPipelineDepth
 import kotlin.jvm.optionals.getOrNull
 
-//? if >= 26.2
-//import com.mojang.blaze3d.PrimitiveTopology
+//? if >= 26.3 {
+/*import com.mojang.renderpearl.api.pipeline.PrimitiveTopology
+*///?} elif 26.2 {
+/*import com.mojang.blaze3d.PrimitiveTopology
+*///?}
 
 class LevelPipelineBuilder {
     lateinit var snippet: RenderPipeline.Snippet

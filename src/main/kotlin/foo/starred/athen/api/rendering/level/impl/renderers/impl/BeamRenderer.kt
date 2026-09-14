@@ -46,6 +46,7 @@ object BeamRenderer : ILevelRenderer {
 
             //? if >= 26.2 {
             /*poseStack.pushPose()
+            //~ if >= 26.3 'mulPose' -> 'rotate'
             poseStack.mulPose(Axis.YP.rotationDegrees(animationTime * 2.25f - 45f))
             consumers.submitCustomGeometry(poseStack, opaqueType) { a, b -> a.part(b, beacon.color, 0f, beamRadius, beamRadius, 0f, -beamRadius, 0f, 0f, -beamRadius, 320 * (0.5f / beamRadius) + s, s) }
             poseStack.popPose()

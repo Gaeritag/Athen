@@ -1,5 +1,6 @@
 package foo.starred.athen.modules.impl.render.radial.ui.components
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialEditor
 import foo.starred.athen.modules.impl.render.radial.ui.editor.RadialOverlay
@@ -31,7 +32,7 @@ class RadialPreview(main: ContainerPrimitive) {
             })
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 cancel()
 
                 val s0 = RadialEditor.main

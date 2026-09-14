@@ -1,5 +1,6 @@
 package foo.starred.athen.config.dsl.impl.builders.option
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.base.IConfigElementData
 import foo.starred.athen.config.dsl.base.ElementBuilder
@@ -57,6 +58,11 @@ class ConfigOptionBuilder<T>(
                 is Double -> (it as? Number)?.toDouble()
                 is Float -> (it as? Number)?.toFloat()
                 is Long -> (it as? Number)?.toLong()
+                is InputConstants.Key -> when (it) {
+                    is InputConstants.Key -> it
+                    is String -> runCatching { InputConstants.getKey(it) }.getOrNull()
+                    else -> null
+                }
                 else -> it
             } as? T ?: default
         }

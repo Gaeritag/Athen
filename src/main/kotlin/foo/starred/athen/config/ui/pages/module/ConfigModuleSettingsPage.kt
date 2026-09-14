@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.base.IConfigElementData
 import foo.starred.athen.config.data.feature.ConfigFeatureData
@@ -79,7 +80,7 @@ object ConfigModuleSettingsPage {
             }
 
             on<MouseEvent.Press> {
-                if (button != 0) return@on
+                if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 cancel()
 
                 ConfigModules.active = null

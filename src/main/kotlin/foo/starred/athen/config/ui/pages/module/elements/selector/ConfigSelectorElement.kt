@@ -1,5 +1,6 @@
 package foo.starred.athen.config.ui.pages.module.elements.selector
 
+import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.data.impl.ConfigSelectorElementData
@@ -81,11 +82,11 @@ class ConfigSelectorElement(
         })
 
         on<MouseEvent.Press> {
-            if (button != 0 && button != 1) return@on
+            if (button != InputConstants.MOUSE_BUTTON_LEFT && button != InputConstants.MOUSE_BUTTON_RIGHT) return@on
             cancel()
 
             val x1 = x - this@ConfigSelectorElement.x
-            val direction = if (x1 < 16f) -1 else if (x1 > width - 16f) 1 else if (button == 0) 1 else -1
+            val direction = if (x1 < 16f) -1 else if (x1 > width - 16f) 1 else if (button == InputConstants.MOUSE_BUTTON_LEFT) 1 else -1
             val value1 = (value + direction + config.options.size) % config.options.size
             value = value1
             text.text = CascadeFonts.arial.truncate(config.options.getOrNull(value) ?: "Unknown", 8f, 60f, "…").literal()

@@ -21,6 +21,7 @@ import foo.starred.athen.utils.id
 import foo.starred.athen.utils.lore
 import foo.starred.athen.utils.uuid
 import foo.starred.snowbird.api.*
+import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.stripped
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -69,7 +70,7 @@ object ProtectItems : Module(
 
         on<GuiEvent.Slots.Render.Any.Post> {
             if (!slot.item.fn()) return@on
-            if (renderKey && !renderKeybind.pressed) return@on
+            if (renderKey && !GenericInputState.pressed(renderKeybind)) return@on
 
             graphics.extractText(p, slot.x, slot.y)
         }.runWhen(render.state)
