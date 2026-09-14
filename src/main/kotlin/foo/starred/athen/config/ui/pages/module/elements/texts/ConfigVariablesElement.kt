@@ -13,6 +13,7 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -46,10 +47,10 @@ class ConfigVariablesElement(
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(if (total > 1) 140f else 114f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         })
 
@@ -61,7 +62,7 @@ class ConfigVariablesElement(
                 adopt(text {
                     wrapper = CascadeTextWrapper
                     textSize = 8f
-                    color = Catppuccin.Mocha.Lavender.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Lavender.argb)
                     position = CenterPositionConstraint()
                 }.also { labels.add(it) })
 
@@ -93,7 +94,7 @@ class ConfigVariablesElement(
             adopt(rectangle {
                 position = FixedPositionConstraint((i + 1) * 38f, 3f)
                 size = FixedSizeConstraint(1f, 8f)
-                color = Catppuccin.Mocha.Surface2.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
                 interact = false
             }.also { slot1.add(it) })
         }
@@ -102,7 +103,7 @@ class ConfigVariablesElement(
             adopt(rectangle {
                 position = FixedPositionConstraint(114f, 3f)
                 size = FixedSizeConstraint(1f, 8f)
-                color = Catppuccin.Mocha.Surface2.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
                 interact = false
             })
 
@@ -112,7 +113,7 @@ class ConfigVariablesElement(
 
                 adopt(image {
                     location = ResourceAPI.identify("textures/gui/chevron.png")
-                    color = Catppuccin.Mocha.Subtext0.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
                     position = CenterPositionConstraint()
                     size = FixedSizeConstraint(5f, 5f)
                     interact = false
@@ -131,7 +132,7 @@ class ConfigVariablesElement(
 
                 on<MouseEvent.Move.Enter> {
                     if (page <= 0) return@on
-                    chevron0?.animateColor(Catppuccin.Mocha.Text.argb, 0.1f)
+                    chevron0?.animateColor(CascadeGeometricColor(Catppuccin.Mocha.Text.argb), 0.1f)
                 }
 
                 on<MouseEvent.Move.Exit> {
@@ -142,7 +143,7 @@ class ConfigVariablesElement(
             adopt(rectangle {
                 position = FixedPositionConstraint(127f, 3f)
                 size = FixedSizeConstraint(1f, 8f)
-                color = Catppuccin.Mocha.Surface2.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
                 interact = false
             })
 
@@ -153,7 +154,7 @@ class ConfigVariablesElement(
                 adopt(image {
                     location = ResourceAPI.identify("textures/gui/chevron.png")
                     rotation = 180f
-                    color = Catppuccin.Mocha.Subtext0.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
                     position = CenterPositionConstraint()
                     size = FixedSizeConstraint(5f, 5f)
                     interact = false
@@ -172,7 +173,7 @@ class ConfigVariablesElement(
 
                 on<MouseEvent.Move.Enter> {
                     if (page >= total - 1) return@on
-                    chevron1?.animateColor(Catppuccin.Mocha.Text.argb, 0.1f)
+                    chevron1?.animateColor(CascadeGeometricColor(Catppuccin.Mocha.Text.argb), 0.1f)
                 }
 
                 on<MouseEvent.Move.Exit> {
@@ -203,8 +204,8 @@ class ConfigVariablesElement(
         }
 
         if (total <= 1) return
-        chevron0?.color = if (page > 0) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface2.argb
-        chevron1?.color = if (page < total - 1) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface2.argb
+        chevron0?.color = CascadeGeometricColor(if (page > 0) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface2.argb)
+        chevron1?.color = CascadeGeometricColor(if (page < total - 1) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface2.argb)
     }
 
     companion object {

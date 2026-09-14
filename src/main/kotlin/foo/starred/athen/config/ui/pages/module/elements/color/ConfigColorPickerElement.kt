@@ -16,6 +16,7 @@ import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.extensions.circle.circle
 import foo.starred.cascade.graphics.extensions.rectangle.gradient.gradientRectangle
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -48,7 +49,7 @@ class ConfigColorPickerElement(
         position = FixedPositionConstraint(0f, 0f)
         size = FixedSizeConstraint(28f, 14f)
         radius = CascadeGeometricRadius(4f, 0f, 4f, 0f)
-        color = value
+        color = CascadeGeometricColor(value)
         interact = false
     }
 
@@ -69,7 +70,7 @@ class ConfigColorPickerElement(
             parse(it)?.let { c ->
                 this@ConfigColorPickerElement.value = c
                 color(c)
-                swatch.color = c
+                swatch.color = CascadeGeometricColor(c)
                 ConfigManager.update(config.key, c)
             }
 
@@ -86,12 +87,12 @@ class ConfigColorPickerElement(
     }.apply {
         size = FixedSizeConstraint(140f, 128f)
         radius = CascadeGeometricRadius(6f)
-        color = Catppuccin.Mocha.Base.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
         visible = false
         unfocus = false
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface2.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
             inset = false
         })
 
@@ -159,11 +160,11 @@ class ConfigColorPickerElement(
                 position = FixedPositionConstraint(0f, 0f)
                 size = FixedSizeConstraint(124f, 16f)
                 radius = CascadeGeometricRadius(4f)
-                color = 0
+                color = CascadeGeometricColor(0)
                 interact = false
 
                 effect(OutlineEffect {
-                    color = Catppuccin.Mocha.Surface2.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
                     inset = false
                 })
             })
@@ -175,7 +176,7 @@ class ConfigColorPickerElement(
                     position = FixedPositionConstraint(k * 31f, 0f)
                     size = FixedSizeConstraint(31f, 16f)
                     radius = if (k == 0) CascadeGeometricRadius(4f, 0f, 4f, 0f) else if (k == 3) CascadeGeometricRadius(0f, 4f, 0f, 4f) else CascadeGeometricRadius.ZERO
-                    color = color0
+                    color = CascadeGeometricColor(color0)
 
                     on<MouseEvent.Press> {
                         if (button != 0) return@on
@@ -183,17 +184,17 @@ class ConfigColorPickerElement(
                         cancel()
                         value = color0
                         color(color0)
-                        swatch.color = value
+                        swatch.color = CascadeGeometricColor(value)
                         hex.value = value.hex()
                         ConfigManager.update(config.key, value)
                     }
 
                     on<MouseEvent.Move.Enter> {
-                        animateColor(color0.brighten(1.2f), 0.15f)
+                        animateColor(CascadeGeometricColor(color0.brighten(1.2f)), 0.15f)
                     }
 
                     on<MouseEvent.Move.Exit> {
-                        animateColor(color0, 0.15f)
+                        animateColor(CascadeGeometricColor(color0), 0.15f)
                     }
                 })
 
@@ -201,7 +202,7 @@ class ConfigColorPickerElement(
                 adopt(rectangle {
                     position = FixedPositionConstraint((k + 1) * 31f, 0f)
                     size = FixedSizeConstraint(1f, 16f)
-                    color = Catppuccin.Mocha.Surface2.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
                     interact = false
                 })
             }
@@ -212,10 +213,10 @@ class ConfigColorPickerElement(
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(84f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         }.also { outline = it })
 
@@ -227,12 +228,12 @@ class ConfigColorPickerElement(
 
         on<MouseEvent.Move.Enter> {
             if (expanded) return@on
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
 
         on<MouseEvent.Move.Exit> {
             if (expanded) return@on
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
 
         color(value)
@@ -241,7 +242,7 @@ class ConfigColorPickerElement(
         adopt(rectangle {
             position = FixedPositionConstraint(28f, 0f)
             size = FixedSizeConstraint(1f, 14f)
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             interact = false
         })
 
@@ -253,8 +254,8 @@ class ConfigColorPickerElement(
         expanded = false
         box.visible = false
         box.detach()
-        animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-        outline.color = Catppuccin.Mocha.Surface1.argb
+        animateColor(CascadeGeometricColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb), 0.15f)
+        outline.color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
         if (active === this) active = null
     }
 
@@ -270,8 +271,8 @@ class ConfigColorPickerElement(
             expanded = true
             box.visible = true
             box.attach(ConfigUI.scene)
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
-            outline.color = Catppuccin.Mocha.Lavender.argb
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
+            outline.color = CascadeGeometricColor(Catppuccin.Mocha.Lavender.argb)
 
             val y0 = y - ConfigUI.right.scroll
             box.position = FixedPositionConstraint(x + width - 140f, if (y0 + 146f > ConfigUI.scene.height) y0 - 132f else y0 + 18f)
@@ -310,7 +311,7 @@ class ConfigColorPickerElement(
         val a = (alpha * 255f).toInt().coerceIn(0, 255)
         value = (a shl 24) or rgb
 
-        swatch.color = value
+        swatch.color = CascadeGeometricColor(value)
         hex.value = value.hex()
         ConfigManager.update(config.key, value)
     }
@@ -322,8 +323,8 @@ class ConfigColorPickerElement(
         val scissor = graphics.scissorStack.peek()
 
         val hue1 = Color.HSBtoRGB(hue, 1f, 1f) or (0xFF shl 24)
-        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, -1, hue1, -1, hue1, pose, scissor)
-        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, 0, 0, Int.MIN_VALUE, Int.MIN_VALUE, pose, scissor)
+        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, CascadeGeometricColor.horizontal(-1, hue1), pose, scissor)
+        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, CascadeGeometricColor.vertical(0, 0xFF000000.toInt()), pose, scissor)
 
         val x2 = x1 + 8f + saturation * 124f
         val y2 = y1 + 8f + (1f - brightness) * 64f
@@ -335,7 +336,7 @@ class ConfigColorPickerElement(
         for (s in 0..5) {
             val c0 = Color.HSBtoRGB(s / 6f, 1f, 1f) or (0xFF shl 24)
             val c1 = Color.HSBtoRGB((s + 1) / 6f, 1f, 1f) or (0xFF shl 24)
-            graphics.gradientRectangle(x3 + s * 20.66f, y3, 20.66f, 8f, c0, c1, c0, c1, pose, scissor)
+            graphics.gradientRectangle(x3 + s * 20.66f, y3, 20.66f, 8f, CascadeGeometricColor.horizontal(c0, c1), pose, scissor)
         }
 
         val x4 = x3 + hue * 124f
@@ -348,7 +349,7 @@ class ConfigColorPickerElement(
         val rgba = rgb or (0xFF shl 24)
 
         graphics.rectangle(x5, y5, 124f, 8f, Catppuccin.Mocha.Surface0.argb, pose, scissor)
-        graphics.gradientRectangle(x5, y5, 124f, 8f, rgb, rgba, rgb, rgba, pose, scissor)
+        graphics.gradientRectangle(x5, y5, 124f, 8f, CascadeGeometricColor.horizontal(rgb, rgba), pose, scissor)
 
         val x6 = x5 + alpha * 124f
         graphics.rectangle(x6 - 1.5f, y5 - 1f, 3f, 10f, -1, pose, scissor)

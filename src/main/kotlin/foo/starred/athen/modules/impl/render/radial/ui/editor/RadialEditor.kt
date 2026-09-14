@@ -12,11 +12,11 @@ import foo.starred.athen.modules.impl.render.radial.ui.components.RadialTree
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
 import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
-import foo.starred.cascade.constraints.impl.size.FillSizeConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricResolution
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
@@ -59,13 +59,6 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]", CascadeGeometr
         }
 
     init {
-        container {
-            size = FillSizeConstraint()
-            position = FixedPositionConstraint(0, 0)
-            interact = false
-            attach(scene)
-        }
-
         val main = container {
             size = FixedSizeConstraint(906, 320)
             position = CenterPositionConstraint()
@@ -75,10 +68,10 @@ object RadialEditor : CascadeScreen("Radial Menu Editor [Athen]", CascadeGeometr
         val side = rectangle {
             size = FixedSizeConstraint(130, 320)
             position = FixedPositionConstraint(0, 0)
-            color = Mocha.Base.argb
+            color = CascadeGeometricColor(Mocha.Base.argb)
 
             effect(OutlineEffect {
-                color = Mocha.Surface0.argb
+                color = CascadeGeometricColor(Mocha.Surface0.argb)
             })
 
             attach(main)

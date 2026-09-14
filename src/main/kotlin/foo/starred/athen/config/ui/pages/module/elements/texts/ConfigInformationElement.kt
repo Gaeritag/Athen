@@ -8,6 +8,7 @@ import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
@@ -21,11 +22,11 @@ class ConfigInformationElement(
     init {
         position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER)
         size = FixedSizeConstraint(466f, 20f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
         radius = CascadeGeometricRadius(4f)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         })
 
@@ -33,7 +34,7 @@ class ConfigInformationElement(
             wrapper = CascadeTextWrapper
             text = "<#89B4FA>! <dark_gray>| <#CDD6F4>${config.text}".parse(true)
             textSize = 9.5f
-            color = Catppuccin.Mocha.Text.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 6f, 0f)
         })
 

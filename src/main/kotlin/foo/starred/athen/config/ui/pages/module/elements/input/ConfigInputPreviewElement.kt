@@ -11,6 +11,7 @@ import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
@@ -24,7 +25,7 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
     private val text = text {
         wrapper = CascadeTextWrapper
         textSize = 10f
-        color = Catppuccin.Mocha.Text.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.START, 4f, 4f)
     }
 
@@ -34,13 +35,13 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
             super.draw(graphics)
         }
     }.apply {
-        color = Catppuccin.Mocha.Base.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
         radius = CascadeGeometricRadius(4f)
         visible = false
         interact = false
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
         })
 
         size = object : ISizeConstraint {
@@ -54,17 +55,17 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
     init {
         size = FixedSizeConstraint(14f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
         })
 
         adopt(text {
             wrapper = CascadeTextWrapper
             text = "?".literal()
             textSize = 10f
-            color = Catppuccin.Mocha.Text.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
             position = CenterPositionConstraint()
         })
 
@@ -80,12 +81,12 @@ class ConfigInputPreviewElement(private val value: () -> String) : RoundedRectan
         on<MouseEvent.Move.Enter> {
             tooltip.visible = true
             text.text = value().parse()
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
 
         on<MouseEvent.Move.Exit> {
             tooltip.visible = false
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
 
         tooltip.attach(ConfigUI.scene)

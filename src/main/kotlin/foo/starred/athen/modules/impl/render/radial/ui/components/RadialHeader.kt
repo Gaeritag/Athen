@@ -18,6 +18,7 @@ import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -35,11 +36,11 @@ class RadialHeader(side: IPrimitiveElement<*>) {
         val head = roundedRectangle {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 20))
             position = FixedPositionConstraint(0, 0)
-            color = Mocha.Base.argb
+            color = CascadeGeometricColor(Mocha.Base.argb)
             radius = CascadeGeometricRadius.ZERO
 
             effect(OutlineEffect {
-                color = Mocha.Surface0.argb
+                color = CascadeGeometricColor(Mocha.Surface0.argb)
             })
 
             attach(side)
@@ -48,11 +49,11 @@ class RadialHeader(side: IPrimitiveElement<*>) {
         roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 4)
-            color = Mocha.Surface1.argb
+            color = CascadeGeometricColor(Mocha.Surface1.argb)
             radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
-                color = Mocha.Overlay0.argb
+                color = CascadeGeometricColor(Mocha.Overlay0.argb)
             })
 
             on<MouseEvent.Press> {
@@ -68,7 +69,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             adopt(image {
                 location = ResourceAPI.identify("textures/gui/chevron.png")
                 rotation = -90f
-                color = Mocha.Text.argb
+                color = CascadeGeometricColor(Mocha.Text.argb)
                 position = CenterPositionConstraint()
                 size = FixedSizeConstraint(6f, 6f)
                 interact = false
@@ -106,11 +107,11 @@ class RadialHeader(side: IPrimitiveElement<*>) {
         roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0)
-            color = Mocha.Surface1.argb
+            color = CascadeGeometricColor(Mocha.Surface1.argb)
             radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
-                color = Mocha.Overlay0.argb
+                color = CascadeGeometricColor(Mocha.Overlay0.argb)
             })
 
             on<MouseEvent.Press> {
@@ -126,7 +127,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
             adopt(image {
                 location = ResourceAPI.identify("textures/gui/chevron.png")
                 rotation = 90f
-                color = Mocha.Text.argb
+                color = CascadeGeometricColor(Mocha.Text.argb)
                 position = CenterPositionConstraint()
                 size = FixedSizeConstraint(6f, 6f)
                 interact = false
@@ -136,11 +137,11 @@ class RadialHeader(side: IPrimitiveElement<*>) {
         roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0)
-            color = Mocha.Surface1.argb
+            color = CascadeGeometricColor(Mocha.Surface1.argb)
             radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
-                color = Mocha.Overlay0.argb
+                color = CascadeGeometricColor(Mocha.Overlay0.argb)
             })
 
             on<MouseEvent.Press> {
@@ -166,7 +167,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
                 wrapper = CascadeTextWrapper
                 text = "+".literal()
                 textSize = 9f
-                color = Mocha.Green.argb
+                color = CascadeGeometricColor(Mocha.Green.argb)
                 position = CenterPositionConstraint()
             })
         }
@@ -174,11 +175,11 @@ class RadialHeader(side: IPrimitiveElement<*>) {
         roundedRectangle {
             size = FixedSizeConstraint(12, 12)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0)
-            color = Mocha.Surface1.argb
+            color = CascadeGeometricColor(Mocha.Surface1.argb)
             radius = CascadeGeometricRadius(2.5f)
 
             effect(OutlineEffect {
-                color = Mocha.Overlay0.argb
+                color = CascadeGeometricColor(Mocha.Overlay0.argb)
             })
 
             on<MouseEvent.Press> {
@@ -200,7 +201,7 @@ class RadialHeader(side: IPrimitiveElement<*>) {
                 wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 8.5f
-                color = Mocha.Red.argb
+                color = CascadeGeometricColor(Mocha.Red.argb)
                 position = CenterPositionConstraint()
             })
         }

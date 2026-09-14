@@ -14,6 +14,7 @@ import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -34,7 +35,7 @@ class ConfigKeybindElement(
         wrapper = CascadeTextWrapper
         text = value.keyName.literal()
         textSize = 8f
-        color = Catppuccin.Mocha.Text.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
         position = CenterPositionConstraint()
     }
 
@@ -42,10 +43,10 @@ class ConfigKeybindElement(
         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0f, 0f)
         size = FixedSizeConstraint(82f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         }.also { outline = it })
 
@@ -71,12 +72,12 @@ class ConfigKeybindElement(
 
         on<MouseEvent.Move.Enter> {
             if (listening) return@on
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
 
         on<MouseEvent.Move.Exit> {
             if (listening) return@on
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
 
         adopt(key)
@@ -91,10 +92,10 @@ class ConfigKeybindElement(
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0f, 0f)
             size = FixedSizeConstraint(14f, 14f)
             radius = CascadeGeometricRadius(4f)
-            color = Catppuccin.Mocha.Surface0.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface1.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
                 inset = false
             })
 
@@ -102,7 +103,7 @@ class ConfigKeybindElement(
                 wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 8f
-                color = Catppuccin.Mocha.Subtext0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
                 position = CenterPositionConstraint()
             })
 
@@ -113,11 +114,11 @@ class ConfigKeybindElement(
             }
 
             on<MouseEvent.Move.Enter> {
-                animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
             }
 
             on<MouseEvent.Move.Exit> {
-                animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
             }
         })
     }
@@ -126,10 +127,10 @@ class ConfigKeybindElement(
         listening = true
         root.focused = main
         key.text = "...".literal()
-        key.color = Catppuccin.Mocha.Crust.argb
+        key.color = CascadeGeometricColor(Catppuccin.Mocha.Crust.argb)
 
-        main.animateColor(Catppuccin.Mocha.Peach.argb, 0.15f)
-        outline.color = Catppuccin.Mocha.Peach.argb
+        main.animateColor(CascadeGeometricColor(Catppuccin.Mocha.Peach.argb), 0.15f)
+        outline.color = CascadeGeometricColor(Catppuccin.Mocha.Peach.argb)
     }
 
     private fun stop() {
@@ -137,9 +138,9 @@ class ConfigKeybindElement(
         if (root.focused == main) root.focused = null
         key.text = value.keyName.literal()
 
-        key.color = Catppuccin.Mocha.Text.argb
-        main.animateColor(if (main.hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-        outline.color = Catppuccin.Mocha.Surface1.argb
+        key.color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
+        main.animateColor(CascadeGeometricColor(if (main.hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb), 0.15f)
+        outline.color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
     }
 
     private fun update(newKey: Int) {

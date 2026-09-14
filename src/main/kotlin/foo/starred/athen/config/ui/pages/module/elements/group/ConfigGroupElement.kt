@@ -11,6 +11,7 @@ import foo.starred.cascade.constraints.impl.position.AlignPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ImagePrimitive
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
@@ -31,7 +32,7 @@ object ConfigGroupElement {
             }
         }.apply {
             location = ResourceAPI.identify("textures/gui/chevron.png")
-            color = Catppuccin.Mocha.Subtext0.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -12f, 0f)
             size = FixedSizeConstraint(8f, 8f)
 
@@ -41,7 +42,7 @@ object ConfigGroupElement {
         rectangle {
             position = FixedPositionConstraint(0f, 0f)
             size = FixedSizeConstraint(482f, 32f)
-            color = 0
+            color = CascadeGeometricColor.TRANSPARENT
 
             on<MouseEvent.Press> {
                 cancel()

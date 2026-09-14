@@ -17,6 +17,7 @@ import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
@@ -69,33 +70,33 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
         private set
 
     init {
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
         radius = CascadeGeometricRadius(4f)
 
         var outline: OutlineEffect
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         }.also { outline = it })
 
         on<FocusEvent.Gain> {
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
-            outline.color = Catppuccin.Mocha.Lavender.argb.brighten(0.6f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
+            outline.color = CascadeGeometricColor(Catppuccin.Mocha.Lavender.argb.brighten(0.6f))
         }
 
         on<FocusEvent.Lose> {
-            animateColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb, 0.15f)
-            outline.color = Catppuccin.Mocha.Surface1.argb
+            animateColor(CascadeGeometricColor(if (hovered) Catppuccin.Mocha.Surface1.argb else Catppuccin.Mocha.Surface0.argb), 0.15f)
+            outline.color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
         }
 
         on<MouseEvent.Move.Enter> {
             if (root.focused == self) return@on
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
 
         on<MouseEvent.Move.Exit> {
             if (root.focused == self) return@on
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
 
         on<MouseEvent.Press> {

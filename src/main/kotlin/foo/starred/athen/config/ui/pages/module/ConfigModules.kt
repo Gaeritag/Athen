@@ -19,6 +19,7 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -62,11 +63,11 @@ object ConfigModules {
                     else AnchorPositionConstraint({ last0!! }, PositionAnchor.RIGHT, 10f, 0f)
 
                 size = FixedSizeConstraint(154f, 28f)
-                color = Catppuccin.Mocha.Base.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
                 radius = CascadeGeometricRadius(4f)
 
                 effect(OutlineEffect {
-                    color = Catppuccin.Mocha.Surface0.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                     inset = false
                 })
 
@@ -79,12 +80,12 @@ object ConfigModules {
                     fun colors(bool: Boolean) {
                         val enabled = ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)
 
-                        animateColor(when {
+                        animateColor(CascadeGeometricColor(when {
                             enabled && bool -> Catppuccin.Mocha.Lavender.argb.brighten(0.65f)
                             enabled -> Catppuccin.Mocha.Lavender.argb.brighten(0.55f)
                             bool -> Catppuccin.Mocha.Surface0.argb
                             else -> Catppuccin.Mocha.Base.argb
-                        }, 0.15f)
+                        }), 0.15f)
                     }
 
                     colors(false)
@@ -111,7 +112,7 @@ object ConfigModules {
                         wrapper = CascadeTextWrapper
                         text = name.parse()
                         textSize = 12f
-                        color = Catppuccin.Mocha.Text.argb
+                        color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)
                     })
                 })
@@ -119,7 +120,7 @@ object ConfigModules {
                 adopt(rectangle {
                     position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -27f, 0f)
                     size = FixedSizeConstraint(1f, 28f)
-                    color = Catppuccin.Mocha.Surface0.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                     interact = false
                 })
 
@@ -127,11 +128,11 @@ object ConfigModules {
                     position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0f, 0f)
                     size = FixedSizeConstraint(27f, 28f)
                     radius = CascadeGeometricRadius(0f, 4f, 0f, 4f)
-                    color = Catppuccin.Mocha.Base.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
 
                     adopt(image {
                         location = ResourceAPI.identify("textures/gui/gear.png")
-                        color = if (options) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface1.argb
+                        color = CascadeGeometricColor(if (options) Catppuccin.Mocha.Text.argb else Catppuccin.Mocha.Surface1.argb)
                         position = CenterPositionConstraint()
                         size = FixedSizeConstraint(14f, 14f)
                         interact = false
@@ -139,11 +140,11 @@ object ConfigModules {
 
                     if (!options) return@roundedRectangle
                     on<MouseEvent.Move.Enter> {
-                        animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+                        animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
                     }
 
                     on<MouseEvent.Move.Exit> {
-                        animateColor(Catppuccin.Mocha.Base.argb, 0.15f)
+                        animateColor(CascadeGeometricColor(Catppuccin.Mocha.Base.argb), 0.15f)
                     }
 
                     on<MouseEvent.Press> {
@@ -195,14 +196,13 @@ object ConfigModules {
                 }
             }
         }.apply {
-            color = 0
+            color = CascadeGeometricColor.TRANSPARENT
             interact = false
             attach(ConfigUI.right0)
         }
     }
 
     private fun ConfigFeatureData.matches(query: String): Boolean {
-        if (query.isEmpty()) return true
-        return name.contains(query, true) || description.contains(query, true) || options.any { it.name.contains(query, true) || it.description?.contains(query, true) == true }
+        return query.isEmpty() || name.contains(query, true) || description.contains(query, true) || options.any { it.name.contains(query, true) || it.description?.contains(query, true) == true }
     }
 }

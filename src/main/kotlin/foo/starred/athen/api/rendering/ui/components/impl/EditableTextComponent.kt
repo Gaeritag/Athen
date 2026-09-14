@@ -10,6 +10,7 @@ import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.snowbird.api.ZERO_PAIR
 import foo.starred.snowbird.api.client
@@ -33,7 +34,7 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
     override var y: Float = 0f
     override var width: Float = 0f
     override var height: Float = 0f
-    override var color: Int = -1
+    override var color: CascadeGeometricColor = CascadeGeometricColor.WHITE
 
     var textSize: Float = 8.5f
     var color0: Int = Mocha.Text.argb

@@ -6,6 +6,7 @@ import foo.starred.athen.api.rendering.ui.text.vanilla.extensions.extractText
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.snowbird.api.client
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -15,7 +16,7 @@ class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement
     override var y: Float = 0f
     override var width: Float = 0f
     override var height: Float = 0f
-    override var color: Int = -1
+    override var color: CascadeGeometricColor = CascadeGeometricColor.WHITE
 
     override fun draw(graphics: GuiGraphicsExtractor) {
         val working = RadialEditor.working.takeIf { it.isNotEmpty() } ?: return

@@ -14,6 +14,7 @@ import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -33,10 +34,10 @@ class ConfigHUDElement(
             position = FixedPositionConstraint(0f, 0f)
             size = FixedSizeConstraint(14f, 14f)
             radius = CascadeGeometricRadius(4f)
-            color = Catppuccin.Mocha.Surface0.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface1.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
                 inset = false
             })
 
@@ -47,16 +48,16 @@ class ConfigHUDElement(
             }
 
             on<MouseEvent.Move.Enter> {
-                animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
             }
 
             on<MouseEvent.Move.Exit> {
-                animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
             }
 
             adopt(image {
                 location = ResourceAPI.identify("textures/gui/move.png")
-                color = Catppuccin.Mocha.Subtext0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
                 position = CenterPositionConstraint()
                 size = FixedSizeConstraint(12f, 12f)
                 interact = false

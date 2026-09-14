@@ -15,6 +15,7 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
@@ -29,26 +30,26 @@ class ConfigInputExpandElement(
     init {
         size = FixedSizeConstraint(14f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
         })
 
         adopt(text {
             text = "⛶".literal()
             textSize = 10f
-            color = Catppuccin.Mocha.Text.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
             position = CenterPositionConstraint(1f)
             shadow = false
         })
 
         on<MouseEvent.Move.Enter> {
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
         
         on<MouseEvent.Move.Exit> {
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
         
         on<MouseEvent.Press> {
@@ -61,7 +62,7 @@ class ConfigInputExpandElement(
         val main = roundedRectangle {
             position = FixedPositionConstraint(0f, 0f)
             size = FillSizeConstraint()
-            color = 0x80000000.toInt()
+            color = CascadeGeometricColor(0x80000000.toInt())
 
             attach(ConfigUI.scene)
         }
@@ -70,10 +71,10 @@ class ConfigInputExpandElement(
             position = CenterPositionConstraint()
             size = FixedSizeConstraint(400f, 30f)
             radius = CascadeGeometricRadius(8f)
-            color = Catppuccin.Mocha.Base.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface1.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             })
 
             attach(main)
@@ -82,19 +83,19 @@ class ConfigInputExpandElement(
         roundedRectangle {
             size = FixedSizeConstraint(18f, 18f)
             radius = CascadeGeometricRadius(4f)
-            color = Catppuccin.Mocha.Surface0.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -4f, 0f)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface1.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             })
 
             on<MouseEvent.Move.Enter> {
-                animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
             }
 
             on<MouseEvent.Move.Exit> {
-                animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
             }
 
             on<MouseEvent.Press> {
@@ -107,7 +108,7 @@ class ConfigInputExpandElement(
                 wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 10f
-                color = Catppuccin.Mocha.Red.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Red.argb)
                 position = CenterPositionConstraint()
             })
         }

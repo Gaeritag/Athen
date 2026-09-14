@@ -9,6 +9,7 @@ import foo.starred.cascade.constraints.impl.position.CenterPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
@@ -24,10 +25,10 @@ class ConfigButtonElement : RoundedRectanglePrimitive() {
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(100f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         })
 
@@ -35,24 +36,24 @@ class ConfigButtonElement : RoundedRectanglePrimitive() {
             if (button != 0) return@on
             cancel()
             action()
-            animateColor(Catppuccin.Mocha.Surface1.argb.brighten(0.9f), 0.15f) {
-                animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb.brighten(0.9f)), 0.15f) {
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
             }
         }
 
         on<MouseEvent.Move.Enter> {
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
 
         on<MouseEvent.Move.Exit> {
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
 
         adopt(text {
             wrapper = CascadeTextWrapper
             text = "Click".literal()
             textSize = 8f
-            color = Catppuccin.Mocha.Text.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
             position = CenterPositionConstraint()
         })
     }

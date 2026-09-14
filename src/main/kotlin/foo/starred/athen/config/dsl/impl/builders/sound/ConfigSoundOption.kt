@@ -44,7 +44,7 @@ class ConfigSoundOption(
         if (!enabled) return
 
         mainThread {
-            event?.play(volume0, pitch0)
+            sound.play(volume0, pitch0)
         }
     }
 

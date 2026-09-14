@@ -17,6 +17,7 @@ import foo.starred.athen.modules.impl.general.keybinds.data.KeybindCondition
 import foo.starred.athen.modules.impl.general.keybinds.data.KeybindWorkIn
 import foo.starred.athen.modules.impl.general.keybinds.ui.KeybindsGUI.str
 import foo.starred.athen.ui.themes.Catppuccin.Mocha
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.data.PositionAnchor
 import foo.starred.cascade.constraints.impl.position.*
@@ -109,7 +110,7 @@ class KeybindsPopUp(
         rectangle {
             size = FillSizeConstraint()
             position = FixedPositionConstraint(0, 0)
-            color = Mocha.Crust.withAlpha(0.6f)
+            color = CascadeGeometricColor(Mocha.Crust.withAlpha(0.6f))
 
             on<MouseEvent.Press> {
                 if (root.focused is MultiCheckboxComponent) root.focused = null
@@ -122,10 +123,10 @@ class KeybindsPopUp(
         val box = rectangle {
             size = FixedSizeConstraint(380, 260)
             position = CenterPositionConstraint()
-            color = Mocha.Base.argb
+            color = CascadeGeometricColor(Mocha.Base.argb)
 
             effect(OutlineEffect {
-                color = Mocha.Surface0.argb
+                color = CascadeGeometricColor(Mocha.Surface0.argb)
             })
 
             on<MouseEvent.Press> {
@@ -143,7 +144,7 @@ class KeybindsPopUp(
 
             adopt(text {
                 text = "Create Keybind".literal()
-                color = Mocha.Lavender.argb
+                color = CascadeGeometricColor(Mocha.Lavender.argb)
                 position = MixedPositionConstraint(FixedPositionConstraint(8, 0), CenterPositionConstraint())
             }.also { title = it })
         }
@@ -151,20 +152,20 @@ class KeybindsPopUp(
         val divider = rectangle {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 1))
             position = AnchorPositionConstraint({ header }, PositionAnchor.BELOW)
-            color = Mocha.Surface0.argb
+            color = CascadeGeometricColor(Mocha.Surface0.argb)
             attach(box)
         }
 
         val command = text {
             text = "Command".literal()
-            color = Mocha.Subtext0.argb
+            color = CascadeGeometricColor(Mocha.Subtext0.argb)
             position = AnchorPositionConstraint({ divider }, PositionAnchor.BELOW, 16, 8)
             attach(box)
         }
 
         val keys = text {
             text = "Keys".literal()
-            color = Mocha.Subtext0.argb
+            color = CascadeGeometricColor(Mocha.Subtext0.argb)
             position = AnchorPositionConstraint({ divider }, PositionAnchor.BELOW, 194, 8)
             attach(box)
         }
@@ -179,10 +180,10 @@ class KeybindsPopUp(
         `keys$box` = rectangle {
             size = FixedSizeConstraint(170, 16)
             position = AnchorPositionConstraint({ keys }, PositionAnchor.BELOW, 0, 2)
-            color = Mocha.Surface0.argb
+            color = CascadeGeometricColor(Mocha.Surface0.argb)
 
             effect(OutlineEffect {
-                color = Mocha.Overlay0.argb
+                color = CascadeGeometricColor(Mocha.Overlay0.argb)
             }.also { `keys$box$outline` = it })
 
             on<MouseEvent.Press> {
@@ -199,7 +200,7 @@ class KeybindsPopUp(
             attach(box)
             adopt(text {
                 text = "Click to bind".literal()
-                color = Mocha.Text.argb
+                color = CascadeGeometricColor(Mocha.Text.argb)
                 position = CenterPositionConstraint()
             }.also { `keys$boxText` = it })
         }
@@ -345,17 +346,17 @@ class KeybindsPopUp(
         val bottom = rectangle {
             size = MixedSizeConstraint(PercentSizeConstraint(100f, 0f), FixedSizeConstraint(0, 1))
             position = FixedPositionConstraint(0, 220)
-            color = Mocha.Surface0.argb
+            color = CascadeGeometricColor(Mocha.Surface0.argb)
             attach(box)
         }
 
         val cancel = rectangle {
             size = FixedSizeConstraint(170, 22)
             position = AnchorPositionConstraint({ bottom }, PositionAnchor.BELOW, 16, 8)
-            color = Mocha.Surface1.argb
+            color = CascadeGeometricColor(Mocha.Surface1.argb)
 
             effect(OutlineEffect {
-                color = Mocha.Red.argb
+                color = CascadeGeometricColor(Mocha.Red.argb)
             })
 
             on<MouseEvent.Press> {
@@ -364,17 +365,17 @@ class KeybindsPopUp(
             }
 
             on<MouseEvent.Move.Enter> {
-                color = Mocha.Surface2.argb
+                color = CascadeGeometricColor(Mocha.Surface2.argb)
             }
 
             on<MouseEvent.Move.Exit> {
-                color = Mocha.Surface1.argb
+                color = CascadeGeometricColor(Mocha.Surface1.argb)
             }
 
             attach(box)
             adopt(text {
                 text = "Cancel".literal()
-                color = Mocha.Red.argb
+                color = CascadeGeometricColor(Mocha.Red.argb)
                 position = CenterPositionConstraint()
             })
         }
@@ -382,10 +383,10 @@ class KeybindsPopUp(
         rectangle {
             size = FixedSizeConstraint(170, 22)
             position = AnchorPositionConstraint({ cancel }, PositionAnchor.RIGHT, 8)
-            color = Mocha.Surface1.argb
+            color = CascadeGeometricColor(Mocha.Surface1.argb)
 
             effect(OutlineEffect {
-                color = Mocha.Green.argb
+                color = CascadeGeometricColor(Mocha.Green.argb)
             })
 
             on<MouseEvent.Press> {
@@ -402,17 +403,17 @@ class KeybindsPopUp(
             }
 
             on<MouseEvent.Move.Enter> {
-                color = Mocha.Surface2.argb
+                color = CascadeGeometricColor(Mocha.Surface2.argb)
             }
 
             on<MouseEvent.Move.Exit> {
-                color = Mocha.Surface1.argb
+                color = CascadeGeometricColor(Mocha.Surface1.argb)
             }
 
             attach(box)
             adopt(text {
                 text = "Save".literal()
-                color = Mocha.Green.argb
+                color = CascadeGeometricColor(Mocha.Green.argb)
                 position = CenterPositionConstraint()
             })
         }
@@ -423,17 +424,17 @@ class KeybindsPopUp(
 
             size = FixedSizeConstraint(w, (client.font?.lineHeight ?: 9) + 8)
             position = MixedPositionConstraint(CenterPositionConstraint(), AnchorPositionConstraint({ box }, PositionAnchor.BELOW, 0, 6))
-            color = Mocha.Base.argb
+            color = CascadeGeometricColor(Mocha.Base.argb)
             visible = false
 
             effect(OutlineEffect {
-                color = Mocha.Overlay0.argb
+                color = CascadeGeometricColor(Mocha.Overlay0.argb)
             })
 
             attach(box)
             adopt(text {
                 text = str.literal()
-                color = Mocha.Text.argb
+                color = CascadeGeometricColor(Mocha.Text.argb)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 6)
             })
         }
@@ -474,8 +475,8 @@ class KeybindsPopUp(
     }
 
     private fun keys() {
-        `keys$box`.color = if (capturing) Mocha.Peach.withAlpha(0.3f) else Mocha.Surface0.argb
-        `keys$box$outline`.color = if (capturing) Mocha.Peach.argb else Mocha.Overlay0.argb
+        `keys$box`.color = CascadeGeometricColor(if (capturing) Mocha.Peach.withAlpha(0.3f) else Mocha.Surface0.argb)
+        `keys$box$outline`.color = CascadeGeometricColor(if (capturing) Mocha.Peach.argb else Mocha.Overlay0.argb)
         `keys$hint`.visible = capturing
 
         `keys$boxText`.text = when {

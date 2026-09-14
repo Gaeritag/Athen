@@ -12,6 +12,7 @@ import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
@@ -30,7 +31,7 @@ class ConfigSelectorElement(
         wrapper = CascadeTextWrapper
         text = CascadeFonts.arial.truncate(config.options.getOrNull(value) ?: "Unknown", 8f, 60f, "…").literal()
         textSize = 8f
-        color = Catppuccin.Mocha.Text.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
         position = CenterPositionConstraint()
     }
 
@@ -38,17 +39,17 @@ class ConfigSelectorElement(
         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -8f, 0f)
         size = FixedSizeConstraint(100f, 14f)
         radius = CascadeGeometricRadius(4f)
-        color = Catppuccin.Mocha.Surface0.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
             inset = false
         })
 
         adopt(image {
             location = ResourceAPI.identify("textures/gui/chevron.png")
             rotation = -90f
-            color = Catppuccin.Mocha.Subtext0.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 5f, 0f)
             size = FixedSizeConstraint(6f, 6f)
             interact = false
@@ -57,7 +58,7 @@ class ConfigSelectorElement(
         adopt(rectangle {
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 16f, 0f)
             size = FixedSizeConstraint(1f, 8f)
-            color = Catppuccin.Mocha.Surface2.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
             interact = false
         })
 
@@ -66,14 +67,14 @@ class ConfigSelectorElement(
         adopt(rectangle {
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -16f, 0f)
             size = FixedSizeConstraint(1f, 8f)
-            color = Catppuccin.Mocha.Surface2.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface2.argb)
             interact = false
         })
 
         adopt(image {
             location = ResourceAPI.identify("textures/gui/chevron.png")
             rotation = 90f
-            color = Catppuccin.Mocha.Subtext0.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -5f, 0f)
             size = FixedSizeConstraint(6f, 6f)
             interact = false
@@ -90,17 +91,17 @@ class ConfigSelectorElement(
             text.text = CascadeFonts.arial.truncate(config.options.getOrNull(value) ?: "Unknown", 8f, 60f, "…").literal()
 
             ConfigManager.update(config.key, value1)
-            animateColor(Catppuccin.Mocha.Surface1.argb.brighten(0.9f), 0.15f) {
-                animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb.brighten(0.9f)), 0.15f) {
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
             }
         }
 
         on<MouseEvent.Move.Enter> {
-            animateColor(Catppuccin.Mocha.Surface1.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb), 0.15f)
         }
 
         on<MouseEvent.Move.Exit> {
-            animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+            animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
         }
     }
 

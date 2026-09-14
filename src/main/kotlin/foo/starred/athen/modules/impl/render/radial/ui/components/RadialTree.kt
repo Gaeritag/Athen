@@ -14,6 +14,7 @@ import foo.starred.cascade.constraints.impl.size.PercentSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
@@ -43,11 +44,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
             roundedRectangle {
                 size = MixedSizeConstraint(PercentSizeConstraint(95f, 0f), FixedSizeConstraint(0, 22))
                 position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.START, 0, i0)
-                color = if (b0) Mocha.Surface1.argb else Mocha.Mantle.argb
+                color = CascadeGeometricColor(if (b0) Mocha.Surface1.argb else Mocha.Mantle.argb)
                 radius = CascadeGeometricRadius(4f)
 
                 effect(OutlineEffect {
-                    color = if (b0) Mocha.Lavender.argb else Mocha.Surface0.argb
+                    color = CascadeGeometricColor(if (b0) Mocha.Lavender.argb else Mocha.Surface0.argb)
                 })
 
                 on<MouseEvent.Press> {
@@ -60,11 +61,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
 
                 on<MouseEvent.Move.Enter> {
                     if (RadialEditor.main == i1 && RadialEditor.sub < 0) return@on
-                    color = Mocha.Surface0.argb
+                    color = CascadeGeometricColor(Mocha.Surface0.argb)
                 }
 
                 on<MouseEvent.Move.Exit> {
-                    color = if (RadialEditor.main == i1 && RadialEditor.sub < 0) Mocha.Surface1.argb else Mocha.Mantle.argb
+                    color = CascadeGeometricColor(if (RadialEditor.main == i1 && RadialEditor.sub < 0) Mocha.Surface1.argb else Mocha.Mantle.argb)
                 }
 
                 attach(side0)
@@ -77,7 +78,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     wrapper = CascadeTextWrapper
                     text = CascadeFonts.arial.truncate(list0[i1].name.ifBlank { "..." }, 9.5f, 54f).literal()
                     textSize = 9.5f
-                    color = if (b0) Mocha.Text.argb else Mocha.Subtext0.argb
+                    color = CascadeGeometricColor(if (b0) Mocha.Text.argb else Mocha.Subtext0.argb)
                     position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 24, 0)
                 })
 
@@ -89,11 +90,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     adopt(roundedRectangle {
                         size = FixedSizeConstraint(12, 12)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0, 0)
-                        color = Mocha.Surface1.argb
+                        color = CascadeGeometricColor(Mocha.Surface1.argb)
                         radius = CascadeGeometricRadius(2.5f)
 
                         effect(OutlineEffect {
-                            color = Mocha.Overlay0.argb
+                            color = CascadeGeometricColor(Mocha.Overlay0.argb)
                         })
 
                         on<MouseEvent.Press> {
@@ -112,7 +113,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             location = ResourceAPI.identify("textures/gui/chevron.png")
                             rotation = 0f
                             size = FixedSizeConstraint(6f, 6f)
-                            color = Mocha.Text.argb
+                            color = CascadeGeometricColor(Mocha.Text.argb)
                             position = CenterPositionConstraint()
                             interact = false
                         })
@@ -121,11 +122,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     adopt(roundedRectangle {
                         size = FixedSizeConstraint(12, 12)
                         position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0, 0)
-                        color = Mocha.Surface1.argb
+                        color = CascadeGeometricColor(Mocha.Surface1.argb)
                         radius = CascadeGeometricRadius(2.5f)
 
                         effect(OutlineEffect {
-                            color = Mocha.Overlay0.argb
+                            color = CascadeGeometricColor(Mocha.Overlay0.argb)
                         })
 
                         on<MouseEvent.Press> {
@@ -144,7 +145,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             location = ResourceAPI.identify("textures/gui/chevron.png")
                             rotation = 180f
                             size = FixedSizeConstraint(6f, 6f)
-                            color = Mocha.Text.argb
+                            color = CascadeGeometricColor(Mocha.Text.argb)
                             position = CenterPositionConstraint()
                             interact = false
                         })
@@ -153,11 +154,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     adopt(roundedRectangle {
                         size = FixedSizeConstraint(12, 12)
                         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0, 0)
-                        color = Mocha.Surface1.argb
+                        color = CascadeGeometricColor(Mocha.Surface1.argb)
                         radius = CascadeGeometricRadius(2.5f)
 
                         effect(OutlineEffect {
-                            color = Mocha.Overlay0.argb
+                            color = CascadeGeometricColor(Mocha.Overlay0.argb)
                         })
 
                         on<MouseEvent.Press> {
@@ -172,7 +173,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             wrapper = CascadeTextWrapper
                             text = "×".literal()
                             textSize = 8.5f
-                            color = Mocha.Red.argb
+                            color = CascadeGeometricColor(Mocha.Red.argb)
                             position = CenterPositionConstraint()
                         })
                     })
@@ -188,11 +189,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     roundedRectangle {
                         size = MixedSizeConstraint(PercentSizeConstraint(84f, 0f), FixedSizeConstraint(0, 20))
                         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.START, -4, i0)
-                        color = if (b3) Mocha.Surface1.argb else Mocha.Mantle.argb
+                        color = CascadeGeometricColor(if (b3) Mocha.Surface1.argb else Mocha.Mantle.argb)
                         radius = CascadeGeometricRadius(4f)
 
                         effect(OutlineEffect {
-                            color = if (b3) Mocha.Lavender.argb else Mocha.Surface0.argb
+                            color = CascadeGeometricColor(if (b3) Mocha.Lavender.argb else Mocha.Surface0.argb)
                         })
 
                         on<MouseEvent.Press> {
@@ -204,11 +205,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
 
                         on<MouseEvent.Move.Enter> {
                             if (RadialEditor.main == i1 && RadialEditor.sub == i2) return@on
-                            color = Mocha.Surface0.argb
+                            color = CascadeGeometricColor(Mocha.Surface0.argb)
                         }
 
                         on<MouseEvent.Move.Exit> {
-                            color = if (RadialEditor.main == i1 && RadialEditor.sub == i2) Mocha.Surface1.argb else Mocha.Mantle.argb
+                            color = CascadeGeometricColor(if (RadialEditor.main == i1 && RadialEditor.sub == i2) Mocha.Surface1.argb else Mocha.Mantle.argb)
                         }
 
                         attach(side0)
@@ -222,7 +223,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             wrapper = CascadeTextWrapper
                             text = CascadeFonts.arial.truncate(list0[i1].sub[i2].name.ifBlank { "..." }, 9f, 42f).literal()
                             textSize = 9f
-                            color = if (b3) Mocha.Text.argb else Mocha.Subtext0.argb
+                            color = CascadeGeometricColor(if (b3) Mocha.Text.argb else Mocha.Subtext0.argb)
                             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 22, 0)
                         })
 
@@ -234,11 +235,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             adopt(roundedRectangle {
                                 size = FixedSizeConstraint(12, 12)
                                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 0, 0)
-                                color = Mocha.Surface1.argb
+                                color = CascadeGeometricColor(Mocha.Surface1.argb)
                                 radius = CascadeGeometricRadius(2.5f)
 
                                 effect(OutlineEffect {
-                                    color = Mocha.Overlay0.argb
+                                    color = CascadeGeometricColor(Mocha.Overlay0.argb)
                                 })
 
                                 on<MouseEvent.Press> {
@@ -260,7 +261,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                     location = ResourceAPI.identify("textures/gui/chevron.png")
                                     rotation = 0f
                                     size = FixedSizeConstraint(6f, 6f)
-                                    color = Mocha.Text.argb
+                                    color = CascadeGeometricColor(Mocha.Text.argb)
                                     position = CenterPositionConstraint()
                                     interact = false
                                 })
@@ -269,11 +270,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             adopt(roundedRectangle {
                                 size = FixedSizeConstraint(12, 12)
                                 position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.CENTER, 0, 0)
-                                color = Mocha.Surface1.argb
+                                color = CascadeGeometricColor(Mocha.Surface1.argb)
                                 radius = CascadeGeometricRadius(2.5f)
 
                                 effect(OutlineEffect {
-                                    color = Mocha.Overlay0.argb
+                                    color = CascadeGeometricColor(Mocha.Overlay0.argb)
                                 })
 
                                 on<MouseEvent.Press> {
@@ -295,7 +296,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                     location = ResourceAPI.identify("textures/gui/chevron.png")
                                     rotation = 180f
                                     size = FixedSizeConstraint(6f, 6f)
-                                    color = Mocha.Text.argb
+                                    color = CascadeGeometricColor(Mocha.Text.argb)
                                     position = CenterPositionConstraint()
                                     interact = false
                                 })
@@ -304,11 +305,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                             adopt(roundedRectangle {
                                 size = FixedSizeConstraint(12, 12)
                                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, 0, 0)
-                                color = Mocha.Surface1.argb
+                                color = CascadeGeometricColor(Mocha.Surface1.argb)
                                 radius = CascadeGeometricRadius(2.5f)
 
                                 effect(OutlineEffect {
-                                    color = Mocha.Overlay0.argb
+                                    color = CascadeGeometricColor(Mocha.Overlay0.argb)
                                 })
 
                                 on<MouseEvent.Press> {
@@ -326,7 +327,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                                     wrapper = CascadeTextWrapper
                                     text = "×".literal()
                                     textSize = 8.5f
-                                    color = Mocha.Red.argb
+                                    color = CascadeGeometricColor(Mocha.Red.argb)
                                     position = CenterPositionConstraint()
                                 })
                             })
@@ -336,7 +337,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     rectangle {
                         size = FixedSizeConstraint(1, 14)
                         position = FixedPositionConstraint(10, i0 + 3)
-                        color = Mocha.Surface0.argb
+                        color = CascadeGeometricColor(Mocha.Surface0.argb)
                         interact = false
 
                         attach(side0)
@@ -350,11 +351,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                 roundedRectangle {
                     size = MixedSizeConstraint(PercentSizeConstraint(84f, 0f), FixedSizeConstraint(0, 18))
                     position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.START, -4, i0)
-                    color = Mocha.Mantle.argb
+                    color = CascadeGeometricColor(Mocha.Mantle.argb)
                     radius = CascadeGeometricRadius(4f)
 
                     effect(OutlineEffect {
-                        color = Mocha.Surface0.argb
+                        color = CascadeGeometricColor(Mocha.Surface0.argb)
                     })
 
                     attach(side0)
@@ -372,18 +373,18 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                     }
 
                     on<MouseEvent.Move.Enter> {
-                        color = Mocha.Surface0.argb
+                        color = CascadeGeometricColor(Mocha.Surface0.argb)
                     }
 
                     on<MouseEvent.Move.Exit> {
-                        color = Mocha.Mantle.argb
+                        color = CascadeGeometricColor(Mocha.Mantle.argb)
                     }
 
                     adopt(text {
                         wrapper = CascadeTextWrapper
                         text = "+ Sub".literal()
                         textSize = 8.5f
-                        color = Mocha.Green.argb
+                        color = CascadeGeometricColor(Mocha.Green.argb)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 6, 0)
                     })
                 }
@@ -391,7 +392,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
                 rectangle {
                     size = FixedSizeConstraint(1, 14)
                     position = FixedPositionConstraint(10, i0 + 2)
-                    color = Mocha.Surface0.argb
+                    color = CascadeGeometricColor(Mocha.Surface0.argb)
                     interact = false
 
                     attach(side0)
@@ -404,11 +405,11 @@ class RadialTree(private val side0: ScrollablePrimitive) {
         roundedRectangle {
             size = MixedSizeConstraint(PercentSizeConstraint(95f, 0f), FixedSizeConstraint(0, 22))
             position = AlignPositionConstraint(PositionAlignment.CENTER, PositionAlignment.START, 0, i0)
-            color = Mocha.Mantle.argb
+            color = CascadeGeometricColor(Mocha.Mantle.argb)
             radius = CascadeGeometricRadius(4f)
 
             effect(OutlineEffect {
-                color = Mocha.Surface0.argb
+                color = CascadeGeometricColor(Mocha.Surface0.argb)
             })
 
             attach(side0)
@@ -422,18 +423,18 @@ class RadialTree(private val side0: ScrollablePrimitive) {
             }
 
             on<MouseEvent.Move.Enter> {
-                color = Mocha.Surface0.argb
+                color = CascadeGeometricColor(Mocha.Surface0.argb)
             }
 
             on<MouseEvent.Move.Exit> {
-                color = Mocha.Mantle.argb
+                color = CascadeGeometricColor(Mocha.Mantle.argb)
             }
 
             adopt(text {
                 wrapper = CascadeTextWrapper
                 text = "+ Slot".literal()
                 textSize = 9.5f
-                color = Mocha.Green.argb
+                color = CascadeGeometricColor(Mocha.Green.argb)
                 position = CenterPositionConstraint()
             })
         }

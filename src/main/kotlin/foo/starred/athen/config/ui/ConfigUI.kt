@@ -22,6 +22,7 @@ import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.graphics.font.CascadeFonts
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.graphics.geometry.CascadeGeometricResolution
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
@@ -47,7 +48,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
     private val text = text {
         wrapper = CascadeTextWrapper
         textSize = 10f
-        color = Catppuccin.Mocha.Text.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.START, 4f, 4f)
     }
 
@@ -57,7 +58,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
             super.draw(graphics)
         }
     }.apply {
-        color = Catppuccin.Mocha.Base.argb
+        color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
         radius = CascadeGeometricRadius(4f)
         visible = false
         interact = false
@@ -68,7 +69,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
         }
 
         effect(OutlineEffect {
-            color = Catppuccin.Mocha.Surface1.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Surface1.argb)
         })
 
         adopt(text)
@@ -121,11 +122,11 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
         val header = roundedRectangle {
             position = FixedPositionConstraint(0f, 0f)
             size = FixedSizeConstraint(650f, 32f)
-            color = Catppuccin.Mocha.Mantle.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Mantle.argb)
             radius = CascadeGeometricRadius(5f, 5f, 0f, 0f)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                 inset = false
             })
 
@@ -136,7 +137,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
             wrapper = CascadeTextWrapper
             text = "<bold><#FDCCDA>A<#FCDDD3>t<#FAEDCB>h<#F0E2D7>e<#E5D8E4>n<#DBCDF0>".parse()
             textSize = 16f
-            color = Catppuccin.Mocha.Text.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 12f, 0f)
 
             attach(header)
@@ -157,11 +158,11 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
         left = roundedRectangle {
             position = AnchorPositionConstraint({ header }, PositionAnchor.BELOW)
             size = FixedSizeConstraint(140f, 318f)
-            color = Catppuccin.Mocha.Mantle.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Mantle.argb)
             radius = CascadeGeometricRadius(0f, 0f, 5f, 0f)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                 inset = false
             })
 
@@ -171,11 +172,11 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
         right0 = roundedRectangle {
             position = AnchorPositionConstraint({ left }, PositionAnchor.RIGHT)
             size = FixedSizeConstraint(510f, 318f)
-            color = Catppuccin.Mocha.Crust.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Crust.argb)
             radius = CascadeGeometricRadius(0f, 0f, 0f, 5f)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                 inset = false
             })
 

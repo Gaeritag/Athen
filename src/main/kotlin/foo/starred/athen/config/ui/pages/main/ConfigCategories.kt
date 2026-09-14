@@ -12,6 +12,7 @@ import foo.starred.cascade.constraints.impl.position.AnchorPositionConstraint
 import foo.starred.cascade.constraints.impl.position.FixedPositionConstraint
 import foo.starred.cascade.constraints.impl.size.FixedSizeConstraint
 import foo.starred.cascade.events.impl.MouseEvent
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive.Companion.container
@@ -43,14 +44,14 @@ object ConfigCategories {
                         wrapper = CascadeTextWrapper
                         text = "Categories".literal()
                         textSize = 9f
-                        color = Catppuccin.Mocha.Surface0.argb
+                        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 2f, 0f)
                     })
 
                     adopt(rectangle {
                         position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER, -2f, 0f)
                         size = FixedSizeConstraint(74f, 1f)
-                        color = Catppuccin.Mocha.Surface0.argb
+                        color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                     })
                 }
             }
@@ -60,7 +61,7 @@ object ConfigCategories {
             last = roundedRectangle {
                 position = if (last1 == null) FixedPositionConstraint(8f, 8f) else if (a == Category.GENERAL) AnchorPositionConstraint({ last1 }, PositionAnchor.BELOW, 0f, 6f) else AnchorPositionConstraint({ last1 }, PositionAnchor.BELOW, 0f, 4f)
                 size = FixedSizeConstraint(124f, 22f)
-                color = if (bool) Catppuccin.Mocha.Surface0.argb else Catppuccin.Mocha.Mantle.argb
+                color = CascadeGeometricColor(if (bool) Catppuccin.Mocha.Surface0.argb else Catppuccin.Mocha.Mantle.argb)
                 radius = CascadeGeometricRadius(4f)
 
                 on<MouseEvent.Press> {
@@ -84,12 +85,12 @@ object ConfigCategories {
 
                 on<MouseEvent.Move.Enter> {
                     if (active == a) return@on
-                    animateColor(Catppuccin.Mocha.Base.argb, 0.15f)
+                    animateColor(CascadeGeometricColor(Catppuccin.Mocha.Base.argb), 0.15f)
                 }
 
                 on<MouseEvent.Move.Exit> {
                     if (active == a) return@on
-                    animateColor(Catppuccin.Mocha.Mantle.argb, 0.15f)
+                    animateColor(CascadeGeometricColor(Catppuccin.Mocha.Mantle.argb), 0.15f)
                 }
 
                 attach(left)
@@ -97,7 +98,7 @@ object ConfigCategories {
                     wrapper = CascadeTextWrapper
                     text = a.displayName.literal()
                     textSize = 12f
-                    color = if (bool) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb
+                    color = CascadeGeometricColor(if (bool) Catppuccin.Mocha.Lavender.argb else Catppuccin.Mocha.Subtext0.argb)
                     position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 8f, 0f)
                 })
             }

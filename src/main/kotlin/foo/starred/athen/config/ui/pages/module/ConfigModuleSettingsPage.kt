@@ -33,6 +33,7 @@ import foo.starred.cascade.constraints.impl.size.MixedSizeConstraint
 import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.extensions.scissor.scissor
+import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
@@ -61,20 +62,20 @@ object ConfigModuleSettingsPage {
         }.apply {
             position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.END, -12f, -12f)
             size = FixedSizeConstraint(24f, 24f)
-            color = Catppuccin.Mocha.Mantle.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Mantle.argb)
             radius = CascadeGeometricRadius(4f)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                 inset = false
             })
 
             on<MouseEvent.Move.Enter> {
-                animateColor(Catppuccin.Mocha.Surface0.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb), 0.15f)
             }
 
             on<MouseEvent.Move.Exit> {
-                animateColor(Catppuccin.Mocha.Mantle.argb, 0.15f)
+                animateColor(CascadeGeometricColor(Catppuccin.Mocha.Mantle.argb), 0.15f)
             }
 
             on<MouseEvent.Press> {
@@ -90,7 +91,7 @@ object ConfigModuleSettingsPage {
                 wrapper = CascadeTextWrapper
                 text = "×".literal()
                 textSize = 12f
-                color = Catppuccin.Mocha.Subtext0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Subtext0.argb)
                 position = CenterPositionConstraint()
             })
         }
@@ -131,11 +132,11 @@ object ConfigModuleSettingsPage {
         return roundedRectangle {
             position = if (above == null) FixedPositionConstraint(14f, 14f) else AnchorPositionConstraint({ above }, PositionAnchor.BELOW, 0f, 14f)
             size = MixedSizeConstraint(FixedSizeConstraint(482f, 0f), FlexibleSizeConstraint(0f))
-            color = Catppuccin.Mocha.Mantle.argb
+            color = CascadeGeometricColor(Catppuccin.Mocha.Mantle.argb)
             radius = CascadeGeometricRadius(6f)
 
             effect(OutlineEffect {
-                color = Catppuccin.Mocha.Surface0.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Surface0.argb)
                 inset = false
             })
 
@@ -159,7 +160,7 @@ object ConfigModuleSettingsPage {
                     wrapper = CascadeTextWrapper
                     text = first.name.parse()
                     textSize = 10f
-                    color = Catppuccin.Mocha.Text.argb
+                    color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
                     position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)
                 })
 
@@ -266,7 +267,7 @@ object ConfigModuleSettingsPage {
                 wrapper = CascadeTextWrapper
                 text = config.name.parse()
                 textSize = 10f
-                color = Catppuccin.Mocha.Text.argb
+                color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
                 position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)
             })
 
