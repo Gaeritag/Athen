@@ -19,7 +19,6 @@ import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
 import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
 import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.literal
 import foo.starred.updater.logic.source.impl.ModrinthUpdateSource
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -49,9 +48,9 @@ object Athen : ClientModInitializer {
         ModrinthUpdateSource("athen").init(modVersion)
 
         on<LocationEvent.Server.Connect> {
-            Scheduler.schedule(20.clientTicks) { li() }
-            Scheduler.schedule(60.clientTicks) { broadcast() }
-            Scheduler.repeat(1.hours) { broadcast() }
+            Scheduler.schedule(20.clientTicks, ::li)
+            Scheduler.schedule(60.clientTicks, ::broadcast)
+            Scheduler.repeat(1.hours, action = ::broadcast)
         }.once()
     }
 
@@ -59,10 +58,9 @@ object Athen : ClientModInitializer {
         if (Dev.lastVersion == modVersion) return
         Dev.lastVersion = modVersion
 
-        val divider = ("§8§m" + "-".repeat()).literal()
-
+        val divider = ("<dark_gray><strikethrough>" + "-".repeat()).parse()
         divider.lie()
-        "§d§l$modName".center().lie()
+        ("<${Mocha.Lavender.argb}>" + "Athen".center()).parse().lie()
         divider.lie()
         "<gray>Thank you for installing $modName <dark_gray>(v$modVersion)<gray>.".parse().lie()
         EMPTY_COMPONENT.lie()
@@ -75,7 +73,7 @@ object Athen : ClientModInitializer {
         "<hover:<${Mocha.Lavender.argb}>Click to join!><click:url:$discordUrl><gray>Need help? Click to join our Discord!".parse().lie()
 
         divider.lie()
-        "<hover:<green>Click to open page!><click:url:https://patreon.com/starredskies>Want to help support the development for mods like Athen? Click here to open the Patreon :3".parse().lie()
+        "<gray><hover:<green>Click to open page!><click:url:https://patreon.com/starredskies>Want to help support the development for mods like Athen? Click here to open the Patreon :3".parse().lie()
         divider.lie()
     }
 
