@@ -57,7 +57,7 @@ loom {
 
     runConfigs.named("client") {
         generateRunConfig = true
-        jvmArguments.addAll("-Ddevauth.enabled=true", "-Ddevauth.account=main", "-XX:+AllowEnhancedClassRedefinition", "-XX:+IgnoreUnrecognizedVMOptions",)
+        jvmArguments.addAll("-Ddevauth.enabled=true", "-Ddevauth.account=main", "-XX:+AllowEnhancedClassRedefinition", "-XX:+IgnoreUnrecognizedVMOptions")
     }
 
     runConfigs.named("server") {
@@ -100,7 +100,7 @@ publishing {
 
 tasks {
     processResources {
-        val r = mapOf("id" to mod("id"), "name" to mod("name"), "version" to mod("version"), "minecraft" to lib("compatibility"), "tweaker" to mod("tweaker"), "accessWidener" to mod("tweaker"))
+        val r = mapOf("id" to mod("id"), "name" to mod("name"), "version" to mod("version"), "minecraft" to lib("compatibility"), "tweaker" to mod("tweaker"))
 
         inputs.properties(r)
         filesMatching("fabric.mod.json") { expand(r) }
