@@ -10,7 +10,7 @@ exordium = "IK5p5vrB"
 iris = "YEGDGnJM"
 
 snowbird = "024+26.1"
-cascade = "040+26.1"
+cascade = "041+26.1"
 updater = "1.0.8+26.1"
 
 [libraries]
