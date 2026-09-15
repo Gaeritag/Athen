@@ -102,7 +102,7 @@ object MissingEnchants : Module(
                     if (!s.r()) continue
 
                     val ls = l.siblings.lastOrNull() ?: continue
-                    if ((ls.style.color?.value == 11184810  || ls.style.color?.value == 0) && !ls.style.isBold) continue
+                    if ((ls.style.color?.value == 11184810 || ls.style.color?.value == 0) && !ls.style.isBold) continue
 
                     se = true
                     continue

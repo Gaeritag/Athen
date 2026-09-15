@@ -136,7 +136,7 @@ object ColoredEnchants : Module(
 
                 if (found && str.isEmpty()) break
                 if ("◆" in str) continue
-                if (l.siblings.firstOrNull()?.style?.color?.value == 0) continue
+                if (l.siblings.firstOrNull()?.style?.color?.value == null) continue
 
                 val final = EMPTY_COMPONENT.copy()
                 var i = 0
