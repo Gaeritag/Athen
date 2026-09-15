@@ -1,4 +1,4 @@
-package foo.starred.athen.mixin;
+package foo.starred.athen.mixin.loader;
 
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
