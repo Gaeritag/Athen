@@ -23,8 +23,7 @@ import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.snowbird.api.ZERO_PAIR
 import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.ctrl
-import foo.starred.snowbird.api.shift
+import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
 import foo.starred.snowbird.utils.brighten
 import foo.starred.snowbird.utils.withAlpha
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -117,13 +116,13 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                 i0 = i
             }
 
-            anchor = if (shift) anchor.takeIf { it != -1 } ?: cursor else -1
+            anchor = if (KeyboardInputState.States.shift()) anchor.takeIf { it != -1 } ?: cursor else -1
             cursor = i0
         }
 
         on<KeyEvent.Press> {
-            val shift = shift
-            val ctrl = ctrl
+            val shift = KeyboardInputState.States.shift()
+            val ctrl = KeyboardInputState.States.control()
 
             when (key) {
                 InputConstants.KEY_LEFT -> {
