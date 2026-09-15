@@ -22,6 +22,7 @@ import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
 import foo.starred.snowbird.api.inputs.impl.GenericInputState
 import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
+import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import foo.starred.snowbird.utils.literal
 
 class ConfigKeybindElement(
@@ -56,7 +57,7 @@ class ConfigKeybindElement(
         }.also { outline = it })
 
         on<MouseEvent.Press> {
-            if (listening) update(InputConstants.Type.MOUSE.getOrCreate(button)) else start()
+            if (listening) update(MouseInputState.vanilla(button)) else start()
             cancel()
         }
 
