@@ -284,7 +284,7 @@ object SlotBindsGUI : CascadeScreen("Slot Binds Editor [Athen]") {
                 for (e in SlotBinds.m0.int2IntEntrySet()) {
                     val a = pos(e.intKey, x0, y0, y1) ?: continue
                     val b = pos(e.intValue, x0, y0, y1) ?: continue
-                    graphics.stroke(a.first.toFloat(), a.second.toFloat(), b.first.toFloat(), b.second.toFloat(), SlotBinds.m2.get(e.intKey), 1f, pose, scissor)
+                    graphics.stroke(a.first.toFloat(), a.second.toFloat(), b.first.toFloat(), b.second.toFloat(), SlotBinds.m2.get(e.intKey), 1f, false, pose, scissor)
                 }
             }
 

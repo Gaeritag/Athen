@@ -15,7 +15,6 @@ import foo.starred.cascade.effects.impl.OutlineEffect
 import foo.starred.cascade.events.impl.FocusEvent
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.extensions.circle.circle
-import foo.starred.cascade.graphics.extensions.rectangle.gradient.gradientRectangle
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
@@ -324,8 +323,8 @@ class ConfigColorPickerElement(
         val scissor = graphics.scissorStack.peek()
 
         val hue1 = Color.HSBtoRGB(hue, 1f, 1f) or (0xFF shl 24)
-        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, CascadeGeometricColor.horizontal(-1, hue1), pose, scissor)
-        graphics.gradientRectangle(x1 + 8f, y1 + 8f, 124f, 64f, CascadeGeometricColor.vertical(0, 0xFF000000.toInt()), pose, scissor)
+        graphics.rectangle(x1 + 8f, y1 + 8f, 124f, 64f, CascadeGeometricColor.horizontal(-1, hue1), pose, scissor)
+        graphics.rectangle(x1 + 8f, y1 + 8f, 124f, 64f, CascadeGeometricColor.vertical(0, 0xFF000000.toInt()), pose, scissor)
 
         val x2 = x1 + 8f + saturation * 124f
         val y2 = y1 + 8f + (1f - brightness) * 64f
@@ -337,7 +336,7 @@ class ConfigColorPickerElement(
         for (s in 0..5) {
             val c0 = Color.HSBtoRGB(s / 6f, 1f, 1f) or (0xFF shl 24)
             val c1 = Color.HSBtoRGB((s + 1) / 6f, 1f, 1f) or (0xFF shl 24)
-            graphics.gradientRectangle(x3 + s * 20.66f, y3, 20.66f, 8f, CascadeGeometricColor.horizontal(c0, c1), pose, scissor)
+            graphics.rectangle(x3 + s * 20.66f, y3, 20.66f, 8f, CascadeGeometricColor.horizontal(c0, c1), pose, scissor)
         }
 
         val x4 = x3 + hue * 124f
@@ -350,7 +349,7 @@ class ConfigColorPickerElement(
         val rgba = rgb or (0xFF shl 24)
 
         graphics.rectangle(x5, y5, 124f, 8f, Catppuccin.Mocha.Surface0.argb, pose, scissor)
-        graphics.gradientRectangle(x5, y5, 124f, 8f, CascadeGeometricColor.horizontal(rgb, rgba), pose, scissor)
+        graphics.rectangle(x5, y5, 124f, 8f, CascadeGeometricColor.horizontal(rgb, rgba), pose, scissor)
 
         val x6 = x5 + alpha * 124f
         graphics.rectangle(x6 - 1.5f, y5 - 1f, 3f, 10f, -1, pose, scissor)

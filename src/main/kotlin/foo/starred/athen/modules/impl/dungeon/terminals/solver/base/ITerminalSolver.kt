@@ -111,7 +111,7 @@ abstract class ITerminalSolver(val type: TerminalType) {
         }
 
         graphics.roundedRectangle(x0, y0, width0, height0, TerminalSolvers.`ui$bg`, radius, pose, scissor)
-        graphics.hollowRectangle(x0, y0, width0, height0, bw, TerminalSolvers.`ui$border`, radius, pose, scissor)
+        graphics.hollowRectangle(x0, y0, width0, height0, bw, TerminalSolvers.`ui$border`, radius, true, pose, scissor)
 
         graphics.header(x, y, grid.width, grid.head, scale, pose, scissor)
         graphics.render(x - int1 * grid.spacing + grid.padding + inset - 1f, y + grid.head + grid.top - grid.spacing + grid.padding + inset - 1f, 0f, scale, pose, scissor)
@@ -150,7 +150,7 @@ abstract class ITerminalSolver(val type: TerminalType) {
 
     fun GuiGraphicsExtractor.slot(x: Float, y: Float, width: Float, height: Float, color: Int, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?, radius: CascadeGeometricRadius = CascadeGeometricRadius(TerminalSolvers.`ui$slots$roundness` * scale)) {
         if (TerminalSolvers.`ui$slots$fill`) roundedRectangle(x, y, width, height, color, radius, pose, scissor)
-        else hollowRectangle(x, y, width, height, scale, color, radius, pose, scissor)
+        else hollowRectangle(x, y, width, height, scale, color, radius, true, pose, scissor)
     }
 
     private fun GuiGraphicsExtractor.header( x: Float, y: Float, width: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
@@ -171,7 +171,7 @@ abstract class ITerminalSolver(val type: TerminalType) {
         }
 
         roundedRectangle(x1, y1, width1, height1, TerminalSolvers.`ui$header`, radius, pose, scissor)
-        hollowRectangle(x1, y1, width1, height1, thickness, TerminalSolvers.`ui$border`, radius, pose, scissor)
+        hollowRectangle(x1, y1, width1, height1, thickness, TerminalSolvers.`ui$border`, radius, true, pose, scissor)
 
         val size = 11f * scale
         font.extract(this, title, (x + width / 2) * scale - font.width(title, size) / 2, (y + height / 2) * scale - (font.regular.height * size) / 2, Mocha.Text.rgba, false, size)

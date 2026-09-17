@@ -107,10 +107,8 @@ object ConfigModules {
                     }
 
                     adopt(text {
-                        val name = if (CascadeFonts.loaded) CascadeFonts.arial.truncate(v.name, 12f, 115f) else v.name
-
                         wrapper = CascadeTextWrapper
-                        text = name.parse()
+                        text = CascadeFonts.arial.truncate(v.name, 12f, 115f).parse()
                         textSize = 12f
                         color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)

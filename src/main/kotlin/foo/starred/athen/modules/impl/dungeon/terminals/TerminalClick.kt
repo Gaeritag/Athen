@@ -51,7 +51,7 @@ object TerminalClick : Module(
                 val c2 = cs[i + 1]
                 val color = (if (c1.button == InputConstants.MOUSE_BUTTON_LEFT) `color$mouse$left` else `color$mouse$right`)
 
-                graphics.stroke(c1.x, c1.y, c2.x, c2.y, color, thickness.toFloat(), pose, scissor)
+                graphics.stroke(c1.x, c1.y, c2.x, c2.y, color, thickness.toFloat(), false, pose, scissor)
             }
 
             for (c in cs) {

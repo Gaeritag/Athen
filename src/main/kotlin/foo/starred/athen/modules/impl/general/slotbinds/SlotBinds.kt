@@ -256,7 +256,7 @@ object SlotBinds : Module(
                 val b = slots.getOrNull(e.intValue) ?: continue
                 val c = m2.get(e.intKey)
 
-                graphics.stroke(a.x + 8f, a.y + 8f, b.x + 8f, b.y + 8f, c, 1f, pose, scissor)
+                graphics.stroke(a.x + 8f, a.y + 8f, b.x + 8f, b.y + 8f, c, 1f, false, pose, scissor)
 
                 graphics.outline(a.x, a.y, 16, 16, 1, c, true)
                 graphics.outline(b.x, b.y, 16, 16, 1, c, true)

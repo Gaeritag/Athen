@@ -54,15 +54,15 @@ object MelodySolver : ITerminalSolver(TerminalType.MELODY) {
             when (i) {
                 current -> {
                     roundedRectangle(x1, y0, size, size, TerminalSolvers.`melody$fill`, radius, pose, scissor)
-                    hollowRectangle(x1, y0, size, size, scale, color, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, color, radius, true, pose, scissor)
                 }
 
                 correct -> {
-                    hollowRectangle(x1, y0, size, size, scale, TerminalSolvers.`melody$correct`, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, TerminalSolvers.`melody$correct`, radius, true, pose, scissor)
                 }
 
                 else -> {
-                    hollowRectangle(x1, y0, size, size, scale, TerminalSolvers.`melody$wrong`, radius, pose, scissor)
+                    hollowRectangle(x1, y0, size, size, scale, TerminalSolvers.`melody$wrong`, radius, true, pose, scissor)
                 }
             }
         }
