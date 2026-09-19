@@ -12,7 +12,7 @@ classgraph = "4.8.184"
 
 kommand = "2026.09.1"
 snowbird = "2026.09.1"
-cascade = "2026.09.2"
+cascade = "2026.09.3"
 updater = "2026.09.1"
 
 hypixel-modapi = "1.0.2"
