@@ -21,7 +21,7 @@ object NumbersSolver : ITerminalSolver(TerminalType.NUMBERS) {
     private val counts = mutableMapOf<Int, Int>()
 
     override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
-        val font = CascadeFonts.arial
+        val font = CascadeFonts.sans
         for ((i, c) in list.withIndex()) {
             if (i > 2) break
 

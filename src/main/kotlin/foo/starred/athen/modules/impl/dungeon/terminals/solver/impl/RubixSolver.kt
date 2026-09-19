@@ -30,7 +30,7 @@ object RubixSolver : ITerminalSolver(TerminalType.RUBIX) {
     private var last: Int? = null
 
     override fun GuiGraphicsExtractor.render(x: Float, y: Float, height: Float, scale: Float, pose: Matrix3x2f, scissor: ScreenRectangle?) {
-        val font = CascadeFonts.arial
+        val font = CascadeFonts.sans
 
         for ((slot, button) in list) {
             val x = (slot % 9 * float + x + 1f) * scale

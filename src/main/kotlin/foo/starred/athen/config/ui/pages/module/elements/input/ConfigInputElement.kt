@@ -99,7 +99,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
         }
 
         on<MouseEvent.Press> {
-            val font = CascadeFonts.arial
+            val font = CascadeFonts.sans
 
             root.focused = self
             cancel()
@@ -282,7 +282,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
 
         super.draw(graphics)
 
-        val font = CascadeFonts.arial
+        val font = CascadeFonts.sans
         val x0 = x.toInt()
         val y0 = y.toInt()
 
@@ -319,7 +319,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
     }
 
     private fun fn0() {
-        val font = CascadeFonts.arial
+        val font = CascadeFonts.sans
         _cursor = font.width(value.substring(0, min(cursor, value.length)), 12f)
 
         val width = width.toInt()

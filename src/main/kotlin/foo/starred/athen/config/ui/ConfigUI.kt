@@ -64,8 +64,8 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
         interact = false
 
         size = object : ISizeConstraint {
-            override fun width(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = CascadeFonts.arial.width(text.text, 10f) + 8f
-            override fun height(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = (CascadeFonts.arial.regular.height * 10f) + 8f
+            override fun width(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = CascadeFonts.sans.width(text.text, 10f) + 8f
+            override fun height(element: IPrimitiveElement<*>, parent: IPrimitiveElement<*>): Float = (CascadeFonts.sans.regular.height * 10f) + 8f
         }
 
         effect(OutlineEffect {

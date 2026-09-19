@@ -42,9 +42,9 @@ dependencies {
 
     shadow(libs.classgraph)
     shadow(libs.kommand)
-    shadow(lib["snowbird"])
-    shadow(lib["cascade"])
-    shadow(lib["updater"])
+    shadow(libs.snowbird.find())
+    shadow(libs.cascade.find())
+    shadow(libs.updater.find())
 
     shadow(libs.skyblock.api) {
         capabilities { requireCapability("tech.thatgravyboat:skyblock-api-$minecraft") }
@@ -120,6 +120,10 @@ fun DependencyHandlerScope.shadow(dep: Any, config: ExternalModuleDependency.() 
     d.config()
     include(d)
     implementation(d)
+}
+
+fun Provider<MinimalExternalModuleDependency>.find(): String {
+    return "${get()}+$minecraft"
 }
 
 operator fun VersionCatalog.get(name: String): Provider<MinimalExternalModuleDependency> {

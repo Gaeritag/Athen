@@ -11,6 +11,10 @@ skyblock-api = "4.2.24"
 classgraph = "4.8.184"
 kommand = "1.0.2"
 
+snowbird = "024"
+cascade = "2026.09.1"
+updater = "1.0.9"
+
 hypixel-modapi = "1.0.2"
 hypixel-modapi-fabric = "1.0.2+build.1+mc26.1"
 
@@ -19,12 +23,16 @@ fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-l
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
 
 devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth" }
+classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
 
 skyblock-api = { module = "tech.thatgravyboat:skyblock-api", version.ref = "skyblock-api" }
-classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
-kommand = { module = "foo.starred:kommand", version.ref = "kommand" }
 hypixel-modapi = { module = "net.hypixel:mod-api", version.ref = "hypixel-modapi" }
 hypixel-modapi-fabric = { module = "maven.modrinth:hypixel-mod-api", version.ref = "hypixel-modapi-fabric" }
+
+kommand = { module = "foo.starred:kommand", version.ref = "kommand" }
+cascade = { module = "foo.starred:cascade", version.ref = "cascade" }
+snowbird = { module = "foo.starred:snowbird", version.ref = "snowbird" }
+updater = { module = "foo.starred:updater", version.ref = "updater" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

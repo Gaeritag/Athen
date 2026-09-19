@@ -119,7 +119,7 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
             graphics.roundedRectangle(x, y, width * value0, height, Catppuccin.Mocha.Lavender.argb.brighten(0.6f), radius, pose, scissor)
         }
 
-        val font = CascadeFonts.arial
+        val font = CascadeFonts.sans
         val height0 = font.regular.height * 10f
 
         val x1 = x + (width / 2f) - (_width / 2f)
@@ -142,7 +142,7 @@ open class ConfigSliderElement : RoundedRectanglePrimitive() {
         val suffix = if (unit.isNotEmpty()) " $unit" else ""
 
         _component = (display + suffix).literal()
-        _width = CascadeFonts.arial.width(_component, 10f)
+        _width = CascadeFonts.sans.width(_component, 10f)
     }
 
     companion object {

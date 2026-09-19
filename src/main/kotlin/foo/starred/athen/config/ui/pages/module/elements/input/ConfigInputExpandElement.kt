@@ -38,10 +38,11 @@ class ConfigInputExpandElement(
         })
 
         adopt(text {
+            wrapper = CascadeTextWrapper
             text = "⛶".literal()
             textSize = 10f
             color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
-            position = CenterPositionConstraint(1f)
+            position = CenterPositionConstraint()
             shadow = false
         })
 

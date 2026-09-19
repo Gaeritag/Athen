@@ -197,7 +197,7 @@ class ConfigVariablesElement(
             slot0[i].visible = visible
             slot0[i].position = FixedPositionConstraint(i * width1, 0f)
             slot0[i].size = FixedSizeConstraint(width1, 14f)
-            labels[i].text = if (visible) CascadeFonts.arial.truncate(config.tokens[index], 8f, width1 - 6f, "…").literal() else "".literal()
+            labels[i].text = if (visible) CascadeFonts.sans.truncate(config.tokens[index], 8f, width1 - 6f, "…").literal() else "".literal()
 
             if (i >= 2) continue
             slot1[i].visible = i + 1 < count

@@ -157,7 +157,7 @@ abstract class ITerminalSolver(val type: TerminalType) {
         if (TerminalSolvers.`ui$hideHeader`) return
 
         val title = type.name.lowercase().replaceFirstChar { it.uppercase() }
-        val font = CascadeFonts.arial
+        val font = CascadeFonts.sans
 
         val radius = CascadeGeometricRadius(TerminalSolvers.`ui$roundness` * scale)
         val x1 = x * scale

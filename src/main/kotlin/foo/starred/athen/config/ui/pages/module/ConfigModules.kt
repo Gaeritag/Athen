@@ -63,7 +63,7 @@ object ConfigModules {
                     else AnchorPositionConstraint({ last0!! }, PositionAnchor.RIGHT, 10f, 0f)
 
                 size = FixedSizeConstraint(154f, 28f)
-                color = CascadeGeometricColor(Catppuccin.Mocha.Base.argb)
+                color = CascadeGeometricColor.TRANSPARENT
                 radius = CascadeGeometricRadius(4f)
 
                 effect(OutlineEffect {
@@ -108,7 +108,7 @@ object ConfigModules {
 
                     adopt(text {
                         wrapper = CascadeTextWrapper
-                        text = CascadeFonts.arial.truncate(v.name, 12f, 115f).parse()
+                        text = CascadeFonts.sans.truncate(v.name, 12f, 115f).parse()
                         textSize = 12f
                         color = CascadeGeometricColor(Catppuccin.Mocha.Text.argb)
                         position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 10f, 0f)

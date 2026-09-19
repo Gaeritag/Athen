@@ -77,7 +77,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
 
                 adopt(text {
                     wrapper = CascadeTextWrapper
-                    text = CascadeFonts.arial.truncate(list0[i1].name.ifBlank { "..." }, 9.5f, 54f).literal()
+                    text = CascadeFonts.sans.truncate(list0[i1].name.ifBlank { "..." }, 9.5f, 54f).literal()
                     textSize = 9.5f
                     color = CascadeGeometricColor(if (b0) Mocha.Text.argb else Mocha.Subtext0.argb)
                     position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 24, 0)
@@ -224,7 +224,7 @@ class RadialTree(private val side0: ScrollablePrimitive) {
 
                         adopt(text {
                             wrapper = CascadeTextWrapper
-                            text = CascadeFonts.arial.truncate(list0[i1].sub[i2].name.ifBlank { "..." }, 9f, 42f).literal()
+                            text = CascadeFonts.sans.truncate(list0[i1].sub[i2].name.ifBlank { "..." }, 9f, 42f).literal()
                             textSize = 9f
                             color = CascadeGeometricColor(if (b3) Mocha.Text.argb else Mocha.Subtext0.argb)
                             position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, 22, 0)

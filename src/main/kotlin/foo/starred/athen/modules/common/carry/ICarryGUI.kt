@@ -174,9 +174,9 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             }
 
             rectangle {
-                val width = CascadeFonts.arial.width(carry.short, 7.5f) + 10f
+                val width = CascadeFonts.sans.width(carry.short, 7.5f) + 10f
                 size = FixedSizeConstraint(width, 14f)
-                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, (CascadeFonts.arial.width(carry.player, 9f) + 18f).toInt(), -7)
+                position = AlignPositionConstraint(PositionAlignment.START, PositionAlignment.CENTER, (CascadeFonts.sans.width(carry.player, 9f) + 18f).toInt(), -7)
                 color = CascadeGeometricColor(Mocha.Surface1.argb)
 
                 effect(OutlineEffect {
