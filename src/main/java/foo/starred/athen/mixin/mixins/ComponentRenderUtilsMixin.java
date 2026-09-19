@@ -1,22 +1,22 @@
 package foo.starred.athen.mixin.mixins;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import foo.starred.athen.modules.impl.render.VisualWords;
+import foo.starred.snowbird.internal.misc.DonatorTextReplacer;
 import net.minecraft.client.gui.components.ComponentRenderUtils;
-import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.List;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ComponentRenderUtils.class)
 public class ComponentRenderUtilsMixin {
-    @ModifyReturnValue(method = "wrapComponents", at = @At("RETURN"))
-    private static List<FormattedCharSequence> athen$wrapComponents(List<FormattedCharSequence> original) {
-        if (!VisualWords.INSTANCE.getEnabled()) return original;
-        if (VisualWords.words.getMap0().isEmpty()) return original;
+    @ModifyVariable(method = "wrapComponents", at = @At("HEAD"), argsOnly = true)
+    private static FormattedText athen$wrapComponents(FormattedText message) {
+        if (!VisualWords.INSTANCE.getEnabled()) return message;
+        if (VisualWords.words.getMap0().isEmpty()) return message;
+        if (!(message instanceof Component component)) return message;
 
-        original.replaceAll(VisualWords.words::fn);
-        return original;
+        return DonatorTextReplacer.INSTANCE.fn(component);
     }
 }
