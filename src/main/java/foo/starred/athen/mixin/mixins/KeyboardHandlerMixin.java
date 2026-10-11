@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import foo.starred.athen.events.InputEvent;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.input.KeyEvent;
@@ -12,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class KeyboardHandlerMixin {
     @Inject(method = "keyPress", at = @At("HEAD"), cancellable = true)
     private void athen$keyPress(long handle, int action, KeyEvent event, CallbackInfo ci) {
+        if (event.key() == InputConstants.UNKNOWN.getValue()) return;
+
         if (action == 1) {
             if (new InputEvent.Keyboard.Press(event).post()) ci.cancel();
         } else if (action == 0) {

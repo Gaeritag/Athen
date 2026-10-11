@@ -1,5 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import foo.starred.athen.events.InputEvent;
 import foo.starred.athen.modules.impl.render.ContainerScale;
@@ -25,6 +26,8 @@ public class MouseHandlerMixin {
 
     @Inject(method = "onButton", at = @At("HEAD"), cancellable = true)
     private void athen$onButton(long handle, MouseButtonInfo rawButtonInfo, int action, CallbackInfo ci) {
+        if (rawButtonInfo.button() == InputConstants.UNKNOWN.getValue()) return;
+
         if (action == 1) {
             if (new InputEvent.Mouse.Press(rawButtonInfo).post()) ci.cancel();
         } else if (action == 0) {
