@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import foo.starred.athen.modules.impl.render.VisualWords;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -38,10 +37,9 @@ public class EditBoxMixin {
         this.athen$position = offset;
         this.athen$version = version;
 
-        final Component component = Component.literal(text);
-        final Component replaced = VisualWords.words.fn(component);
-        if (replaced == component) return this.athen$cached = original;
+        final FormattedCharSequence replaced = VisualWords.words.fn(original);
+        if (replaced == original) return this.athen$cached = original;
 
-        return this.athen$cached = replaced.getVisualOrderText();
+        return this.athen$cached = replaced;
     }
 }
