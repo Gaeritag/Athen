@@ -23,12 +23,15 @@ public class AvatarRendererMixin {
     private void athen$scale(AvatarRenderState state, PoseStack poseStack, CallbackInfo ci) {
         if (!CustomScale.INSTANCE.getEnabled()) return;
 
-        Entity entity = ((EntityRenderStateDuck) state).athen$getEntity();
+        final Entity entity = ((EntityRenderStateDuck) state).athen$getEntity();
         if (entity == null) return;
         if (!CustomScale.fn(entity)) return;
 
-        final float s = CustomScale.INSTANCE.getScale() * 0.9375f;
-        poseStack.scale(s, s, s);
+        final float scale0 = CustomScale.INSTANCE.getScale();
+        if (scale0 == 1f) return;
+
+        final float scale1 = scale0 * 0.9375f;
+        poseStack.scale(scale1, scale1, scale1);
     }
 
     @Inject(method = "shouldShowName(Lnet/minecraft/world/entity/Avatar;D)Z", at = @At("HEAD"), cancellable = true)
