@@ -8,7 +8,6 @@ import foo.starred.athen.api.network.websocket.helpers.WebSocketLocationResolver
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
-import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.SlayerEvent
@@ -47,8 +46,11 @@ object GenericSlayerBossResolver {
             val text = content.stripped().takeIf { it.startsWith("SLAYER BOSS! The ") } ?: return@on
             val match = spawnRegex.find(text) ?: return@on
 
-            val type0 = ISlayerType.Companion.Names.map[match.groups["type"]?.value ?: ""]
-            val tier0 = SlayerTier.find(match.groups["tier"]?.value ?: "")
+            val _type = match.groups["type"]?.value ?: return@on
+            val _tier = match.groups["tier"]?.value ?: return@on
+
+            val type0 = SlayerBoss.entries.firstOrNull { _type in it.names } ?: return@on
+            val tier0 = SlayerTier.find(_tier) ?: return@on
             val last = last
 
             mainThread {
