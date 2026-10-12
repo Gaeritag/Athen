@@ -71,7 +71,7 @@ object GenericSlayerBossResolver {
                 if (info.type !is SlayerBoss) continue
                 if (info.owner != null) continue
                 if (!info.entity.isAlive) continue
-                if (info.entity.tickCount > 20) continue
+                if (info.entity.tickCount > 60) continue
 
                 get(info, ModSettings.tickBossCheck)
             }
@@ -107,12 +107,10 @@ object GenericSlayerBossResolver {
         val active = SlayerAPI.bosses.values.filter { it.entity.isAlive && (it.type != SlayerBoss.Tarantula || it.phase != 1) }.mapNotNull { it.owner }
         val players = level.players().filter { it.valid(this, distance, active, p2, tick) }
 
-        return players.minByOrNull {
-            val distance = it.distanceTo(this)
-            val angle = angle(it)
+        val angles = players.associateWith { angle(it) }
+        val pool = angles.filter { it.value <= 15.0 }.ifEmpty { angles.filter { it.value <= 30.0 } }.ifEmpty { angles.filter { it.value <= 60.0 } }
 
-            distance + (angle / 90.0) * 2.0
-        }
+        return pool.minByOrNull { (v0, v1) -> v1 + (v0.distanceTo(this) * 0.3) }?.key
     }
 
     private fun Player.valid(boss: Entity, distance: Double, active: List<String>, p2: Boolean = false, tick: Boolean = false): Boolean {
