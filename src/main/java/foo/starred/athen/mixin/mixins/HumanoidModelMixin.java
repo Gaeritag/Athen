@@ -22,7 +22,7 @@ public abstract class HumanoidModelMixin {
         final int style = CustomScale.INSTANCE.getChibi();
         if (style == 0) return;
 
-        Entity entity = ((EntityRenderStateDuck) avatarState).athen$getEntity();
+        Entity entity = ((EntityRenderStateDuck) avatarState).athen$entity();
         if (entity == null) return;
         if (!CustomScale.fn(entity)) return;
 

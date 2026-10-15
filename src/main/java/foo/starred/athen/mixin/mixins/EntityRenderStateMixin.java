@@ -12,12 +12,12 @@ public class EntityRenderStateMixin implements EntityRenderStateDuck {
     private Entity athen$entity;
 
     @Override
-    public Entity athen$getEntity() {
+    public Entity athen$entity() {
         return this.athen$entity;
     }
 
     @Override
-    public void athen$setEntity(Entity entity) {
+    public void athen$entity(Entity entity) {
         this.athen$entity = entity;
     }
 }

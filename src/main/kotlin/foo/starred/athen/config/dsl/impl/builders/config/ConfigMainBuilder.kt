@@ -8,13 +8,13 @@ import foo.starred.athen.modules.Module
 import foo.starred.snowbird.api.data.Observable
 
 class ConfigMainBuilder(
-    val configKey: String,
+    val key: String,
     name: String,
     description: String,
     category: ConfigCategory,
-    private val default: Boolean = false
+    val default: Boolean = false,
 ) : ConfigScope {
-    val feature = ConfigManager.feature(name, description, category, configKey, default)
+    val feature = ConfigManager.feature(name, description, category, key, default)
     val state = Observable(default)
 
     override val builder: ConfigMainBuilder
@@ -27,9 +27,9 @@ class ConfigMainBuilder(
         internal set
 
     init {
-        Athen.LOGGER.debug("Feature added for {}: {}", configKey, feature)
+        Athen.LOGGER.debug("Feature added for {}: {}", key, feature)
 
-        ConfigManager.observe(configKey) {
+        ConfigManager.observe(key) {
             state.value = it as? Boolean ?: default
         }
     }

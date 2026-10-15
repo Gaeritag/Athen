@@ -27,7 +27,7 @@ class ConfigOptionBuilder<T>(
         private set
 
     fun unique(key: String): ConfigOptionBuilder<T> {
-        this.key = "${builder.configKey}.$key"
+        this.key = "${builder.key}.$key"
         fn()
         return this
     }
@@ -37,7 +37,7 @@ class ConfigOptionBuilder<T>(
     }
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ReadOnlyProperty<Any?, T> {
-        if (!::key.isInitialized) key = "${builder.configKey}.${property.name}"
+        if (!::key.isInitialized) key = "${builder.key}.${property.name}"
         fn()
         return this
     }

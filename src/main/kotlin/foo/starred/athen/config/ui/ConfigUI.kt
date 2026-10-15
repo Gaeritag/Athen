@@ -307,7 +307,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
             "/athen irc help" to "View all IRC commands"
         )
 
-        for ((c, d) in commands) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".parse().lie()
+        for ((c, d) in commands) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".lie()
 
         divider.lie()
     }

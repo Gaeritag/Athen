@@ -60,7 +60,7 @@ public abstract class LivingEntityRendererMixin {
         if (!(state instanceof EndermanRenderState)) return;
         if (!EndermanPhaseColor.INSTANCE.getEnabled()) return;
 
-        Entity entity = ((EntityRenderStateDuck) state).athen$getEntity();
+        Entity entity = ((EntityRenderStateDuck) state).athen$entity();
         if (entity == null) return;
 
         Integer color = EndermanPhaseColor.get(entity);
@@ -74,7 +74,7 @@ public abstract class LivingEntityRendererMixin {
         if (!(state instanceof EndermanRenderState)) return;
         if (!EndermanPhaseColor.INSTANCE.getEnabled()) return;
 
-        Entity entity = ((EntityRenderStateDuck) state).athen$getEntity();
+        Entity entity = ((EntityRenderStateDuck) state).athen$entity();
         if (entity == null) return;
 
         Integer color = EndermanPhaseColor.get(entity);

@@ -236,20 +236,20 @@ object IRC : Module(
         val c = MochaColorScheme.Green.argb
 
         a.lie()
-        ("<red>" + ("Athen IRC".center())).parse().lie()
+        ("<red>" + ("Athen IRC".center())).lie()
         a.lie()
 
-        " <dark_gray>- <$c>/athen irc create [channel] [pin <gray>- optional<$c>]".parse().lie()
-        " <dark_gray>- <$c>/athen irc join [channel] [pin <gray>- optional<$c>]".parse().lie()
-        " <dark_gray>- <$c>/athen irc leave <gray>- leave channel".parse().lie()
-        " <dark_gray>- <$c>/athen irc pin [pin] <gray>- sets a pin".parse().lie()
-        " <dark_gray>- <$c>/athen irc chat [message]".parse().lie()
-        " <dark_gray>- <$c>/athen irc list <gray>- list channels".parse().lie()
+        " <dark_gray>- <$c>/athen irc create [channel] [pin <gray>- optional<$c>]".lie()
+        " <dark_gray>- <$c>/athen irc join [channel] [pin <gray>- optional<$c>]".lie()
+        " <dark_gray>- <$c>/athen irc leave <gray>- leave channel".lie()
+        " <dark_gray>- <$c>/athen irc pin [pin] <gray>- sets a pin".lie()
+        " <dark_gray>- <$c>/athen irc chat [message]".lie()
+        " <dark_gray>- <$c>/athen irc list <gray>- list channels".lie()
 
         a.lie()
 
-        " <dark_gray>- <$c>/airc [message] <gray>- send message alias".parse().lie()
-        " <dark_gray>- <$c>/airc toggle <gray>- send all messages to irc".parse().lie()
+        " <dark_gray>- <$c>/airc [message] <gray>- send message alias".lie()
+        " <dark_gray>- <$c>/airc toggle <gray>- send all messages to irc".lie()
 
         a.lie()
     }

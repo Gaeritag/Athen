@@ -116,8 +116,8 @@ object ColoredEnchants : Module(
                 val map = Gson().fromJson<Map<String, Any>>(clipboard.decompress(), Map::class.java)
 
                 for ((k, v) in map) when (k) {
-                    $$"ultimate$color", $$"max$color", $$"high$color", $$"normal$color", $$"bad$color" -> update("$configKey.$k", (v as Double).toInt())
-                    $$"ultimate$style", $$"max$style", $$"high$style", $$"normal$style", $$"bad$style" -> update("$configKey.$k", (v as List<Double>).map { it.toInt() })
+                    $$"ultimate$color", $$"max$color", $$"high$color", $$"normal$color", $$"bad$color" -> update("$_key.$k", (v as Double).toInt())
+                    $$"ultimate$style", $$"max$style", $$"high$style", $$"normal$style", $$"bad$style" -> update("$_key.$k", (v as List<Double>).map { it.toInt() })
                     "replaceRoman" -> update(k, v as Boolean)
                 }
 

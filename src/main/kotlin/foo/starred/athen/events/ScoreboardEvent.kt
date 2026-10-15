@@ -4,11 +4,6 @@ import foo.starred.athen.events.core.AthenEvent
 import net.minecraft.network.chat.Component
 
 sealed class ScoreboardEvent {
-    data class UpdateTitle(
-        val old: String?,
-        val new: String
-    ) : AthenEvent()
-
     data class Update(
         val old: List<String>,
         val new: List<String>,

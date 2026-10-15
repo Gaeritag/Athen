@@ -13,7 +13,6 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.regex
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.name
-import foo.starred.snowbird.api.text.parser.impl.parse
 import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 
 @Load
@@ -60,13 +59,13 @@ object KuudraBreakdown : Module(
                     val a = " • <yellow>${p.name} <gray>- <red>${p.supply} <r>Supplies <gray>| <red>${p.fuel} <r>Fuels <gray>| <red>${p.deaths ?: "???"} <r>Deaths"
                     val b = "<hover:<red>${p.stun} <r>Stuns>"
 
-                    if (p.stun > 0) "$b$a".parse().lie() else a.parse().lie()
+                    if (p.stun > 0) "$b$a".lie() else a.lie()
                 }
 
                 val total = set.sumOf { it.fresh }
 
-                if (fresh.isNotEmpty()) " • <hover:${fresh.joinToString("\n")}><orange>Freshens: <red>$total".parse().lie()
-                else " • <orange>Freshens: <red>$total".parse().lie()
+                if (fresh.isNotEmpty()) " • <hover:${fresh.joinToString("\n")}><orange>Freshens: <red>$total".lie()
+                else " • <orange>Freshens: <red>$total".lie()
 
                 return@on
             }

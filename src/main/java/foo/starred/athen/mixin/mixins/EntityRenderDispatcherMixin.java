@@ -19,12 +19,12 @@ public class EntityRenderDispatcherMixin {
     @Inject(method = "extractEntity", at = @At("RETURN"))
     private void athen$extractEntity(Entity entity, float partialTicks, CallbackInfoReturnable<EntityRenderState> cir) {
         EntityRenderState renderState = cir.getReturnValue();
-        ((EntityRenderStateDuck) renderState).athen$setEntity(entity);
+        ((EntityRenderStateDuck) renderState).athen$entity(entity);
     }
 
     @Inject(method = "submit", at = @At("HEAD"), cancellable = true)
     private void athen$submit$pre(EntityRenderState renderState, CameraRenderState camera, double x, double y, double z, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CallbackInfo ci) {
-        Entity entity = ((EntityRenderStateDuck) renderState).athen$getEntity();
+        Entity entity = ((EntityRenderStateDuck) renderState).athen$entity();
         if (new WorldRenderEvent.Entity(renderState, poseStack, camera, entity).post()) ci.cancel();
     }
 }

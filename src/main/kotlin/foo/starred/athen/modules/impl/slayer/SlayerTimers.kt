@@ -123,12 +123,12 @@ object SlayerTimers : Module(
                     if (!f) b1.lie()
                     f = false
 
-                    "<aqua>✦ ${type.str()}".parse().lie()
+                    "<aqua>✦ ${type.str()}".lie()
 
                     val b = a[type]?.sortedBy { it.key } ?: return@invoke
                     for ((k, d) in b) {
                         val tier = k.substringAfterLast("_")
-                        "  • <red>$tier<r>: <green>${d.toDuration(secondsDecimals = 1)}".parse().lie()
+                        "  • <red>$tier<r>: <green>${d.toDuration(secondsDecimals = 1)}".lie()
                     }
                 }
 

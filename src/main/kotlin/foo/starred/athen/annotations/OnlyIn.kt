@@ -8,7 +8,6 @@ import foo.starred.snowbird.api.ALWAYS_TRUE
 import foo.starred.snowbird.api.data.Observable
 import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
@@ -20,7 +19,7 @@ annotation class OnlyIn(
 ) {
     companion object {
         fun get(klass: KClass<*>): Observable<Boolean> {
-            val self = klass.findAnnotation<OnlyIn>() ?: return ALWAYS_TRUE
+            val self = klass.java.getAnnotation(OnlyIn::class.java) ?: return ALWAYS_TRUE
 
             return when {
                 self.floors.isNotEmpty() -> DungeonAPI.floor.map { it in self.floors }

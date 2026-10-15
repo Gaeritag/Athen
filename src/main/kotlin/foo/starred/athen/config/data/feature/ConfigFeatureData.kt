@@ -7,7 +7,7 @@ import foo.starred.athen.config.data.impl.*
 data class ConfigFeatureData(
     val name: String,
     val description: String,
-    val configKey: String,
+    val key: String,
     val default: Any?
 ) {
     val options = mutableListOf<IConfigElementData>()
@@ -33,11 +33,13 @@ data class ConfigFeatureData(
         }
     }
 
-    fun all(): List<String> = listOf(configKey) + options.flatMap {
-        when (it) {
-            is ConfigButtonElementData, is ConfigGroupElementData, is ConfigVariablesElementData, is ConfigInformationElementData -> emptyList()
-            is ConfigHudElementData -> listOf(it.key, "${it.key}.x", "${it.key}.y", "${it.key}.scale")
-            else -> listOf(it.key)
+    fun all(): List<String> {
+        return listOf(key) + options.flatMap {
+            when (it) {
+                is ConfigButtonElementData, is ConfigGroupElementData, is ConfigVariablesElementData, is ConfigInformationElementData -> emptyList()
+                is ConfigHudElementData -> listOf(it.key, "${it.key}.x", "${it.key}.y", "${it.key}.scale")
+                else -> listOf(it.key)
+            }
         }
     }
 

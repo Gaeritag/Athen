@@ -41,7 +41,7 @@ object TerminalSimulator : Module(
             if (!it) return@observe
 
             "Run \"/athen simulate terminals ping <ping>\" to change ping!".mod()
-            ConfigManager.update(configKey, false)
+            ConfigManager.update(_key, false)
         }
 
         command {
@@ -50,7 +50,7 @@ object TerminalSimulator : Module(
             }
 
             "simulate" / "terminals" / "ping" / int("int") {
-                ConfigManager.update("$configKey.ping", int("int").toString())
+                ConfigManager.update("$_key.ping", int("int").toString())
                 "Ping set to ${ping}ms".mod()
             }
 

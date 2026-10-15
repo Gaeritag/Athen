@@ -60,23 +60,23 @@ interface ConfigScope {
     }
 
     fun button(text: String, onClick: () -> Unit): ConfigOptionBuilder<String> {
-        return option(text, ConfigButtonElementData(text, "${builder.configKey}.button_${text.hashCode()}", onClick))
+        return option(text, ConfigButtonElementData(text, "${builder.key}.button_${text.hashCode()}", onClick))
     }
 
     fun variables(vararg tokens: String): ConfigOptionBuilder<List<String>> {
-        return option(tokens.toList(), ConfigVariablesElementData("Variables", "${builder.configKey}.variables_${tokens.joinToString().hashCode()}", tokens.toList()))
+        return option(tokens.toList(), ConfigVariablesElementData("Variables", "${builder.key}.variables_${tokens.joinToString().hashCode()}", tokens.toList()))
     }
 
     fun variables(name: String, tokens: List<String>): ConfigOptionBuilder<List<String>> {
-        return option(tokens, ConfigVariablesElementData(name, "${builder.configKey}.variables_${name.hashCode()}_${tokens.joinToString().hashCode()}", tokens))
+        return option(tokens, ConfigVariablesElementData(name, "${builder.key}.variables_${name.hashCode()}_${tokens.joinToString().hashCode()}", tokens))
     }
 
     fun information(text: String): ConfigOptionBuilder<String> {
-        return option(text, ConfigInformationElementData("Information", "${builder.configKey}.info_${text.hashCode()}", text))
+        return option(text, ConfigInformationElementData("Information", "${builder.key}.info_${text.hashCode()}", text))
     }
 
     fun information(name: String, text: String): ConfigOptionBuilder<String> {
-        return option(text, ConfigInformationElementData(name, "${builder.configKey}.info_${name.hashCode()}_${text.hashCode()}", text))
+        return option(text, ConfigInformationElementData(name, "${builder.key}.info_${name.hashCode()}_${text.hashCode()}", text))
     }
 
     fun <T> option(default: T, data: IConfigElementData): ConfigOptionBuilder<T> {

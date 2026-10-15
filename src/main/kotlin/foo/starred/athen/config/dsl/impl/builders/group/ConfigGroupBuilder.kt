@@ -24,7 +24,7 @@ class ConfigGroupBuilder(
         private set
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ReadOnlyProperty<Any?, ConfigGroupBuilder> {
-        key = "${builder.configKey}.expandable_${property.name}"
+        key = "${builder.key}.expandable_${property.name}"
 
         val data = ConfigGroupElementData(name, key, collapsed, super<ElementBuilder>.parent, description)
         builder.feature.option(data)

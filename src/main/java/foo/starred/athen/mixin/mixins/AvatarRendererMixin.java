@@ -23,7 +23,7 @@ public class AvatarRendererMixin {
     private void athen$scale(AvatarRenderState state, PoseStack poseStack, CallbackInfo ci) {
         if (!CustomScale.INSTANCE.getEnabled()) return;
 
-        final Entity entity = ((EntityRenderStateDuck) state).athen$getEntity();
+        Entity entity = ((EntityRenderStateDuck) state).athen$entity();
         if (entity == null) return;
         if (!CustomScale.fn(entity)) return;
 

@@ -27,7 +27,6 @@ import foo.starred.snowbird.api.command
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.network.data.HttpRequest
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.literal
 import foo.starred.snowbird.utils.toDuration
 import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
@@ -218,7 +217,7 @@ object DungeonCarryTracker : Module(
         "§bAthen Dungeon Carry Commands".center().lie()
         divider.lie()
 
-        for ((c, d) in commands) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".parse().lie()
+        for ((c, d) in commands) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".lie()
 
         divider.lie()
     }

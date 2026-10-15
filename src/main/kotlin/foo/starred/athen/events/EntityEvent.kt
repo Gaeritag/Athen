@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attribute
+import net.minecraft.world.entity.decoration.ArmorStand
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEvent
 
 sealed class EntityEvent {
@@ -33,7 +34,7 @@ sealed class EntityEvent {
 
         data class Named(
             val component: Component,
-            val entity: Entity
+            val entity: ArmorStand
         ) : AthenEvent() {
             val stripped: String =
                 component.stripped()

@@ -137,13 +137,13 @@ object VisualWords : Module(
         divider.lie()
         "§bVisual Words §7[Athen]".center().lie()
         divider.lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals add [word] [word, supports space]".parse().lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals set [word] [word, supports space]".parse().lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals remove [word]".parse().lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals list".parse().lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals add [word] [word, supports space]".lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals set [word] [word, supports space]".lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals remove [word]".lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals list".lie()
         divider.lie()
         " <dark_gray>• <r>The text supports the format: ".parse().append("<hex><bold>te</bold>xt").lie()
-        " <hover:<${MochaColorScheme.Mauve.argb}>Click to join!><click:url:${ModWrapper.discord}><dark_gray>• <r>Want to know more about formats? Ask in the <${MochaColorScheme.Mauve.argb}>discord<r>!".parse().lie()
+        " <hover:<${MochaColorScheme.Mauve.argb}>Click to join!><click:url:${ModWrapper.discord}><dark_gray>• <r>Want to know more about formats? Ask in the <${MochaColorScheme.Mauve.argb}>discord<r>!".lie()
         divider.lie()
     }
 

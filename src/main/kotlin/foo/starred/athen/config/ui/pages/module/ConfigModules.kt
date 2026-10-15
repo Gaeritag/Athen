@@ -75,7 +75,7 @@ object ConfigModules {
         for (v in features) {
             val above = last
             val selected = active == v
-            var enabled = ConfigManager.get(v.configKey) as? Boolean ?: (v.default as? Boolean ?: false)
+            var enabled = ConfigManager.get(v.key) as? Boolean ?: (v.default as? Boolean ?: false)
 
             val row = roundedRectangle {
                 position = if (above == null) FixedPositionConstraint(6f, 6f) else AnchorPositionConstraint({ above }, PositionAnchor.BELOW)
@@ -126,7 +126,7 @@ object ConfigModules {
                         cancel()
 
                         enabled = !enabled
-                        ConfigManager.update(v.configKey, enabled)
+                        ConfigManager.update(v.key, enabled)
 
                         if (!selected) {
                             animate(150.milliseconds) {

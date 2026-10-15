@@ -20,7 +20,7 @@ public class GuardianRendererMixin {
     private void athen$submit(GuardianRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, CallbackInfo ci) {
         if (!EndermanLaserHider.INSTANCE.getEnabled()) return;
 
-        final Guardian a = (Guardian) ((EntityRenderStateDuck) state).athen$getEntity();
+        final Guardian a = (Guardian) ((EntityRenderStateDuck) state).athen$entity();
         if (a == null) return;
 
         final int b = ((GuardianDuck) a).athen$hide();

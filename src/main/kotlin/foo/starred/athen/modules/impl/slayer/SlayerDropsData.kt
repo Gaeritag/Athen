@@ -105,7 +105,7 @@ object SlayerDropsData : Module(
             val i1 = xp ?: return@on
             val i2 = l.drop.xp ?: return@on
             val c0 = fn(i1, i2, l.drop.chance)
-            "   <dark-gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c0)} <dark_gray>[✯$mf]".parse().lie()
+            "   <dark-gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c0)} <dark_gray>[✯$mf]".lie()
         }
 
         on<MessageEvent.Chat.Intercept> {
@@ -123,11 +123,11 @@ object SlayerDropsData : Module(
             val r2 = "%.2f".format(i1.toDouble() / i2.toDouble() * 100)
 
             cancel()
-            "   <pink>RNG Meter <r>- <pink>$i0<gray>/<pink>${i2.formatted()} XP <dark_gray>[<gray>$r0<dark_gray>/<gray>$r1 <dark_gray>| <gray>$r2%<dark_gray>]".parse().lie()
+            "   <pink>RNG Meter <r>- <pink>$i0<gray>/<pink>${i2.formatted()} XP <dark_gray>[<gray>$r0<dark_gray>/<gray>$r1 <dark_gray>| <gray>$r2%<dark_gray>]".lie()
 
             if (!last) return@on
             val c = fn(i1, i2, l.drop.chance)
-            "   <dark_gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c)}% <dark_gray>[✯$mf]".parse().lie()
+            "   <dark_gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c)}% <dark_gray>[✯$mf]".lie()
         }
     }
 

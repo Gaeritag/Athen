@@ -145,15 +145,15 @@ object ProtectItems : Module(
                 a.lie()
 
                 "Protected UUIDs:".mod()
-                for (u in uuids.value) " <dark_gray>- <gray>$u".parse().lie()
+                for (u in uuids.value) " <dark_gray>- <gray>$u".lie()
                 a.lie()
 
                 "Protected SkyBlock IDs:".mod()
-                for (t in types0.value) " <dark_gray>- <gray>$t".parse().lie()
+                for (t in types0.value) " <dark_gray>- <gray>$t".lie()
                 a.lie()
 
                 "Protected IDs:".mod()
-                for (t in types.value) " <dark_gray>- <gray>$t".parse().lie()
+                for (t in types.value) " <dark_gray>- <gray>$t".lie()
                 a.lie()
 
                 if (!enabled) "Please turn on the feature \"ProtectItems\"".mod()

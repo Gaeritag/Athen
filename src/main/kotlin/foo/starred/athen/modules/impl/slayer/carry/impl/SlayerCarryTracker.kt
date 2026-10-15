@@ -156,7 +156,7 @@ object SlayerCarryTracker : Module(
 
                 "Currently tracking:".mod()
                 for (k in tracked.value) {
-                    " <dark_gray>- <aqua>${k.name} <gray>[${k.type.short}${k.tier?.let { " T${it.int}" } ?: " Any"}] <yellow>${k.done}/${k.max}".parse().lie()
+                    " <dark_gray>- <aqua>${k.name} <gray>[${k.type.short}${k.tier?.let { " T${it.int}" } ?: " Any"}] <yellow>${k.done}/${k.max}".lie()
                 }
             }
 
@@ -181,7 +181,7 @@ object SlayerCarryTracker : Module(
 
                 val e1 = e0.take(10)
                 for (e in e1) {
-                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".parse().lie()
+                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".lie()
                 }
 
                 val hover = buildString {
@@ -218,7 +218,7 @@ object SlayerCarryTracker : Module(
                 for (i in start until end) {
                     val e = list[i]
 
-                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".parse().lie()
+                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".lie()
                 }
 
                 val hover = buildString {
@@ -391,10 +391,10 @@ object SlayerCarryTracker : Module(
         val c = ("<dark_gray>" + ("-".repeat())).parse()
 
         c.lie()
-        ("<aqua>" + ("Athen Slayer Carry".center())).parse().lie()
+        ("<aqua>" + ("Athen Slayer Carry".center())).lie()
         c.lie()
 
-        for ((c, d) in b) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".parse().lie()
+        for ((c, d) in b) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".lie()
 
         c.lie()
     }

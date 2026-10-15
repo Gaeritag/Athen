@@ -131,11 +131,11 @@ object KuudraSplits : Module(
                 for (s in splits) {
                     val pb = pbs[s]?.toDurationFromMillis(secondsDecimals = 1) ?: continue
                     val type = if (s == KuudraPhase.Fuel && tier >= KuudraTier.BURNING.int) "eaten" else null
-                    " <dark_gray>• <red>${s.str(type)}<r>: $pb".parse().lie()
+                    " <dark_gray>• <red>${s.str(type)}<r>: $pb".lie()
                 }
 
                 val overall = PB.get(tier, null).toDurationFromMillis(secondsDecimals = 1)
-                " <dark_gray>• <red>Overall<r>: $overall".parse().lie()
+                " <dark_gray>• <red>Overall<r>: $overall".lie()
             }
         }
 
@@ -166,7 +166,7 @@ object KuudraSplits : Module(
                     val t1 = (s.durTicks / 20.0).toDuration(secondsDecimals = 1)
                     val delta = pBs[s].let { if (it != null && it > 0) s.durTime - it else Long.MAX_VALUE }.strD()
 
-                    " <dark_gray>• <red>${s.str()}<r>: $t0 <gray>[$t1]$delta".parse().lie()
+                    " <dark_gray>• <red>${s.str()}<r>: $t0 <gray>[$t1]$delta".lie()
                 }
 
                 val d0 = splits.sumOf { it.durTime }
@@ -176,7 +176,7 @@ object KuudraSplits : Module(
                 val t0 = d0.toDurationFromMillis(secondsDecimals = 1)
                 val t1 = d1.toDuration(secondsDecimals = 1)
 
-                " <dark_gray>• <red>Overall<r>: $t0 <gray>[$t1]$str".parse().lie()
+                " <dark_gray>• <red>Overall<r>: $t0 <gray>[$t1]$str".lie()
             }
         }
     }

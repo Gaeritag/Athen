@@ -65,20 +65,20 @@ object Athen : ClientModInitializer {
 
         val divider = ("<dark_gray><strikethrough>" + "-".repeat()).parse()
         divider.lie()
-        ("<${MochaColorScheme.Lavender.argb}>" + "Athen".center()).parse().lie()
+        ("<${MochaColorScheme.Lavender.argb}>" + "Athen".center()).lie()
         divider.lie()
-        "<gray>Thank you for installing Athen <dark_gray>(v${ModWrapper.version})<gray>.".parse().lie()
+        "<gray>Thank you for installing Athen <dark_gray>(v${ModWrapper.version})<gray>.".lie()
         EMPTY_COMPONENT.lie()
-        "<gray>Quick Start:".parse().lie()
-        "  <aqua>/athen config <gray>- Open configuration menu".parse().lie()
-        "  <aqua>/athen hud <gray>- Position HUD elements".parse().lie()
-        "  <aqua>/athen help <gray>- View all commands".parse().lie()
+        "<gray>Quick Start:".lie()
+        "  <aqua>/athen config <gray>- Open configuration menu".lie()
+        "  <aqua>/athen hud <gray>- Position HUD elements".lie()
+        "  <aqua>/athen help <gray>- View all commands".lie()
         EMPTY_COMPONENT.lie()
 
-        "<hover:<${MochaColorScheme.Lavender.argb}>Click to join!><click:url:${ModWrapper.discord}><gray>Need help? Click to join our Discord!".parse().lie()
+        "<hover:<${MochaColorScheme.Lavender.argb}>Click to join!><click:url:${ModWrapper.discord}><gray>Need help? Click to join our Discord!".lie()
 
         divider.lie()
-        "<gray><hover:<green>Click to open page!><click:url:https://patreon.com/starredskies>Want to help support the development for mods like Athen? Click here to open the Patreon :3".parse().lie()
+        "<gray><hover:<green>Click to open page!><click:url:https://patreon.com/starredskies>Want to help support the development for mods like Athen? Click here to open the Patreon :3".lie()
         divider.lie()
     }
 

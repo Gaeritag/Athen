@@ -27,9 +27,9 @@ object ConfigManager {
         }
     }
 
-    fun feature(name: String, description: String, category: ConfigCategory, configKey: String, default: Any?): ConfigFeatureData {
-        val feature = ConfigFeatureData(name, description, configKey, default).also { features.getOrPut(category) { mutableListOf() }.add(it) }
-        return feature.also { it.default(configKey, default) }
+    fun feature(name: String, description: String, category: ConfigCategory, key: String, default: Any?): ConfigFeatureData {
+        val feature = ConfigFeatureData(name, description, key, default).also { features.getOrPut(category) { mutableListOf() }.add(it) }
+        return feature.also { it.default(key, default) }
     }
 
     fun update(key: String, value: Any) {

@@ -126,7 +126,7 @@ object MobHighlight : Module(
                 a.lie()
 
                 for (b in e0.value) {
-                    " <dark_gray>- <gray>${b.name}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}".parse().lie()
+                    " <dark_gray>- <gray>${b.name}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}".lie()
                 }
 
                 a.lie()
@@ -140,7 +140,7 @@ object MobHighlight : Module(
                 a.lie()
 
                 for (b in e1.value) {
-                    " <dark_gray>- <gray>${b.type}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}".parse().lie()
+                    " <dark_gray>- <gray>${b.type}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}".lie()
                 }
 
                 a.lie()
@@ -151,13 +151,13 @@ object MobHighlight : Module(
                 val c = MochaColorScheme.Green.argb
 
                 a.lie()
-                ("<red>" + ("Athen Higlights".center())).parse().lie()
+                ("<red>" + ("Athen Higlights".center())).lie()
                 a.lie()
 
-                " <dark_gray>- <$c>/athen highlight add [named | typed] <color> <maxHp - optional> <name | type>".parse().lie()
-                " <dark_gray>- <$c>/athen highlight remove [named | typed] <name | type>".parse().lie()
-                " <dark_gray>- <$c>/athen highlight list [named | typed]".parse().lie()
-                " <dark_gray>- <$c>/athen highlight [gui - optional]".parse().lie()
+                " <dark_gray>- <$c>/athen highlight add [named | typed] <color> <maxHp - optional> <name | type>".lie()
+                " <dark_gray>- <$c>/athen highlight remove [named | typed] <name | type>".lie()
+                " <dark_gray>- <$c>/athen highlight list [named | typed]".lie()
+                " <dark_gray>- <$c>/athen highlight [gui - optional]".lie()
 
                 a.lie()
             }

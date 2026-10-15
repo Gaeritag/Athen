@@ -22,7 +22,7 @@ public class ItemEntityRendererMixin {
     private void athen$submit(ItemEntityRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, CallbackInfo ci) {
         if (!BigSlayerDrops.INSTANCE.getEnabled()) return;
 
-        final Entity a = ((EntityRenderStateDuck) state).athen$getEntity();
+        final Entity a = ((EntityRenderStateDuck) state).athen$entity();
         if (a == null) return;
         if (!(a instanceof ItemEntity b)) return;
 

@@ -77,15 +77,10 @@ public abstract class EntityMixin implements EntityDuck {
     private Entity athen$attachedTo;
 
     @Unique
-    private SlayerCarryPlayer carry;
+    private SlayerCarryPlayer athen$feat$carry;
 
     @Unique
     private int athen$ticks = 20;
-
-    @Unique
-    private Entity self() {
-        return (Entity) (Object) this;
-    }
 
     @Override
     public @NotNull List<WeakReference<Entity>> athen$attachments() {
@@ -105,40 +100,40 @@ public abstract class EntityMixin implements EntityDuck {
 
     @Override
     public SlayerCarryPlayer athen$feat$carry$boss() {
-        return carry;
+        return athen$feat$carry;
     }
 
     @Override
     public void athen$feat$carry$boss(SlayerCarryPlayer a) {
-        carry = a;
+        athen$feat$carry = a;
     }
 
     @Inject(method = "setCustomName", at = @At("RETURN"))
     private void athen$setCustomName(Component name, CallbackInfo ci) {
-        Entity entity = self();
+        Entity entity = athen$self();
 
         if (name == null) return;
-        if (!(entity instanceof ArmorStand)) return;
+        if (!(entity instanceof ArmorStand stand)) return;
 
-        new EntityEvent.Update.Named(name, entity).post();
+        new EntityEvent.Update.Named(name, stand).post();
     }
 
     @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("TAIL"))
     private void athen$onSyncedDataUpdated(EntityDataAccessor<?> accessor, CallbackInfo ci) {
-        Entity entity = self();
+        Entity entity = athen$self();
 
-        if (!(entity instanceof ArmorStand)) return;
+        if (!(entity instanceof ArmorStand stand)) return;
         if (accessor != DATA_CUSTOM_NAME) return;
 
         Component component = getCustomName();
         if (component == null) return;
 
-        new EntityEvent.Update.Named(component, entity).post();
+        new EntityEvent.Update.Named(component, stand).post();
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void athen$tick(CallbackInfo ci) {
-        Entity entity = self();
+        Entity entity = athen$self();
 
         if (athen$ticks-- > 0) return;
         athen$ticks = 20;
@@ -161,11 +156,18 @@ public abstract class EntityMixin implements EntityDuck {
     private void athen$remove(Entity.RemovalReason reason, CallbackInfo ci) {
         if (!(athen$attachedTo instanceof EntityDuck acc)) return;
 
-        acc.athen$attachments().removeIf(ref -> ref.get() == self());
+        acc.athen$attachments().removeIf(ref -> ref.get() == athen$self());
     }
 
     @Inject(method = "isCurrentlyGlowing", at = @At("HEAD"), cancellable = true)
     private void athen$isCurrentlyGlowing(CallbackInfoReturnable<Boolean> cir) {
-        if (RenderOptimiser.getGlow()) cir.setReturnValue(false);
+        if (!RenderOptimiser.getGlow()) return;
+
+        cir.setReturnValue(false);
+    }
+
+    @Unique
+    private Entity athen$self() {
+        return (Entity) (Object) this;
     }
 }

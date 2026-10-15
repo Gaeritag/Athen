@@ -61,7 +61,7 @@ object EntityAPI {
         }
 
         on<EntityEvent.Update.Named> {
-            attach(entity as? ArmorStand ?: return@on)
+            attach(entity)
         }
     }
 

@@ -53,13 +53,13 @@ class ConfigHudBuilder(
     }
 
     fun unique(key: String): ConfigHudBuilder {
-        this.key = "${builder.configKey}.$key"
+        this.key = "${builder.key}.$key"
         register()
         return this
     }
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ReadOnlyProperty<Any?, ConfigHudBuilder> {
-        if (!::key.isInitialized) key = "${builder.configKey}.${property.name}"
+        if (!::key.isInitialized) key = "${builder.key}.${property.name}"
         register()
         return this
     }
@@ -72,7 +72,7 @@ class ConfigHudBuilder(
         if (bool) return
 
         bool = true
-        if (!::key.isInitialized) key = "${builder.configKey}.${name.toCamelCase()}"
+        if (!::key.isInitialized) key = "${builder.key}.${name.toCamelCase()}"
 
         coordinate.x = (ConfigManager.get("$key.x") as? Number)?.toFloat() ?: 20f
         coordinate.y = (ConfigManager.get("$key.y") as? Number)?.toFloat() ?: 20f

@@ -29,7 +29,6 @@ import foo.starred.snowbird.api.data.Observable
 import foo.starred.snowbird.api.inputs.impl.MouseInputState
 import foo.starred.snowbird.api.lie
 import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.text.parser.impl.parse
 import foo.starred.snowbird.utils.compress
 import foo.starred.snowbird.utils.decompress
 import foo.starred.snowbird.utils.literal
@@ -394,11 +393,11 @@ object RadialMenu : Module(
         divider.lie()
         "§bRadial Menu §7[Athen]".center().lie()
         divider.lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen radial edit <gray>- Opens editor".parse().lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen import radial <gray>- Imports config from clipboard".parse().lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen export radial <gray>- Exports current config to clipboard".parse().lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen radial edit <gray>- Opens editor".lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen import radial <gray>- Imports config from clipboard".lie()
+        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen export radial <gray>- Exports current config to clipboard".lie()
         divider.lie()
-        "Want to explore <red>presets<r>? Join the <hover:<red>Click to join!><click:url:${ModWrapper.discord}><${MochaColorScheme.Lavender.argb}>discord!".parse().lie()
+        "Want to explore <red>presets<r>? Join the <hover:<red>Click to join!><click:url:${ModWrapper.discord}><${MochaColorScheme.Lavender.argb}>discord!".lie()
         divider.lie()
     }
 

@@ -8,7 +8,6 @@ import tech.thatgravyboat.skyblockapi.api.SkyBlockAPI
 import tech.thatgravyboat.skyblockapi.api.events.base.Subscription
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityAttributesUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.entity.EntityEquipmentUpdateEvent
-import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardTitleUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.ScoreboardUpdateEvent
 import tech.thatgravyboat.skyblockapi.api.events.info.TabListChangeEvent
 import tech.thatgravyboat.skyblockapi.api.events.minecraft.sounds.SoundPlayedEvent
@@ -23,11 +22,6 @@ object SkyblockEventDispatcher {
     @Subscription
     fun onTabListChange(event: TabListChangeEvent) {
         TabListEvent.Change(event.old, event.new).post()
-    }
-
-    @Subscription
-    fun onScoreboardTitleUpdate(event: ScoreboardTitleUpdateEvent) {
-        ScoreboardEvent.UpdateTitle(event.old, event.new).post()
     }
 
     @Subscription
