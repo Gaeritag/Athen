@@ -54,7 +54,6 @@ object SlayerCarryTracker : Module(
     private val `announce$comp$party` by config.switch("Announce in party", true)
     private val `announce$spawn` by config.switch("Show spawn message", true)
 
-    @Suppress("unused")
     private val _manager by config.button("Open manager") { SlayerCarryGUI.open() }
 
     private val _webhook by config.group("Discord webhook")
@@ -84,8 +83,8 @@ object SlayerCarryTracker : Module(
     private val deathRegex = Regex("^ ☠ (?<player>\\w+) was killed by (?<killer>.+)\\.$")
 
     private val json = JsonStore("features/slayerCarryTracker")
-    val tracked = json.mutableList("tracked", SlayerCarryPlayer.CODEC)
     private val history = json.mutableList("history", SlayerCarryHistory.CODEC)
+    val tracked = json.mutableList("tracked", SlayerCarryPlayer.CODEC)
 
     private val display = Ticking(5) {
         if (tracked.value.isEmpty()) return@Ticking null
@@ -115,190 +114,43 @@ object SlayerCarryTracker : Module(
     private var trader: String? = null
 
     init {
-        command {
-            "carry" / "add" / word("player").suggests { McClient.players.map { it.profile.name } } / int("amount", 1).suggests { listOf("1", "5", "10", "20") } / word("slayerType").suggests { SlayerBoss.SHORTS0 } / word("tier") {
-                val name = string("player")
-                val amount = int("amount")
-                val slayerType = string("slayerType").lowercase()
-                val t0 = string("tier")
-
-                if (tracked.value.any { it.name.equals(name, true) }) return@word "<red>$name is already being tracked.".mod()
-
-                val type = SlayerBoss.entries.find { it.short.lowercase() == slayerType } ?: return@word "Invalid slayer type.".mod()
-                val i0 = if (t0.equals("any", true)) null else t0.toIntOrNull() ?: return@word "Invalid tier.".mod()
-
-                if (i0 != null) {
-                    val i1 = type.max.int
-                    if (i0 !in 1..i1) return@word "<red>Tier must be 1-$i1 or any for $type.".mod()
-                }
-
-                val tier = SlayerTier.entries.find { it.int == i0 }
-                tracked.update { add(SlayerCarryPlayer(name, type, tier, amount)) }
-                "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] xathenmount!".mod()
-            }.suggests { listOf("any", "1", "2", "3", "4", "5") }
-
-            "carry" / "remove" / word("player") {
-                val name = string("player")
-                val bool = tracked.value.any { it.name.equals(name, true) }
-
-                if (!bool) {
-                    return@word "<red>$name is not being tracked.".mod()
-                }
-
-                tracked.update { removeIf { it.name.equals(name, true) } }
-                "<green>Removed <aqua>$name <green>from tracking.".mod()
-            }.suggests { tracked.value.map { it.name } }
-
-            "carry" / "list" {
-                if (tracked.value.isEmpty()) {
-                    return@invoke "<red>No active carries.".mod()
-                }
-
-                "Currently tracking:".mod()
-                for (k in tracked.value) {
-                    " <dark_gray>- <aqua>${k.name} <gray>[${k.type.short}${k.tier?.let { " T${it.int}" } ?: " Any"}] <yellow>${k.done}/${k.max}".lie()
-                }
-            }
-
-            "carry" / "list" / "clear" {
-                tracked.update { clear() }
-                "<green>Cleared all tracked carries.".mod()
-            }
-
-            "carry" / "history" {
-                if (history.value.isEmpty()) {
-                    return@invoke "<red>No carry history.".mod()
-                }
-
-                val e0 = history.value.asReversed()
-                val i0 = maxOf(1, (e0.size + 9) / 10)
-
-                val c = ("<dark_gray>" + ("-".repeat())).parse()
-                val green = MochaColorScheme.Green.argb
-
-                c.lie()
-                "Carry History <gray>(1/$i0)<r>:".mod()
-
-                val e1 = e0.take(10)
-                for (e in e1) {
-                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".lie()
-                }
-
-                val hover = buildString {
-                    val kv = e0.groupBy { "${it.type.short}${it.tier?.let { t -> " T${t.int}" } ?: " Any"}" }
-                    for ((i, k) in kv.entries.withIndex()) {
-                        if (i > 0) append('\n')
-                        append("<$green>${k.key}<r>: <aqua>${k.value.sumOf { it.amount }} <gray>carries across <aqua>${k.value.size} <gray>entries")
-                    }
-                }
-
-                c.lie()
-                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${e0.sumOf { it.amount }} <gray>across <$green>${e0.size} <gray>entries.".parse(true).lie()
-                c.lie()
-            }
-
-            "carry" / "history" / int("page", 1) {
-                val page = int("page")
-                val list = history.value.asReversed()
-
-                val c = ("<dark_gray>" + ("-".repeat())).parse()
-                val green = MochaColorScheme.Green.argb
-
-                val page0 = maxOf(1, (list.size + 9) / 10)
-                if (page > page0) {
-                    return@int "<red>Page must be 1-$page0.".mod()
-                }
-
-                val start = (page - 1) * 10
-                val end = minOf(start + 10, list.size)
-
-                c.lie()
-                "Carry History <gray>($page/$page0)<r>:".mod()
-
-                for (i in start until end) {
-                    val e = list[i]
-
-                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".lie()
-                }
-
-                val hover = buildString {
-                    val kv = list.groupBy { "${it.type.short}${it.tier?.let { t -> " T${t.int}" } ?: " Any"}" }
-                    for ((i, k) in kv.entries.withIndex()) {
-                        if (i > 0) append('\n')
-                        append("<$green>${k.key}<r>: <aqua>${k.value.sumOf { it.amount }} <gray>carries across <aqua>${k.value.size} <gray>entries")
-                    }
-                }
-
-                c.lie()
-                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${list.sumOf { it.amount }} <gray>across <$green>${list.size} <gray>entries.".parse(true).lie()
-                c.lie()
-            }.suggests { listOf("1", "2", "3", "4", "5") }
-
-            "carry" / "help" {
-                help()
-            }
-
-            "carry" {
-                SlayerCarryGUI.open()
-            }
-        }
-
         on<MessageEvent.Chat.Receive> {
             tradeCompleteRegex.findThenNull(stripped, "player") { (player) ->
                 trader = player
             } ?: return@on
 
-            coinsReceivedRegex.findThenNull(stripped, "amount") { (a) ->
-                val last = trader?.also { trader = null } ?: return@findThenNull
-                val a0 = a.toDoubleOrNull() ?: return@findThenNull
+            deathRegex.findThenNull(stripped, "player", "killer") { (player, killer) ->
+                val p = tracked.value.find { it.name == player } ?: return@findThenNull
+                if (p.boss != null) p.reset()
+            } ?: return@on
 
-                val list = mutableListOf<Triple<SlayerBoss, SlayerTier, Int>>()
-                for (b in SlayerBoss.entries) {
-                    val c = b.price ?: continue
+            if (trader == null) return@on
+            coinsReceivedRegex.findThenNull(stripped, "amount") { (i) ->
+                val trader = trader?.also { trader = null } ?: return@findThenNull
+                val i = i.toDoubleOrNull() ?: return@findThenNull
 
-                    for ((k, v) in c) {
-                        for (e in v.split(',')) {
-                            val price = e.trim().toDoubleOrNull() ?: continue
-                            if (price <= 0.0) continue
-
-                            val count = round(a0 / price).toInt()
-                            if (count <= 0) continue
-
-                            if (abs(a0 - count * price) < 0.01) list.add(Triple(b, k, count))
-                        }
-                    }
-                }
-
+                val list = matches(i)
                 if (list.isEmpty()) return@findThenNull
 
                 Scheduler.schedule(1.clientTicks) {
                     if (list.size == 1) {
                         val (boss, tier, count) = list[0]
 
-                        "<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$last<r>. Click to add!".mod()
+                        "<click:command:/athen carry add $trader $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$trader<r>. Click to add!".mod()
                         return@schedule
                     }
 
                     val root = "Found multiple matches, add for: ".literal()
-
                     for (i in list.indices) {
                         val (boss, tier, count) = list[i]
 
-                        if (i > 0) {
-                            root.append(" ".literal())
-                        }
-
-                        root.append("<click:command:/athen carry add $last $count ${boss.short.lowercase()} ${tier.int}><aqua>[${count}x ${boss.short} T${tier.int}]".parse())
+                        if (i > 0) root.append(" ".literal())
+                        root.append("<click:command:/athen carry add $trader $count ${boss.short.lowercase()} ${tier.int}><aqua>[${count}x ${boss.short} T${tier.int}]".parse())
                     }
 
                     root.mod()
                 }
             } ?: return@on
-
-            deathRegex.findThenNull(stripped, "player", "killer") { (player, killer) ->
-                val p = tracked.value.find { it.name == player } ?: return@findThenNull
-                if (p.boss != null) p.reset()
-            }
         }
 
         on<SlayerEvent.Boss.Spawn> {
@@ -378,6 +230,176 @@ object SlayerCarryTracker : Module(
         }
     }
 
+    fun update(index: Int, name: String, type: SlayerBoss, tier: SlayerTier?, max: Int, done: Int) {
+        val old = tracked.value.getOrNull(index) ?: return
+        tracked.update { set(index, SlayerCarryPlayer(name, type, tier, max, done, old.first, old.last)) }
+    }
+
+    fun remove(index: Int) {
+        if (index !in tracked.value.indices) return
+        tracked.update { removeAt(index) }
+    }
+
+    fun complete(index: Int) {
+        val carry = tracked.value.getOrNull(index) ?: return
+        val duration = if (carry.first > 0 && carry.last > 0) carry.last - carry.first else 0L
+        history.update { add(SlayerCarryHistory(carry.name, carry.type, carry.tier, carry.max, duration)) }
+        tracked.update { removeAt(index) }
+    }
+
+    private fun matches(i: Double): List<Triple<SlayerBoss, SlayerTier, Int>> {
+        return SlayerBoss.entries.flatMap { b ->
+            val map = when (b) {
+                SlayerBoss.Voidgloom -> mapOf(SlayerTier.Three to `price$void$3`, SlayerTier.Four to `price$void$4`)
+                SlayerBoss.Inferno -> mapOf(SlayerTier.Two to `price$blaze$2`, SlayerTier.Three to `price$blaze$3`, SlayerTier.Four to `price$blaze$4`)
+                else -> return@flatMap emptyList()
+            }
+
+            map.flatMap { (k, v) ->
+                v.split(',').mapNotNull {
+                    val price = it.trim().toDoubleOrNull() ?: return@mapNotNull null
+                    if (price <= 0.0) return@mapNotNull null
+
+                    val count = round(i / price).toInt()
+                    if (count <= 0) return@mapNotNull null
+                    if (abs(i - count * price) >= 0.01) return@mapNotNull null
+
+                    Triple(b, k, count)
+                }
+            }
+        }
+    }
+
+    init {
+        command {
+            "carry" / "add" / word("player").suggests { McClient.players.map { it.profile.name } } / int("amount", 1).suggests { listOf("1", "5", "10", "20") } / word("slayerType").suggests { SlayerBoss.SHORTS0 } / word("tier") {
+                val name = string("player")
+                val amount = int("amount")
+                val slayerType = string("slayerType").lowercase()
+                val t0 = string("tier")
+
+                if (tracked.value.any { it.name.equals(name, true) }) return@word "<red>$name is already being tracked.".mod()
+
+                val type = SlayerBoss.entries.find { it.short.lowercase() == slayerType } ?: return@word "Invalid slayer type.".mod()
+                val i0 = if (t0.equals("any", true)) null else t0.toIntOrNull() ?: return@word "Invalid tier.".mod()
+
+                if (i0 != null) {
+                    val i1 = type.max.int
+                    if (i0 !in 1..i1) return@word "<red>Tier must be 1-$i1 or any for $type.".mod()
+                }
+
+                val tier = SlayerTier.entries.find { it.int == i0 }
+                tracked.update { add(SlayerCarryPlayer(name, type, tier, amount)) }
+                "<green>Now tracking <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] x$amount!".mod()
+            }.suggests { listOf("any", "1", "2", "3", "4", "5") }
+
+            "carry" / "remove" / word("player") {
+                val name = string("player")
+                val bool = tracked.value.any { it.name.equals(name, true) }
+
+                if (!bool) {
+                    return@word "<red>$name is not being tracked.".mod()
+                }
+
+                tracked.update { removeIf { it.name.equals(name, true) } }
+                "<green>Removed <aqua>$name <green>from tracking.".mod()
+            }.suggests { tracked.value.map { it.name } }
+
+            "carry" / "list" {
+                if (tracked.value.isEmpty()) {
+                    return@invoke "<red>No active carries.".mod()
+                }
+
+                "Currently tracking:".mod()
+                for ((name, type, tier, max, done) in tracked.value) {
+                    " <dark_gray>- <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] <yellow>$done/$max".lie()
+                }
+            }
+
+            "carry" / "list" / "clear" {
+                tracked.update { clear() }
+                "<green>Cleared all tracked carries.".mod()
+            }
+
+            "carry" / "history" {
+                if (history.value.isEmpty()) {
+                    return@invoke "<red>No carry history.".mod()
+                }
+
+                val e0 = history.value.asReversed()
+                val i0 = maxOf(1, (e0.size + 9) / 10)
+
+                val c = ("<dark_gray>" + ("-".repeat())).parse()
+                val green = MochaColorScheme.Green.argb
+
+                c.lie()
+                "Carry History <gray>(1/$i0)<r>:".mod()
+
+                val e1 = e0.take(10)
+                for ((name, type, tier, amount, duration) in e1) {
+                    " <dark_gray>- <aqua>$name <gray>• <$green>${amount}x ${type.short}${tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(duration / 1000.0).toDuration()}".lie()
+                }
+
+                val hover = buildString {
+                    val kv = e0.groupBy { "${it.type.short}${it.tier?.let { t -> " T${t.int}" } ?: " Any"}" }
+                    for ((i, k) in kv.entries.withIndex()) {
+                        if (i > 0) append('\n')
+                        append("<$green>${k.key}<r>: <aqua>${k.value.sumOf { it.amount }} <gray>carries across <aqua>${k.value.size} <gray>entries")
+                    }
+                }
+
+                c.lie()
+                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${e0.sumOf { it.amount }} <gray>across <$green>${e0.size} <gray>entries.".parse(true).lie()
+                c.lie()
+            }
+
+            "carry" / "history" / int("page", 1) {
+                val page = int("page")
+                val list = history.value.asReversed()
+
+                val c = ("<dark_gray>" + ("-".repeat())).parse()
+                val green = MochaColorScheme.Green.argb
+
+                val page0 = maxOf(1, (list.size + 9) / 10)
+                if (page > page0) {
+                    return@int "<red>Page must be 1-$page0.".mod()
+                }
+
+                val start = (page - 1) * 10
+                val end = minOf(start + 10, list.size)
+
+                c.lie()
+                "Carry History <gray>($page/$page0)<r>:".mod()
+
+                for (i in start until end) {
+                    val e = list[i]
+
+                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".lie()
+                }
+
+                val hover = buildString {
+                    val kv = list.groupBy { "${it.type.short}${it.tier?.let { t -> " T${t.int}" } ?: " Any"}" }
+                    for ((i, k) in kv.entries.withIndex()) {
+                        if (i > 0) append('\n')
+                        append("<$green>${k.key}<r>: <aqua>${k.value.sumOf { it.amount }} <gray>carries across <aqua>${k.value.size} <gray>entries")
+                    }
+                }
+
+                c.lie()
+                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${list.sumOf { it.amount }} <gray>across <$green>${list.size} <gray>entries.".parse(true).lie()
+                c.lie()
+            }.suggests { listOf("1", "2", "3", "4", "5") }
+
+            "carry" / "help" {
+                help()
+            }
+
+            "carry" {
+                SlayerCarryGUI.open()
+            }
+        }
+    }
+
     private fun help() {
         val b = listOf(
             "/athen carry" to "Open the config tracker menu",
@@ -398,28 +420,4 @@ object SlayerCarryTracker : Module(
 
         c.lie()
     }
-
-    fun update(index: Int, name: String, type: SlayerBoss, tier: SlayerTier?, max: Int, done: Int) {
-        val old = tracked.value.getOrNull(index) ?: return
-        tracked.update { set(index, SlayerCarryPlayer(name, type, tier, max, done, old.first, old.last)) }
-    }
-
-    fun remove(index: Int) {
-        if (index !in tracked.value.indices) return
-        tracked.update { removeAt(index) }
-    }
-
-    fun complete(index: Int) {
-        val carry = tracked.value.getOrNull(index) ?: return
-        val duration = if (carry.first > 0 && carry.last > 0) carry.last - carry.first else 0L
-        history.update { add(SlayerCarryHistory(carry.name, carry.type, carry.tier, carry.max, duration)) }
-        tracked.update { removeAt(index) }
-    }
-
-    private val SlayerBoss.price: Map<SlayerTier, String>?
-        get() {
-            if (this == SlayerBoss.Voidgloom) return mapOf(SlayerTier.Three to `price$void$3`, SlayerTier.Four to `price$void$4`)
-            if (this == SlayerBoss.Inferno) return mapOf(SlayerTier.Two to `price$blaze$2`, SlayerTier.Three to `price$blaze$3`, SlayerTier.Four to `price$blaze$4`)
-            return null
-        }
 }
