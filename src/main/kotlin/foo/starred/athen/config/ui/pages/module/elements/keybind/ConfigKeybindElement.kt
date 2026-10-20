@@ -21,10 +21,10 @@ import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
-import foo.starred.snowbird.api.inputs.impl.MouseInputState
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.input.impl.MouseInputState
+import foo.starred.kontext.api.format.extension.component.literal
 import kotlin.time.Duration.Companion.milliseconds
 
 class ConfigKeybindElement(

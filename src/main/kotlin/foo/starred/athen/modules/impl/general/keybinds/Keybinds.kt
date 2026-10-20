@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.impl.general.keybinds
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.InputEvent
@@ -10,10 +10,10 @@ import foo.starred.athen.modules.impl.general.keybinds.data.KeybindCondition
 import foo.starred.athen.modules.impl.general.keybinds.data.KeybindEntry
 import foo.starred.athen.modules.impl.general.keybinds.ui.KeybindsGUI
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.api.message
+import foo.starred.kontext.abstraction.chat.command.MinecraftCommands
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
 
-@Load
+@LoadableAthenModule
 object Keybinds : Module(
     "Keybinds",
     "Keybinds and shortcuts for various actions.",
@@ -76,7 +76,7 @@ object Keybinds : Module(
 
             val command = binding.command
             if (command.isEmpty()) continue
-            if (command[0] == '/') command.command() else command.message()
+            if (command[0] == '/') MinecraftCommands.client(command) else MinecraftMessages.send(command)
         }
     }
 

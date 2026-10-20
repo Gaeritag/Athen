@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.impl.dungeon.terminals
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.dungeon.data.DungeonClass
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -8,18 +8,18 @@ import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.markerAABB
+import foo.starred.athen.utils.aabb
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.api.data.Observable
 import foo.starred.parallax.api.primitives.ParallaxBox
 import foo.starred.parallax.api.primitives.ParallaxText
-import foo.starred.snowbird.api.data.Observable
 import net.minecraft.core.BlockPos
 import net.minecraft.world.phys.AABB
 
 //? if >= 26.2
 //import net.minecraft.world.phys.Vec3
 
-@Load
+@LoadableAthenModule
 object TerminalWaypoints : Module(
     "Terminal waypoints",
     "Waypoints with terminal, allows for a ton of customisation!",
@@ -27,7 +27,7 @@ object TerminalWaypoints : Module(
 ) {
     // <editor-fold desc = "Brainfuck">
     private sealed class Node(val positions: List<BlockPos>, val defaultClass: DungeonClass, val configIndex: Int, val section: Int) {
-        val aabb1: AABB = positions.first().markerAABB().inflate(0.0001)
+        val aabb1: AABB = positions.first().aabb().inflate(0.0001)
 
         class Terminal(positions: List<BlockPos>, defaultClass: DungeonClass, configIndex: Int, section: Int) : Node(positions, defaultClass, configIndex, section)
         class Lever(positions: List<BlockPos>, defaultClass: DungeonClass, configIndex: Int, section: Int) : Node(positions, defaultClass, configIndex, section)

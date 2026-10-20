@@ -1,13 +1,13 @@
 package foo.starred.athen.events.dispatcher
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.events.LocationEvent
 import net.hypixel.modapi.HypixelModAPI
 import net.hypixel.modapi.fabric.event.HypixelModAPICallback
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket
 import kotlin.jvm.optionals.getOrNull
 
-@Priority
+@LoadableAthenModule
 object HypixelEventDispatcher {
     init {
         HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket::class.java)

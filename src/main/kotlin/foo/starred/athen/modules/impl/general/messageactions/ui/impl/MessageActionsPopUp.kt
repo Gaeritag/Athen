@@ -32,7 +32,7 @@ import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangl
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.component.literal
 
 class MessageActionsPopUp(
     private val gui: CascadeScreen,

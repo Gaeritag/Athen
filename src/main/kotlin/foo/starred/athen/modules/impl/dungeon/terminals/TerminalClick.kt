@@ -3,7 +3,7 @@
 package foo.starred.athen.modules.impl.dungeon.terminals
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -14,12 +14,12 @@ import foo.starred.athen.modules.Module
 import foo.starred.cascade.graphics.extensions.circle.circle
 import foo.starred.cascade.graphics.extensions.stroke.stroke
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.inputs.impl.MouseInputState
+import foo.starred.kontext.abstraction.input.impl.MouseInputState
+import foo.starred.kontext.api.data.Observable
 import org.joml.Matrix3x2f
 import kotlin.time.Duration.Companion.seconds
 
-@Load
+@LoadableAthenModule
 object TerminalClick : Module(
     "Terminal click",
     "Lines between when you clicked the mouse button in terminals",

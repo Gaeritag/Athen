@@ -3,11 +3,11 @@
 package foo.starred.athen.modules.impl.general
 
 import com.google.gson.JsonParser
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.network.websocket.data.SocketPacket
 import foo.starred.athen.api.network.websocket.base.IWebSocket
+import foo.starred.athen.api.network.websocket.data.SocketPacket
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.InternalEvent
@@ -17,14 +17,16 @@ import foo.starred.athen.utils.command
 import foo.starred.kbus.extensions.runWhen
 import foo.starred.kommand.IKommand
 import foo.starred.kommand.scopes.KommandCommandScope
-import foo.starred.snowbird.api.*
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.text.parser.impl.parse
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.network.protocol.game.ServerboundChatPacket
 
-@Load
+@LoadableAthenModule
 object IRC : Module(
     "IRC",
     "Enables the IRC by default on launch if the module is enabled.",
@@ -220,7 +222,7 @@ object IRC : Module(
         if ("@here" in body) return "Please don't ping every online member...".mod()
 
         `socket$send`(SocketPacket.IRC.ServerBound.Chat.id, "b" to body)
-        "<dark_gray>[<aqua>#$cc<dark_gray>]".format0(name, body).parse(true).mod()
+        "<dark_gray>[<aqua>#$cc<dark_gray>]".format0(client.user.name, body).parse(true).mod()
     }
 
     private fun String.format0(n: String, b: String): String {
@@ -232,26 +234,26 @@ object IRC : Module(
     }
 
     private fun help() {
-        val a = ("<dark_gray>" + ("-".repeat())).parse()
+        val a = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
         val c = MochaColorScheme.Green.argb
 
-        a.lie()
-        ("<red>" + ("Athen IRC".center())).lie()
-        a.lie()
+        MinecraftMessages.display(a)
+        MinecraftMessages.display("<red>" + MinecraftChat.center("Athen IRC"))
+        MinecraftMessages.display(a)
 
-        " <dark_gray>- <$c>/athen irc create [channel] [pin <gray>- optional<$c>]".lie()
-        " <dark_gray>- <$c>/athen irc join [channel] [pin <gray>- optional<$c>]".lie()
-        " <dark_gray>- <$c>/athen irc leave <gray>- leave channel".lie()
-        " <dark_gray>- <$c>/athen irc pin [pin] <gray>- sets a pin".lie()
-        " <dark_gray>- <$c>/athen irc chat [message]".lie()
-        " <dark_gray>- <$c>/athen irc list <gray>- list channels".lie()
+        MinecraftMessages.display(" <dark_gray>- <$c>/athen irc create [channel] [pin <gray>- optional<$c>]")
+        MinecraftMessages.display(" <dark_gray>- <$c>/athen irc join [channel] [pin <gray>- optional<$c>]")
+        MinecraftMessages.display(" <dark_gray>- <$c>/athen irc leave <gray>- leave channel")
+        MinecraftMessages.display(" <dark_gray>- <$c>/athen irc pin [pin] <gray>- sets a pin")
+        MinecraftMessages.display(" <dark_gray>- <$c>/athen irc chat [message]")
+        MinecraftMessages.display(" <dark_gray>- <$c>/athen irc list <gray>- list channels")
 
-        a.lie()
+        MinecraftMessages.display(a)
 
-        " <dark_gray>- <$c>/airc [message] <gray>- send message alias".lie()
-        " <dark_gray>- <$c>/airc toggle <gray>- send all messages to irc".lie()
+        MinecraftMessages.display(" <dark_gray>- <$c>/airc [message] <gray>- send message alias")
+        MinecraftMessages.display(" <dark_gray>- <$c>/airc toggle <gray>- send all messages to irc")
 
-        a.lie()
+        MinecraftMessages.display(a)
     }
 
     private fun er0() {

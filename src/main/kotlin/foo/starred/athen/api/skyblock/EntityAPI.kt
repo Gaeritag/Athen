@@ -32,17 +32,19 @@
  *
  * The original MIT license applies to the portions derived from SkyblockAPI.
  */
+@file:Suppress("ConstPropertyName")
 
 package foo.starred.athen.api.skyblock
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.ducks.entity.EntityDuck
 import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.core.on
-import foo.starred.snowbird.api.level
-import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.scheduling.scheduler.extensions.clientTicks
+import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
@@ -53,8 +55,11 @@ import net.minecraft.world.entity.monster.spider.Spider
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
-@Priority
+@LoadableAthenModule
 object EntityAPI {
+    private const val dungeon = "Boomer|Flaming|Fortified|Golden|Healing|Healthy|Speedy|Stealth|Stormy"
+    private val nameRegex = Regex("""^(?:\[Lv\d+] )?(?:[^\w \-]+ )?(?:\[\w+] )?(?:(?:$dungeon) )?(?<bool>.\s*Corrupted )?(?<name>.+?)(?: ᛤ)? \S*❤""")
+
     init {
         on<EntityEvent.Load> {
             load(entity as? ArmorStand ?: return@on)
@@ -65,10 +70,20 @@ object EntityAPI {
         }
     }
 
+    fun name(component: Component): String? {
+        val a = component.stripped().takeIf { '❤' in it } ?: return null
+        val b = nameRegex.find(a) ?: return null
+
+        return b.groups["name"]?.value
+            ?.let { if (b.groups["bool"] != null) it.dropLast(1) else it }
+            ?.trim()
+            ?.takeIf { it.isNotBlank() }
+    }
+
     @JvmStatic
     fun attach(ent: Entity) {
         val lit = ent.customName ?: return
-        val level = level ?: return
+        val level = client.level ?: return
         if (lit.stripped().damage()) return
 
         var a: Entity? = null

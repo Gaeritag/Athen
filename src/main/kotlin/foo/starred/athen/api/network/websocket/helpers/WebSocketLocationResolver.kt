@@ -1,6 +1,6 @@
 package foo.starred.athen.api.network.websocket.helpers
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.api.network.websocket.base.IWebSocket
 import foo.starred.athen.api.network.websocket.data.SocketPacket
@@ -9,11 +9,11 @@ import foo.starred.athen.events.InternalEvent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.ModSettings
-import foo.starred.snowbird.api.scheduling.scheduler.data.tasks.base.SchedulerTask
+import foo.starred.kontext.api.scheduling.scheduler.data.tasks.base.SchedulerTask
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.milliseconds
 
-@Load
+@LoadableAthenModule
 object WebSocketLocationResolver : IWebSocket {
     private var pending: String? = null
     private var task: SchedulerTask? = null

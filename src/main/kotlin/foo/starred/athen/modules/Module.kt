@@ -2,16 +2,16 @@
 
 package foo.starred.athen.modules
 
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
 import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.core.AthenEvent
 import foo.starred.kbus.data.node.KBusNode
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.data.Observable.Companion.and
-import foo.starred.snowbird.utils.toCamelCase
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.data.Observable.Companion.and
+import foo.starred.kontext.api.format.extension.string.camelCased
 import net.minecraft.network.protocol.Packet
 
 open class Module(
@@ -20,9 +20,9 @@ open class Module(
     category: ConfigCategory,
     default: Boolean = false
 ) {
-    private val _location: Observable<Boolean> = OnlyIn.get(this::class)
+    private val _location: Observable<Boolean> = AthenModuleScope.get(this::class)
 
-    val _key: String = name.toCamelCase()
+    val _key: String = name.camelCased()
     val config: ConfigMainBuilder = ConfigMainBuilder(_key, name, description, category, default).also { it.module = this }
     val observable: Observable<Boolean> = config.state and _location
 

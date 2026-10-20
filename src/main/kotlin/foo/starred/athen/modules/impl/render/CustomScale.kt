@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.render
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object CustomScale : Module(
     "Custom scale",
     "Changes the scale for players!",

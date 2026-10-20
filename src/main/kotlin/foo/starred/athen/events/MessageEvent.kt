@@ -2,7 +2,7 @@ package foo.starred.athen.events
 
 import foo.starred.athen.events.core.AthenEvent
 import foo.starred.kbus.data.event.traits.KBusCancellableTrait
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.api.format.extension.string.stripped
 import net.minecraft.network.chat.Component
 
 sealed class MessageEvent {

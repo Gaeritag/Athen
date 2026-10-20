@@ -1,18 +1,18 @@
 package foo.starred.athen.api.math
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.athen.utils.command
 import foo.starred.kommand.IKommand
 import foo.starred.kommand.scopes.KommandCommandScope
-import foo.starred.snowbird.utils.formatted
+import foo.starred.kontext.api.format.extension.number.format
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import kotlin.math.pow
 
-@Load
+@LoadableAthenModule
 object Calculator : IKommand<FabricClientCommandSource> {
     override val loader: KommandCommandScope<FabricClientCommandSource> = KommandCommandScope()
 
@@ -27,7 +27,7 @@ object Calculator : IKommand<FabricClientCommandSource> {
         command {
             "calc" / greedyString("operation") {
                 val string = string("operation")
-                val result = calc(string).formatted()
+                val result = calc(string).format(true)
                 "<gray>$string = <green>$result".mod(MessagePrefixType.SUCCESS)
             }
         }
@@ -38,7 +38,7 @@ object Calculator : IKommand<FabricClientCommandSource> {
             command("calc") {
                 greedyString("operation") {
                     val string = string("operation")
-                    val result = calc(string).formatted()
+                    val result = calc(string).format(true)
                     "<gray>$string = <green>$result".mod(MessagePrefixType.SUCCESS)
                 }
             }

@@ -32,7 +32,7 @@
 
 package foo.starred.athen.api.location
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.area.base.ISkyBlockArea
 import foo.starred.athen.api.location.area.impl.CustomSkyBlockArea
 import foo.starred.athen.api.location.area.impl.PresetSkyBlockArea
@@ -43,11 +43,10 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.ScoreboardEvent
 import foo.starred.athen.events.core.on
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.data.Observable
+import foo.starred.kontext.api.data.Observable
 import net.hypixel.data.type.GameType
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
 
-@Priority
+@LoadableAthenModule
 object LocationAPI {
     private val regex = Regex(" *[⏣ф\uE067\uE020] *(?<location>(?:\\s?[^[ൠ\uE018]\\s]+)*)(?: [ൠ\uE018] x\\d)?")
 
@@ -80,11 +79,13 @@ object LocationAPI {
         }
 
         on<ScoreboardEvent.Update> {
-            regex.anyMatch(added, "location") { (location) ->
+            for (line in added) {
+                val (location) = regex.find(line)?.destructured ?: continue
                 val old = area.value
 
                 area.value = PresetSkyBlockArea.of(location) ?: CustomSkyBlockArea(location)
                 LocationEvent.SkyBlock.Area(old, area.value).post()
+                break
             }
         }.runWhen(skyblock)
 

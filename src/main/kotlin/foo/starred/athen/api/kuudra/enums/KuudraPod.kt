@@ -1,6 +1,6 @@
 package foo.starred.athen.api.kuudra.enums
 
-import foo.starred.athen.utils.markerAABB
+import foo.starred.athen.utils.aabb
 import net.minecraft.core.BlockPos
 import net.minecraft.world.phys.AABB
 
@@ -19,5 +19,5 @@ enum class KuudraPod(val from: BlockPos, val to: BlockPos, val pos: BlockPos = B
     )
 
     val aabb0: AABB =
-        pos.markerAABB()
+        pos.aabb()
 }

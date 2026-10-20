@@ -2,12 +2,12 @@
 
 package foo.starred.athen.modules.impl.render.radial.actions.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.modules.impl.render.radial.actions.ActionType
 import foo.starred.athen.modules.impl.render.radial.actions.IAction
-import foo.starred.snowbird.api.message
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
 
-@Load
+@LoadableAthenModule
 class MessageAction(val message: String) : IAction {
     override val id: Int = int
     override val name: String = str
@@ -15,7 +15,8 @@ class MessageAction(val message: String) : IAction {
 
     override fun run() {
         if (message.isEmpty()) return
-        message.message()
+
+        MinecraftMessages.send(message)
     }
 
     companion object {

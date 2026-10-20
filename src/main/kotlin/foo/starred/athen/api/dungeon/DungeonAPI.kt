@@ -32,23 +32,20 @@
 
 package foo.starred.athen.api.dungeon
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.dungeon.data.DungeonClass
+import foo.starred.athen.api.dungeon.data.DungeonFloor
 import foo.starred.athen.api.dungeon.data.DungeonPlayer
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.name
-import foo.starred.snowbird.api.player
-import foo.starred.snowbird.utils.stripped
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.find
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.format.extension.string.stripped
 
-@Priority
+@LoadableAthenModule
 object DungeonAPI {
     // <editor-fold desc="Regex & Variables">
     private val dungeonFloorRegex = Regex("The Catacombs \\((?<floor>.+)\\)")
@@ -116,7 +113,7 @@ object DungeonAPI {
 
         on<TabListEvent.Change> {
             val firstColumn = new.firstOrNull() ?: return@on
-            val str = name
+            val str = client.user.name + firstColumn
             val next = arrayOfNulls<DungeonPlayer>(5)
 
             for (i in 0 until 5) {
@@ -138,20 +135,21 @@ object DungeonAPI {
         }.runWhen(PresetSkyBlockIsland.THE_CATACOMBS.state)
 
         on<LocationEvent.SkyBlock.Area> {
-            dungeonFloorRegex.find(new.string, "floor") { (f) ->
-                val old = floor.value
-                val new = DungeonFloor.getByName(f)
-                if (old == new) return@find
+            val match = dungeonFloorRegex.find(new.string)?.groupValues?.get(1) ?: return@on
 
-                floor.value = new
-                floor.value?.let { DungeonEvent.Enter(it).post() }
-            }
+            val old = floor.value
+            val new = DungeonFloor.getByName(match)
+            if (old == new) return@on
+
+            floor.value = new
+            floor.value?.let { DungeonEvent.Enter(it).post() }
         }.runWhen(PresetSkyBlockIsland.THE_CATACOMBS.state)
 
         on<MessageEvent.Chat.Receive> {
-            playerGhostRegex.findThenNull(stripped, "name") { (s) ->
+            playerGhostRegex.find(stripped)?.let { match ->
+                val (s) = match.destructured
                 var n0 = s
-                if (n0 == "You") n0 = name
+                if (n0 == "You") n0 = client.user.name
 
                 for (t in teammates) {
                     if (t.name != n0) continue
@@ -159,12 +157,15 @@ object DungeonAPI {
                     DungeonEvent.Player.Death(t).post()
                     "DungeonAPI: Player died! Player deaths: ${t.deaths}".dev()
                 }
-            } ?: return@on
+                return@on
+            }
 
             if (!inBoss.value && floor.value != DungeonFloor.E) {
-                bossStartRegex.findThenNull(stripped, "boss") { (boss) ->
-                    if (boss == "The Watcher") return@findThenNull
-                    inBoss.value = floor.value?.chatBossName == boss
+                bossStartRegex.find(stripped)?.let { match ->
+                    val (boss) = match.destructured
+                    if (boss != "The Watcher") {
+                        inBoss.value = floor.value?.chatBossName == boss
+                    }
                 }
             }
 
@@ -219,7 +220,7 @@ object DungeonAPI {
             if (floor.value?.floorNumber != 7) return@on
             if (!inBoss.value) return@on
 
-            val y = player?.y ?: return@on
+            val y = client.player?.y ?: return@on
             F7Phase.value = when {
                 y > 210 -> 1
                 y > 155 -> 2

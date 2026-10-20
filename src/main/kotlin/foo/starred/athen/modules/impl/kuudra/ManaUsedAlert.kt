@@ -1,19 +1,18 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.api.text.parser.impl.parse
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.text.parser.impl.parse
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object ManaUsedAlert : Module(
     "Mana used alert",
     "Alerts the party when you mana dump!",
@@ -26,7 +25,8 @@ object ManaUsedAlert : Module(
         on<MessageEvent.Chat.Receive> {
             val level = client.level ?: return@on
             val p = client.player ?: return@on
-            val i0 = regex.findGroup(stripped, "int")?.toIntOrNull() ?: return@on
+            val (i0Str) = regex.find(stripped)?.destructured ?: return@on
+            val i0 = i0Str.toIntOrNull() ?: return@on
             var i1 = 0
 
             for (a in level.players()) {
@@ -39,7 +39,7 @@ object ManaUsedAlert : Module(
 
             if (i1 == 0 && ignore0) return@on
 
-            "pc $i0 mana used on $i1 players!".command(false)
+            MinecraftMessages.display("pc $i0 mana used on $i1 players!")
             "<red>$i0 <r>mana used on <red>$i1 <r>players!".parse(true).mod()
         }
     }

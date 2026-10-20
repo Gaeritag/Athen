@@ -1,30 +1,25 @@
 package foo.starred.athen.api.kuudra
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.enums.*
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
-import foo.starred.athen.utils.texture
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.lazy.RefreshableLazy
-import foo.starred.snowbird.api.level
-import foo.starred.snowbird.api.name
-import foo.starred.snowbird.api.player
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.tablist.MinecraftTabList
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.entity.extension.serverMaxHealth
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.TextureKontextItemDataResolver
+import foo.starred.kontext.api.lazy.RefreshableLazy
 import net.minecraft.world.entity.monster.Giant
-import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.extentions.serverMaxHealth
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.anyMatch
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 
 //~ if >= 26.2 'monster.MagmaCube' -> 'monster.cubemob.MagmaCube'
 import net.minecraft.world.entity.monster.MagmaCube
 
-@Priority
+@LoadableAthenModule
 object KuudraAPI {
     private val deathRegex = Regex("^ ☠ (?:(?<username>\\w+)|You were) .+(?: and became a ghost)?\\.$")
     private val tierRegex = Regex(" ⏣ Kuudra's Hollow \\(T(?<t>\\d+)\\)")
@@ -87,14 +82,14 @@ object KuudraAPI {
 
         on<KuudraEvent.Start> (priority = Int.MIN_VALUE) {
             teammates.clear()
-            for (p in McClient.players) teammates += KuudraPlayer(p.profile.name)
+            for (p in MinecraftTabList.players) teammates += KuudraPlayer(p.profile.name)
         }
 
         on<TickEvent.Client.End> {
             if (!inRun) return@on
             if (ticks % 2 != 0) return@on
 
-            val player = player ?: return@on
+            val player = client.player ?: return@on
             if (KuudraPhase.Skip.active && player.position().y < 10) phase = KuudraPhase.Kill.start()
 
             if (phase !in set) return@on
@@ -127,7 +122,7 @@ object KuudraAPI {
             val e = entity as? Giant ?: return@on
 
             if (supplies.any { it.entity == e } || fuels.any { it.entity == e }) return@on
-            if (e.mainHandItem.texture() !in set0) return@on
+            if (e.mainHandItem.get<TextureKontextItemDataResolver, String>() !in set0) return@on
 
             val s = AbstractSupply(e)
             if (phase == KuudraPhase.Supply) supplies += s
@@ -169,11 +164,14 @@ object KuudraAPI {
                         return@on
                     }
 
-                    progressRegex.findThenNull(stripped, "progress") { (progress) ->
+                    progressRegex.find(stripped)?.let { match ->
+                        val (progress) = match.destructured
                         KuudraSupply.at(pos, progress.toInt())?.built = false
-                    } ?: return@on
+                        return@on
+                    }
 
-                    buildRegex.findOrNull(stripped, "progress", "players") { (p0, p1) ->
+                    buildRegex.find(stripped)?.let { match ->
+                        val (p0, p1) = match.destructured
                         buildProgress.value = p0.toInt()
                         buildPlayers = p1.toInt()
                     }
@@ -186,8 +184,10 @@ object KuudraAPI {
         on<ScoreboardEvent.Update> {
             if (tier != null) return@on
 
-            tierRegex.anyMatch(added, "t") { (t) ->
+            for (line in added) {
+                val (t) = tierRegex.find(line)?.destructured ?: continue
                 tier = KuudraTier.get(t.toInt())
+                break
             }
         }.runWhen(PresetSkyBlockIsland.KUUDRA.state)
 
@@ -236,27 +236,33 @@ object KuudraAPI {
                 }
 
                 else -> {
-                    deathRegex.findThenNull(stripped, "username") { (username) ->
-                        val n = username.takeIf { it != "You" } ?: name
+                    deathRegex.find(stripped)?.let { match ->
+                        val username = match.groups["username"]?.value
+                        val n = username?.takeIf { it != "You" } ?: client.user.name
 
                         teammates.find { it.name == n }?.deaths++
-                    } ?: return@on
+                        return@on
+                    }
 
                     val tier = tier ?: return@on
                     if (tier.int < KuudraTier.BURNING.int) return@on
                     if (KuudraPhase.Stun.started && KuudraPhase.DPS.started) return@on
 
                     if (!KuudraPhase.Stun.started) {
-                        eatRegex.findThenNull(stripped, "user") { (user) ->
-                            if (user == "Elle") return@findThenNull
-                            phase = KuudraPhase.Stun.start()
-                        } ?: return@on
+                        eatRegex.find(stripped)?.let { match ->
+                            val (user) = match.destructured
+                            if (user != "Elle") {
+                                phase = KuudraPhase.Stun.start()
+                            }
+                            return@on
+                        }
                     }
 
                     if (!KuudraPhase.DPS.started) {
-                        stunRegex.findThenNull(stripped) {
+                        if (stunRegex.containsMatchIn(stripped)) {
                             phase = KuudraPhase.DPS.start()
-                        } ?: return@on
+                            return@on
+                        }
                     }
                 }
             }
@@ -266,14 +272,14 @@ object KuudraAPI {
             if (phase !in set) return@on
             val message = message.stripped().takeIf { it.isNotEmpty() } ?: return@on
 
-            supplyProgressRegex.findOrNull(message, "progress") { (progress) ->
-                if (KuudraEvent.Supply.Progress(progress.toInt(), message).post()) cancel()
-            }
+            val (progress) = supplyProgressRegex.find(message)?.destructured ?: return@on
+            if (KuudraEvent.Supply.Progress(progress.toInt(), message).post()) cancel()
         }.runWhen(PresetSkyBlockIsland.KUUDRA.state)
     }
 
-    private fun fn(): MagmaCube? =
-        level?.entitiesForRendering()?.find { it is MagmaCube && it.size == 30 && it.serverMaxHealth == 100_000f } as? MagmaCube
+    private fun fn(): MagmaCube? {
+        return client.level?.entitiesForRendering()?.find { it is MagmaCube && it.size == 30 && it.serverMaxHealth == 100_000f } as? MagmaCube
+    }
 
     private fun reset() {
         tier = null

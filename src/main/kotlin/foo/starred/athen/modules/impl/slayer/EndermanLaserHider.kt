@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.carry
@@ -15,8 +15,8 @@ import kotlin.math.abs
 //~ if >= 26.3 'EnderMan' -> 'Enderman'
 import net.minecraft.world.entity.monster.EnderMan
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.THE_END])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.THE_END])
 object EndermanLaserHider : Module(
     "Enderman laser hider",
     "Hides the lasers for voidgloom bosses!",

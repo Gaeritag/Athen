@@ -5,7 +5,7 @@ package foo.starred.athen.modules.impl.general.messageactions
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import foo.starred.athen.Athen.GSON
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.storage.JsonStore
@@ -21,15 +21,15 @@ import foo.starred.athen.modules.impl.general.messageactions.actions.impl.NoActi
 import foo.starred.athen.modules.impl.general.messageactions.ui.data.MessageActionsCategoryEntry
 import foo.starred.athen.modules.impl.general.messageactions.ui.impl.MessageActionsGUI
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.colorCoded
-import foo.starred.snowbird.utils.compress
-import foo.starred.snowbird.utils.decompress
-import foo.starred.snowbird.utils.safely
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.api.format.extension.component.colored
+import foo.starred.kontext.util.compress
+import foo.starred.kontext.util.decompress
+import foo.starred.kontext.util.safely
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import java.lang.reflect.Type
 
-@Load
+@LoadableAthenModule
 object MessageActions : Module(
     "Message actions",
     "Allows you to run actions when you receive a message.",
@@ -120,7 +120,7 @@ object MessageActions : Module(
                 cancel()
 
                 if (entry.action == NoAction) return@on
-                val action = entry.action(text ?: message.colorCoded().also { text = it })
+                val action = entry.action(text ?: message.colored().also { text = it })
                 if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() } else action.run()
             }
         }
@@ -131,7 +131,7 @@ object MessageActions : Module(
             for (entry in a1) {
                 if (!entry.matches(stripped, set)) continue
 
-                val action = entry.action(text ?: message.colorCoded().also { text = it })
+                val action = entry.action(text ?: message.colored().also { text = it })
                 if (entry.source.delay > 0.0) Scheduler.schedule(entry.delay) { action.run() } else action.run()
             }
         }
@@ -147,12 +147,12 @@ object MessageActions : Module(
 
             "export" / "messageactions" {
                 disk()
-                client.keyboardHandler.clipboard = gson.toJson(mapOf("actions" to actions, "categories" to categories)).compress()
+                MinecraftClient.clipboard = gson.toJson(mapOf("actions" to actions, "categories" to categories)).compress()
                 "Exported ${actions.size} actions to clipboard!".mod()
             }
 
             "import" / "messageactions" {
-                val a = client.keyboardHandler.clipboard
+                val a = MinecraftClient.clipboard
                 if (a.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 safely {

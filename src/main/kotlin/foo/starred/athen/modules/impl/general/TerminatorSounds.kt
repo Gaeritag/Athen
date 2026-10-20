@@ -2,18 +2,18 @@
 
 package foo.starred.athen.modules.impl.general
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.SoundPlayEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.id
-import foo.starred.snowbird.api.held
+import foo.starred.kontext.abstraction.client.extension.client
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.item.BowItem
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object TerminatorSounds : Module(
     "Terminator sounds",
     "Custom sounds for terminator!",
@@ -24,11 +24,11 @@ object TerminatorSounds : Module(
 
     init {
         on<SoundPlayEvent> {
-            if (sound == SoundEvents.ARROW_SHOOT) return@on cancel()
-            if (sound == SoundEvents.ARROW_HIT && !wall) return@on cancel()
-            if (sound != SoundEvents.ARROW_HIT && sound != SoundEvents.ARROW_HIT_PLAYER) return@on
+            if (sound == SoundEvents.ARROW_SHOOT.location()) return@on cancel()
+            if (sound == SoundEvents.ARROW_HIT.location() && !wall) return@on cancel()
+            if (sound != SoundEvents.ARROW_HIT.location() && sound != SoundEvents.ARROW_HIT_PLAYER.location()) return@on
 
-            val i = held ?: return@on
+            val i = client.player?.mainHandItem ?: return@on
             if (i.item !is BowItem) return@on
             if (i.id() != "TERMINATOR") return@on
 

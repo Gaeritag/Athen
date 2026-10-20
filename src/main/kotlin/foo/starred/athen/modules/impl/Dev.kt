@@ -1,16 +1,16 @@
 package foo.starred.athen.modules.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.text.parser.impl.parse
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.api.text.parser.impl.parse
 
-@Load
+@LoadableAthenModule
 object Dev {
     private val r = Regex("(?<!^)([A-Z])")
 
@@ -56,8 +56,7 @@ object Dev {
             }
 
             "clear" / "chat" {
-                //~ if >= 26.2 'client.gui.chat' -> 'client.gui.hud.chat'
-                client.gui.chat.clearMessages(false)
+                MinecraftChat.instance.clearMessages(false)
             }
         }
     }

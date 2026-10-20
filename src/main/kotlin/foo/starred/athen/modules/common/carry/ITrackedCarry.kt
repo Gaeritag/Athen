@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.common.carry
 
-import foo.starred.snowbird.utils.toDuration
+import foo.starred.kontext.api.format.extension.time.parseDuration
 
 interface ITrackedCarry {
     val player: String
@@ -17,7 +17,7 @@ interface ITrackedCarry {
 
         val timeSince = lastCompletionTime
             .takeIf { it != 0L }
-            ?.let { ((now - it) / 1000.0).toDuration() }
+            ?.let { ((now - it) / 1000.0).parseDuration() }
             ?: "§7N/A"
 
         val rate = if (completed > 2 && firstCompletionTime != 0L) {

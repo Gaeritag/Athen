@@ -3,19 +3,19 @@
 package foo.starred.athen.api.skyblock
 
 import com.google.gson.JsonObject
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
+import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.modules.impl.ModSettings
-import foo.starred.athen.utils.api
 import foo.starred.athen.utils.id
-import foo.starred.snowbird.api.scheduling.scheduler.data.tasks.base.SchedulerTask
-import foo.starred.snowbird.utils.asJsonObjectOrNull
+import foo.starred.kontext.api.scheduling.scheduler.data.tasks.base.SchedulerTask
+import foo.starred.kontext.util.asJsonObjectOrNull
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import net.minecraft.world.item.ItemStack
 import kotlin.time.Duration.Companion.minutes
 
-@Priority
+@LoadableAthenModule
 object PriceAPI {
     private val auctions = Int2ObjectOpenHashMap<Auction>(8192)
     private val bazaar = Int2ObjectOpenHashMap<Bazaar>(2048)
@@ -46,7 +46,7 @@ object PriceAPI {
     }
 
     private fun fn() {
-        "prices".api.request(log = false) {
+        AthenAPI.get("prices").request(log = false) {
             success<JsonObject> {
                 val ah = it["auction_house"].asJsonObjectOrNull ?: return@success
                 val bz = it["bazaar"].asJsonObjectOrNull ?: return@success

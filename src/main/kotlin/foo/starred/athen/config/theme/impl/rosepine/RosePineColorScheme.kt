@@ -3,7 +3,7 @@
 package foo.starred.athen.config.theme.impl.rosepine
 
 import foo.starred.athen.config.theme.base.IThemeColorScheme
-import foo.starred.snowbird.utils.rgba
+import foo.starred.kontext.api.format.impl.color.ColorFormatter.rgba
 
 enum class RosePineColorScheme(override val rgba: Int) : IThemeColorScheme {
     Base(rgba(35, 33, 54)),

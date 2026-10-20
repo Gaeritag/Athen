@@ -3,26 +3,29 @@
 package foo.starred.athen.modules.impl.render
 
 import com.mojang.serialization.Codec
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.Athen
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.mod.ModWrapper
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.*
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.api.text.replacer.AbstractTextReplacer
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.EMPTY_COMPONENT
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.text.parser.impl.parse
+import foo.starred.kontext.api.text.replacer.AbstractTextReplacer
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.FormattedCharSequence
 
-@Load
+@LoadableAthenModule
 object VisualWords : Module(
     "Visual words",
     "Visually modify words!",
@@ -55,7 +58,7 @@ object VisualWords : Module(
 
         nameChanger.state.observe {
             if (it) return@observe nickname.value.fn()
-            words.remove(name)
+            words.remove(client.user.name)
             words.build()
         }
 
@@ -115,7 +118,7 @@ object VisualWords : Module(
 
             "visuals" / "list" {
                 "Replacement words list:".mod()
-                for ((a, b) in words.map2) " <dark_gray>• <r>$a <gray>-> ".parse().skip().append(b.toComponent()).lie()
+                for ((a, b) in words.map2) MinecraftMessages.display(" <dark_gray>• <r>$a <gray>-> ".parse().skip().append(b.toComponent()))
             }
         }
     }
@@ -123,28 +126,28 @@ object VisualWords : Module(
     private fun String.fn() {
         if (nameChanger.value && isNotEmpty()) {
             val cmp = parse(true)
-            words.put(name, cmp.string, cmp, cmp.visualOrderText)
+            words.put(client.user.name, cmp.string, cmp, cmp.visualOrderText)
             words.build()
             return
         }
 
-        words.remove(name)
+        words.remove(client.user.name)
         words.build()
     }
 
     private fun help() {
-        val divider = ("§8§m" + "-".repeat()).literal()
-        divider.lie()
-        "§bVisual Words §7[Athen]".center().lie()
-        divider.lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals add [word] [word, supports space]".lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals set [word] [word, supports space]".lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals remove [word]".lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals list".lie()
-        divider.lie()
-        " <dark_gray>• <r>The text supports the format: ".parse().append("<hex><bold>te</bold>xt").lie()
-        " <hover:<${MochaColorScheme.Mauve.argb}>Click to join!><click:url:${ModWrapper.discord}><dark_gray>• <r>Want to know more about formats? Ask in the <${MochaColorScheme.Mauve.argb}>discord<r>!".lie()
-        divider.lie()
+        val divider = ("§8§m" + MinecraftChat.repeat("-")).literal()
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display(MinecraftChat.center("§bVisual Words §7[Athen]"))
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals add [word] [word, supports space]")
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals set [word] [word, supports space]")
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals remove [word]")
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen visuals list")
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display(" <dark_gray>• <r>The text supports the format: ".parse().append("<hex><bold>te</bold>xt"))
+        MinecraftMessages.display(" <hover:<${MochaColorScheme.Mauve.argb}>Click to join!><click:url:${Athen.Data.discord}><dark_gray>• <r>Want to know more about formats? Ask in the <${MochaColorScheme.Mauve.argb}>discord<r>!")
+        MinecraftMessages.display(divider)
     }
 
     private fun load() {

@@ -5,7 +5,7 @@ package foo.starred.athen.modules.impl.general.slotbinds
 import com.google.gson.reflect.TypeToken
 import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.Athen.GSON
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -15,22 +15,23 @@ import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.PlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.guiClick
 import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
 import foo.starred.cascade.graphics.extensions.stroke.stroke
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.utils.compress
-import foo.starred.snowbird.utils.decompress
-import foo.starred.snowbird.utils.safely
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.util.compress
+import foo.starred.kontext.util.decompress
+import foo.starred.kontext.util.safely
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.world.inventory.ContainerInput
 import org.joml.Matrix3x2f
 
-@Load
+@LoadableAthenModule
 object SlotBinds : Module(
     "Slot binds",
     "Bindings for slots!",
@@ -129,7 +130,7 @@ object SlotBinds : Module(
             }
 
             "export" / "slotbinds" {
-                val clipboard = client.keyboardHandler.clipboard
+                val clipboard = MinecraftClient.clipboard
                 if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 val data = GSON.fromJson(clipboard.decompress(), object : TypeToken<Map<String, Any>>() {}.type) as Map<String, Any>
@@ -170,14 +171,13 @@ object SlotBinds : Module(
                 val c = map1[active]
                 if (c != null) for (e in c.int2IntEntrySet()) colors[e.intKey.toString()] = e.intValue
 
-                client.keyboardHandler.clipboard = GSON.toJson(mapOf("name" to active, "binds" to binds, "colors" to colors)).compress()
+                MinecraftClient.clipboard = GSON.toJson(mapOf("name" to active, "binds" to binds, "colors" to colors)).compress()
                 "Exported profile '$active' to clipboard!".mod()
             }
         }
 
         on<GuiEvent.Slots.Input.Click> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            val s = client.screen as? InventoryScreen ?: return@on
+            val s = MinecraftGui.screen as? InventoryScreen ?: return@on
             val h = slot?.index ?: return@on
 
             val f = m0.get(h)
@@ -239,13 +239,12 @@ object SlotBinds : Module(
             if (g.getOrNull(c)?.item?.isEmpty != false && g.getOrNull(d)?.item?.isEmpty != false) return@on
 
             m1.put(d, c)
-            guiClick(s.menu.containerId, c, e, ContainerInput.SWAP)
+            MinecraftGui.click(s.menu.containerId, c, e, ContainerInput.SWAP)
             cancel()
         }
 
         on<GuiEvent.Slots.Render.Menu.End> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            val screen = client.screen as? InventoryScreen ?: return@on
+            val screen = MinecraftGui.screen as? InventoryScreen ?: return@on
             val slots = screen.menu.slots
 
             val pose = Matrix3x2f(graphics.pose())

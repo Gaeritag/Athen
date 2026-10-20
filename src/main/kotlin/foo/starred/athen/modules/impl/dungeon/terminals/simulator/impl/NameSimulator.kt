@@ -5,7 +5,7 @@ import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.ITerminalSim
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.SimulatorMenu
 import foo.starred.athen.utils.glint
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.inventory.Slot

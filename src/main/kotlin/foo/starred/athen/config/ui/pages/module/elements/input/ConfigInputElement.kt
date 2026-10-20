@@ -22,10 +22,10 @@ import foo.starred.cascade.graphics.geometry.CascadeGeometricOffset
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
-import foo.starred.snowbird.api.ZERO_PAIR
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
-import foo.starred.snowbird.utils.withAlpha
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
+import foo.starred.kontext.api.ZERO_PAIR
+import foo.starred.kontext.api.format.extension.color.alpha
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.abs
 import kotlin.math.max
@@ -253,7 +253,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
-                    client.keyboardHandler.clipboard = value.substring(range.first, range.second)
+                    MinecraftClient.clipboard = value.substring(range.first, range.second)
                     cancel()
                     return@on
                 }
@@ -262,7 +262,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
-                    client.keyboardHandler.clipboard = value.substring(range.first, range.second)
+                    MinecraftClient.clipboard = value.substring(range.first, range.second)
                     delete()
                     cancel()
                     return@on
@@ -272,7 +272,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                     if (!ctrl) return@on
 
                     delete()
-                    val clip = client.keyboardHandler.clipboard
+                    val clip = MinecraftClient.clipboard
                     value = value.substring(0, block) + clip + value.substring(block)
                     block += clip.length
                     cancel()
@@ -312,7 +312,7 @@ open class ConfigInputElement : RoundedRectanglePrimitive() {
                 val i1 = max(_selection0, _selection1)
                 val width = i1 - i0
 
-                graphics.rectangle(x1 + i0, y1, width, height0, MochaColorScheme.Base.argb.withAlpha(0.5f))
+                graphics.rectangle(x1 + i0, y1, width, height0, MochaColorScheme.Base.argb.alpha(0.5f))
             }
 
             val bool1 = value.isEmpty() && bool0

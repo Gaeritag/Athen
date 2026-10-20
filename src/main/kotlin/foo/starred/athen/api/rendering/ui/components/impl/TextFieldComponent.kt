@@ -1,8 +1,6 @@
 package foo.starred.athen.api.rendering.ui.components.impl
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.cascade.events.impl.KeyEvent
 import foo.starred.cascade.events.impl.MouseEvent
@@ -11,9 +9,11 @@ import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.snowbird.api.ZERO_PAIR
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.ZERO_PAIR
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.abs
 import kotlin.math.max
@@ -60,7 +60,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
             var i1 = Int.MAX_VALUE
 
             for (i in 0..value.length) {
-                val a = VanillaFontMeasurer.width(value.substring(0, i))
+                val a = MinecraftFontMeasurer.width(value.substring(0, i))
                 val b = abs(a - x).takeIf { it < i1 }?.toInt() ?: continue
 
                 i1 = b
@@ -179,7 +179,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     if (!selected) return@on
 
                     val (s, e) = range
-                    client.keyboardHandler.clipboard = value.substring(s, e)
+                    MinecraftClient.clipboard = value.substring(s, e)
                     cancel()
                     return@on
                 }
@@ -189,7 +189,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     if (!selected) return@on
 
                     val (s, e) = range
-                    client.keyboardHandler.clipboard = value.substring(s, e)
+                    MinecraftClient.clipboard = value.substring(s, e)
                     delete()
                     cancel()
                     return@on
@@ -199,7 +199,7 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
                     if (!ctrl) return@on
 
                     delete()
-                    val clip = client.keyboardHandler.clipboard
+                    val clip = MinecraftClient.clipboard
                     value = value.substring(0, block) + clip + value.substring(block)
                     block += clip.length
                     cancel()
@@ -230,26 +230,26 @@ open class TextFieldComponent : IPrimitiveElement<TextFieldComponent>() {
             run {
                 if (!b) return@run ::scroll.set(0)
                 val i0 = width - 6
-                while (VanillaFontMeasurer.width(value.substring(0, block)) - scroll > i0) scroll += 10
-                while (VanillaFontMeasurer.width(value.substring(0, block)) - scroll < 0) scroll = max(0, scroll - 10)
+                while (MinecraftFontMeasurer.width(value.substring(0, block)) - scroll > i0) scroll += 10
+                while (MinecraftFontMeasurer.width(value.substring(0, block)) - scroll < 0) scroll = max(0, scroll - 10)
             }
 
             val x0 = x + 3 - scroll
 
             if (selected && b) {
                 val (s, e) = range
-                val s1 = VanillaFontMeasurer.width(value.substring(0, s))
-                val s2 = VanillaFontMeasurer.width(value.substring(0, e))
+                val s1 = MinecraftFontMeasurer.width(value.substring(0, s))
+                val s2 = MinecraftFontMeasurer.width(value.substring(0, e))
                 graphics.rectangle(x0 + s1, y + 2, (s2 - s1).toFloat(), height - 4, MochaColorScheme.Lavender.alpha(0.5f))
             }
 
             val c = value.isEmpty() && !b
             val str = if (c) placeholder else value
             val color = if (c) MochaColorScheme.Subtext0.argb else MochaColorScheme.Text.argb
-            VanillaFontRenderer.extract(graphics, str, x0, y + (height - VanillaFontMeasurer.height) / 2 + 1, false, color)
+            MinecraftFontRenderer.extract(graphics, str, x0, y + (height - MinecraftFontMeasurer.height) / 2 + 1, false, color)
 
             if (b && (System.currentTimeMillis() / 500) % 2 == 0L) {
-                val x1 = VanillaFontMeasurer.width(value.substring(0, block))
+                val x1 = MinecraftFontMeasurer.width(value.substring(0, block))
                 graphics.rectangle(x0 + x1, y + 2, 1f, height - 4, MochaColorScheme.Lavender.argb)
             }
         }

@@ -4,8 +4,8 @@ package foo.starred.athen.modules.impl.general.keybinds.ui
 
 import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.api.dungeon.data.DungeonClass
+import foo.starred.athen.api.dungeon.data.DungeonFloor
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
 import foo.starred.athen.api.rendering.ui.components.impl.MultiCheckboxComponent
 import foo.starred.athen.api.rendering.ui.components.impl.MultiCheckboxComponent.Companion.multiCheckbox
 import foo.starred.athen.api.rendering.ui.components.impl.TextFieldComponent
@@ -36,8 +36,8 @@ import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangl
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
-import foo.starred.snowbird.utils.literal
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.api.format.extension.component.literal
 
 class KeybindsPopUp(
     private val gui: CascadeScreen,
@@ -432,9 +432,9 @@ class KeybindsPopUp(
 
         `keys$hint` = rectangle {
             val str = "Press Enter to confirm | Escape to cancel"
-            val w = VanillaFontMeasurer.width(str) + 12
+            val w = MinecraftFontMeasurer.width(str) + 12
 
-            size = FixedSizeConstraint(w, VanillaFontMeasurer.height + 8)
+            size = FixedSizeConstraint(w, MinecraftFontMeasurer.height + 8)
             position = MixedPositionConstraint(CenterPositionConstraint(), AnchorPositionConstraint({ box }, PositionAnchor.BELOW))
             offset = CascadeGeometricOffset(0f, 6f)
             color = CascadeGeometricColor(MochaColorScheme.Base.argb)

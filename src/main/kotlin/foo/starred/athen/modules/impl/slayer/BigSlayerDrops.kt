@@ -1,25 +1,26 @@
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.slayers.enums.drop.impl.*
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.enchants0
+import foo.starred.athen.utils.id
+import foo.starred.kontext.api.item.data.enchant.SkyBlockItemEnchant
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.SkyBlockEnchantKontextItemDataResolver
+import foo.starred.kontext.api.item.resolver.impl.TextureKontextItemDataResolver
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Item
 import net.minecraft.world.phys.Vec3
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.utils.extentions.getTexture
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.seconds
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object BigSlayerDrops : Module(
     "Big slayer drops",
     "Renders the items dropped by a slayer boss to be bigger!",
@@ -62,10 +63,10 @@ object BigSlayerDrops : Module(
         val c = position().z()
 
         val d = item
-        val e = d.getData(DataTypes.ID) ?: return false
+        val e = d.id() ?: return false
         val f = d.item
-        val g = if (e == "RUNE") d.getTexture() else null
-        val h = if (e == "ENCHANTED_BOOK") d.enchants0().firstOrNull() else null
+        val g = if (e == "RUNE") d.get<TextureKontextItemDataResolver, String>() else null
+        val h = if (e == "ENCHANTED_BOOK") d.get<SkyBlockEnchantKontextItemDataResolver, List<SkyBlockItemEnchant>>()?.firstOrNull()?.id else null
 
         val i = fn0(e, f, g, h) || fn1(e, f, g, h) || fn2(e, f, g, h) || fn3(e, f, g, h) || fn4(e, f, g, h) || fn5(e, f, g, h)
         if (!i) return false

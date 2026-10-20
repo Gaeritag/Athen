@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.render
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
@@ -11,18 +11,16 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
+import foo.starred.kontext.abstraction.chat.command.MinecraftCommands
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.format.extension.color.alpha
+import foo.starred.kontext.api.format.extension.time.parseDuration
 import foo.starred.parallax.api.primitives.ParallaxCircle
 import foo.starred.parallax.api.primitives.ParallaxText
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.utils.toDurationFromMillis
-import foo.starred.snowbird.utils.withAlpha
 import net.minecraft.world.phys.Vec3
-import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object IchorPool : Module(
     "Ichor pool",
     "Highlights the area on Ichor Pool",
@@ -46,7 +44,8 @@ object IchorPool : Module(
         on<MessageEvent.Chat.Receive> {
             if (onlyKuudra && KuudraAPI.phase != KuudraPhase.Kill) return@on
             if (pos == null || !prio) {
-                messageRegex.findOrNull(stripped, "x", "y", "z") { (x, y, z) ->
+                messageRegex.find(stripped)?.let {
+                    val (x, y, z) = it.destructured
                     pos = Vec3(x.toDouble(), y.toDouble() + 0.1, z.toDouble())
                     time = System.currentTimeMillis()
                 }
@@ -62,7 +61,9 @@ object IchorPool : Module(
 
             val str = "${n.x} ${n.y} ${n.z}"
             "Ichor pool casted at <red>$str".mod()
-            if (notifyParty && PartyAPI.inParty) "pc Ichor pool casted at $str".command(false)
+            if (notifyParty) {
+                MinecraftCommands.client("pc Ichor pool casted at $str")
+            }
         }
 
         on<WorldRenderEvent.Extract> {
@@ -71,8 +72,8 @@ object IchorPool : Module(
             val t = (20100 - (System.currentTimeMillis() - time)).takeIf { it > 0 } ?: return@on reset()
 
             ParallaxCircle.frame(center, 8.0, color)
-            ParallaxCircle.fill(center, 8.0, color.withAlpha(0.5f))
-            ParallaxText.string(t.toDurationFromMillis(), center, textColor, depth = false, increase = true)
+            ParallaxCircle.fill(center, 8.0, color.alpha(0.5f))
+            ParallaxText.string(t.div(1000).parseDuration(), center, textColor, depth = false, increase = true)
         }
     }
 

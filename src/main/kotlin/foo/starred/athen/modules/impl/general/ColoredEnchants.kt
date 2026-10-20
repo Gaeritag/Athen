@@ -3,11 +3,11 @@
 package foo.starred.athen.modules.impl.general
 
 import com.google.gson.Gson
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
-import foo.starred.athen.api.messaging.enums.MessageColors
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.ConfigManager.update
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -15,19 +15,21 @@ import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.data
-import foo.starred.athen.utils.enchants
-import foo.starred.snowbird.api.EMPTY_COMPONENT
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.compress
-import foo.starred.snowbird.utils.decompress
-import foo.starred.snowbird.utils.stripped
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.text.TextUtils.substring
+import foo.starred.kontext.abstraction.chat.color.MinecraftColors
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.api.EMPTY_COMPONENT
+import foo.starred.kontext.api.format.extension.roman.parseRomanNumeral
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.item.data.enchant.SkyBlockItemEnchant
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.SkyBlockEnchantKontextItemDataResolver
+import foo.starred.kontext.api.text.parser.impl.parse
+import foo.starred.kontext.util.compress
+import foo.starred.kontext.util.decompress
+import net.minecraft.network.chat.Component
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object ColoredEnchants : Module(
     "Colored enchants",
     "Custom colors for enchants!",
@@ -42,15 +44,15 @@ object ColoredEnchants : Module(
     private val `ultimate$style` by ultimate.multiSelector("Ultimate style", l, listOf(0))
 
     private val max by config.group("Maxed enchants")
-    private val `max$color` by max.colorPicker("Max color", MessageColors.RED.color)
+    private val `max$color` by max.colorPicker("Max color", MinecraftColors.RED.color)
     private val `max$style` by max.multiSelector("Max style", l)
 
     private val high by config.group("High-level enchants")
-    private val `high$color` by high.colorPicker("High color", MessageColors.RED.color)
+    private val `high$color` by high.colorPicker("High color", MinecraftColors.RED.color)
     private val `high$style` by high.multiSelector("High style", l)
 
     private val normal by config.group("Normal-level enchants")
-    private val `normal$color` by normal.colorPicker("Normal color", MessageColors.BLUE.color)
+    private val `normal$color` by normal.colorPicker("Normal color", MinecraftColors.BLUE.color)
     private val `normal$style` by normal.multiSelector("Normal style", l)
 
     private val bad by config.group("Bad-level enchants")
@@ -73,7 +75,7 @@ object ColoredEnchants : Module(
     private val enchants = mutableMapOf<String, Enchant>()
 
     init {
-        "enchants.json".data.request {
+        AthenAPI.data("enchants.json").request {
             success<Map<String, Any>> { str ->
                 for ((a, b) in str) {
                     val c = b as? Map<String, Map<String, Any?>> ?: continue
@@ -105,68 +107,89 @@ object ColoredEnchants : Module(
                     "replaceRoman" to replaceRoman
                 )
 
-                client.keyboardHandler.clipboard = Gson().toJson(data).compress()
+                MinecraftClient.clipboard = Gson().toJson(data).compress()
                 "Enchant config exported to clipboard!".mod()
             }
 
             "import" / "enchants" {
-                val clipboard = client.keyboardHandler.clipboard
+                val clipboard = MinecraftClient.clipboard
                 if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod(MessagePrefixType.ERROR)
 
                 val map = Gson().fromJson<Map<String, Any>>(clipboard.decompress(), Map::class.java)
 
-                for ((k, v) in map) when (k) {
-                    $$"ultimate$color", $$"max$color", $$"high$color", $$"normal$color", $$"bad$color" -> update("$_key.$k", (v as Double).toInt())
-                    $$"ultimate$style", $$"max$style", $$"high$style", $$"normal$style", $$"bad$style" -> update("$_key.$k", (v as List<Double>).map { it.toInt() })
-                    "replaceRoman" -> update(k, v as Boolean)
+                for ((k, v) in map) {
+                    when (k) {
+                        $$"ultimate$color", $$"max$color", $$"high$color", $$"normal$color", $$"bad$color" -> update("$_key.$k", (v as Double).toInt())
+                        $$"ultimate$style", $$"max$style", $$"high$style", $$"normal$style", $$"bad$style" -> update("$_key.$k", (v as List<Double>).map { it.toInt() })
+                        "replaceRoman" -> update(k, v as Boolean)
+                    }
                 }
 
                 "Enchant config imported successfully!".mod()
             }
         }
-
         on<GuiEvent.Tooltip.Update> (100) {
             if (enchants.isEmpty()) return@on
-            if (item.enchants().isEmpty()) return@on
+            if (item.get<SkyBlockEnchantKontextItemDataResolver, List<SkyBlockItemEnchant>>()?.isEmpty() != false) return@on
 
             var found = false
-            for (idx in tooltip.indices) {
-                val l = tooltip[idx]
-                val str = l.stripped()
+            for (index in tooltip.indices) {
+                val line = tooltip[index]
+                val plain = line.stripped()
 
-                if (found && str.isEmpty()) break
-                if ("◆" in str) continue
-                if (l.siblings.firstOrNull()?.style?.color?.value == null) continue
+                if (found && plain.isEmpty()) break
+                if ("◆" in plain) continue
 
-                val final = EMPTY_COMPONENT.copy()
-                var i = 0
+                val parts = line.toFlatList()
+                if (parts.firstOrNull()?.style?.color?.value == null) continue
 
-                for (match in enchantRegex.findAll(str)) {
-                    val s = match.range.first
-                    val f = match.range.last + 1
+                val result = EMPTY_COMPONENT.copy()
+                for (part in parts) {
+                    val text = part.string
+                    val matches = enchantRegex.findAll(text).toList()
 
-                    if (s > i) final.append(l.substring(i, s))
+                    fun keep(value: String) {
+                        result.append(Component.literal(value).withStyle(part.style))
+                    }
 
-                    val name = match.groups["enchant"]?.value?.lowercase() ?: continue
-                    val lv0 = match.groups["level"]?.value ?: continue
-                    val lv1 = lv0.parseRomanNumeral()
-
-                    val ec = enchants[name] ?: run {
-                        final.append(l.substring(s, f))
-                        i = f
+                    if (matches.isEmpty()) {
+                        result.append(part)
                         continue
                     }
 
-                    var str0 = ""
-                    if (f < str.length && str[f] == ',') str0 = str[f].toString()
+                    var cursor = 0
+                    for (match in matches) {
+                        val start = match.range.first
+                        val end = match.range.last + 1
 
-                    final.append("${ec.style(lv1)}${ec.name} ${if (replaceRoman) lv1 else lv0}$str0".parse())
-                    i = f + str0.length
-                    found = true
+                        if (start > cursor) {
+                            keep(text.substring(cursor, start))
+                        }
+
+                        val key = match.groups["enchant"]?.value?.lowercase() ?: continue
+                        val roman = match.groups["level"]?.value ?: continue
+                        val level = roman.parseRomanNumeral() ?: continue
+
+                        val enchant = enchants[key]
+                        if (enchant == null) {
+                            keep(text.substring(start, end))
+                            cursor = end
+                            continue
+                        }
+
+                        val comma = if (end < text.length && text[end] == ',') "," else ""
+
+                        result.append("${enchant.style(level)}${enchant.name} ${if (replaceRoman) level else roman}$comma".parse())
+                        cursor = end + comma.length
+                        found = true
+                    }
+
+                    if (cursor < text.length) {
+                        keep(text.substring(cursor))
+                    }
                 }
 
-                if (i < str.length) final.append(l.substring(i, str.length))
-                tooltip[idx] = final
+                tooltip[index] = result
             }
         }
     }

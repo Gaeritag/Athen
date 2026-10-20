@@ -4,14 +4,14 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.data.feature.ConfigFeatureData
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
-import foo.starred.snowbird.api.data.Observable
+import foo.starred.kontext.api.data.Observable
 import java.awt.Color
 
-@Priority(-4)
+@LoadableAthenModule
 object ConfigManager {
     private val json = JsonStore("config/Config")
 

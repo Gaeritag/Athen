@@ -1,14 +1,14 @@
 package foo.starred.athen.modules.impl.render
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.client
+import foo.starred.kontext.abstraction.gui.MinecraftGui
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 
-@Load
+@LoadableAthenModule
 object ContainerScale : Module(
     "Container scale",
     "Scales containers visually",
@@ -19,27 +19,23 @@ object ContainerScale : Module(
 
     @JvmStatic
     val x0: Float
-        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-        get() = (client.screen?.width ?: 0) / 2f
+        get() = (MinecraftGui.screen?.width ?: 0) / 2f
 
     @JvmStatic
     val y0: Float
-        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-        get() = (client.screen?.height ?: 0) / 2f
+        get() = (MinecraftGui.screen?.height ?: 0) / 2f
 
     @JvmStatic
     val bool: Boolean
         get() {
             if (!enabled) return false
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            val screen = client.screen ?: return false
+            val screen = MinecraftGui.screen ?: return false
             return if (inventory) screen is InventoryScreen else screen is AbstractContainerScreen<*>
         }
 
     init {
         on<GuiEvent.Render.Screen.Pre>(Int.MIN_VALUE) {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            val screen = client.screen as? AbstractContainerScreen<*> ?: return@on
+            val screen = MinecraftGui.container ?: return@on
             if (!bool) return@on
 
             graphics.fillGradient(0, 0, screen.width, screen.height, -1072689136, -804253680)
@@ -50,7 +46,6 @@ object ContainerScale : Module(
         }
 
         on<GuiEvent.Render.Screen.Post>(Int.MIN_VALUE) {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
             if (!bool) return@on
 
             graphics.pose().popMatrix()

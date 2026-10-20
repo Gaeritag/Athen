@@ -26,7 +26,7 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.ScrollablePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.component.literal
 
 class RadialTree(private val side0: ScrollablePrimitive) {
     fun fn() {

@@ -3,16 +3,14 @@
 package foo.starred.athen.modules.impl.kuudra
 
 import com.mojang.serialization.Codec
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.storage.JsonStore
@@ -22,18 +20,19 @@ import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.render.fcs
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.toDuration
-import foo.starred.snowbird.utils.toDurationFromMillis
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 import kotlin.math.abs
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object KuudraSplits : Module(
     "Kuudra splits",
     "Splits for kuudra, very customisable.",
@@ -51,18 +50,18 @@ object KuudraSplits : Module(
         §cSkip§f: 5.6s §7[5.4s]
         §cKill§f: 5.4s §7[5.4s]
         §4Overall§f: 1m 40s §7[1m 38s]
-        """.trimIndent().lines().fcs
+        """.trimIndent().lines().formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
-            VanillaFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
         }
     }
 
@@ -95,22 +94,22 @@ object KuudraSplits : Module(
         val list = mutableListOf<FormattedCharSequence>()
 
         for (s in splits) {
-            val d0 = s.durTime.toDurationFromMillis(secondsDecimals = 1)
-            val d1 = (s.durTicks / 20.0).toDuration(secondsDecimals = 1)
-            val pb = PB.get(tier, s).toDurationFromMillis(secondsDecimals = 1)
+            val d0 = (s.durTime / 1000).parseDuration(decimals = 1)
+            val d1 = (s.durTicks / 20.0).parseDuration(decimals = 1)
+            val pb = (PB.get(tier, s) / 1000).parseDuration(decimals = 1)
 
             list += s.style.prs(s.str(), d0, d1, pb).visualOrderText
         }
 
-        val d0 = splits.sumOf { it.durTime }.toDurationFromMillis(secondsDecimals = 1)
-        val d1 = splits.sumOf { it.durTicks / 20.0 }.toDuration(secondsDecimals = 1)
-        val pb = PB.get(tier, null).toDurationFromMillis(secondsDecimals = 1)
+        val d0 = (splits.sumOf { it.durTime } / 1000).parseDuration(decimals = 1)
+        val d1 = splits.sumOf { it.durTicks / 20.0 }.parseDuration(decimals = 1)
+        val pb = (PB.get(tier, null) / 1000).parseDuration(decimals = 1)
         list += (if (styleType == 1) overallStyle else generalStyle).prs("Overall", d0, d1, pb).visualOrderText
 
         if (!estimatePace || splits.none { it.started }) return@Ticking list
         val ms = splits.est(tier).takeIf { it != 0L } ?: return@Ticking list
 
-        list += estimateStyle.prs("Estimate", ms.toDurationFromMillis(secondsDecimals = 1), "", "").visualOrderText
+        list += estimateStyle.prs("Estimate", (ms / 1000).parseDuration(decimals = 1), "", "").visualOrderText
         list
     }
 
@@ -129,13 +128,13 @@ object KuudraSplits : Module(
                 "<yellow>PBs for <red>Kuudra T$tier:".mod()
 
                 for (s in splits) {
-                    val pb = pbs[s]?.toDurationFromMillis(secondsDecimals = 1) ?: continue
+                    val pb = pbs[s]?.div(1000)?.parseDuration(decimals = 1) ?: continue
                     val type = if (s == KuudraPhase.Fuel && tier >= KuudraTier.BURNING.int) "eaten" else null
-                    " <dark_gray>• <red>${s.str(type)}<r>: $pb".lie()
+                    MinecraftMessages.display(" <dark_gray>• <red>${s.str(type)}<r>: $pb")
                 }
 
-                val overall = PB.get(tier, null).toDurationFromMillis(secondsDecimals = 1)
-                " <dark_gray>• <red>Overall<r>: $overall".lie()
+                val overall = PB.get(tier, null).div(1000).parseDuration(decimals = 1)
+                MinecraftMessages.display(" <dark_gray>• <red>Overall<r>: $overall")
             }
         }
 
@@ -162,21 +161,21 @@ object KuudraSplits : Module(
                 "Split breakdown:".mod()
 
                 for (s in splits) {
-                    val t0 = s.durTime.toDurationFromMillis(secondsDecimals = 1)
-                    val t1 = (s.durTicks / 20.0).toDuration(secondsDecimals = 1)
+                    val t0 = (s.durTime / 1000).parseDuration(decimals = 1)
+                    val t1 = (s.durTicks / 20.0).parseDuration(decimals = 1)
                     val delta = pBs[s].let { if (it != null && it > 0) s.durTime - it else Long.MAX_VALUE }.strD()
 
-                    " <dark_gray>• <red>${s.str()}<r>: $t0 <gray>[$t1]$delta".lie()
+                    MinecraftMessages.display(" <dark_gray>• <red>${s.str()}<r>: $t0 <gray>[$t1]$delta")
                 }
 
                 val d0 = splits.sumOf { it.durTime }
                 val d1 = splits.sumOf { it.durTicks / 20.0 }
                 val str = ov.let { if (it > 0) d0 - it else Long.MAX_VALUE }.strD()
 
-                val t0 = d0.toDurationFromMillis(secondsDecimals = 1)
-                val t1 = d1.toDuration(secondsDecimals = 1)
+                val t0 = d0.div(1000).parseDuration(decimals = 1)
+                val t1 = d1.parseDuration(decimals = 1)
 
-                " <dark_gray>• <red>Overall<r>: $t0 <gray>[$t1]$str".lie()
+                MinecraftMessages.display(" <dark_gray>• <red>Overall<r>: $t0 <gray>[$t1]$str")
             }
         }
     }
@@ -193,7 +192,7 @@ object KuudraSplits : Module(
 
         val f = this < 0
         val color = if (f) "<${MochaColorScheme.Green.argb}>" else "<${MochaColorScheme.Peach.argb}>"
-        val abs = abs(this).toDurationFromMillis(secondsDecimals = 1)
+        val abs = abs(this).div(1000).parseDuration(decimals = 1)
 
         return " $color[${if (f) "-" else "+"}$abs]"
     }

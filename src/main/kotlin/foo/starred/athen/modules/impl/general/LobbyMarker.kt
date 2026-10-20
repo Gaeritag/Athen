@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.impl.general
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -8,7 +8,7 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.modules.Module
 import kotlin.time.Duration.Companion.minutes
 
-@Load
+@LoadableAthenModule
 object  LobbyMarker : Module(
     "Lobby marker",
     "Marks lobbies and alerts you if you have already been inside that lobby.",

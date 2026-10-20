@@ -2,22 +2,22 @@
 
 package foo.starred.athen.modules.impl.general
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.fcs
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.api.player
+import foo.starred.kontext.abstraction.chat.command.MinecraftCommands
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.component.formattedText
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object LagDetector : Module(
     "Lag detector",
     "Displays a timer since the last server tick if it was older than the threshold.",
@@ -29,24 +29,24 @@ object LagDetector : Module(
     private val text by config.input("Message", "Lag detected!")
 
     private val hud by config.hud("Lag display") {
-        val example = "§c67ms".fcs
+        val example = "§c67ms".formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
             if (last == 0L) return@render
-            if (player == null) return@render
+            if (client.player == null) return@render
 
             val t = System.currentTimeMillis() - last
             if (t <= threshold) return@render
 
-            VanillaFontRenderer.extract(graphics, "§c${t}ms", 0, 0)
+            MinecraftFontRenderer.extract(graphics, "§c${t}ms", 0, 0)
         }
     }
 
@@ -56,7 +56,7 @@ object LagDetector : Module(
     init {
         on<TickEvent.Client.End> {
             if (last == 0L) return@on
-            if (player == null) return@on
+            if (client.player == null) return@on
 
             val t = System.currentTimeMillis() - last
             if (t <= threshold) return@on
@@ -64,7 +64,10 @@ object LagDetector : Module(
 
             bool = true
             text.mod()
-            if (party) "/pc $text".command()
+
+            if (party) {
+                MinecraftCommands.client("/pc $text")
+            }
         }.runWhen(notify.state)
 
         on<TickEvent.Server> {

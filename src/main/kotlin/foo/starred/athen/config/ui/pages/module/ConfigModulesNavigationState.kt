@@ -24,7 +24,7 @@ import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangl
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.text.parser.impl.parse
+import foo.starred.kontext.api.text.parser.impl.parse
 import kotlin.time.Duration.Companion.milliseconds
 
 object ConfigModulesNavigationState {

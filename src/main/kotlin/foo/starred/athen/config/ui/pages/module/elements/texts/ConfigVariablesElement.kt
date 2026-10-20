@@ -24,8 +24,8 @@ import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangle
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.api.format.extension.component.literal
 import kotlin.time.Duration.Companion.milliseconds
 
 class ConfigVariablesElement(
@@ -72,7 +72,7 @@ class ConfigVariablesElement(
 
                     val token = config.tokens.getOrNull(page * 3 + i) ?: return@on
                     copied = token
-                    client.keyboardHandler.clipboard = token
+                    MinecraftClient.clipboard = token
                     ConfigUI.show("<#A6E3A1>Copied $token to clipboard!", x, y)
                 }
 

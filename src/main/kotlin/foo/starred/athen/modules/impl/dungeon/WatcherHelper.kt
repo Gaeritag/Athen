@@ -2,13 +2,11 @@
 
 package foo.starred.athen.modules.impl.dungeon
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -17,21 +15,23 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.fcs
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.level
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.alert
-import foo.starred.snowbird.utils.stripped
-import foo.starred.snowbird.utils.toDuration
-import foo.starred.snowbird.utils.toDurationFromMillis
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.sound.MinecraftSound
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.abstraction.title.MinecraftTitle
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
 import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 import kotlin.math.abs
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.THE_CATACOMBS])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.THE_CATACOMBS])
 object WatcherHelper : Module(
     "Watcher helper",
     "Shows information about the watcher's speed and movements.",
@@ -57,23 +57,23 @@ object WatcherHelper : Module(
 
             append("Total: §c$`display$total`")
             if (showTicks.value) append(" §7($`display$total$t`)")
-        }.split("\n").fcs
+        }.split("\n").formattedText()
     }
 
     private val hud by config.hud("Blood timers") {
-        val example0 = listOf("Speak: §c23.4s §7(23.2s)", "Move: §c25.6s §7(24.6s)", "Total: §c57.3s §7(54.2s)").fcs
-        val example1 = listOf("Speak: §c23.4s", "Move: §c25.6s", "Total: §c57.3s").fcs
+        val example0 = listOf("Speak: §c23.4s §7(23.2s)", "Move: §c25.6s §7(24.6s)", "Total: §c57.3s §7(54.2s)").formattedText()
+        val example1 = listOf("Speak: §c23.4s", "Move: §c25.6s", "Total: §c57.3s").formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(if (showTicks.value) example0 else example1)
+            MinecraftFontMeasurer.constrain(if (showTicks.value) example0 else example1)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, if (showTicks.value) example0 else example1, 0, 0)
+            MinecraftFontRenderer.extract(graphics, if (showTicks.value) example0 else example1, 0, 0)
         }
 
         render {
-            VanillaFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
         }
     }
 
@@ -147,8 +147,8 @@ object WatcherHelper : Module(
             val t = System.currentTimeMillis() - `blood$start`
             val t0 = Scheduler.ticks.server - `blood$start$t`
 
-            val d = t.toDurationFromMillis(secondsDecimals = 1, secondsOnly = true)
-            val d0 = (t0 / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
+            val d = (t / 1000).parseDuration(decimals = 1, short = true)
+            val d0 = (t0 / 20.0).parseDuration(decimals = 1, short = true)
 
             "Watcher took <red>$d <gray>($d0) <r>to spawn all!".mod()
         }
@@ -175,8 +175,8 @@ object WatcherHelper : Module(
         on<TickEvent.Client.End> {
             if (DungeonAPI.bloodKilledAll.value) return@on
 
-            `display$total` = (System.currentTimeMillis() - `blood$start`).toDurationFromMillis(secondsDecimals = 1, secondsOnly = true)
-            `display$total$t` = ((Scheduler.ticks.server - `blood$start$t`) / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
+            `display$total` = ((System.currentTimeMillis() - `blood$start`) / 1000).parseDuration(decimals = 1, short = true)
+            `display$total$t` = ((Scheduler.ticks.server - `blood$start$t`) / 20.0).parseDuration(decimals = 1, short = true)
         }.runWhen(DungeonAPI.bloodOpened)
 
         on<MessageEvent.Chat.Receive> {
@@ -189,8 +189,8 @@ object WatcherHelper : Module(
             val t = `blood$speak` - `blood$start`
             val t0 = `blood$speak$t` - `blood$start$t`
 
-            `display$speak` = t.toDurationFromMillis(secondsDecimals = 1, secondsOnly = true)
-            `display$speak$t` = (t0 / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
+            `display$speak` = (t / 1000).parseDuration(decimals = 1, short = true)
+            `display$speak$t` = (t0 / 20.0).parseDuration(decimals = 1, short = true)
 
             if (!speak) return@on
 
@@ -198,11 +198,13 @@ object WatcherHelper : Module(
 
             "<hover:<red>$t0 <white>ticks.>Watcher took <red>$`display$speak` <gray>($`display$speak$t`)<r> to speak!".mod()
 
+            MinecraftSound.play(purreow)
+
             when (ty) {
-                Shrimp.FAST -> `text$fast`.parse().alert(subTitle = "Took <red>$`display$speak` <r>to speak!".parse(), soundType = purreow)
-                Shrimp.NORMAL -> `text$normal`.parse().alert(subTitle = "Took <red>$`display$speak` <r>to speak!".parse(), soundType = purreow)
-                Shrimp.SLOW -> `text$slow`.parse().alert(subTitle = "Took <red>$`display$speak` <r>to speak!".parse(), soundType = purreow)
-                Shrimp.SNAIL -> `text$snail`.parse().alert(subTitle = "Took <red>$`display$speak` <r>to speak!".parse(), soundType = purreow)
+                Shrimp.FAST -> MinecraftTitle.display(`text$fast`.parse(), "Took <red>$`display$speak` <r>to speak!".parse())
+                Shrimp.NORMAL -> MinecraftTitle.display(`text$normal`.parse(), "Took <red>$`display$speak` <r>to speak!".parse())
+                Shrimp.SLOW -> MinecraftTitle.display(`text$slow`.parse(), "Took <red>$`display$speak` <r>to speak!".parse())
+                Shrimp.SNAIL -> MinecraftTitle.display(`text$snail`.parse(), "Took <red>$`display$speak` <r>to speak!".parse())
             }
         }.runWhen(DungeonAPI.bloodOpened)
 
@@ -212,7 +214,7 @@ object WatcherHelper : Module(
             if (`blood$speak` == 0L) return@on
             if (System.currentTimeMillis() - `blood$speak` < 2500) return@on
 
-            val l = level ?: return@on
+            val l = client.level ?: return@on
             val e = getEntity(l)?.takeIf { it.customName?.stripped()?.contains("The Watcher") == true } ?: return@on
             val x = `blood$watcher$x` ?: e.x.also { `blood$watcher$x` = it }
             val z = `blood$watcher$z` ?: e.z.also { `blood$watcher$z` = it }
@@ -226,8 +228,8 @@ object WatcherHelper : Module(
             val t = `blood$move` - `blood$start`
             val t0 = `blood$move$t` - `blood$start$t`
 
-            `display$move` = t.toDurationFromMillis(secondsDecimals = 1, secondsOnly = true)
-            `display$move$t` = (t0 / 20.0).toDuration(secondsDecimals = 1, secondsOnly = true)
+            `display$move` = (t / 1000).parseDuration(decimals = 1, short = true)
+            `display$move$t` = (t0 / 20.0).parseDuration(decimals = 1, short = true)
 
             if (!move) return@on
 

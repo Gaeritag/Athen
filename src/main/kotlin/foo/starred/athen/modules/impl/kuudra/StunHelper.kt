@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPod
 import foo.starred.athen.api.kuudra.enums.KuudraTier
@@ -11,22 +11,22 @@ import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.*
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.renderPos
 import foo.starred.kbus.data.event.traits.KBusCancellableTrait
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.api.entity.extension.renderVec3
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.LoreKontextItemDataResolver
 import foo.starred.parallax.api.primitives.ParallaxBox
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.HitResult
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object StunHelper : Module(
     "Stun helper",
     "Helper features for stunning in kuudra.",
@@ -57,7 +57,7 @@ object StunHelper : Module(
             if (!KuudraAPI.inRun) return@on
 
             val item = client.player?.getItemInHand(InteractionHand.MAIN_HAND) ?: return@on
-            if (item.getData(DataTypes.COOLDOWN_ABILITY)?.first != "Pickobulus") return@on
+            if (item.get<LoreKontextItemDataResolver, List<Component>>()?.any { "Ability: Pickobulus" in it.string } != true) return@on
             if (GenericInputState.pressed(blockOverride)) return@on
 
             val tier = KuudraAPI.tier?.int ?: return@on
@@ -91,7 +91,7 @@ object StunHelper : Module(
             if (tier < KuudraTier.BURNING.int) return@on
 
             if (stunning) {
-                stunRegex.findOrNull(stripped) { reset() }
+                if (stunRegex.containsMatchIn(stripped)) reset()
                 return@on
             }
 
@@ -115,7 +115,7 @@ object StunHelper : Module(
             val player = client.player ?: return@on
             val selected = fn0()
             val offset =
-                if (!belly) player.renderPos.subtract(-161.0, 49.0, -186.0)
+                if (!belly) player.renderVec3().subtract(-161.0, 49.0, -186.0)
                 else null
 
             for (p in KuudraPod.entries) {

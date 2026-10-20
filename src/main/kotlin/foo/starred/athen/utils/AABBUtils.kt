@@ -3,6 +3,6 @@ package foo.starred.athen.utils
 import net.minecraft.core.BlockPos
 import net.minecraft.world.phys.AABB
 
-fun BlockPos.markerAABB() = AABB(x.toDouble(), y.toDouble(), z.toDouble(), x + 1.0, y + 1.0, z + 1.0)
-
-fun AABB.copy(): AABB = AABB(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ)
+fun BlockPos.aabb(): AABB {
+    return AABB(x.toDouble(), y.toDouble(), z.toDouble(), x + 1.0, y + 1.0, z + 1.0)
+}

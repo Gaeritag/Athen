@@ -2,14 +2,14 @@
 
 package foo.starred.athen.modules.impl.general.messageactions.actions.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.modules.impl.general.messageactions.actions.base.IMessageAction
 import foo.starred.athen.modules.impl.general.messageactions.actions.data.MessageActionField
 import foo.starred.athen.modules.impl.general.messageactions.actions.data.MessageActionType
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.showTitle
+import foo.starred.kontext.abstraction.title.MinecraftTitle
+import foo.starred.kontext.api.text.parser.impl.parse
 
-@Load
+@LoadableAthenModule
 class TitleAction(val text: String, val stay: Int = 70) : IMessageAction {
     private val parsed = text.parse()
     private val empty = text.isEmpty()
@@ -20,7 +20,7 @@ class TitleAction(val text: String, val stay: Int = 70) : IMessageAction {
 
     override fun run() {
         if (empty) return
-        parsed.showTitle(fadeIn = 10, stay = stay, fadeOut = 10)
+        MinecraftTitle.display(parsed, fadeIn = 10, stay = stay, fadeOut = 10)
     }
 
     override fun resolve(text: String, match: MatchResult?): IMessageAction {

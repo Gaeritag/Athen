@@ -1,23 +1,23 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.toDurationFromMillis
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.util.FormattedCharSequence
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object KuudraTimers : Module(
     "Kuudra timers",
     "Timers for various miscellaneous things in Kuudra.",
@@ -28,24 +28,24 @@ object KuudraTimers : Module(
 
     private val d0 = Ticking(2) {
         if (KuudraAPI.phase != KuudraPhase.Supply) return@Ticking null
-        val t = (t0 - System.currentTimeMillis()).takeIf { it > 0 } ?: return@Ticking fn0()
-        s0(t.toDurationFromMillis(secondsDecimals = 1))
+        val t = (t0 - System.currentTimeMillis()).takeIf { it > 0 }?.div(1000) ?: return@Ticking fn0()
+        s0(t.parseDuration(decimals = 1))
     }
 
     private val spawn by config.hud("Supply spawn timer") {
         val example = "Supply in: <red>4.5s".parse().visualOrderText
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
             if (t0 == 0L) return@render
-            VanillaFontRenderer.extract(graphics, d0.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, d0.value ?: return@render, 0, 0)
         }
     }
 
@@ -57,24 +57,24 @@ object KuudraTimers : Module(
 
     private val d1 = Ticking(2) {
         if (KuudraAPI.phase != KuudraPhase.Build) return@Ticking null
-        val t = (t1 - System.currentTimeMillis()).takeIf { it > 0 } ?: return@Ticking fn1()
-        s1(t.toDurationFromMillis(secondsDecimals = 1))
+        val t = (t1 - System.currentTimeMillis()).takeIf { it > 0 }?.div(1000) ?: return@Ticking fn1()
+        s1(t.parseDuration(decimals = 1))
     }
 
     private val build by config.hud("Build start timer") {
         val example = "Build in: <red>4.5s".parse().visualOrderText
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
             if (t1 == 0L) return@render
-            VanillaFontRenderer.extract(graphics, d1.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, d1.value ?: return@render, 0, 0)
         }
     }
 

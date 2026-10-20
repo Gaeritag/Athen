@@ -4,10 +4,9 @@ package foo.starred.athen.modules.impl.general
 
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.serialization.Codec
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
@@ -16,23 +15,25 @@ import foo.starred.athen.events.PlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
 import foo.starred.athen.utils.id
-import foo.starred.athen.utils.lore
 import foo.starred.athen.utils.uuid
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.held
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.LoreKontextItemDataResolver
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
 import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
-@Load
+@LoadableAthenModule
 object ProtectItems : Module(
     "Protect items",
     "Protects any item!",
@@ -74,12 +75,12 @@ object ProtectItems : Module(
             if (!slot.item.fn()) return@on
             if (renderKey && !GenericInputState.pressed(renderKeybind)) return@on
 
-            VanillaFontRenderer.extract(graphics, p, slot.x, slot.y)
+            MinecraftFontRenderer.extract(graphics, p, slot.x, slot.y)
         }.runWhen(render.state)
 
         command {
             "protect" / "add" {
-                val item = held?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".mod()
+                val item = client.player?.mainHandItem?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".mod()
                 val uuid = item.uuid()
                 if (!enabled) "Please turn on the feature \"ProtectItems\"".mod()
 
@@ -109,7 +110,7 @@ object ProtectItems : Module(
             }
 
             "protect" / "remove" {
-                val item = held?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".mod()
+                val item = client.player?.mainHandItem?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".mod()
                 val uuid = item.uuid()
                 if (!enabled) "Please turn on the feature \"ProtectItems\"".mod()
 
@@ -139,22 +140,22 @@ object ProtectItems : Module(
             }
 
             "protect" / "list" {
-                val a = ("<gray>" + ("-".repeat())).parse()
+                val a = ("<gray>" + MinecraftChat.repeat("-")).parse()
 
                 "Protected items list:".mod()
-                a.lie()
+                MinecraftMessages.display(a)
 
                 "Protected UUIDs:".mod()
-                for (u in uuids.value) " <dark_gray>- <gray>$u".lie()
-                a.lie()
+                for (u in uuids.value) MinecraftMessages.display(" <dark_gray>- <gray>$u")
+                MinecraftMessages.display(a)
 
                 "Protected SkyBlock IDs:".mod()
-                for (t in types0.value) " <dark_gray>- <gray>$t".lie()
-                a.lie()
+                for (t in types0.value) MinecraftMessages.display(" <dark_gray>- <gray>$t")
+                MinecraftMessages.display(a)
 
                 "Protected IDs:".mod()
-                for (t in types.value) " <dark_gray>- <gray>$t".lie()
-                a.lie()
+                for (t in types.value) MinecraftMessages.display(" <dark_gray>- <gray>$t")
+                MinecraftMessages.display(a)
 
                 if (!enabled) "Please turn on the feature \"ProtectItems\"".mod()
             }
@@ -184,7 +185,7 @@ object ProtectItems : Module(
 
         val t0 = s.menu.slots.getOrNull(49)?.item
         if (t0?.item == Items.HOPPER && t0.hoverName.stripped() == "Sell Item") return true
-        if (t0?.lore()?.lastOrNull()?.stripped() == "Click to buyback!") return true
+        if (t0?.get<LoreKontextItemDataResolver, List<Component>>()?.lastOrNull()?.stripped() == "Click to buyback!") return true
 
         return false
     }

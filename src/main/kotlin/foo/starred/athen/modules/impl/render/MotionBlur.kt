@@ -4,11 +4,11 @@ package foo.starred.athen.modules.impl.render
 
 import com.mojang.blaze3d.pipeline.*
 import com.mojang.blaze3d.systems.RenderSystem
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.client
+import foo.starred.kontext.abstraction.client.extension.client
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.resources.Identifier
@@ -42,7 +42,7 @@ import java.util.Optional
 import com.mojang.renderpearl.api.pipeline.ColorTargetState
 *///? }
 
-@Load
+@LoadableAthenModule
 object MotionBlur : Module(
     "Motion blur",
     "Motion blur, I think that's self-explanatory",

@@ -2,8 +2,8 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -14,24 +14,24 @@ import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.renderPos
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.entity.extension.renderVec3
+import foo.starred.kontext.api.entity.extension.serverHealth
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.format.extension.number.abbreviate
+import foo.starred.kontext.api.format.extension.roman.toRomanNumeral
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 import foo.starred.parallax.api.primitives.ParallaxText
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.abbreviate
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.toDuration
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.decoration.ArmorStand
-import tech.thatgravyboat.skyblockapi.utils.extentions.serverHealth
-import tech.thatgravyboat.skyblockapi.utils.extentions.toRomanNumeral
 import java.util.*
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object SlayerNametags : Module(
     "Slayer nametags",
     "Shows information about the boss in a cleaner format.",
@@ -129,7 +129,7 @@ object SlayerNametags : Module(
             val info = entities[entity] ?: return@on
 
             info.deathTicks = 0
-            info.renderable = listOf("§c${(entity.tickCount / 20.0).toDuration(secondsDecimals = 1)}".literal())
+            info.renderable = listOf("§c${(entity.tickCount / 20.0).parseDuration(decimals = 1)}".literal())
         }
 
         on<LocationEvent.Server.Connect> {
@@ -156,8 +156,8 @@ object SlayerNametags : Module(
             val entities = entities.toMap()
             for ((k, v) in entities) {
                 val text = v.renderable
-                val spacing = if (increase) 0.25 * camera.distanceTo(k.renderPos) / 3f else 0.25
-                val position = k.renderPos.add(0.0, 0.5 + (text.size - 1) * spacing / 2, 0.0)
+                val spacing = if (increase) 0.25 * camera.distanceTo(k.renderVec3()) / 3f else 0.25
+                val position = k.renderVec3().add(0.0, 0.5 + (text.size - 1) * spacing / 2, 0.0)
 
                 for (i in text.indices) {
                     ParallaxText.component(text[i], position.add(0.0, -i * spacing, 0.0), depth = !v.visible, increase = increase)
@@ -172,7 +172,7 @@ object SlayerNametags : Module(
 
         return buildList {
             add(attached.timer(slayer.entity.time(), slayer.type == SlayerBoss.Inferno))
-            add(`styles$name`.fill("#name_short" to ((slayer.type as? SlayerBoss)?.short ?: name), "#name_long" to name, "#tier" to (slayer.tier?.int?.toRomanNumeral(true) ?: "???")))
+            add(`styles$name`.fill("#name_short" to ((slayer.type as? SlayerBoss)?.short ?: name), "#name_long" to name, "#tier" to (slayer.tier?.int?.toRomanNumeral() ?: "???")))
 
             if (hits != null) add(`styles$health$hits`.fill("#health" to health, "#hits" to hits.toString(), extra = special))
             else add(`styles$health$normal`.fill("#health" to health, extra = special))
@@ -187,7 +187,7 @@ object SlayerNametags : Module(
         val laser = when (seconds) {
             null -> return `styles$timer$normal`.fill("#time" to this, "#laser" to "")
             0.0 -> "Soon"
-            else -> seconds.toDuration(secondsDecimals = 1)
+            else -> seconds.parseDuration(decimals = 1)
         }
 
         return `styles$timer$void$laser`.fill("#time" to this, "#laser" to laser)

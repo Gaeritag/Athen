@@ -34,8 +34,8 @@
 package foo.starred.athen.api.dungeon.data
 
 import foo.starred.athen.Athen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.lazy.RefreshableLazy
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.lazy.RefreshableLazy
 import net.minecraft.world.entity.Entity
 
 class DungeonPlayer(

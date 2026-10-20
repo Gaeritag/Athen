@@ -1,6 +1,6 @@
 package foo.starred.athen.config.hud.impl
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.hud.data.element.HudElement
 import foo.starred.athen.config.hud.ui.HudElementEditorUI
@@ -8,9 +8,10 @@ import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.ModSettings
 import foo.starred.cascade.graphics.geometry.CascadeGeometricResolution
-import foo.starred.snowbird.api.client
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.gui.MinecraftGui
 
-@Priority(-2)
+@LoadableAthenModule
 object HudRenderer {
     val resolution = CascadeGeometricResolution.FHD.of(2f)
     val elements = mutableMapOf<String, HudElement>()
@@ -26,8 +27,7 @@ object HudRenderer {
 
     init {
         on<GuiEvent.Render.Any.Main> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            if (client.screen is HudElementEditorUI) return@on
+            if (MinecraftGui.screen is HudElementEditorUI) return@on
             //~ if >= 26.2 'client.options.hideGui' -> 'client.gui.hud.isHidden'
             if (client.options.hideGui && ModSettings.hideGuis) return@on
 

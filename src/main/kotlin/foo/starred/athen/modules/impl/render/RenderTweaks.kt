@@ -1,10 +1,10 @@
 package foo.starred.athen.modules.impl.render
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.modules.Module
 
-@Load
+@LoadableAthenModule
 object RenderTweaks : Module(
     "Render tweaks",
     "Tweaks Minecraft's rendering!",

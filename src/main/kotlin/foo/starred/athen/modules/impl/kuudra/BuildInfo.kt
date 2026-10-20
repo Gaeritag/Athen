@@ -2,29 +2,29 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraSupply
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.fcs
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.abstraction.title.MinecraftTitle
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.text.parser.impl.parse
 import foo.starred.parallax.api.primitives.ParallaxBox
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.alert
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object BuildInfo : Module(
     "Build info",
     "Shows information about the ballista build process in phase 2.",
@@ -37,24 +37,24 @@ object BuildInfo : Module(
     private val `stun$message` by config.input("Notification message", "<red>Stun!")
 
     private val display = Ticking {
-        listOf("§7Builders: §c${KuudraAPI.buildPlayers}", "§7Progress: §c${KuudraAPI.buildProgress.value}%").fcs
+        listOf("§7Builders: §c${KuudraAPI.buildPlayers}", "§7Progress: §c${KuudraAPI.buildProgress.value}%").formattedText()
     }
 
     private val hud by config.hud("Build info") {
-        val example = listOf("§7Builders: §c3", "§7Progress: §c47%").fcs
+        val example = listOf("§7Builders: §c3", "§7Progress: §c47%").formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
             if (!render) return@render
 
-            VanillaFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
         }
     }
 
@@ -71,7 +71,7 @@ object BuildInfo : Module(
             if (it <= `stun$percent`) return@observe
 
             val prs = `stun$message`.parse(true)
-            prs.alert()
+            MinecraftTitle.display(prs)
             prs.mod()
             sent = true
         }

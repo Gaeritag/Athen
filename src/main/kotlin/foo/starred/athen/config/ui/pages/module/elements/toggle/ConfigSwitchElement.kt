@@ -16,7 +16,7 @@ import foo.starred.cascade.graphics.geometry.CascadeGeometricOffset
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
-import foo.starred.snowbird.utils.brighten
+import foo.starred.kontext.api.format.extension.color.brighten
 import kotlin.time.Duration.Companion.milliseconds
 
 class ConfigSwitchElement : RoundedRectanglePrimitive() {

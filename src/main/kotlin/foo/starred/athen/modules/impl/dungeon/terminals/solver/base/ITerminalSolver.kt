@@ -13,8 +13,8 @@ import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
 import foo.starred.cascade.graphics.extensions.rectangle.rounded.roundedRectangle
 import foo.starred.cascade.graphics.font.CascadeFonts
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.utils.send
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.gui.MinecraftGui
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
@@ -70,8 +70,7 @@ abstract class ITerminalSolver(val type: TerminalType) {
 
     open fun click(slot: Int, button: Int) {
         if (TerminalSimulator.s.value) {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            val screen = client.screen as? ITerminalSim ?: return
+            val screen = MinecraftGui.screen as? ITerminalSim ?: return
             val slot0 = screen.menu.slots.getOrNull(slot) ?: return
 
             screen.slotClicked(slot0, slot, button, if (button == InputConstants.MOUSE_BUTTON_LEFT) ContainerInput.CLONE else ContainerInput.PICKUP)
@@ -81,7 +80,7 @@ abstract class ITerminalSolver(val type: TerminalType) {
             return
         }
 
-        ServerboundContainerClickPacket(TerminalAPI.id, client.player?.containerMenu?.stateId ?: return, slot.toShort(), (if (button == InputConstants.MOUSE_BUTTON_LEFT) 2 else button).toByte(), if (button == InputConstants.MOUSE_BUTTON_LEFT) ContainerInput.CLONE else ContainerInput.PICKUP, Int2ObjectOpenHashMap(), HashedStack.create(ItemStack.EMPTY, client.connection?.decoratedHashOpsGenenerator() ?: return)).send()
+        client.connection?.send(ServerboundContainerClickPacket(TerminalAPI.id, client.player?.containerMenu?.stateId ?: return, slot.toShort(), (if (button == InputConstants.MOUSE_BUTTON_LEFT) 2 else button).toByte(), if (button == InputConstants.MOUSE_BUTTON_LEFT) ContainerInput.CLONE else ContainerInput.PICKUP, Int2ObjectOpenHashMap(), HashedStack.create(ItemStack.EMPTY, client.connection?.decoratedHashOpsGenenerator() ?: return)))
         TerminalSolvers.last = System.currentTimeMillis()
         pending = true
     }

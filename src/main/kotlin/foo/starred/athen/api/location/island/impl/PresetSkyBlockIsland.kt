@@ -2,7 +2,7 @@ package foo.starred.athen.api.location.island.impl
 
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.api.location.island.base.ISkyBlockIsland
-import foo.starred.snowbird.api.data.Observable
+import foo.starred.kontext.api.data.Observable
 
 enum class PresetSkyBlockIsland(val id: String, override val string: String): ISkyBlockIsland {
     NONE("none", "None"),

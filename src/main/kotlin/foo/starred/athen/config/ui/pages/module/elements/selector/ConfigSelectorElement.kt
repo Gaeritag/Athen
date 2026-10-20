@@ -22,8 +22,8 @@ import foo.starred.cascade.primitives.impl.RectanglePrimitive.Companion.rectangl
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.utils.brighten
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.color.brighten
+import foo.starred.kontext.api.format.extension.component.literal
 import kotlin.time.Duration.Companion.milliseconds
 
 class ConfigSelectorElement(

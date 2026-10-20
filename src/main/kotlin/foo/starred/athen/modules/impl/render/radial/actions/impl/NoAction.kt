@@ -1,10 +1,10 @@
 package foo.starred.athen.modules.impl.render.radial.actions.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.modules.impl.render.radial.actions.ActionType
 import foo.starred.athen.modules.impl.render.radial.actions.IAction
 
-@Load
+@LoadableAthenModule
 object NoAction : IAction {
     override val id: Int = 0
     override val name: String = "None"

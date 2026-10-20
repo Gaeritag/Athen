@@ -2,12 +2,12 @@
 
 package foo.starred.athen.modules.impl.general
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.SoundPlayEvent
 import foo.starred.athen.modules.Module
 
-@Load
+@LoadableAthenModule
 object SoundReplacer : Module(
     "Sound replacer",
     "Replaces all sounds, with a sound that you select.",
@@ -17,7 +17,7 @@ object SoundReplacer : Module(
 
     init {
         on<SoundPlayEvent> {
-            val r = sound0.sound.takeIf { it != sound } ?: return@on
+            val r = sound0.sound.takeIf { it.location() != sound } ?: return@on
 
             cancel()
             sound0.play()

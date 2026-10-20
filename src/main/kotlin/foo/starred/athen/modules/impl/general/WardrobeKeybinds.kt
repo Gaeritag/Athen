@@ -3,24 +3,23 @@
 package foo.starred.athen.modules.impl.general
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.guiClick
 import foo.starred.kbus.data.event.traits.KBusCancellableTrait
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Items
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object WardrobeKeybinds : Module(
     "Wardrobe keybinds",
     "Keybinds for wardrobe slots!",
@@ -74,11 +73,10 @@ object WardrobeKeybinds : Module(
 
     init {
         on<GuiEvent.Open.Container> {
-            menuRegex.findOrNull(stripped, "cur", "max") { (cur, max) ->
-                open = true
-                current = cur.toInt()
-                WardrobeKeybinds.max = max.toInt()
-            }
+            val (cur, max) = menuRegex.find(stripped)?.destructured ?: return@on
+            open = true
+            current = cur.toInt()
+            WardrobeKeybinds.max = max.toInt()
         }
 
         on<GuiEvent.Close.Container> {
@@ -111,12 +109,12 @@ object WardrobeKeybinds : Module(
         val player = client.player ?: return
 
         if (key == prevPage) {
-            if (current > 1) guiClick(player.containerMenu.containerId, 45)
+            if (current > 1) MinecraftGui.click(player.containerMenu.containerId, 45)
             return
         }
 
         if (key == nextPage) {
-            if (current < max) guiClick(player.containerMenu.containerId, 53)
+            if (current < max) MinecraftGui.click(player.containerMenu.containerId, 53)
             return
         }
 
@@ -126,7 +124,7 @@ object WardrobeKeybinds : Module(
             val slot2 = slots.find { it.idx == swapKey2 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
             val s = if (slot1.equipped) slot2.idx else slot1.idx
 
-            guiClick(player.containerMenu.containerId, s)
+            MinecraftGui.click(player.containerMenu.containerId, s)
             last = System.currentTimeMillis()
             cancel()
             return
@@ -135,7 +133,7 @@ object WardrobeKeybinds : Module(
         val slot = slots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
         if (slot.equipped && preventUnequip) return
 
-        guiClick(player.containerMenu.containerId, slot.idx)
+        MinecraftGui.click(player.containerMenu.containerId, slot.idx)
         last = System.currentTimeMillis()
         cancel()
     }

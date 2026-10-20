@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static foo.starred.snowbird.api.ClientKt.client;
+import static foo.starred.kontext.abstraction.client.extension.MinecraftClientExtensionsKt.client;
 
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {

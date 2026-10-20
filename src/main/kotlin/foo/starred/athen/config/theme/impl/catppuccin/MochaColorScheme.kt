@@ -3,7 +3,7 @@
 package foo.starred.athen.config.theme.impl.catppuccin
 
 import foo.starred.athen.config.theme.base.IThemeColorScheme
-import foo.starred.snowbird.utils.rgba
+import foo.starred.kontext.api.format.impl.color.ColorFormatter.rgba
 
 enum class MochaColorScheme(override val rgba: Int) : IThemeColorScheme {
     Rosewater(rgba(245, 224, 220)),

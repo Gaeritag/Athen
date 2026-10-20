@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.impl.render
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 
-@Load
+@LoadableAthenModule
 object RenderOptimiser :  Module(
     "Render optimiser",
     "Cleans up rendering stuff, and maybe optimizes a bit.",

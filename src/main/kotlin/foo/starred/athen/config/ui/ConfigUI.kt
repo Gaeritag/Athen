@@ -1,6 +1,6 @@
 package foo.starred.athen.config.ui
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.config.hud.ui.HudElementEditorUI
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
@@ -36,15 +36,14 @@ import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrolla
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.center
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.open
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
-@Priority
+@LoadableAthenModule
 object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.FHD.of(2f)) {
     private val text = text {
         wrapper = CascadeTextWrapper
@@ -114,7 +113,7 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
             }
 
             "hud" {
-                HudElementEditorUI.open()
+                MinecraftGui.screen(HudElementEditorUI)
             }
         }
 
@@ -284,11 +283,11 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
     }
 
     private fun help() {
-        val divider = ("§8§m" + ("-".repeat())).literal()
+        val divider = ("§8§m" + MinecraftChat.repeat("-")).literal()
 
-        divider.lie()
-        "§bAthen Commands".center().lie()
-        divider.lie()
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display(MinecraftChat.center("§bAthen Commands"))
+        MinecraftMessages.display(divider)
 
         val commands = listOf(
             "/athen config" to "Open the configuration menu",
@@ -307,8 +306,10 @@ object ConfigUI : CascadeScreen("Config UI [Athen]", CascadeGeometricResolution.
             "/athen irc help" to "View all IRC commands"
         )
 
-        for ((c, d) in commands) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".lie()
+        for ((c, d) in commands) {
+            MinecraftMessages.display("  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d")
+        }
 
-        divider.lie()
+        MinecraftMessages.display(divider)
     }
 }

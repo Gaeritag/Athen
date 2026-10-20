@@ -6,8 +6,8 @@ import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
-import foo.starred.snowbird.api.level
-import foo.starred.snowbird.utils.toDuration
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.format.extension.time.parseDuration
 import net.minecraft.world.entity.Entity
 import java.util.*
 
@@ -21,7 +21,7 @@ data class SlayerCarryPlayer(
     var last: Long = 0
 ) {
     val entity = Ticking(5) {
-        level?.players()?.find { it.name.string == name }
+        client.level?.players()?.find { it.name.string == name }
     }
 
     var tick: Int = 0
@@ -32,6 +32,7 @@ data class SlayerCarryPlayer(
 
     fun spawn(entity: Entity): Boolean {
         if (boss != null) return false
+
         boss = entity
         tick = Scheduler.ticks.server
         return true
@@ -46,14 +47,7 @@ data class SlayerCarryPlayer(
         boss = null
         done++
 
-        return Result(
-            entity.tickCount / 20.0,
-            Scheduler.ticks.server - tick,
-            done >= max,
-            done,
-            max,
-            (last - first) / 1000.0,
-        )
+        return Result(entity.tickCount / 20.0, Scheduler.ticks.server - tick, done >= max, done, max, (last - first) / 1000.0)
     }
 
     fun reset() {
@@ -63,7 +57,7 @@ data class SlayerCarryPlayer(
 
     override fun toString(): String {
         val now = System.currentTimeMillis()
-        val since = if (last != 0L) ((now - last) / 1000.0).toDuration() else "N/A"
+        val since = if (last != 0L) ((now - last) / 1000.0).parseDuration() else "N/A"
         val short = "<dark_gray>[<gray>${type.short}${tier?.let { " T${it.int}" } ?: " Any"}<dark_gray>]"
         return "<dark_gray>- <aqua>$name $short<r>: <aqua>$done<r>/<aqua>$max <gray>($since | ${rate()})"
     }

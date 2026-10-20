@@ -17,7 +17,6 @@ repositories {
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven("https://repo.hypixel.net/repository/Hypixel")
     maven("https://api.modrinth.com/maven")
-    maven("https://maven.teamresourceful.com/repository/maven-public/")
 
     maven("https://maven.starred.foo/releases")
     maven("https://maven.starred.foo/snapshots")
@@ -38,19 +37,15 @@ dependencies {
     implementation(libs.fabric.loader)
     implementation(libs.fabric.language.kotlin)
     implementation(libs.hypixel.modapi)
-    implementation(libs.hypixel.modapi.fabric)
 
     shadow(libs.kbus)
     shadow(libs.kommand)
     shadow(libs.klassgraph)
-    shadow(libs.snowbird.find())
+    shadow(libs.kontext.find())
     shadow(libs.cascade.find())
     shadow(libs.parallax.find())
     shadow(libs.updater.find())
-
-    shadow(libs.skyblock.api) {
-        capabilities { requireCapability("tech.thatgravyboat:skyblock-api-$minecraft") }
-    }
+    shadow(libs.hypixel.modapi.fabric)
 }
 
 loom {

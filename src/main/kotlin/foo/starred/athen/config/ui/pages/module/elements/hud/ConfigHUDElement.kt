@@ -22,7 +22,7 @@ import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.ContainerPrimitive
 import foo.starred.cascade.primitives.impl.ImagePrimitive.Companion.image
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.roundedRectangle
-import foo.starred.snowbird.utils.open
+import foo.starred.kontext.abstraction.gui.MinecraftGui
 import kotlin.time.Duration.Companion.milliseconds
 
 class ConfigHUDElement(
@@ -48,7 +48,7 @@ class ConfigHUDElement(
             on<MouseEvent.Press> {
                 if (button != InputConstants.MOUSE_BUTTON_LEFT) return@on
                 cancel()
-                HudElementEditorUI.open()
+                MinecraftGui.screen(HudElementEditorUI)
             }
 
             on<MouseEvent.Move.Enter> {

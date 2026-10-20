@@ -1,7 +1,7 @@
 package foo.starred.athen.api.profile.utils
 
 import foo.starred.athen.api.profile.data.PlayerProfileStack
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.api.format.extension.string.stripped
 import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import kotlin.io.encoding.Base64

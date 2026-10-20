@@ -27,8 +27,8 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.utils.brighten
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.color.brighten
+import foo.starred.kontext.api.format.extension.component.literal
 
 class RadialForm(mid: ContainerPrimitive) {
     private val list = mutableListOf<RoundedRectanglePrimitive>()

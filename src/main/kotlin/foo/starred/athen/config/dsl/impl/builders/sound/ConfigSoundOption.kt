@@ -4,9 +4,8 @@ import foo.starred.athen.api.storage.ResourceAPI
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.dsl.impl.builders.group.ConfigGroupBuilder
-import foo.starred.snowbird.api.mainThread
-import foo.starred.snowbird.utils.play
-import foo.starred.snowbird.utils.sound
+import foo.starred.kontext.abstraction.client.extension.mainThread
+import foo.starred.kontext.abstraction.sound.MinecraftSound
 import net.minecraft.sounds.SoundEvent
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -28,7 +27,7 @@ class ConfigSoundOption(
     var id: String = sound0
         private set
 
-    var event: SoundEvent? = sound0.sound()
+    var event: SoundEvent? = MinecraftSound.tryCreate(sound0)
         private set
 
     var pitch: Float = pitch0
@@ -44,7 +43,7 @@ class ConfigSoundOption(
         if (!enabled) return
 
         mainThread {
-            sound.play(volume0, pitch0)
+            MinecraftSound.play(sound, volume0, pitch0)
         }
     }
 
@@ -64,7 +63,7 @@ class ConfigSoundOption(
         ConfigManager.observe("$key.sound") {
             val sound = it as? String ?: sound0
             id = sound
-            event = sound.sound()
+            event = MinecraftSound.tryCreate(sound)
         }
 
         ConfigManager.observe("$key.pitch") {

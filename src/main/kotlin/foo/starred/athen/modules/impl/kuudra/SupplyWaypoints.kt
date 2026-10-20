@@ -2,8 +2,8 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraSupply
@@ -13,17 +13,16 @@ import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.markerAABB
+import foo.starred.athen.utils.aabb
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 import foo.starred.parallax.api.primitives.ParallaxBeam
 import foo.starred.parallax.api.primitives.ParallaxBox
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.toDurationFromMillis
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object SupplyWaypoints : Module(
     "Supply waypoints",
     "Waypoints for supplies, pickup and drop-off spots.",
@@ -51,17 +50,17 @@ object SupplyWaypoints : Module(
         on<MessageEvent.Chat.Intercept> {
             if (KuudraAPI.phase != KuudraPhase.Supply) return@on
 
-            supplyRegex.findOrNull(stripped, "user", "cur", "max") { (user, cur, max) ->
-                cancel()
+            val (user, cur, max) = supplyRegex.find(stripped)?.destructured ?: return@on
+            cancel()
 
+            MinecraftMessages.display(
                 textStyle
                     .replace("#user", user)
-                    .replace("#time", KuudraPhase.Supply.durTime.toDurationFromMillis(secondsDecimals = 1))
+                    .replace("#time", KuudraPhase.Supply.durTime.div(1000).parseDuration(decimals = 1))
                     .replace("#cur", cur)
                     .replace("#max", max)
                     .parse(true)
-                    .lie()
-            }
+            )
         }.runWhen(customMessages.state)
 
         on<WorldRenderEvent.Extract> {
@@ -82,7 +81,7 @@ object SupplyWaypoints : Module(
                     if (pickup) {
                         for (s in KuudraAPI.supplies) {
                             val color = if (changeColor && s.nearby) playerColor else pickupColor
-                            ParallaxBox.frame(s.blockPos.markerAABB(), color, depth = false)
+                            ParallaxBox.frame(s.blockPos.aabb(), color, depth = false)
                             ParallaxBeam.extract(s.blockPos, color)
                         }
                     }
@@ -91,7 +90,7 @@ object SupplyWaypoints : Module(
                 KuudraPhase.Fuel if fuel -> {
                     for (s in KuudraAPI.fuels) {
                         val color = if (changeColor && s.nearby) playerColor else fuelColor
-                        ParallaxBox.frame(s.blockPos.markerAABB(), color, depth = false)
+                        ParallaxBox.frame(s.blockPos.aabb(), color, depth = false)
                         ParallaxBeam.extract(s.blockPos, color)
                     }
                 }

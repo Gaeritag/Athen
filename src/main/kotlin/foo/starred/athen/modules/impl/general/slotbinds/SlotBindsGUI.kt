@@ -28,8 +28,8 @@ import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrolla
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
-import foo.starred.snowbird.utils.brighten
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.color.brighten
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.joml.Matrix3x2f
 

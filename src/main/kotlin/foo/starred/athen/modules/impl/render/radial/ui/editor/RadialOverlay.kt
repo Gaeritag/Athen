@@ -1,7 +1,5 @@
 package foo.starred.athen.modules.impl.render.radial.ui.editor
 
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.modules.impl.render.radial.RadialMenu
 import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
@@ -9,6 +7,8 @@ import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement<RadialOverlay>() {
@@ -83,7 +83,7 @@ class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement
         val back = bool || (RadialMenu.type == 2 && i0 in working.indices && i1 >= 0)
         val str = if (back) "←" else "✕"
 
-        VanillaFontRenderer.extract(graphics, str, x0 - VanillaFontMeasurer.width(str) / 2, y0 - VanillaFontMeasurer.height / 2, false, if (hc) MochaColorScheme.Lavender.argb else MochaColorScheme.Subtext0.argb)
+        MinecraftFontRenderer.extract(graphics, str, x0 - MinecraftFontMeasurer.width(str) / 2, y0 - MinecraftFontMeasurer.height / 2, false, if (hc) MochaColorScheme.Lavender.argb else MochaColorScheme.Subtext0.argb)
 
         val label = if (hc) (if (back) "Back" else "Exit") else {
             if (sub != -1) working.getOrNull(i0)?.sub?.getOrNull(sub)?.name
@@ -91,13 +91,13 @@ class RadialOverlay(private val panel: IPrimitiveElement<*>) : IPrimitiveElement
         }
 
         if (label != null && panel.hovered) {
-            val width = VanillaFontMeasurer.width(label)
+            val width = MinecraftFontMeasurer.width(label)
             val mx0 = mx.toInt() + 12
             val my0 = my.toInt() - 4
 
-            graphics.rectangle(mx0 - 5f, my0 - 5f, width + 10f, VanillaFontMeasurer.height + 10f, MochaColorScheme.Base.argb)
-            graphics.hollowRectangle(mx0 - 5f, my0 - 5f, width + 10f, VanillaFontMeasurer.height + 10f, 1f, MochaColorScheme.Lavender.argb, inset = false)
-            VanillaFontRenderer.extract(graphics, label, mx0, my0, false, MochaColorScheme.Text.argb)
+            graphics.rectangle(mx0 - 5f, my0 - 5f, width + 10f, MinecraftFontMeasurer.height + 10f, MochaColorScheme.Base.argb)
+            graphics.hollowRectangle(mx0 - 5f, my0 - 5f, width + 10f, MinecraftFontMeasurer.height + 10f, 1f, MochaColorScheme.Lavender.argb, inset = false)
+            MinecraftFontRenderer.extract(graphics, label, mx0, my0, false, MochaColorScheme.Text.argb)
         }
     }
 }

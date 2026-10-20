@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 //~ if >= 26.3 'ItemInHandRenderer' -> 'FirstPersonHandsAndItemsRenderer'
 import net.minecraft.client.renderer.ItemInHandRenderer;
-
 //? if >= 26.3
 //import net.minecraft.client.renderer.state.level.PlayerRenderState;
 

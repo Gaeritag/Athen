@@ -2,11 +2,9 @@
 
 package foo.starred.athen.modules.impl.slayer.carry.impl
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.scheduling.Ticking
@@ -25,27 +23,27 @@ import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryHistory
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer
 import foo.starred.athen.modules.impl.slayer.carry.ui.SlayerCarryGUI
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.render.fcs
-import foo.starred.athen.utils.render.renderBoundingBox
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.chat.command.MinecraftCommands
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.tablist.MinecraftTabList
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.entity.extension.renderAABB
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.network.data.HttpRequest
+import foo.starred.kontext.api.scheduling.scheduler.extensions.clientTicks
+import foo.starred.kontext.api.text.parser.impl.parse
 import foo.starred.parallax.api.primitives.ParallaxBox
-import foo.starred.snowbird.api.center
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.network.data.HttpRequest
-import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.toDuration
 import net.minecraft.world.entity.LivingEntity
-import tech.thatgravyboat.skyblockapi.helpers.McClient
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import kotlin.math.abs
 import kotlin.math.round
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object SlayerCarryTracker : Module(
     "Slayer carry tracker",
     "Track slayer carries and display progress.",
@@ -96,18 +94,18 @@ object SlayerCarryTracker : Module(
     }
 
     private val hud by config.hud("Slayer carry display") {
-        val example = listOf("§f§lSlayer Carries:", "§7> §bExample §8[§7Void T4§8]§f: §b3§f/§b10 §7(12.5s | 28/hr)").fcs
+        val example = listOf("§f§lSlayer Carries:", "§7> §bExample §8[§7Void T4§8]§f: §b3§f/§b10 §7(12.5s | 28/hr)").formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
-            VanillaFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
         }
     }
 
@@ -115,42 +113,46 @@ object SlayerCarryTracker : Module(
 
     init {
         on<MessageEvent.Chat.Receive> {
-            tradeCompleteRegex.findThenNull(stripped, "player") { (player) ->
-                trader = player
-            } ?: return@on
+            tradeCompleteRegex.find(stripped)?.let { match ->
+                trader = match.groupValues.get(1)
+                return@on
+            }
 
-            deathRegex.findThenNull(stripped, "player", "killer") { (player, killer) ->
-                val p = tracked.value.find { it.name == player } ?: return@findThenNull
-                if (p.boss != null) p.reset()
-            } ?: return@on
+            deathRegex.find(stripped)?.let { match ->
+                val (player, killer) = match.destructured
+
+                val p = tracked.value.find { it.name == player }
+                if (p?.boss != null) p.reset()
+
+                return@on
+            }
 
             if (trader == null) return@on
-            coinsReceivedRegex.findThenNull(stripped, "amount") { (i) ->
-                val trader = trader?.also { trader = null } ?: return@findThenNull
-                val i = i.toDoubleOrNull() ?: return@findThenNull
+            val amount = coinsReceivedRegex.find(stripped)?.groupValues?.get(1) ?: return@on
+            val trader = trader?.also { trader = null } ?: return@on
+            val i = amount.toDoubleOrNull() ?: return@on
 
-                val list = matches(i)
-                if (list.isEmpty()) return@findThenNull
+            val list = matches(i)
+            if (list.isEmpty()) return@on
 
-                Scheduler.schedule(1.clientTicks) {
-                    if (list.size == 1) {
-                        val (boss, tier, count) = list[0]
+            Scheduler.schedule(1.clientTicks) {
+                if (list.size == 1) {
+                    val (boss, tier, count) = list[0]
 
-                        "<click:command:/athen carry add $trader $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$trader<r>. Click to add!".mod()
-                        return@schedule
-                    }
-
-                    val root = "Found multiple matches, add for: ".literal()
-                    for (i in list.indices) {
-                        val (boss, tier, count) = list[i]
-
-                        if (i > 0) root.append(" ".literal())
-                        root.append("<click:command:/athen carry add $trader $count ${boss.short.lowercase()} ${tier.int}><aqua>[${count}x ${boss.short} T${tier.int}]".parse())
-                    }
-
-                    root.mod()
+                    "<click:command:/athen carry add $trader $count ${boss.short.lowercase()} ${tier.int}>Received payment for <aqua>${count}x <gray>${boss.short} T${tier.int}<r> carries from <aqua>$trader<r>. Click to add!".mod()
+                    return@schedule
                 }
-            } ?: return@on
+
+                val root = "Found multiple matches, add for: ".literal()
+                for (i in list.indices) {
+                    val (boss, tier, count) = list[i]
+
+                    if (i > 0) root.append(" ".literal())
+                    root.append("<click:command:/athen carry add $trader $count ${boss.short.lowercase()} ${tier.int}><aqua>[${count}x ${boss.short} T${tier.int}]".parse())
+                }
+
+                root.mod()
+            }
         }
 
         on<SlayerEvent.Boss.Spawn> {
@@ -184,10 +186,10 @@ object SlayerCarryTracker : Module(
             val result = carry.die(entity) ?: return@on
             tracked.update {} // no-op, intended.
 
-            "<hover:<red>${result.ticks} ticks>Killed boss for <aqua>$name<r> in <yellow>${result.time.toDuration(secondsDecimals = 1)} <gray>| <yellow>${(result.ticks / 20.0).toDuration(secondsDecimals = 1)}".mod()
+            "<hover:<red>${result.ticks} ticks>Killed boss for <aqua>$name<r> in <yellow>${result.time.parseDuration(decimals = 1)} <gray>| <yellow>${(result.ticks / 20.0).parseDuration(decimals = 1)}".mod()
 
             if (`announce$comp$party`) {
-                "pc $name: ${result.done}/${result.max}".command(false)
+                MinecraftCommands.client("pc $name: ${result.done}/${result.max}")
             }
 
             if (`webhook$each` && webhook) {
@@ -197,7 +199,7 @@ object SlayerCarryTracker : Module(
             }
 
             if (result.last) {
-                val time = result.time0.toDuration()
+                val time = result.time0.parseDuration()
                 "<${MochaColorScheme.Green.argb}>Completed bosses for <aqua>$name <gray>[${type.short}${if (carry.tier == null) " Any" else " T${slayerInfo.tier?.int}"}]<r> in <yellow>$time".mod()
 
                 if (webhook) {
@@ -215,13 +217,13 @@ object SlayerCarryTracker : Module(
             val e = entity as? LivingEntity ?: return@on
             if (e.carry == null) return@on
 
-            ParallaxBox.frame(e.renderBoundingBox, `highlight$boss$color`, `highlight$boss$width`)
+            ParallaxBox.frame(e.renderAABB(), `highlight$boss$color`, `highlight$boss$width`)
         }.runWhen(`highlight$boss`.state)
 
         on<WorldRenderEvent.Extract> {
             for (p in tracked.value) {
                 val p = p.entity.value ?: continue
-                ParallaxBox.frame(p.renderBoundingBox, `highlight$player$color`, `highlight$player$width`)
+                ParallaxBox.frame(p.renderAABB(), `highlight$player$color`, `highlight$player$width`)
             }
         }.runWhen(`highlight$player`.state)
 
@@ -272,7 +274,7 @@ object SlayerCarryTracker : Module(
 
     init {
         command {
-            "carry" / "add" / word("player").suggests { McClient.players.map { it.profile.name } } / int("amount", 1).suggests { listOf("1", "5", "10", "20") } / word("slayerType").suggests { SlayerBoss.SHORTS0 } / word("tier") {
+            "carry" / "add" / word("player").suggests { MinecraftTabList.players.map { it.profile.name } } / int("amount", 1).suggests { listOf("1", "5", "10", "20") } / word("slayerType").suggests { SlayerBoss.SHORTS0 } / word("tier") {
                 val name = string("player")
                 val amount = int("amount")
                 val slayerType = string("slayerType").lowercase()
@@ -312,7 +314,7 @@ object SlayerCarryTracker : Module(
 
                 "Currently tracking:".mod()
                 for ((name, type, tier, max, done) in tracked.value) {
-                    " <dark_gray>- <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] <yellow>$done/$max".lie()
+                    MinecraftMessages.display(" <dark_gray>- <aqua>$name <gray>[${type.short}${tier?.let { " T${it.int}" } ?: " Any"}] <yellow>$done/$max")
                 }
             }
 
@@ -329,15 +331,15 @@ object SlayerCarryTracker : Module(
                 val e0 = history.value.asReversed()
                 val i0 = maxOf(1, (e0.size + 9) / 10)
 
-                val c = ("<dark_gray>" + ("-".repeat())).parse()
+                val c = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
                 val green = MochaColorScheme.Green.argb
 
-                c.lie()
+                MinecraftMessages.display(c)
                 "Carry History <gray>(1/$i0)<r>:".mod()
 
                 val e1 = e0.take(10)
                 for ((name, type, tier, amount, duration) in e1) {
-                    " <dark_gray>- <aqua>$name <gray>• <$green>${amount}x ${type.short}${tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(duration / 1000.0).toDuration()}".lie()
+                    MinecraftMessages.display(" <dark_gray>- <aqua>$name <gray>• <$green>${amount}x ${type.short}${tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(duration / 1000.0).parseDuration()}")
                 }
 
                 val hover = buildString {
@@ -348,16 +350,16 @@ object SlayerCarryTracker : Module(
                     }
                 }
 
-                c.lie()
-                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${e0.sumOf { it.amount }} <gray>across <$green>${e0.size} <gray>entries.".parse(true).lie()
-                c.lie()
+                MinecraftMessages.display(c)
+                MinecraftMessages.display("<hover:$hover> <dark_gray>• <r>Total carries: <$green>${e0.sumOf { it.amount }} <gray>across <$green>${e0.size} <gray>entries.".parse(true))
+                MinecraftMessages.display(c)
             }
 
             "carry" / "history" / int("page", 1) {
                 val page = int("page")
                 val list = history.value.asReversed()
 
-                val c = ("<dark_gray>" + ("-".repeat())).parse()
+                val c = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
                 val green = MochaColorScheme.Green.argb
 
                 val page0 = maxOf(1, (list.size + 9) / 10)
@@ -368,13 +370,13 @@ object SlayerCarryTracker : Module(
                 val start = (page - 1) * 10
                 val end = minOf(start + 10, list.size)
 
-                c.lie()
+                MinecraftMessages.display(c)
                 "Carry History <gray>($page/$page0)<r>:".mod()
 
                 for (i in start until end) {
                     val e = list[i]
 
-                    " <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).toDuration()}".lie()
+                    MinecraftMessages.display(" <dark_gray>- <aqua>${e.name} <gray>• <$green>${e.amount}x ${e.type.short}${e.tier?.let { " T${it.int}" } ?: " Any"}s <gray>in <$green>${(e.duration / 1000.0).parseDuration()}")
                 }
 
                 val hover = buildString {
@@ -385,9 +387,9 @@ object SlayerCarryTracker : Module(
                     }
                 }
 
-                c.lie()
-                "<hover:$hover> <dark_gray>• <r>Total carries: <$green>${list.sumOf { it.amount }} <gray>across <$green>${list.size} <gray>entries.".parse(true).lie()
-                c.lie()
+                MinecraftMessages.display(c)
+                MinecraftMessages.display("<hover:$hover> <dark_gray>• <r>Total carries: <$green>${list.sumOf { it.amount }} <gray>across <$green>${list.size} <gray>entries.".parse(true))
+                MinecraftMessages.display(c)
             }.suggests { listOf("1", "2", "3", "4", "5") }
 
             "carry" / "help" {
@@ -410,14 +412,16 @@ object SlayerCarryTracker : Module(
             "/athen carry history [page=0]" to "Shows tracked history"
         )
 
-        val c = ("<dark_gray>" + ("-".repeat())).parse()
+        val c = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
 
-        c.lie()
-        ("<aqua>" + ("Athen Slayer Carry".center())).lie()
-        c.lie()
+        MinecraftMessages.display(c)
+        MinecraftMessages.display("<aqua>" + MinecraftChat.center("Athen Slayer Carry"))
+        MinecraftMessages.display(c)
 
-        for ((c, d) in b) "  <${MochaColorScheme.Green.argb}>$c <dark_gray>- <gray>$d".lie()
+        for ((cmd, desc) in b) {
+            MinecraftMessages.display("  <${MochaColorScheme.Green.argb}>$cmd <dark_gray>- <gray>$desc")
+        }
 
-        c.lie()
+        MinecraftMessages.display(c)
     }
 }

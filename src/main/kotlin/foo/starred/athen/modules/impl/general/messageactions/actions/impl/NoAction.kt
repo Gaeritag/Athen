@@ -1,10 +1,10 @@
 package foo.starred.athen.modules.impl.general.messageactions.actions.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.modules.impl.general.messageactions.actions.base.IMessageAction
 import foo.starred.athen.modules.impl.general.messageactions.actions.data.MessageActionType
 
-@Load
+@LoadableAthenModule
 object NoAction : IMessageAction {
     override val id = 0
     override val name = "None"

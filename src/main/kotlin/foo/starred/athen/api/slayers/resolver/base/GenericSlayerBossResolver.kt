@@ -2,7 +2,7 @@
 
 package foo.starred.athen.api.slayers.resolver.base
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.api.network.websocket.helpers.WebSocketLocationResolver
 import foo.starred.athen.api.slayers.SlayerAPI
@@ -14,19 +14,20 @@ import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.ModSettings
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.mainThread
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.client.extension.mainThread
+import foo.starred.kontext.api.format.extension.string.stripped
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket
 import net.minecraft.world.entity.Entity
-//~ if >= 26.2 'EntityType' -> 'EntityTypes'
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import kotlin.math.acos
 
-@Load
+//~ if >= 26.2 'EntityType' -> 'EntityTypes'
+import net.minecraft.world.entity.EntityType
+
+@LoadableAthenModule
 object GenericSlayerBossResolver {
     private val spawnRegex = Regex("SLAYER BOSS! The (?<type>.+?) (?<tier>[IVXLCDM]+) spawned!")
     //~ if >= 26.2 'EntityType' -> 'EntityTypes'

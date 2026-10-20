@@ -2,11 +2,9 @@
 
 package foo.starred.athen.modules.impl.dungeon.partyfinder.impl
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.profile.ProfileAPI
 import foo.starred.athen.api.profile.data.PlayerProfileStats
 import foo.starred.athen.api.scheduling.Scheduler
@@ -18,32 +16,31 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.partyfinder.data.PartyFinderSlotData
 import foo.starred.athen.modules.impl.dungeon.partyfinder.enums.PartyFinderClassType
 import foo.starred.athen.modules.impl.dungeon.partyfinder.enums.PartyFinderSlotStatus
-import foo.starred.athen.utils.contains
-import foo.starred.athen.utils.lore
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.mainThread
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.alpha
-import foo.starred.snowbird.utils.formatted
-import foo.starred.snowbird.utils.stripped
-import foo.starred.snowbird.utils.toMS
+import foo.starred.kontext.abstraction.client.extension.mainThread
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.color.alpha
+import foo.starred.kontext.api.format.extension.number.format
+import foo.starred.kontext.api.format.extension.roman.parseRomanNumeral
+import foo.starred.kontext.api.format.extension.string.contains
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.format.extension.time.formatTime
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.LoreKontextItemDataResolver
+import foo.starred.kontext.api.text.parser.impl.parse
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.ItemLore
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.hours
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.DUNGEON_HUB])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.DUNGEON_HUB])
 object PartyFinderDisplay : Module(
     "Party finder display",
     "Displays stats of party finder groups in the menu.",
@@ -111,7 +108,7 @@ object PartyFinderDisplay : Module(
             if (!menu0) return@on
             val s = data[slot.index]?.members?.size?.toString() ?: return@on
 
-            VanillaFontRenderer.extract(graphics, s, slot.x + 17 - VanillaFontMeasurer.width(s), slot.y + 18 - VanillaFontMeasurer.height)
+            MinecraftFontRenderer.extract(graphics, s, slot.x + 17 - MinecraftFontMeasurer.width(s), slot.y + 18 - MinecraftFontMeasurer.height)
         }.runWhen(stack.state)
 
         on<PacketEvent.Receive, ClientboundContainerSetContentPacket> {
@@ -121,7 +118,9 @@ object PartyFinderDisplay : Module(
             val lore0 = it0.get(DataComponents.LORE)?.lines() ?: return@on
 
             if (menu1) {
-                klass = PartyFinderClassType.get(selectedRegex.findGroup(lore0.getOrNull(2)?.stripped() ?: return@on, "class") ?: return@on)
+                val line = lore0.getOrNull(2)?.stripped() ?: return@on
+                val (cls) = selectedRegex.find(line)?.destructured ?: return@on
+                klass = PartyFinderClassType.get(cls) ?: return@on
                 return@on
             }
 
@@ -141,7 +140,7 @@ object PartyFinderDisplay : Module(
                 if (i >= 54) break
                 if (it.item != Items.PLAYER_HEAD) continue
 
-                val lore = it.lore()?.takeIf { it.size >= 4 } ?: continue
+                val lore = it.get<LoreKontextItemDataResolver, List<Component>>()?.takeIf { it.size >= 4 } ?: continue
                 val lore0 = lore.map { it.stripped() }
 
                 val members = mutableSetOf<Pair<String, PartyFinderClassType>>()
@@ -151,9 +150,8 @@ object PartyFinderDisplay : Module(
                     if (members.size == 5) break
                     if (l.isEmpty()) continue
 
-                    val pair = nameRegex.findGroups(l, "name", "class") ?: continue
-                    val klass = PartyFinderClassType.get(pair["class"] ?: continue) ?: continue
-                    val name = pair["name"] ?: continue
+                    val (name, className) = nameRegex.find(l)?.destructured ?: continue
+                    val klass = PartyFinderClassType.get(className) ?: continue
 
                     all += name
                     classes += klass
@@ -166,8 +164,8 @@ object PartyFinderDisplay : Module(
 
                 val master = "Master Mode" in lore0.first()
                 val blocked = lore0.last().contains("Requires Catacombs Level", "Requires a Class at Level", "Complete previous floor first!", "You must complete")
-                val floor = floorRegex.findGroup(lore0[1], "floor")?.parseRomanNumeral() ?: 0
-                val note = noteRegex.findGroup(lore0[2], "note")
+                val floor = floorRegex.find(lore0[1])?.destructured?.component1()?.parseRomanNumeral() ?: 0
+                val note = noteRegex.find(lore0[2])?.destructured?.component1()
 
                 val status = when {
                     blocked -> PartyFinderSlotStatus.BLOCKED
@@ -195,8 +193,7 @@ object PartyFinderDisplay : Module(
     }
 
     private fun lore() {
-        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-        val slots = (client.screen as? AbstractContainerScreen<*>)?.menu?.slots ?: return
+        val slots = MinecraftGui.container?.menu?.slots ?: return
 
         for ((k, v) in data) {
             val item = slots.getOrNull(k)?.item ?: continue
@@ -220,9 +217,10 @@ object PartyFinderDisplay : Module(
             val l0 = l.stripped()
             var l1 = l
 
-            nameRegex.findThenNull(l0, "name", "class", "level") { (name, klass, level) ->
-                val klass = PartyFinderClassType.get(klass) ?: return@findThenNull
-                l1 = cache[name]?.second?.build(floor, master, l.color(), klass, level.toInt()) ?: return@findThenNull
+            nameRegex.find(l0)?.let { match ->
+                val (name, className, level) = match.destructured
+                val k = PartyFinderClassType.get(className) ?: return@let
+                l1 = cache[name]?.second?.build(floor, master, l.color(), k, level.toInt()) ?: return@let
             }
 
             lore += l1
@@ -233,10 +231,10 @@ object PartyFinderDisplay : Module(
     }
 
     private fun PlayerProfileStats.build(floor: Int, master: Boolean, color: Int?, klass: PartyFinderClassType, level: Int): Component {
-        val pb = (if (master) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(floor)?.let { (it / 1000).toMS() } ?: "?"
+        val pb = (if (master) dungeons?.`pbs$master` else dungeons?.`pbs$normal`)?.get(floor)?.let { (it / 1000).formatTime(false) } ?: "?"
         val level1 = dungeons?.catacombs ?: "?"
         val secrets = dungeons?.secrets ?: "?"
-        val average = dungeons?.`secrets$average`?.formatted()?.dropLast(1) ?: "?"
+        val average = dungeons?.`secrets$average`?.format(true)?.dropLast(1) ?: "?"
 
         return "<${color ?: "aqua"}> $name <dark_gray>[${klass.fancy}$level <dark_gray>| <yellow>C$level1<dark_gray>] [<green>$secrets <dark_gray>| <green>$average<dark_gray>] [<aqua>$pb<dark_gray>]".parse().apply { style = style.withItalic(false) }
     }

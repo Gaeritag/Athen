@@ -4,11 +4,11 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import foo.starred.athen.api.dungeon.DungeonAPI
 import foo.starred.athen.api.dungeon.data.DungeonClass
+import foo.starred.athen.api.dungeon.data.DungeonFloor
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.snowbird.api.client
+import foo.starred.kontext.abstraction.gui.MinecraftGui
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 
 data class KeybindCondition(
     var workIn: KeybindWorkIn = KeybindWorkIn.OUTSIDE_GUI,
@@ -18,8 +18,7 @@ data class KeybindCondition(
     val phases: MutableSet<Int> = mutableSetOf()
 ) {
     fun eval(): Boolean {
-        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-        val screen = client.screen
+        val screen = MinecraftGui.screen
         val ig = screen is AbstractContainerScreen<*>
         val og = screen == null
 

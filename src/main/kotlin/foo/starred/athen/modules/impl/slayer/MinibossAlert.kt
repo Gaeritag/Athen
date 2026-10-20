@@ -2,8 +2,8 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerMini
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -11,13 +11,12 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.alert
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.title.MinecraftTitle
+import foo.starred.kontext.api.text.parser.impl.parse
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object MinibossAlert : Module(
     "Miniboss alert",
     "Shows an alert for you when a miniboss spawns nearby.",
@@ -36,7 +35,7 @@ object MinibossAlert : Module(
 
     init {
         on<MessageEvent.Chat.Receive> {
-            val name = regex.findGroup(stripped, "name") ?: return@on
+            val (name) = regex.find(stripped)?.destructured ?: return@on
             val text = if (name in special) bigBoiText else alertText
 
             fn(text)
@@ -54,7 +53,7 @@ object MinibossAlert : Module(
 
     private fun fn(text: String) {
         if (showTitle) {
-            text.parse().alert()
+            MinecraftTitle.display(text.parse())
         }
 
         if (sendMessage) {

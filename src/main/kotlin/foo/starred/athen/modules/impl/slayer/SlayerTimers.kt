@@ -3,9 +3,8 @@
 package foo.starred.athen.modules.impl.slayer
 
 import com.mojang.serialization.Codec
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
-import foo.starred.athen.api.messaging.enums.MessageColors
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
@@ -16,13 +15,14 @@ import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.toDuration
+import foo.starred.kontext.abstraction.chat.color.MinecraftColors
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object SlayerTimers : Module(
     "Slayer timers",
     "Kill and spawn timers for slayer bosses.",
@@ -67,16 +67,16 @@ object SlayerTimers : Module(
             if (start0 <= 0) return@on
 
             val time = (System.currentTimeMillis() - start0) / 1000.0
-            style0.replace("#time", time.toDuration(secondsDecimals = 1)).mod()
+            style0.replace("#time", time.parseDuration(decimals = 1)).mod()
         }
 
         on<SlayerEvent.Boss.Death> {
             if (!slayerInfo.owned) return@on
 
             val time = entity.tickCount / 20.0
-            val str0 = time.toDuration(secondsDecimals = 1)
+            val str0 = time.parseDuration(decimals = 1)
             val time0 = Scheduler.ticks.server - start1
-            val str1 = (time0 / 20.0).toDuration(secondsDecimals = 1)
+            val str1 = (time0 / 20.0).parseDuration(decimals = 1)
             val key = slayerInfo.serializable + if (slayerInfo.phase != 1) "_P${slayerInfo.phase}" else ""
             val pb = kills.value[key]
 
@@ -92,14 +92,14 @@ object SlayerTimers : Module(
                 }
 
                 time < pb -> {
-                    "<green>" to pb1.parse(str1, (pb - time).toDuration(secondsDecimals = 1), pb.toDuration(secondsDecimals = 1), "<green>", "<dark_green>", "$time0")
+                    "<green>" to pb1.parse(str1, (pb - time).parseDuration(decimals = 1), pb.parseDuration(decimals = 1), "<green>", "<dark_green>", "$time0")
                 }
 
                 else -> {
                     val a = time < pb * 1.1
-                    val c0 = if (a) MochaColorScheme.Peach.argb else MessageColors.RED.color
+                    val c0 = if (a) MochaColorScheme.Peach.argb else MinecraftColors.RED.color
                     val c1 = if (a) MochaColorScheme.Pink.argb else MochaColorScheme.Red.argb
-                    "<$c0>" to pb2.parse(str1, (time - pb).toDuration(secondsDecimals = 1), pb.toDuration(secondsDecimals = 1), "<$c0>", "<$c1>", "$time0")
+                    "<$c0>" to pb2.parse(str1, (time - pb).parseDuration(decimals = 1), pb.parseDuration(decimals = 1), "<$c0>", "<$c1>", "$time0")
                 }
             }
 
@@ -111,28 +111,28 @@ object SlayerTimers : Module(
 
         command {
             "times" / "slayers" {
-                val b0 = "<gray>${"-".repeat()}".parse()
-                val b1 = "<dark_gray>${"-".repeat()}".parse()
+                val b0 = ("<gray>" + MinecraftChat.repeat("-")).parse()
+                val b1 = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
 
-                b0.lie()
+                MinecraftMessages.display(b0)
 
                 val a = kills.value.entries.groupBy { it.key.substringBeforeLast("_T") }
                 var f = true
 
                 for (type in a.keys.sorted()) {
-                    if (!f) b1.lie()
+                    if (!f) MinecraftMessages.display(b1)
                     f = false
 
-                    "<aqua>✦ ${type.str()}".lie()
+                    MinecraftMessages.display("<aqua>✦ ${type.str()}")
 
                     val b = a[type]?.sortedBy { it.key } ?: return@invoke
                     for ((k, d) in b) {
                         val tier = k.substringAfterLast("_")
-                        "  • <red>$tier<r>: <green>${d.toDuration(secondsDecimals = 1)}".lie()
+                        MinecraftMessages.display("  • <red>$tier<r>: <green>${d.parseDuration(decimals = 1)}")
                     }
                 }
 
-                b0.lie()
+                MinecraftMessages.display(b0)
             }
         }
     }

@@ -1,11 +1,11 @@
 package foo.starred.athen.modules.impl.render.radial.data
 
 import foo.starred.athen.modules.impl.render.radial.actions.IAction
+import foo.starred.kontext.api.item.extension.texture
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import tech.thatgravyboat.skyblockapi.utils.extentions.createSkull
 
 class RadialSlot(
     var name: String,
@@ -51,7 +51,7 @@ class RadialSlot(
             _item?.let { return it }
             val r = runCatching { BuiltInRegistries.ITEM.getOptional(Identifier.withDefaultNamespace(itemId)).orElse(Items.BARRIER) }.getOrDefault(Items.BARRIER)
             val t = text
-            return (if (r == Items.PLAYER_HEAD && t != null) createSkull(t) else r.defaultInstance).also { _item = it }
+            return (if (r == Items.PLAYER_HEAD && t != null) r.defaultInstance.texture(t) else r.defaultInstance).also { _item = it }
         }
 
     fun clone(): RadialSlot {

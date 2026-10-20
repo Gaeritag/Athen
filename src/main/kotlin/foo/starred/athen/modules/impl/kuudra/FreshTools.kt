@@ -2,29 +2,28 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraPhase
 import foo.starred.athen.api.kuudra.enums.KuudraSupply
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.fcs
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.showTitle
-import foo.starred.snowbird.utils.toDurationFromMillis
-import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
+import foo.starred.kontext.abstraction.chat.command.MinecraftCommands
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.abstraction.title.MinecraftTitle
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object FreshTools : Module(
     "Fresh tools",
     "Fresh notifier and timer for kuudra.",
@@ -40,17 +39,16 @@ object FreshTools : Module(
     private val notify by notify0.switch("Notify party", true)
     private val `notify$message` by notify0.input("Notify message", "FRESH [#buildPerc]")
     private val `notify$unused` by notify0.variables("#buildPerc")
-    private val `notify$checkParty` by notify0.switch("Check party", true)
 
     private val timer by config.hud("Fresh timer") {
-        val example = "Fresh: §c6.7s".fcs
+        val example = "Fresh: §c6.7s".formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
@@ -59,7 +57,7 @@ object FreshTools : Module(
             val r = 10_000 - (System.currentTimeMillis() - time)
             if (r <= 0) return@render fn()
 
-            VanillaFontRenderer.extract(graphics, "Fresh: §c${r.toDurationFromMillis(secondsDecimals = 1)}", 0, 0)
+            MinecraftFontRenderer.extract(graphics, "Fresh: §c${(r / 1000).parseDuration(decimals = 1)}", 0, 0)
         }
     }
 
@@ -79,8 +77,8 @@ object FreshTools : Module(
 
             if (!alert && !notify) return@on
             if (alert && `alert$message`) `alert$message$t`.mod()
-            if (alert && `alert$title`) `alert$title$t`.parse().showTitle()
-            if (notify && (!`notify$checkParty` || PartyAPI.inParty)) fn0()
+            if (alert && `alert$title`) MinecraftTitle.display(`alert$title$t`.parse())
+            if (notify) fn0()
         }
     }
 
@@ -92,6 +90,7 @@ object FreshTools : Module(
         val vector = client.player?.blockPosition() ?: return
         val int = KuudraSupply.every.minByOrNull { it.buildPos.distSqr(vector) }?.progress ?: return
         val a = `notify$message`.replace("#buildPerc", "$int%")
-        "pc $a".command(false)
+
+        MinecraftCommands.client("pc $a")
     }
 }

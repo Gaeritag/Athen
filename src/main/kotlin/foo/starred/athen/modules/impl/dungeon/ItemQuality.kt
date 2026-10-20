@@ -2,18 +2,18 @@
 
 package foo.starred.athen.modules.impl.dungeon
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.text.parser.impl.parse
+import foo.starred.athen.utils.quality
+import foo.starred.athen.utils.tier
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object ItemQuality : Module(
     "Item quality",
     "Shows the quality of dungeon items.",
@@ -24,8 +24,8 @@ object ItemQuality : Module(
 
     init {
         on<GuiEvent.Tooltip.Update> {
-            val cur = item.getData(DataTypes.DUNGEON_QUALITY) ?: return@on
-            val f = item.getData(DataTypes.DUNGEON_TIER) ?: return@on
+            val cur = item.quality() ?: return@on
+            val f = item.tier() ?: return@on
 
             tooltip.add(1, str(cur.toString(), f))
         }

@@ -2,22 +2,21 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
-import foo.starred.athen.api.messaging.enums.MessageColors
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
 import foo.starred.athen.events.*
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.renderBoundingBox
+import foo.starred.kontext.abstraction.chat.color.MinecraftColors
+import foo.starred.kontext.api.entity.extension.renderAABB
 import foo.starred.parallax.api.primitives.ParallaxBox
 import net.minecraft.world.entity.Entity
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
 import java.util.concurrent.ConcurrentHashMap
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object SlayerHighlight : Module(
     "Slayer highlights",
     "Highlights the slayer bosses.",
@@ -46,10 +45,10 @@ object SlayerHighlight : Module(
 
     private val _blaze by config.group("Blaze state colors")
     private val blaze by _blaze.switch("Blaze state colors", true)
-    private val `blaze$ashen` by _blaze.colorPicker("Ashen", MessageColors.DARK_GRAY.color)
-    private val `blaze$auric` by _blaze.colorPicker("Auric", MessageColors.GOLD.color)
-    private val `blaze$crystal` by _blaze.colorPicker("Crystal", MessageColors.AQUA.color)
-    private val `blaze$spirit` by _blaze.colorPicker("Spirit", MessageColors.WHITE.color)
+    private val `blaze$ashen` by _blaze.colorPicker("Ashen", MinecraftColors.DARK_GRAY.color)
+    private val `blaze$auric` by _blaze.colorPicker("Auric", MinecraftColors.GOLD.color)
+    private val `blaze$crystal` by _blaze.colorPicker("Crystal", MinecraftColors.AQUA.color)
+    private val `blaze$spirit` by _blaze.colorPicker("Spirit", MinecraftColors.WHITE.color)
 
     private val slayers = ConcurrentHashMap<Entity, Int>()
     private val demons = ConcurrentHashMap<Entity, Int>()
@@ -72,7 +71,7 @@ object SlayerHighlight : Module(
             val demon = demons.any { it.key.id == parent.id }
             if (!slayer && !demon) return@on
 
-            val f = regex.findGroup(stripped, "attunement") ?: return@on
+            val (f) = regex.find(stripped)?.destructured ?: return@on
             val c = if (f == "ASHEN") `blaze$ashen` else if (f == "AURIC") `blaze$auric` else if (f == "CRYSTAL") `blaze$crystal` else if (f == "SPIRIT") `blaze$spirit` else `boss$color`
 
             if (slayer) slayers[parent] = c
@@ -130,7 +129,7 @@ object SlayerHighlight : Module(
 
         for ((k, v) in map) {
             if (!k.isAlive) continue
-            val aabb = k.renderBoundingBox.inflate(inflate, 0.0, inflate)
+            val aabb = k.renderAABB().inflate(inflate, 0.0, inflate)
 
             if (fill) ParallaxBox.fill(aabb, v) else ParallaxBox.frame(aabb, v, width)
         }

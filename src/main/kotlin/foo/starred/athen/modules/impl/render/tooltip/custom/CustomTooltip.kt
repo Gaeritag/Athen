@@ -4,7 +4,7 @@ package foo.starred.athen.modules.impl.render.tooltip.custom
 
 import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.accessors.hovered
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
@@ -13,17 +13,17 @@ import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.data.TooltipContext
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl.CombinedTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl.SeparatedTooltip
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.api.item.data.rarity.SkyBlockItemRarity
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.SkyBlockRarityKontextItemDataResolver
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
 
-@Load
+@LoadableAthenModule
 object CustomTooltip : Module(
     "Custom tooltip",
     "Custom tooltip rendering!",
@@ -71,12 +71,12 @@ object CustomTooltip : Module(
     init {
         on<GuiEvent.Slots.Input.Hover> {
             if (!`scroll$reset`) {
-                color = slot.item.getData(DataTypes.RARITY)?.color?.or(0xFF000000.toInt()) ?: `border$color`
+                color = slot.item.get<SkyBlockRarityKontextItemDataResolver, SkyBlockItemRarity>()?.color?.color ?: `border$color`
                 return@on
             }
 
             reset()
-            color = slot.item.getData(DataTypes.RARITY)?.color?.or(0xFF000000.toInt()) ?: `border$color`
+            color = slot.item.get<SkyBlockRarityKontextItemDataResolver, SkyBlockItemRarity>()?.color?.color ?: `border$color`
         }
 
         on<GuiEvent.Close.Any> {
@@ -118,8 +118,7 @@ object CustomTooltip : Module(
 
     @JvmStatic
     fun render(graphics: GuiGraphicsExtractor, font: Font, components: List<ClientTooltipComponent>, x: Int, y: Int, positioner: ClientTooltipPositioner) {
-        //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-        if (color != `border$color` && (client.screen as? AbstractContainerScreen<*>)?.hovered == null) color = `border$color`
+        if (color != `border$color` && MinecraftGui.container?.hovered == null) color = `border$color`
 
         last = Scheduler.ticks.client
         val components = if (name) components.take(1) else components

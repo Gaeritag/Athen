@@ -2,9 +2,9 @@ package foo.starred.athen.api.slayers.data
 
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.lazy.RefreshableLazy
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.lazy.RefreshableLazy
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.decoration.ArmorStand
 

@@ -1,24 +1,24 @@
 package foo.starred.athen.config.hud.ui
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Priority
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.hud.data.editor.HudEditorRuntimeCoordinateData
 import foo.starred.athen.config.hud.data.editor.HudEditorRuntimeRenderData
 import foo.starred.athen.config.hud.data.element.HudElement
 import foo.starred.athen.config.hud.impl.HudRenderer
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.modules.impl.Dev
-import foo.starred.snowbird.api.inputs.impl.MouseInputState
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.input.impl.MouseInputState
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import kotlin.math.roundToInt
 
-@Priority(-1)
+@LoadableAthenModule
 object HudElementEditorUI : Screen("HUD Editor [Athen]".literal()) {
     private val runtime = HudEditorRuntimeRenderData()
     private val coordinate = HudEditorRuntimeCoordinateData()
@@ -96,15 +96,15 @@ object HudElementEditorUI : Screen("HUD Editor [Athen]".literal()) {
 
         active?.let { e ->
             val text = e.config.name + if (Dev.debug) " | ${e.coordinate.x} | ${e.coordinate.y}" else ""
-            val width = VanillaFontMeasurer.width(text)
-            val height = VanillaFontMeasurer.height
+            val width = MinecraftFontMeasurer.width(text)
+            val height = MinecraftFontMeasurer.height
 
             graphics.pose().pushMatrix()
             graphics.pose().translate(coordinate.x + 12, coordinate.y - height / 2)
 
             graphics.fill(-6, -6, width + 6, height + 6, MochaColorScheme.Base.alpha(0.8f))
             graphics.outline(-6, -6, width + 12, height + 12, MochaColorScheme.Text.argb)
-            VanillaFontRenderer.extract(graphics, text, 0, 0, false, MochaColorScheme.Text.argb)
+            MinecraftFontRenderer.extract(graphics, text, 0, 0, false, MochaColorScheme.Text.argb)
             graphics.pose().popMatrix()
         }
 
@@ -269,10 +269,10 @@ object HudElementEditorUI : Screen("HUD Editor [Athen]".literal()) {
             for (entry in lines) {
                 val (enabled, text) = entry()
 
-                VanillaFontRenderer.extract(this, "•", 0, y1, false, if (enabled) MochaColorScheme.Green.argb else MochaColorScheme.Red.argb)
-                VanillaFontRenderer.extract(this, text, t0, y1, false, MochaColorScheme.Text.argb)
+                MinecraftFontRenderer.extract(this, "•", 0, y1, false, if (enabled) MochaColorScheme.Green.argb else MochaColorScheme.Red.argb)
+                MinecraftFontRenderer.extract(this, text, t0, y1, false, MochaColorScheme.Text.argb)
 
-                y1 += VanillaFontMeasurer.height
+                y1 += MinecraftFontMeasurer.height
             }
 
             pose().popMatrix()
@@ -282,11 +282,11 @@ object HudElementEditorUI : Screen("HUD Editor [Athen]".literal()) {
             var w = 0
             var y = 0
 
-            t0 = VanillaFontMeasurer.width("• ")
+            t0 = MinecraftFontMeasurer.width("• ")
 
             for (line in lines) {
-                w = w.coerceAtLeast(VanillaFontMeasurer.width(line().second) + t0)
-                y += VanillaFontMeasurer.height
+                w = w.coerceAtLeast(MinecraftFontMeasurer.width(line().second) + t0)
+                y += MinecraftFontMeasurer.height
             }
 
             width = w

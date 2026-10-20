@@ -4,11 +4,11 @@ import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
-import foo.starred.snowbird.api.EMPTY_COMPONENT
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.mainThread
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.open
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.client.extension.mainThread
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.api.EMPTY_COMPONENT
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
@@ -51,7 +51,7 @@ abstract class ITerminalSim(
 
     open fun a() {
         mainThread {
-            this@ITerminalSim.open()
+            MinecraftGui.screen(this@ITerminalSim)
             TerminalSimulator.s.value = true
         }
     }

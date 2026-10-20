@@ -1,7 +1,6 @@
 package foo.starred.athen.mixin.mixins;
 
 import foo.starred.athen.modules.impl.render.VisualWords;
-import foo.starred.snowbird.internal.misc.DonatorTextReplacer;
 import net.minecraft.client.gui.components.ComponentRenderUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -17,6 +16,6 @@ public class ComponentRenderUtilsMixin {
         if (VisualWords.words.getMap0().isEmpty()) return message;
         if (!(message instanceof Component component)) return message;
 
-        return DonatorTextReplacer.INSTANCE.fn(component);
+        return VisualWords.words.fn(component);
     }
 }

@@ -16,7 +16,7 @@ import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
 import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.text.parser.impl.parse
+import foo.starred.kontext.api.text.parser.impl.parse
 
 class ConfigInformationElement(
     private val config: ConfigInformationElementData

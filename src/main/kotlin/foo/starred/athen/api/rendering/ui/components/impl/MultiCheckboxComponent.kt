@@ -1,7 +1,5 @@
 package foo.starred.athen.api.rendering.ui.components.impl
 
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.cascade.events.impl.MouseEvent
 import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
@@ -9,6 +7,8 @@ import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.max
 import kotlin.math.min
@@ -81,12 +81,12 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
     override fun draw(graphics: GuiGraphicsExtractor) {
         if (root.focused != this) open = false
 
-        if (label.isNotEmpty()) VanillaFontRenderer.extract(graphics, label, x, y - VanillaFontMeasurer.height - 2, false, MochaColorScheme.Subtext0.argb)
+        if (label.isNotEmpty()) MinecraftFontRenderer.extract(graphics, label, x, y - MinecraftFontMeasurer.height - 2, false, MochaColorScheme.Subtext0.argb)
         graphics.rectangle(x, y, width, height, MochaColorScheme.Surface1.argb)
         graphics.hollowRectangle(x, y, width, height, 1f, if (open) MochaColorScheme.Lavender.argb else MochaColorScheme.Surface2.argb, inset = false)
 
-        VanillaFontRenderer.extract(graphics, text, x + 4, y + (height - VanillaFontMeasurer.height) / 2 + 1, false, MochaColorScheme.Text.argb)
-        VanillaFontRenderer.extract(graphics, if (open) "▾" else "▸", x + width - 12, y + (height - VanillaFontMeasurer.height) / 2 + 1, false, MochaColorScheme.Overlay0.argb)
+        MinecraftFontRenderer.extract(graphics, text, x + 4, y + (height - MinecraftFontMeasurer.height) / 2 + 1, false, MochaColorScheme.Text.argb)
+        MinecraftFontRenderer.extract(graphics, if (open) "▾" else "▸", x + width - 12, y + (height - MinecraftFontMeasurer.height) / 2 + 1, false, MochaColorScheme.Overlay0.argb)
 
         if (open) {
             val height1 = height1.toFloat()
@@ -105,8 +105,8 @@ open class MultiCheckboxComponent : IPrimitiveElement<MultiCheckboxComponent>() 
                     graphics.rectangle(x, y0, width, 14f, MochaColorScheme.Base.argb)
 
                     val b = selected(idx)
-                    VanillaFontRenderer.extract(graphics, item, x + 4, y0 + (14 - VanillaFontMeasurer.height) / 2 + 1, false, if (b) MochaColorScheme.Lavender.argb else MochaColorScheme.Text.argb)
-                    if (b) VanillaFontRenderer.extract(graphics, "✔", x + width - 14, y0 + (14 - VanillaFontMeasurer.height) / 2 + 1, false, MochaColorScheme.Lavender.argb)
+                    MinecraftFontRenderer.extract(graphics, item, x + 4, y0 + (14 - MinecraftFontMeasurer.height) / 2 + 1, false, if (b) MochaColorScheme.Lavender.argb else MochaColorScheme.Text.argb)
+                    if (b) MinecraftFontRenderer.extract(graphics, "✔", x + width - 14, y0 + (14 - MinecraftFontMeasurer.height) / 2 + 1, false, MochaColorScheme.Lavender.argb)
 
                     y0 += 14
                 }

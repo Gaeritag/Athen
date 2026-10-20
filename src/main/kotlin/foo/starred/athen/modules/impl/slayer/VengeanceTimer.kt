@@ -1,10 +1,8 @@
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
@@ -12,15 +10,16 @@ import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.modules.Module
+import foo.starred.athen.utils.id
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.held
-import foo.starred.snowbird.utils.toDuration
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.format.extension.time.parseDuration
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.CRIMSON_ISLE])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.CRIMSON_ISLE])
 object VengeanceTimer : Module(
     "Vengeance timer",
     "Shows the time until your vengeance damage should activate.",
@@ -34,18 +33,18 @@ object VengeanceTimer : Module(
 
     private val hud by config.hud("Vengeance") {
         constrain {
-            VanillaFontMeasurer.constrain(if (compact.value) "120" else "§cVengeance: §f120")
+            MinecraftFontMeasurer.constrain(if (compact.value) "120" else "§cVengeance: §f120")
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, if (compact.value) "120" else "§cVengeance: §f120", 0, 0)
+            MinecraftFontRenderer.extract(graphics, if (compact.value) "120" else "§cVengeance: §f120", 0, 0)
         }
 
         render {
             if (!count.value) return@render
 
-            val value = if (useTicks) "$countDown" else (countDown / 20.0).toDuration(secondsDecimals = 1)
-            VanillaFontRenderer.extract(graphics, if (compact.value) value else "§cVengeance: §f$value", 0, 0)
+            val value = if (useTicks) "$countDown" else (countDown / 20.0).parseDuration(decimals = 1)
+            MinecraftFontRenderer.extract(graphics, if (compact.value) value else "§cVengeance: §f$value", 0, 0)
         }
     }
 
@@ -65,7 +64,7 @@ object VengeanceTimer : Module(
 
             if (!slayerInfo.owned) return@on
             if (!stripped.contains("ASHEN ♨7")) return@on
-            if (held?.getData(DataTypes.SKYBLOCK_ID)?.skyblockId !in abilityIds) return@on
+            if (client.player?.mainHandItem?.id() !in abilityIds) return@on
 
             count.value = true
         }

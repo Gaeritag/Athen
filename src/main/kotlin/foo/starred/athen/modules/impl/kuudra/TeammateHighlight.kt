@@ -1,19 +1,19 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.renderBoundingBox
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.entity.extension.renderAABB
 import foo.starred.parallax.api.primitives.ParallaxBox
-import foo.starred.snowbird.api.name
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object TeammateHighlight : Module(
     "Teammate highlight",
     "Highlights your teammates in kuudra!",
@@ -25,10 +25,10 @@ object TeammateHighlight : Module(
     init {
         on<WorldRenderEvent.Extract> {
             for (p in KuudraAPI.teammates) {
-                if (p.name == name) continue
+                if (p.name == client.user.name) continue
                 val e = p.entity ?: continue
 
-                ParallaxBox.frame(e.renderBoundingBox, color, lineWidth)
+                ParallaxBox.frame(e.renderAABB(), color, lineWidth)
             }
         }
     }

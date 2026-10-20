@@ -2,9 +2,9 @@ package foo.starred.athen.api.messaging.impl
 
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.modules.impl.Dev
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
 
 object MessagingAPI {
@@ -18,7 +18,7 @@ object MessagingAPI {
     @JvmOverloads
     fun Component.mod(prefixType: MessagePrefixType = MessagePrefixType.DEFAULT) {
         val colored = if (this.style.color == null) this.copy().withColor(0xFFFFFF) else this
-        prefixType.component.copy().append(" ".literal()).append(colored).lie()
+        MinecraftMessages.display(prefixType.component.copy().append(" ".literal()).append(colored))
     }
 
     @JvmStatic

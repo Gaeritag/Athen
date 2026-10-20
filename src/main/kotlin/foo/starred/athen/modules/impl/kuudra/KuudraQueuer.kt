@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -8,13 +8,10 @@ import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.modules.Module
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.command
-import foo.starred.snowbird.api.name
-import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
-import tech.thatgravyboat.skyblockapi.api.profile.party.PartyAPI
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
+import foo.starred.kontext.abstraction.chat.command.MinecraftCommands
+import foo.starred.kontext.api.scheduling.scheduler.extensions.clientTicks
 
-@Load
+@LoadableAthenModule
 object KuudraQueuer : Module(
     "Kuudra queuer",
     "Automatically re-queues at the end of each run.",
@@ -27,19 +24,15 @@ object KuudraQueuer : Module(
 
     init {
         on<MessageEvent.Chat.Receive> {
-            if (PartyAPI.leader?.name?.equals(name) ?: false) return@on
-
-            partyRegex.findOrNull(stripped, "message") { (message) ->
-                if (message == "!dt") bool = true
-            }
+            val (message) = partyRegex.find(stripped)?.destructured ?: return@on
+            if (message == "!dt") bool = true
         }.runWhen(PresetSkyBlockIsland.KUUDRA.state)
 
         on<KuudraEvent.End.Success> {
-            if (PartyAPI.leader?.name?.equals(name) ?: false) return@on
             if (bool) return@on ::bool.set(false)
 
             Scheduler.schedule(delay.clientTicks) {
-                "instancerequeue".command()
+                MinecraftCommands.server("instancerequeue")
             }
         }
     }

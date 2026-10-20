@@ -1,8 +1,8 @@
 package foo.starred.athen.api.slayers.resolver.impl
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.api.network.websocket.data.SocketPacket
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.network.websocket.base.IWebSocket
+import foo.starred.athen.api.network.websocket.data.SocketPacket
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
@@ -12,10 +12,10 @@ import foo.starred.athen.events.InternalEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.ModSettings
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.mainThread
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.client.extension.mainThread
 
-@Load
+@LoadableAthenModule
 object WebSocketSlayerBossResolver : IWebSocket {
     init {
         on<SlayerEvent.Boss.Spawn> {

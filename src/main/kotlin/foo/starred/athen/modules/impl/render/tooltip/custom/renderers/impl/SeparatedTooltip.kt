@@ -1,6 +1,5 @@
 package foo.starred.athen.modules.impl.render.tooltip.custom.renderers.impl
 
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.modules.impl.render.tooltip.custom.CustomTooltip
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.base.ITooltipRenderer
 import foo.starred.athen.modules.impl.render.tooltip.custom.renderers.data.TooltipContext
@@ -9,6 +8,7 @@ import foo.starred.cascade.graphics.extensions.rectangle.hollow.hollowRectangle
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.graphics.geometry.CascadeGeometricRadius
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip
@@ -37,7 +37,7 @@ object SeparatedTooltip : ITooltipRenderer {
         val text = (header as? ClientTextTooltip)?.text
         if (text != null) {
             val x = if (CustomTooltip.`header$centered`) (x + (width1 - 8) / 2) - font.width(text) / 2 else x
-            VanillaFontRenderer.extract(graphics, text, x, y2, CustomTooltip.`text$shadow`)
+            MinecraftFontRenderer.extract(graphics, text, x, y2, CustomTooltip.`text$shadow`)
         }
 
         header.extractImage(font, x, y2, width, height, graphics)

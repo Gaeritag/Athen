@@ -7,8 +7,8 @@ import foo.starred.athen.config.dsl.impl.builders.config.ConfigMainBuilder
 import foo.starred.athen.config.hud.data.element.HudElement
 import foo.starred.athen.config.hud.data.element.HudElementCoordinateData
 import foo.starred.athen.config.hud.impl.HudRenderer
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.utils.toCamelCase
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.format.extension.string.camelCased
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -72,7 +72,7 @@ class ConfigHudBuilder(
         if (bool) return
 
         bool = true
-        if (!::key.isInitialized) key = "${builder.key}.${name.toCamelCase()}"
+        if (!::key.isInitialized) key = "${builder.key}.${name.camelCased()}"
 
         coordinate.x = (ConfigManager.get("$key.x") as? Number)?.toFloat() ?: 20f
         coordinate.y = (ConfigManager.get("$key.y") as? Number)?.toFloat() ?: 20f

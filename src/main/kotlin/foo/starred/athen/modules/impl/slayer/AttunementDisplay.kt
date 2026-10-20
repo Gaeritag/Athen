@@ -2,24 +2,23 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
 import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.fcs
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.util.FormattedCharSequence
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.CRIMSON_ISLE])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.CRIMSON_ISLE])
 object AttunementDisplay : Module(
     "Attunement display",
     "Displays the current attunement for blaze slayer, does not work with demons.",
@@ -27,18 +26,18 @@ object AttunementDisplay : Module(
 ) {
     private val count by config.switch("Display count")
     private val hud by config.hud("Attunement display") {
-        val example = "§l§eAURIC ♨5".fcs
+        val example = "§l§eAURIC ♨5".formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
-            VanillaFontRenderer.extract(graphics, last ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, last ?: return@render, 0, 0)
         }
     }
 
@@ -51,9 +50,9 @@ object AttunementDisplay : Module(
             val s = SlayerAPI.bosses[e] ?: return@on
             if (!s.owned) return@on
 
-            val a = regex.findGroups(stripped, "attunement", "count") ?: return@on
-            val b = a["attunement"]?.fn() ?: return@on
-            val c = a["count"]?.toIntOrNull() ?: return@on
+            val (attunement, count) = regex.find(stripped)?.destructured ?: return@on
+            val b = attunement.fn() ?: return@on
+            val c = count.toIntOrNull() ?: return@on
 
             last = b.fn0(c).literal().visualOrderText
         }

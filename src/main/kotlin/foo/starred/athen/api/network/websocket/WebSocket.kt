@@ -4,9 +4,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import foo.starred.athen.Athen
 import foo.starred.athen.Athen.SCOPE
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.websocket.data.SocketPacket
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.GameEvent
@@ -14,10 +15,8 @@ import foo.starred.athen.events.InternalEvent
 import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.wsUrl
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.name
-import foo.starred.snowbird.api.scheduling.scheduler.data.tasks.base.SchedulerTask
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.scheduling.scheduler.data.tasks.base.SchedulerTask
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
@@ -28,7 +27,7 @@ import java.util.concurrent.CompletionStage
 import kotlin.time.Duration.Companion.seconds
 import java.net.http.WebSocket as JavaWebSocket
 
-@Priority
+@LoadableAthenModule
 object WebSocket {
     private val http = HttpClient.newHttpClient()
 
@@ -63,7 +62,7 @@ object WebSocket {
 
         SCOPE.launch {
             for (c in out) {
-                c.addProperty("n", name)
+                c.addProperty("n", client.user.name)
                 socket?.sendText(c.toString(), true)
             }
         }
@@ -97,11 +96,11 @@ object WebSocket {
         }
 
         http.newWebSocketBuilder()
-            .buildAsync(URI.create(wsUrl), object : JavaWebSocket.Listener {
+            .buildAsync(URI.create(AthenAPI.websocket()), object : JavaWebSocket.Listener {
                 override fun onOpen(webSocket: JavaWebSocket) {
                     webSocket.sendText(JsonObject().apply {
                         addProperty("t", SocketPacket.WebSocket.ServerBound.Auth.id)
-                        addProperty("n", name)
+                        addProperty("n", client.user.name)
                         addProperty("s", server)
                     }.toString(), true)
                     webSocket.request(1)

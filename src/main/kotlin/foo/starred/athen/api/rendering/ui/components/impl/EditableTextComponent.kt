@@ -12,10 +12,10 @@ import foo.starred.cascade.graphics.extensions.scissor.scissor
 import foo.starred.cascade.graphics.font.CascadeFonts
 import foo.starred.cascade.graphics.geometry.CascadeGeometricColor
 import foo.starred.cascade.primitives.base.impl.IPrimitiveElement
-import foo.starred.snowbird.api.ZERO_PAIR
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
-import foo.starred.snowbird.utils.withAlpha
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
+import foo.starred.kontext.api.ZERO_PAIR
+import foo.starred.kontext.api.format.extension.color.alpha
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.abs
 import kotlin.math.max
@@ -239,7 +239,7 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
-                    client.keyboardHandler.clipboard = value.substring(range.first, range.second)
+                    MinecraftClient.clipboard = value.substring(range.first, range.second)
                     cancel()
                 }
 
@@ -247,7 +247,7 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
                     if (!ctrl) return@on
                     if (!selected) return@on
 
-                    client.keyboardHandler.clipboard = value.substring(range.first, range.second)
+                    MinecraftClient.clipboard = value.substring(range.first, range.second)
                     delete()
                     cancel()
                 }
@@ -256,7 +256,7 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
                     if (!ctrl) return@on
 
                     delete()
-                    val clip = client.keyboardHandler.clipboard
+                    val clip = MinecraftClient.clipboard
                     value = value.substring(0, block) + clip + value.substring(block)
                     block += clip.length
 
@@ -289,7 +289,7 @@ open class EditableTextComponent : IPrimitiveElement<EditableTextComponent>() {
             if (editing && selected) {
                 val i0 = min(_selection0, _selection1)
                 val i1 = max(_selection0, _selection1)
-                graphics.rectangle(x1 + i0, y1, i1 - i0, height1, MochaColorScheme.Lavender.argb.withAlpha(0.35f))
+                graphics.rectangle(x1 + i0, y1, i1 - i0, height1, MochaColorScheme.Lavender.argb.alpha(0.35f))
             }
 
             val color = if (editing) color1 else if (hovered) color1 else color0

@@ -3,7 +3,7 @@ package foo.starred.athen.modules.impl.kuudra.carry
 import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.modules.common.carry.ICarryStateTracker
 import foo.starred.athen.modules.common.carry.ICarryStateTracker.HistoryEntry
@@ -18,7 +18,7 @@ private val historyCodec: Codec<HistoryEntry> = RecordCodecBuilder.create { inst
     ).apply(instance, ::HistoryEntry)
 }
 
-@Priority
+@LoadableAthenModule
 object KuudraCarryStateTracker : ICarryStateTracker<KuudraCarryStateTracker.TrackedCarry>("features/kuudra/carryTracker", historyCodec) {
     override val tracked = mutableMapOf<String, TrackedCarry>()
 

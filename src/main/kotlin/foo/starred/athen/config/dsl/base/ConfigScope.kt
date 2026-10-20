@@ -9,7 +9,7 @@ import foo.starred.athen.config.dsl.impl.builders.group.ConfigGroupBuilder
 import foo.starred.athen.config.dsl.impl.builders.hud.ConfigHudBuilder
 import foo.starred.athen.config.dsl.impl.builders.option.ConfigOptionBuilder
 import foo.starred.athen.config.dsl.impl.builders.sound.ConfigSoundOption
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
 
 interface ConfigScope {
     val builder: ConfigMainBuilder

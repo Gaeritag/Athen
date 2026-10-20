@@ -1,6 +1,6 @@
 package foo.starred.athen.api.slayers.resolver.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.api.slayers.SlayerAPI
 import foo.starred.athen.api.slayers.data.SlayerInfo
@@ -13,12 +13,12 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.core.on
-import foo.starred.snowbird.api.mainThread
-import foo.starred.snowbird.api.scheduling.scheduler.extensions.serverTicks
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.client.extension.mainThread
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.scheduling.scheduler.extensions.serverTicks
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket
 
-@Load
+@LoadableAthenModule
 object CocoonedSlayerBossResolver {
     private var type: ISlayerType? = null
     private var tier: SlayerTier? = null

@@ -1,6 +1,7 @@
 package foo.starred.athen.mixin.mixins;
 
 import foo.starred.athen.events.EntityEvent;
+import foo.starred.kontext.mixin.accessors.LivingEntityAccessor;
 import net.minecraft.network.syncher.SyncedDataHolder;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tech.thatgravyboat.skyblockapi.mixins.accessors.LivingEntityAccessor;
 
 @Mixin(SynchedEntityData.class)
 public class SynchedEntityDataMixin {
@@ -24,14 +24,14 @@ public class SynchedEntityDataMixin {
 
     @Inject(method = "assignValue", at = @At("HEAD"))
     private <T> void athen$assignValue$pre(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> item, CallbackInfo ci) {
-        if (dataItem.getAccessor() != LivingEntityAccessor.skyblockapi$getDataHealth()) return;
+        if (dataItem.getAccessor() != LivingEntityAccessor.kontext$dataHealthId()) return;
         if (!(this.entity instanceof LivingEntity living)) return;
         last = living.getHealth();
     }
 
     @Inject(method = "assignValue", at = @At("TAIL"))
     private <T> void athen$assignValue$post(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> item, CallbackInfo ci) {
-        if (dataItem.getAccessor() != LivingEntityAccessor.skyblockapi$getDataHealth()) return;
+        if (dataItem.getAccessor() != LivingEntityAccessor.kontext$dataHealthId()) return;
         if (!(this.entity instanceof LivingEntity living)) return;
 
         float v = (Float) item.value();

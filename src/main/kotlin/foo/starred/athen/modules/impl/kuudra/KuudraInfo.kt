@@ -1,12 +1,10 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.EntityEvent
@@ -14,19 +12,21 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.render.renderBoundingBox
-import foo.starred.athen.utils.render.renderPos
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.entity.extension.renderAABB
+import foo.starred.kontext.api.entity.extension.renderVec3
+import foo.starred.kontext.api.format.extension.number.abbreviate
+import foo.starred.kontext.api.text.parser.impl.parse
 import foo.starred.parallax.api.primitives.ParallaxBox
 import foo.starred.parallax.api.primitives.ParallaxText
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.abbreviate
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.entity.LivingEntity
 import kotlin.math.abs
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object KuudraInfo : Module(
     "Kuudra info",
     "Displays information about kuudra and highlights him, nicely :3",
@@ -44,16 +44,16 @@ object KuudraInfo : Module(
         val example = "<green>46.5m<gray>/<dark_red>240m <red>❤".parse().visualOrderText
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
             if (!KuudraAPI.inRun) return@render
-            VanillaFontRenderer.extract(graphics, display ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display ?: return@render, 0, 0)
         }
     }
 
@@ -110,7 +110,7 @@ object KuudraInfo : Module(
         val k = KuudraAPI.kuudra ?: return
 
         if (highlight) {
-            ParallaxBox.frame(k.renderBoundingBox, color, lineWidth)
+            ParallaxBox.frame(k.renderAABB(), color, lineWidth)
         }
 
         if (hpOnKuudra) {
@@ -118,7 +118,7 @@ object KuudraInfo : Module(
             val hw = k.bbWidth * 0.5
             val hh = k.bbHeight * 0.5
 
-            val c = k.renderPos.add(0.0, hh, 0.0)
+            val c = k.renderVec3().add(0.0, hh, 0.0)
             //~ if >= 26.2 'mainCamera' -> 'mainCamera()'
             val d = client.gameRenderer.mainCamera.position().subtract(c)
 

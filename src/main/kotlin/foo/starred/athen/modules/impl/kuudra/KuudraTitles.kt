@@ -2,22 +2,21 @@
 
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.alert
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.abstraction.title.MinecraftTitle
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object KuudraTitles : Module(
     "Kuudra titles",
     "Custom alerts and titles for kuudra!",
@@ -26,17 +25,17 @@ object KuudraTitles : Module(
     private val supply0 by config.group("Supply titles")
     private val supply by supply0.hud("Supply titles") {
         constrain {
-            VanillaFontMeasurer.constrain(dis0 ?: _dis)
+            MinecraftFontMeasurer.constrain(dis0 ?: _dis)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, dis0 ?: _dis, 0, 0)
+            MinecraftFontRenderer.extract(graphics, dis0 ?: _dis, 0, 0)
         }
 
         render {
             if (KuudraAPI.phase !in KuudraAPI.set) return@render
             val display = display ?: return@render
-            VanillaFontRenderer.extract(graphics, display, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display, 0, 0)
         }
     }
 
@@ -52,7 +51,7 @@ object KuudraTitles : Module(
     private val pickupAlert by alerts.switch("Pick up alert")
     private val pickMessage by alerts.input("Pick up alert message", "<green>Picked up supply!")
 
-    private val _dis: Component = "§8[§a|||||||||§f|||||||||§8] §b67%".literal()
+    private val _dis: Component = "§8[§a|||||||||§f|||||||||§8] §b67%".parse()
     private var dis0: Component? = null
     private var display: Component? = null
 
@@ -71,12 +70,12 @@ object KuudraTitles : Module(
 
         on<KuudraEvent.Supply.Pickup> {
             display = null
-            if (pickupAlert) pickMessage.parse().alert()
+            if (pickupAlert) MinecraftTitle.display(pickMessage.parse())
         }
 
         on<KuudraEvent.Supply.Drop> {
             display = null
-            if (dropAlert) dropMessage.parse().alert()
+            if (dropAlert) MinecraftTitle.display(dropMessage.parse())
         }
     }
 

@@ -3,7 +3,7 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.solver
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.dungeon.terminals.TerminalAPI
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -15,14 +15,14 @@ import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
-import foo.starred.snowbird.api.inputs.impl.MouseInputState
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.input.impl.MouseInputState
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
 
-@Load
+@LoadableAthenModule
 object TerminalSolvers : Module(
     "Terminal solvers",
     "Shows solutions for F7/M7 terminals in a nice custom gui!",
@@ -70,7 +70,7 @@ object TerminalSolvers : Module(
     val `ui$titleColor` by header.colorPicker("Title color", 0xE6F0F0F5)
     val `ui$header` by header.colorPicker("Header color", 0xC80A0A0C)
 
-    val clicks by config.sound("Click sound", enabled = false )
+    val clicks by config.sound("Click sound", enabled = false)
 
     private val colors by config.group("Solver colors")
     val `colors$correct` by colors.colorPicker("Colors: Solution", 0xDC2ECC71)

@@ -1,9 +1,9 @@
 package foo.starred.athen.config.ui.pages.main
 
+import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.config.ui.ConfigUI.right
-import foo.starred.athen.utils.data
 import foo.starred.cascade.animation.extension.impl.animate
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
 import foo.starred.cascade.constraints.impl.data.PositionAnchor
@@ -23,9 +23,9 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.open
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.text.parser.impl.parse
 import kotlin.time.Duration.Companion.milliseconds
 
 object ConfigInfoPage {
@@ -72,7 +72,7 @@ object ConfigInfoPage {
 
                     on<MouseEvent.Press> {
                         cancel()
-                        v.open()
+                        MinecraftClient.url(v)
                     }
 
                     attach(this@container)
@@ -174,7 +174,8 @@ object ConfigInfoPage {
 
     private fun get() {
         if (changelogs.isNotEmpty()) return
-        "athen/changelogs.json".data.request {
+
+        AthenAPI.data("athen/changelogs.json").request {
             success<List<String>> {
                 changelogs = it
 

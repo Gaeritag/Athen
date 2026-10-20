@@ -3,8 +3,8 @@
 package foo.starred.athen.modules.impl.slayer
 
 import com.mojang.serialization.Codec
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.slayers.enums.drop.base.ISlayerDrop
 import foo.starred.athen.api.slayers.enums.drop.data.SlayerDropGrade
@@ -19,17 +19,13 @@ import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.formatted
-import foo.starred.snowbird.utils.stripped
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroups
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.api.format.extension.number.format
+import foo.starred.kontext.api.text.parser.impl.parse
 import kotlin.math.min
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object SlayerDropsData : Module(
     "Slayer drops data",
     "Shows useful data about your slayer drop chances!",
@@ -68,7 +64,7 @@ object SlayerDropsData : Module(
             boss = a
             tier = slayerInfo.tier
 
-            if (slayerInfo.type == SlayerBoss.Tarantula && slayerInfo.tier == SlayerTier.Five && client.level?.getEntity(entity.id + 1)?.customName?.stripped()?.contains("Conjoined Brood") != true) return@on
+            if (slayerInfo.type == SlayerBoss.Tarantula && slayerInfo.tier == SlayerTier.Five && slayerInfo.phase != 2) return@on
             if (!sinceLast) return@on
 
             map.update {
@@ -80,7 +76,7 @@ object SlayerDropsData : Module(
         }
 
         on<MessageEvent.Chat.Receive> {
-            val (a, b) = regex2.findGroups(stripped, "boss", "item") ?: return@on
+            val (a, b) = regex2.find(stripped)?.destructured ?: return@on
             val a0 = a.boss ?: return@on
             val b0 = b.lowercase()
 
@@ -89,7 +85,7 @@ object SlayerDropsData : Module(
         }.runWhen(auto.state)
 
         on<MessageEvent.Chat.Receive> {
-            val (a, b, c) = regex1.findGroups(stripped, "type", "name", "mf") ?: return@on
+            val (a, b, c) = regex1.find(stripped)?.destructured ?: return@on
             mf = c.toInt()
 
             var grade = SlayerDropGrade.entries.find { it.str == a } ?: return@on
@@ -105,7 +101,7 @@ object SlayerDropsData : Module(
             val i1 = xp ?: return@on
             val i2 = l.drop.xp ?: return@on
             val c0 = fn(i1, i2, l.drop.chance)
-            "   <dark-gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c0)} <dark_gray>[✯$mf]".lie()
+            MinecraftMessages.display("   <dark-gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c0)} <dark_gray>[✯$mf]")
         }
 
         on<MessageEvent.Chat.Intercept> {
@@ -114,7 +110,7 @@ object SlayerDropsData : Module(
             val l = (boss ?: SlayerBoss.Voidgloom).selected ?: return@on
             val t = (tier ?: SlayerTier.Four).xp
 
-            val i0 = regex0.findGroup(stripped, "exp") ?: return@on
+            val (i0) = regex0.find(stripped)?.destructured ?: return@on
             val i1 = i0.replace(",", "").toLongOrNull()?.also { xp = it } ?: return@on
             val i2 = l.drop.xp ?: return@on
 
@@ -123,11 +119,11 @@ object SlayerDropsData : Module(
             val r2 = "%.2f".format(i1.toDouble() / i2.toDouble() * 100)
 
             cancel()
-            "   <pink>RNG Meter <r>- <pink>$i0<gray>/<pink>${i2.formatted()} XP <dark_gray>[<gray>$r0<dark_gray>/<gray>$r1 <dark_gray>| <gray>$r2%<dark_gray>]".lie()
+            MinecraftMessages.display("   <pink>RNG Meter <r>- <pink>$i0<gray>/<pink>${i2.format(false)} XP <dark_gray>[<gray>$r0<dark_gray>/<gray>$r1 <dark_gray>| <gray>$r2%<dark_gray>]")
 
             if (!last) return@on
             val c = fn(i1, i2, l.drop.chance)
-            "   <dark_gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c)}% <dark_gray>[✯$mf]".lie()
+            MinecraftMessages.display("   <dark_gray>- <${MochaColorScheme.Green.argb}>${l.display} <r>chance: <${MochaColorScheme.Sky.argb}>${"%.5f".format(c)}% <dark_gray>[✯$mf]")
         }
     }
 

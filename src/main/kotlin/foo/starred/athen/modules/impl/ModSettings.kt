@@ -1,10 +1,10 @@
 package foo.starred.athen.modules.impl
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.modules.Module
 
-@Load
+@LoadableAthenModule
 object ModSettings : Module(
     "Mod settings",
     "Toggles for a lot of the internal stuff in the mod!",

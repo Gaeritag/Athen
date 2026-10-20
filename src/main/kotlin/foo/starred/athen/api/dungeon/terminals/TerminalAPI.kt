@@ -2,7 +2,7 @@
 
 package foo.starred.athen.api.dungeon.terminals
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.LocationAPI
 import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.api.scheduling.Scheduler
@@ -12,16 +12,15 @@ import foo.starred.athen.events.core.on
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.TerminalSimulator
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.TerminalSolvers
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.data.Observable.Companion.and
-import foo.starred.snowbird.api.data.Observable.Companion.or
-import foo.starred.snowbird.api.scheduling.scheduler.extensions.clientTicks
-import foo.starred.snowbird.utils.stripped
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.data.Observable.Companion.and
+import foo.starred.kontext.api.data.Observable.Companion.or
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.scheduling.scheduler.extensions.clientTicks
 import net.minecraft.network.protocol.game.*
 
-@Priority
+@LoadableAthenModule
 object TerminalAPI {
     private var i = 0
 
@@ -66,8 +65,7 @@ object TerminalAPI {
             val b0 = a != TerminalType.MELODY
             if (slot !in 0 until b) return@on
 
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            val c = (client.screen as? AbstractContainerScreen<*>)?.menu?.items?.takeIf { it.size >= b } ?: return@on
+            val c = MinecraftGui.container?.menu?.items?.takeIf { it.size >= b } ?: return@on
             c[slot] = item
             i++
 

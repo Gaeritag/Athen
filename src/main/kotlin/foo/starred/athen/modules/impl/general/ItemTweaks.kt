@@ -2,35 +2,33 @@
 
 package foo.starred.athen.modules.impl.general
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.items.ItemAPI.`watch$tooltip`
-import foo.starred.athen.api.messaging.enums.MessageColors
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
+import foo.starred.athen.utils.stars
+import foo.starred.athen.utils.timestamp
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.colorCoded
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.stripped
-import foo.starred.snowbird.utils.toDurationFromMillis
+import foo.starred.kontext.abstraction.chat.color.MinecraftColors
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.component.colored
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Items
-import tech.thatgravyboat.skyblockapi.api.datatype.DataTypes
-import tech.thatgravyboat.skyblockapi.api.datatype.getData
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import kotlin.time.toJavaInstant
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object ItemTweaks : Module(
     "Item tweaks",
     "Tweaks to the items that are too small to be individual features.",
@@ -41,7 +39,7 @@ object ItemTweaks : Module(
     private val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm").withZone(ZoneId.systemDefault())
 
     private val showItemStars = config.switch("Item stars as stack size").unique("showItemStars")
-    private val starColor by config.colorPicker("Star Color", MessageColors.RED.color)
+    private val starColor by config.colorPicker("Star Color", MinecraftColors.RED.color)
 
     private val cakeNumbers = config.switch("Cake numbers").unique("cakeNumbers")
 
@@ -63,9 +61,8 @@ object ItemTweaks : Module(
         on<GuiEvent.Slots.Render.Any.Post> {
             if (slot.item.item != Items.CAKE) return@on
 
-            cakeRegex.findOrNull(slot.item.displayName.stripped(), "year") {
-                VanillaFontRenderer.extract(graphics, "§b${it.component1()}", slot.x, slot.y + 8)
-            }
+            val year = cakeRegex.find(slot.item.displayName.stripped())?.groupValues?.get(1) ?: return@on
+            MinecraftFontRenderer.extract(graphics, "§b$year", slot.x, slot.y + 8)
         }.runWhen(cakeNumbers.state)
 
         on<GuiEvent.Tooltip.Update> {
@@ -79,7 +76,7 @@ object ItemTweaks : Module(
 
                     if (
                         (removeGearScore && s.startsWith("Gear Score: ")) ||
-                        (enchantSet != null && enchantSet.any(s::startsWith) && "§7" in l.colorCoded())
+                        (enchantSet != null && enchantSet.any(s::startsWith) && "§7" in l.colored())
                     ) {
                         it.remove()
                     }
@@ -89,9 +86,10 @@ object ItemTweaks : Module(
 
         on<GuiEvent.Tooltip.Update> {
             if (!showItemAge) return@on
-            val instant = item.getData(DataTypes.TIMESTAMP) ?: return@on
-            val timestamp = dateFormatter.format(instant.toJavaInstant())
-            val age = (Instant.now().toEpochMilli() - instant.toEpochMilliseconds()).toDurationFromMillis(true)
+            val time = item.timestamp() ?: return@on
+            val instant = Instant.ofEpochMilli(time)
+            val timestamp = dateFormatter.format(instant)
+            val age = ((Instant.now().toEpochMilli() - time) / 1000).parseDuration(true)
 
             tooltip.add(1, age.stamp(timestamp).literal())
         }
@@ -105,11 +103,11 @@ object ItemTweaks : Module(
 
         on<GuiEvent.Items.Render.Post> {
             if (item.isEmpty) return@on
-            val stars = item.getData(DataTypes.STAR_COUNT) ?: return@on
+            val stars = item.stars() ?: return@on
             if (stars <= 0) return@on
 
             val str = stars.toString()
-            VanillaFontRenderer.extract(graphics, str, x + 17 - VanillaFontMeasurer.width(str), y + 18 - VanillaFontMeasurer.height, color = starColor)
+            MinecraftFontRenderer.extract(graphics, str, x + 17 - MinecraftFontMeasurer.width(str), y + 18 - MinecraftFontMeasurer.height, color = starColor)
         }.runWhen(showItemStars.state)
     }
 
@@ -124,6 +122,6 @@ object ItemTweaks : Module(
             .replace("&", "§")
             .replace("#hex", "")
             .literal()
-            .append("<${if (`showItemHex$color`) this@hex else MessageColors.DARK_GRAY.color}>" + String.format("#%06X", this).parse())
+            .append("<${if (`showItemHex$color`) this@hex else MinecraftColors.DARK_GRAY.color}>" + String.format("#%06X", this).parse())
             .apply { if (`showItemHex$box`) append("<${this@hex}>⬛".parse()) }
 }

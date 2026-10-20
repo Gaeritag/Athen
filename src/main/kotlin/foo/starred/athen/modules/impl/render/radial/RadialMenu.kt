@@ -5,11 +5,8 @@ package foo.starred.athen.modules.impl.render.radial
 import com.google.gson.reflect.TypeToken
 import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.Athen
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.mod.ModWrapper
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
@@ -23,19 +20,22 @@ import foo.starred.athen.modules.impl.render.radial.utils.RadialRenderState
 import foo.starred.athen.utils.command
 import foo.starred.cascade.graphics.extensions.rectangle.solid.rectangle
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.center
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.data.Observable
-import foo.starred.snowbird.api.inputs.impl.MouseInputState
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.utils.compress
-import foo.starred.snowbird.utils.decompress
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.safely
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.client.impl.MinecraftClient
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.abstraction.input.impl.MouseInputState
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.data.Observable
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.util.compress
+import foo.starred.kontext.util.decompress
+import foo.starred.kontext.util.safely
 import kotlin.math.hypot
 
-@Load
+@LoadableAthenModule
 object RadialMenu : Module(
     "Radial menu",
     "Shows a cool radial menu with a ton of options for customisations!",
@@ -106,7 +106,7 @@ object RadialMenu : Module(
             }
 
             "import" / "radial" {
-                val clipboard = client.keyboardHandler.clipboard
+                val clipboard = MinecraftClient.clipboard
                 if (clipboard.isEmpty()) return@invoke "No data found in clipboard!".mod()
 
                 val map: Map<String, Any> = Athen.GSON.fromJson(clipboard.decompress(), object : TypeToken<Map<String, Any>>() {}.type)
@@ -125,7 +125,7 @@ object RadialMenu : Module(
 
             "export" / "radial" {
                 save()
-                client.keyboardHandler.clipboard = Athen.GSON.toJson(mapOf("name" to active, "slots" to slots)).compress()
+                MinecraftClient.clipboard = Athen.GSON.toJson(mapOf("name" to active, "slots" to slots)).compress()
                 "Exported config '$active' to clipboard!".mod()
             }
         }
@@ -149,16 +149,14 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Keyboard.Press> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            if (client.screen != null) return@on
+            if (MinecraftGui.screen != null) return@on
             if (keyEvent.key != keybind.value) return@on
 
             react(releaseClose || !open.value, true)
         }
 
         on<InputEvent.Keyboard.Release> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            if (client.screen != null) return@on
+            if (MinecraftGui.screen != null) return@on
             if (keyEvent.key != keybind.value) return@on
             if (!open.value) return@on
             if (!releaseClose) return@on
@@ -168,8 +166,7 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Mouse.Press> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            if (client.screen != null) return@on
+            if (MinecraftGui.screen != null) return@on
             if (buttonInfo.button() != keybind.value) return@on
             if (open.value) return@on
 
@@ -177,8 +174,7 @@ object RadialMenu : Module(
         }
 
         on<InputEvent.Mouse.Release> {
-            //~ if >= 26.2 'client.screen' -> 'client.gui.screen()'
-            if (client.screen != null) return@on
+            if (MinecraftGui.screen != null) return@on
             if (buttonInfo.button() != keybind.value) return@on
             if (!open.value) return@on
             if (!releaseClose) return@on
@@ -308,7 +304,7 @@ object RadialMenu : Module(
             val bool0 = dist(x, y) < 15f
             val bool1 = stack.isNotEmpty() || (type == 2 && i2 != -1)
 
-            VanillaFontRenderer.extract(graphics, if (bool1) "←" else "✕", x - VanillaFontMeasurer.width(if (bool1) "←" else "✕") / 2, y - VanillaFontMeasurer.height / 2, false, if (bool0) MochaColorScheme.Lavender.argb else MochaColorScheme.Subtext0.argb)
+            MinecraftFontRenderer.extract(graphics, if (bool1) "←" else "✕", x - MinecraftFontMeasurer.width(if (bool1) "←" else "✕") / 2, y - MinecraftFontMeasurer.height / 2, false, if (bool0) MochaColorScheme.Lavender.argb else MochaColorScheme.Subtext0.argb)
 
             val hovered = when {
                 i1 != -1 && i2 in current.indices -> current[i2].sub.getOrNull(i1)
@@ -319,8 +315,8 @@ object RadialMenu : Module(
             val x1 = MouseInputState.Position.Scaled.x.toInt() + 12
             val y1 = MouseInputState.Position.Scaled.y.toInt() - 4
 
-            graphics.rectangle(x1 - 5f, y1 - 5f, VanillaFontMeasurer.width(label) + 10f, VanillaFontMeasurer.height + 10f, MochaColorScheme.Base.argb)
-            VanillaFontRenderer.extract(graphics, label, x1, y1, false, MochaColorScheme.Text.argb)
+            graphics.rectangle(x1 - 5f, y1 - 5f, MinecraftFontMeasurer.width(label) + 10f, MinecraftFontMeasurer.height + 10f, MochaColorScheme.Base.argb)
+            MinecraftFontRenderer.extract(graphics, label, x1, y1, false, MochaColorScheme.Text.argb)
         }.runWhen(open)
 
         on<GuiEvent.Open.Any> {
@@ -389,16 +385,16 @@ object RadialMenu : Module(
     }
 
     private fun help() {
-        val divider = ("§8§m" + "-".repeat()).literal()
-        divider.lie()
-        "§bRadial Menu §7[Athen]".center().lie()
-        divider.lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen radial edit <gray>- Opens editor".lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen import radial <gray>- Imports config from clipboard".lie()
-        " <dark_gray>• <${MochaColorScheme.Green.argb}>/athen export radial <gray>- Exports current config to clipboard".lie()
-        divider.lie()
-        "Want to explore <red>presets<r>? Join the <hover:<red>Click to join!><click:url:${ModWrapper.discord}><${MochaColorScheme.Lavender.argb}>discord!".lie()
-        divider.lie()
+        val divider = ("§8§m" + MinecraftChat.repeat("-")).literal()
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display(MinecraftChat.center("§bRadial Menu §7[Athen]"))
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen radial edit <gray>- Opens editor")
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen import radial <gray>- Imports config from clipboard")
+        MinecraftMessages.display(" <dark_gray>• <${MochaColorScheme.Green.argb}>/athen export radial <gray>- Exports current config to clipboard")
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display("Want to explore <red>presets<r>? Join the <hover:<red>Click to join!><click:url:${Athen.Data.discord}><${MochaColorScheme.Lavender.argb}>discord!")
+        MinecraftMessages.display(divider)
     }
 
     private fun layout(): List<Pair<Int, RadialSlot>> {

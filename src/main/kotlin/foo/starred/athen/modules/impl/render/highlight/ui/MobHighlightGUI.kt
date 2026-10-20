@@ -3,7 +3,6 @@
 package foo.starred.athen.modules.impl.render.highlight.ui
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.modules.impl.render.highlight.MobHighlight
 import foo.starred.cascade.constraints.impl.data.PositionAlignment
@@ -26,9 +25,10 @@ import foo.starred.cascade.primitives.impl.ScrollablePrimitive.Companion.scrolla
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
-import foo.starred.snowbird.api.nextTick
-import foo.starred.snowbird.utils.brighten
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.abstraction.client.extension.nextTick
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.api.format.extension.color.brighten
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.EntityType
 
@@ -421,7 +421,7 @@ object MobHighlightGUI : CascadeScreen("Mob Highlights [Athen]", CascadeGeometri
 
             rectangle {
                 val hp = if (max == -1) "HP: any" else "HP: $max"
-                val width = VanillaFontMeasurer.width(hp) + 8
+                val width = MinecraftFontMeasurer.width(hp) + 8
 
                 size = FixedSizeConstraint(width, 14)
                 position = AlignPositionConstraint(PositionAlignment.END, PositionAlignment.CENTER)

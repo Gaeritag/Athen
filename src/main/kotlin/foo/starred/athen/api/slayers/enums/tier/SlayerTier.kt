@@ -1,9 +1,7 @@
 package foo.starred.athen.api.slayers.enums.tier
 
 import com.mojang.serialization.Codec
-import tech.thatgravyboat.skyblockapi.api.data.MayorPerks
-import tech.thatgravyboat.skyblockapi.utils.extentions.parseRomanNumeral
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findGroup
+import foo.starred.kontext.api.format.extension.roman.parseRomanNumeral
 
 enum class SlayerTier(val int: Int, private val _xp: Int) {
     One(1, 5),
@@ -12,8 +10,8 @@ enum class SlayerTier(val int: Int, private val _xp: Int) {
     Four(4, 500),
     Five(5, 1500);
 
-    val xp: Int
-        get() = if (MayorPerks.SLAYER_XP_BUFF.active) (_xp * 1.25).toInt() else _xp
+    val xp: Int // TODO: AATROX
+        get() =  _xp
 
     companion object {
         private val tierRegex = Regex("""(?:^|\s)(?<level>[MDCLXVI]{1,7})(?:\s|$)""")
@@ -23,7 +21,8 @@ enum class SlayerTier(val int: Int, private val _xp: Int) {
             if ("Atoned Horror" in string) return Five
             if ("Conjoined Brood" in string) return Five
 
-            val i = tierRegex.findGroup(string, "level")?.parseRomanNumeral() ?: return null
+            val (level) = tierRegex.find(string)?.destructured ?: return null
+            val i = level.parseRomanNumeral() ?: return null
             return entries.find { it.int == i }
         }
     }

@@ -3,11 +3,11 @@ package foo.starred.athen.modules.impl.dungeon.carry
 import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
+import foo.starred.athen.api.dungeon.data.DungeonFloor
 import foo.starred.athen.modules.common.carry.ICarryStateTracker
 import foo.starred.athen.modules.common.carry.ICarryStateTracker.HistoryEntry
 import foo.starred.athen.modules.common.carry.ITrackedCarry
-import tech.thatgravyboat.skyblockapi.api.area.dungeon.DungeonFloor
 
 private val historyCodec: Codec<HistoryEntry> = RecordCodecBuilder.create { instance ->
     instance.group(
@@ -18,7 +18,7 @@ private val historyCodec: Codec<HistoryEntry> = RecordCodecBuilder.create { inst
     ).apply(instance, ::HistoryEntry)
 }
 
-@Priority
+@LoadableAthenModule
 object DungeonCarryStateTracker : ICarryStateTracker<DungeonCarryStateTracker.TrackedCarry>("features/dungeon/carryTracker", historyCodec) {
     override val tracked = mutableMapOf<String, TrackedCarry>()
 

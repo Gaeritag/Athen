@@ -1,26 +1,27 @@
 package foo.starred.athen.modules.impl.general
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.guiClick
-import foo.starred.athen.utils.lore
 import foo.starred.kbus.data.event.traits.KBusCancellableTrait
 import foo.starred.kbus.extensions.runWhen
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.api.inputs.impl.KeyboardInputState
-import foo.starred.snowbird.api.inputs.impl.MouseInputState
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.abstraction.gui.MinecraftGui
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
+import foo.starred.kontext.abstraction.input.impl.MouseInputState
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.LoreKontextItemDataResolver
+import net.minecraft.network.chat.Component
 import net.minecraft.world.inventory.Slot
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findOrNull
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object LoadoutKeybinds : Module(
     "Loadout keybinds",
     "Keybinds for loadout slots!",
@@ -79,11 +80,11 @@ object LoadoutKeybinds : Module(
 
     init {
         on<GuiEvent.Open.Container> {
-            menuRegex.findOrNull(stripped, "cur", "max") { (cur, max) ->
-                open = true
-                current = cur.toInt()
-                LoadoutKeybinds.max = max.toInt()
-            }
+            val (current1, max1) = menuRegex.find(stripped)?.destructured ?: return@on
+
+            open = true
+            current = current1.toInt()
+            max = max1.toInt()
         }
 
         on<GuiEvent.Close.Container> {
@@ -117,12 +118,12 @@ object LoadoutKeybinds : Module(
         val container = player.containerMenu
 
         if (key == prevPage) {
-            if (current > 1) guiClick(container.containerId, 17)
+            if (current > 1) MinecraftGui.click(container.containerId, 17)
             return
         }
 
         if (key == nextPage) {
-            if (current < max) guiClick(container.containerId, 44)
+            if (current < max) MinecraftGui.click(container.containerId, 44)
             return
         }
 
@@ -132,7 +133,7 @@ object LoadoutKeybinds : Module(
             val slot2 = slots.getOrNull(swapKey2)?.takeIf { it.slot?.item?.isEmpty == false } ?: return
             val s = if (slot1.equipped) slot2.idx else slot1.idx
 
-            guiClick(container.containerId, s)
+            MinecraftGui.click(container.containerId, s)
             last = System.currentTimeMillis()
             cancel()
             return
@@ -140,7 +141,7 @@ object LoadoutKeybinds : Module(
 
         val slot = slots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
 
-        guiClick(container.containerId, slot.idx)
+        MinecraftGui.click(container.containerId, slot.idx)
         last = System.currentTimeMillis()
         cancel()
     }
@@ -174,7 +175,7 @@ object LoadoutKeybinds : Module(
 
         val equipped: Boolean
             get() {
-                val a = slot?.item?.lore() ?: return false
+                val a = slot?.item?.get<LoreKontextItemDataResolver, List<Component>>() ?: return false
                 return a.getOrNull(a.lastIndex - 1)?.stripped()?.isEmpty() ?: false
             }
     }

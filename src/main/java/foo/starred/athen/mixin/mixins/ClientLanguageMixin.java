@@ -2,7 +2,7 @@ package foo.starred.athen.mixin.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import foo.starred.athen.modules.impl.render.VisualWords;
-import foo.starred.snowbird.api.text.replacer.AbstractTextReplacer;
+import foo.starred.kontext.api.text.replacer.AbstractTextReplacer;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.resources.language.ClientLanguage;
 import net.minecraft.network.chat.Component;

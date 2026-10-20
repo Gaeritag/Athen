@@ -2,10 +2,10 @@ package foo.starred.athen.api.profile
 
 import com.google.gson.JsonArray
 import foo.starred.athen.Athen
+import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.profile.data.PlayerProfileStats
 import foo.starred.athen.api.profile.utils.ProfileParser
-import foo.starred.athen.utils.api
 
 object ProfileAPI {
     fun get(
@@ -23,7 +23,7 @@ object ProfileAPI {
     ) {
         val names = usernames.joinToString(",")
 
-        "hypixel?names=$names".api.request {
+        AthenAPI.get("hypixel?names=$names").request {
             if (inventory) headers("Include-Inventory" to "true")
 
             success<JsonArray> { array ->

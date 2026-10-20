@@ -3,12 +3,12 @@
 package foo.starred.athen.modules.impl.render.tooltip
 
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
@@ -16,7 +16,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.Identifier
 
-@Load
+@LoadableAthenModule
 object ScrollableTooltip : Module(
     "Scrollable tooltip",
     "Allows you to scroll tooltips. Does nothing if \"CustomTooltip\" is enabled!",

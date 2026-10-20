@@ -3,7 +3,7 @@
 package foo.starred.athen.ducks.entity
 
 import foo.starred.athen.modules.impl.slayer.carry.data.SlayerCarryPlayer
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.api.format.extension.string.stripped
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import java.lang.ref.WeakReference

@@ -1,7 +1,6 @@
 package foo.starred.athen.modules.impl.general.messageactions.actions.data
 
 import foo.starred.athen.modules.impl.general.messageactions.actions.base.IMessageAction
-import foo.starred.athen.utils.regex
 import kotlin.time.Duration.Companion.seconds
 
 class MessageResolvedEntry(src: MessageActionEntry) {
@@ -10,7 +9,7 @@ class MessageResolvedEntry(src: MessageActionEntry) {
     val source = src.copy(pattern = src.pattern.trim())
     val groups = source.match == REGEX && source.action.serializable.values.any { '$' in it }
 
-    val regex = if (source.match == REGEX) source.pattern.regex() else null
+    val regex = if (source.match == REGEX) source.pattern.tryCreateRegex() else null
     val action = source.action
     val delay = source.delay.seconds
 
@@ -28,5 +27,15 @@ class MessageResolvedEntry(src: MessageActionEntry) {
     fun action(text: String): IMessageAction {
         if (!groups) return action
         return action.resolve(text, last)
+    }
+
+    companion object {
+        private fun String.tryCreateRegex(): Regex? {
+            return try {
+                Regex(this)
+            } catch (_: Exception) {
+                null
+            }
+        }
     }
 }

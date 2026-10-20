@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-import static foo.starred.snowbird.api.ClientKt.client;
+import static foo.starred.kontext.abstraction.client.extension.MinecraftClientExtensionsKt.client;
 
 @Mixin(GuiRenderer.class)
 public abstract class GuiRendererMixin {

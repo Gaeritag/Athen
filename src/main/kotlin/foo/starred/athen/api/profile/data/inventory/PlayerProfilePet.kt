@@ -1,12 +1,12 @@
 package foo.starred.athen.api.profile.data.inventory
 
-import tech.thatgravyboat.skyblockapi.api.data.SkyBlockRarity
+import foo.starred.kontext.api.item.data.rarity.SkyBlockItemRarity
 
 data class PlayerProfilePet(
     val name: String,
     private val _rarity: String
 ) {
-    val rarity: SkyBlockRarity by lazy {
-        SkyBlockRarity.fromName(_rarity)
+    val rarity: SkyBlockItemRarity by lazy {
+        SkyBlockItemRarity.get(_rarity) ?: SkyBlockItemRarity.COMMON
     }
 }

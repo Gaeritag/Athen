@@ -1,6 +1,6 @@
 package foo.starred.athen.api.slayers
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.dev
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
@@ -10,16 +10,12 @@ import foo.starred.athen.api.slayers.enums.type.impl.SlayerDemon
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerMini
 import foo.starred.athen.api.slayers.resolver.base.GenericSlayerBossResolver
 import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
-import foo.starred.athen.events.EntityEvent
-import foo.starred.athen.events.LocationEvent
-import foo.starred.athen.events.MessageEvent
-import foo.starred.athen.events.SlayerEvent
-import foo.starred.athen.events.TickEvent
+import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
 import net.minecraft.world.entity.Entity
 import java.util.*
 
-@Priority
+@LoadableAthenModule
 object SlayerAPI {
     private val failRegex = Regex("\\s+SLAYER QUEST FAILED!")
     private val startRegex = Regex("\\s+SLAYER QUEST STARTED!")

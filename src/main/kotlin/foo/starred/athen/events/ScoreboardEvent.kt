@@ -10,7 +10,12 @@ sealed class ScoreboardEvent {
         val oldComponents: List<Component>,
         val newComponents: List<Component>,
     ) : AthenEvent() {
-        val added: List<String> = new - old.toSet()
-        val removed: List<String> = old - new.toSet()
+        val added: List<String> by lazy(LazyThreadSafetyMode.NONE) {
+            new - old.toSet()
+        }
+
+        val removed: List<String> by lazy(LazyThreadSafetyMode.NONE) {
+            old - new.toSet()
+        }
     }
 }

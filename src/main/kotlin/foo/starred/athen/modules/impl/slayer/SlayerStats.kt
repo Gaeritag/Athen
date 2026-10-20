@@ -2,11 +2,9 @@
 
 package foo.starred.athen.modules.impl.slayer
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.minecraft.text.measurer.VanillaFontMeasurer
-import foo.starred.athen.api.minecraft.text.renderer.VanillaFontRenderer
 import foo.starred.athen.api.scheduling.Ticking
 import foo.starred.athen.api.slayers.enums.tier.SlayerTier
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
@@ -16,15 +14,16 @@ import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.render.fcs
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.formatted
-import foo.starred.snowbird.utils.toDuration
+import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
+import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
+import foo.starred.kontext.api.format.extension.component.formattedText
+import foo.starred.kontext.api.format.extension.number.format
+import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.util.FormattedCharSequence
-import tech.thatgravyboat.skyblockapi.utils.text.TextStyle.onClick
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object SlayerStats : Module(
     "Slayer stats",
     "Displays slayer session statistics.",
@@ -69,36 +68,36 @@ object SlayerStats : Module(
 
             if (1 in displayOptions)
                 add((if (styleType == 1) `style$bosses` else `style$general`.replace("#name", "Bosses/hr"))
-                    .replace("#number", (kills / d).formatted(false)).prs())
+                    .replace("#number", (kills / d).format(false)).prs())
 
             if (2 in displayOptions)
                 add((if (styleType == 1) `style$xp` else `style$general`.replace("#name", "XP/hr"))
-                    .replace("#number", (xp / d).formatted(false)).prs())
+                    .replace("#number", (xp / d).format(false)).prs())
 
             if (3 in displayOptions)
                 add((if (styleType == 1) `style$kill` else `style$general`.replace("#name", "Kill"))
-                    .replace("#number", (total / kills).toDuration(secondsDecimals = 1)).prs())
+                    .replace("#number", (total / kills).parseDuration(decimals = 1)).prs())
 
             if (4 in displayOptions)
                 add((if (styleType == 1) `style$session` else `style$general`.replace("#name", "Session"))
-                    .replace("#number", t.toDuration()).prs())
+                    .replace("#number", t.parseDuration()).prs())
         }
     }
 
     private val hud by config.hud("Stats display") {
-        val example = listOf("§cSlayer Stats:", "Bosses: §c67", "Bosses/hr: §c104", "XP/hr: §c60,000", "Kill: §c23.4s", "Session: §c21m 24s").fcs
+        val example = listOf("§cSlayer Stats:", "Bosses: §c67", "Bosses/hr: §c104", "XP/hr: §c60,000", "Kill: §c23.4s", "Session: §c21m 24s").formattedText()
 
         constrain {
-            VanillaFontMeasurer.constrain(example)
+            MinecraftFontMeasurer.constrain(example)
         }
 
         preview {
-            VanillaFontRenderer.extract(graphics, example, 0, 0)
+            MinecraftFontRenderer.extract(graphics, example, 0, 0)
         }
 
         render {
             if (kills <= 0) return@render
-            VanillaFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
+            MinecraftFontRenderer.extract(graphics, display.value ?: return@render, 0, 0)
         }
     }
 
@@ -122,12 +121,7 @@ object SlayerStats : Module(
             `last$tier` = slayerInfo.tier
 
             if ((a != null && a != `last$type`) || (b != null && b != `last$tier`)) {
-                "<hover:<${MochaColorScheme.Red.argb}>This WILL clear all your stats!><${MochaColorScheme.Lavender.argb}>Detected a different slayer, click to reset stats.".parse()
-                    .onClick {
-                        reset()
-                        "Slayer stats were reset!".mod()
-                    }
-                    .mod()
+                "<hover:<${MochaColorScheme.Red.argb}><click:command:/athen reset slayerStats>This WILL clear all your stats!><${MochaColorScheme.Lavender.argb}>Detected a different slayer, click to reset stats.".mod()
             }
         }
 

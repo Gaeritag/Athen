@@ -4,7 +4,7 @@ import com.google.gson.JsonObject
 import com.mojang.serialization.Codec
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.storage.JsonStore
-import foo.starred.snowbird.api.repeat
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,7 +32,7 @@ abstract class ICarryStateTracker<T : ITrackedCarry>(storagePath: String, histor
     fun addCarry(player: String, total: Int, vararg params: Any) {
         val existing = tracked[player]
         if (existing != null && !valid(existing, *params)) return "§b$player§f is already being tracked for §b${existing.short}§f. Remove first.".mod()
-        
+
         val carry = existing ?: create(player, 0, *params)?.also { tracked[player] = it } ?: return "Failed to create carry tracker.".mod()
         carry.total += total
 
@@ -62,17 +62,17 @@ abstract class ICarryStateTracker<T : ITrackedCarry>(storagePath: String, histor
 
     fun displayHistory(page: Int) {
         if (history.value.isEmpty()) return "No carry history found.".mod()
-        
+
         val sorted = history.value.sortedByDescending { it.timestamp }
         val totalPages = (sorted.size + 9) / 10
         val currentPage = page.coerceIn(1, totalPages)
-        
+
         val rangeStart = (currentPage - 1) * 10
         val rangeEnd = minOf(rangeStart + 10, sorted.size)
-        
-        val divider = "§7" + "-".repeat()
+
+        val divider = "§7" + MinecraftChat.repeat("-")
         val dateFormat = SimpleDateFormat("MM/dd HH:mm")
-        
+
         divider.mod()
         "Carry History - Page §b$currentPage§f/§b$totalPages".mod()
 

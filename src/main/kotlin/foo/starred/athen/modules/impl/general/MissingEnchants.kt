@@ -2,24 +2,26 @@ package foo.starred.athen.modules.impl.general
 
 import com.google.gson.JsonObject
 import com.mojang.blaze3d.platform.InputConstants
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.items.ItemAPI.`watch$tooltip`
+import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.data
-import foo.starred.athen.utils.enchants
-import foo.starred.snowbird.api.EMPTY_COMPONENT
-import foo.starred.snowbird.api.inputs.impl.GenericInputState
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.stripped
+import foo.starred.kontext.abstraction.input.impl.GenericInputState
+import foo.starred.kontext.api.EMPTY_COMPONENT
+import foo.starred.kontext.api.format.extension.string.stripped
+import foo.starred.kontext.api.item.data.enchant.SkyBlockItemEnchant
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.SkyBlockEnchantKontextItemDataResolver
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object MissingEnchants : Module(
     "Missing enchants",
     "Shows missing enchants on the item you hover over.",
@@ -34,7 +36,7 @@ object MissingEnchants : Module(
     private var pools: List<List<String>>? = null
 
     init {
-        "enchants.json".data.request {
+        AthenAPI.data("enchants.json").request {
             success<JsonObject> { json ->
                 val map = HashMap<String, MutableList<String>>()
 
@@ -54,7 +56,7 @@ object MissingEnchants : Module(
         }
 
         on<GuiEvent.Tooltip.Update> {
-            if (GenericInputState.bound(keybind.value) && !GenericInputState.pressed(keybind)) return@on
+            if (!GenericInputState.pressed(keybind)) return@on
 
             val a = all ?: return@on
             val b = pools ?: return@on
@@ -69,20 +71,20 @@ object MissingEnchants : Module(
             }
 
             if (i == null) return@on
-            val enchants = item.enchants()
-            if (enchants.contains("one_for_all")) return@on
+            val enchants = item.get<SkyBlockEnchantKontextItemDataResolver, List<SkyBlockItemEnchant>>() ?: return@on
+            if (enchants.any { it.id == "one_for_all" }) return@on
 
             val all = a[i] ?: return@on
             val missing = ArrayList<String>(all.size)
 
             a@ for (enc in all) {
-                if (enc in enchants) continue
+                if (enchants.any { it.id == enc }) continue
 
-                for (pool in b) if (enc in pool && pool.any(enchants::contains)) continue@a
+                for (pool in b) if (enc in pool && pool.any { a -> enchants.any { b -> b.id == a } }) continue@a
                 if (!enc.startsWith("ultimate_")) missing.add(enc.prettify())
             }
 
-            val ult = enchants.any { it.startsWith("ultimate_") }
+            val ult = enchants.any { it.id.startsWith("ultimate_") }
             if (ult && missing.isEmpty()) return@on
             if (!ult) missing.add(0, "Ultimate enchant")
 

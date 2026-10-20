@@ -44,8 +44,8 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.api.text.parser.impl.parse
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.time.Duration.Companion.milliseconds
 

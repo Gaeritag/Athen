@@ -1,11 +1,11 @@
 package foo.starred.athen.api.scheduling
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.events.core.on
-import foo.starred.snowbird.api.scheduling.scheduler.impl.AbstractScheduler
+import foo.starred.kontext.api.scheduling.scheduler.impl.AbstractScheduler
 
-@Priority
+@LoadableAthenModule
 object Scheduler : AbstractScheduler() {
     init {
         on<TickEvent.Client.Start> {

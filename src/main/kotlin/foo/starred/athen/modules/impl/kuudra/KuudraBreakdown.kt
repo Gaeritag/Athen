@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.kuudra
 
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.kuudra.KuudraAPI
 import foo.starred.athen.api.kuudra.enums.KuudraTier
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
@@ -10,13 +10,11 @@ import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.KuudraEvent
 import foo.starred.athen.events.MessageEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.regex
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.name
-import tech.thatgravyboat.skyblockapi.utils.regex.RegexUtils.findThenNull
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
 
-@Load
-@OnlyIn(islands = [PresetSkyBlockIsland.KUUDRA])
+@LoadableAthenModule
+@AthenModuleScope(islands = [PresetSkyBlockIsland.KUUDRA])
 object KuudraBreakdown : Module(
     "Kuudra breakdown",
     "Sends a message about what each player did at the end of the run.",
@@ -33,10 +31,10 @@ object KuudraBreakdown : Module(
     private val set = mutableSetOf<Player>()
 
     init {
-        freshRegex = freshMessage.value.regex()
+        freshRegex = runCatching { Regex(freshMessage.value) }.getOrNull()
 
         freshMessage.state.observe {
-            freshRegex = it.regex() ?: return@observe
+            freshRegex = runCatching { Regex(it) }.getOrNull() ?: return@observe
         }
 
         on<KuudraEvent.Start> {
@@ -59,40 +57,45 @@ object KuudraBreakdown : Module(
                     val a = " • <yellow>${p.name} <gray>- <red>${p.supply} <r>Supplies <gray>| <red>${p.fuel} <r>Fuels <gray>| <red>${p.deaths ?: "???"} <r>Deaths"
                     val b = "<hover:<red>${p.stun} <r>Stuns>"
 
-                    if (p.stun > 0) "$b$a".lie() else a.lie()
+                    MinecraftMessages.display(if (p.stun > 0) "$b$a" else a)
                 }
 
                 val total = set.sumOf { it.fresh }
 
-                if (fresh.isNotEmpty()) " • <hover:${fresh.joinToString("\n")}><orange>Freshens: <red>$total".lie()
-                else " • <orange>Freshens: <red>$total".lie()
+                if (fresh.isNotEmpty()) MinecraftMessages.display(" • <hover:${fresh.joinToString("\n")}><orange>Freshens: <red>$total")
+                else MinecraftMessages.display(" • <orange>Freshens: <red>$total")
 
                 return@on
             }
 
             if (stripped == "Your Fresh Tools Perk bonus doubles your building speed for the next 10 seconds!") {
-                set.find { it.name == name }?.fresh++
+                set.find { it.name == client.user.name }?.fresh++
                 return@on
             }
 
-            partyRegex.findThenNull(stripped, "username", "message") { (username, message) ->
-                if (username == name) return@findThenNull
-                if (freshRegex?.matches(message) != true) return@findThenNull
-                set.find { it.name == username }?.fresh++
-            } ?: return@on
+            partyRegex.find(stripped)?.let { match ->
+                val (username, message) = match.destructured
+                if (username != client.user.name && freshRegex?.matches(message) == true) set.find { it.name == username }?.fresh++
+                return@on
+            }
 
-            supplyRegex.findThenNull(stripped, "user") { (user) ->
+            supplyRegex.find(stripped)?.let { match ->
+                val (user) = match.destructured
                 set.find { it.name == user }?.supply++
-            } ?: return@on
+                return@on
+            }
 
-            fuelRegex.findThenNull(stripped, "user") { (user) ->
+            fuelRegex.find(stripped)?.let { match ->
+                val (user) = match.destructured
                 set.find { it.name == user }?.fuel++
-            } ?: return@on
+                return@on
+            }
 
             val tier = KuudraAPI.tier?.int ?: return@on
             if (tier < KuudraTier.BURNING.int) return@on
 
-            stunRegex.findThenNull(stripped, "user") { (user) ->
+            stunRegex.find(stripped)?.let { match ->
+                val (user) = match.destructured
                 set.find { it.name == user }?.stun++
             }
         }

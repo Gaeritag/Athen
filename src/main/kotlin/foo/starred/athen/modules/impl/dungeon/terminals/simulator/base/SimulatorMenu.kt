@@ -2,7 +2,7 @@ package foo.starred.athen.modules.impl.dungeon.terminals.simulator.base
 
 import foo.starred.athen.api.dungeon.terminals.TerminalType
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl.*
-import foo.starred.snowbird.utils.literal
+import foo.starred.kontext.api.format.extension.component.literal
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item

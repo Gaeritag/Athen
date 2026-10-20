@@ -23,10 +23,9 @@ import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.screen.CascadeScreen
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
-import foo.starred.snowbird.utils.brighten
-import foo.starred.snowbird.utils.literal
-import foo.starred.snowbird.utils.plural
-import foo.starred.snowbird.utils.toDuration
+import foo.starred.kontext.api.format.extension.color.brighten
+import foo.starred.kontext.api.format.extension.component.literal
+import foo.starred.kontext.api.format.extension.time.parseDuration
 
 abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScreen(screenName) {
     private val tooltips = mutableListOf<TooltipEntry>()
@@ -201,7 +200,7 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
             }
 
             text {
-                val time = carry.lastCompletionTime.takeIf { it != 0L }?.let { ((now - it) / 1000.0).toDuration() } ?: "N/A"
+                val time = carry.lastCompletionTime.takeIf { it != 0L }?.let { ((now - it) / 1000.0).parseDuration() } ?: "N/A"
                 val rate = ((now - carry.firstCompletionTime) / 1000).takeIf { carry.completed > 2 && carry.firstCompletionTime != 0L && it > 0 }?.let { "${carry.completed * 3600 / it}/hr" } ?: "N/A"
 
                 wrapper = CascadeTextWrapper
@@ -395,12 +394,11 @@ abstract class ICarryGUI<T : ITrackedCarry>(val screenName: String) : CascadeScr
         }
 
         fun display(): String {
-            val carry = amount.plural("carry", "carries")
             return when (action) {
-                ActionType.COUNT_INCREASE -> "Added $amount completed $carry for $player"
-                ActionType.COUNT_DECREASE -> "Decreased $amount completed $carry for $player"
-                ActionType.TOTAL_INCREASE -> "Added $amount $carry for $player"
-                ActionType.TOTAL_DECREASE -> "Decreased $amount $carry for $player"
+                ActionType.COUNT_INCREASE -> "Added $amount completed carries for $player"
+                ActionType.COUNT_DECREASE -> "Decreased $amount completed carries for $player"
+                ActionType.TOTAL_INCREASE -> "Added $amount carries for $player"
+                ActionType.TOTAL_DECREASE -> "Decreased $amount carries for $player"
                 ActionType.CARRY_REMOVED -> "Removed $player from tracking"
             }
         }

@@ -4,9 +4,10 @@ package foo.starred.athen.modules.impl.render.highlight
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import foo.starred.athen.annotations.Load
-import foo.starred.athen.annotations.OnlyIn
+import foo.starred.athen.annotations.impl.AthenModuleScope
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
+import foo.starred.athen.api.skyblock.EntityAPI
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
@@ -18,28 +19,26 @@ import foo.starred.athen.events.WorldRenderEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.render.highlight.ui.MobHighlightGUI
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.name
-import foo.starred.athen.utils.render.renderBoundingBox
+import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
+import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.entity.extension.renderAABB
+import foo.starred.kontext.api.entity.extension.serverMaxHealth
+import foo.starred.kontext.api.text.parser.impl.parse
 import foo.starred.parallax.api.primitives.ParallaxBox
-import foo.starred.snowbird.api.center
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.lie
-import foo.starred.snowbird.api.repeat
-import foo.starred.snowbird.api.text.parser.impl.parse
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.phys.AABB
-import tech.thatgravyboat.skyblockapi.utils.extentions.serverMaxHealth
 
 //? if >= 26.2 {
 /*import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 *///? }
 
-@Load
-@OnlyIn(skyblock = true)
+@LoadableAthenModule
+@AthenModuleScope(skyblock = true)
 object MobHighlight : Module(
     "Mob highlight",
     "Highlights mobs",
@@ -119,47 +118,47 @@ object MobHighlight : Module(
             }
 
             "highlight" / "list" / "named" {
-                val a = ("<dark_gray>" + ("-".repeat())).parse()
+                val a = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
 
-                a.lie()
+                MinecraftMessages.display(a)
                 "Highlight list <gray>[Named]<r>:".mod()
-                a.lie()
+                MinecraftMessages.display(a)
 
                 for (b in e0.value) {
-                    " <dark_gray>- <gray>${b.name}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}".lie()
+                    MinecraftMessages.display(" <dark_gray>- <gray>${b.name}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}")
                 }
 
-                a.lie()
+                MinecraftMessages.display(a)
             }
 
             "highlight" / "list" / "typed" {
-                val a = ("<dark_gray>" + ("-".repeat())).parse()
+                val a = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
 
-                a.lie()
+                MinecraftMessages.display(a)
                 "Highlight list <gray>[Typed]<r>:".mod()
-                a.lie()
+                MinecraftMessages.display(a)
 
                 for (b in e1.value) {
-                    " <dark_gray>- <gray>${b.type}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}".lie()
+                    MinecraftMessages.display(" <dark_gray>- <gray>${b.type}${if (b.max != -1) " <dark_gray>[Max HP: ${b.max}]<gray>" else ""} <dark_gray>- <${b.color}>${b.color.toHexString()}")
                 }
 
-                a.lie()
+                MinecraftMessages.display(a)
             }
 
             "highlight" / "help" {
-                val a = ("<dark_gray>" + ("-".repeat())).parse()
+                val a = ("<dark_gray>" + MinecraftChat.repeat("-")).parse()
                 val c = MochaColorScheme.Green.argb
 
-                a.lie()
-                ("<red>" + ("Athen Higlights".center())).lie()
-                a.lie()
+                MinecraftMessages.display(a)
+                MinecraftMessages.display("<red>" + MinecraftChat.center("Athen Higlights"))
+                MinecraftMessages.display(a)
 
-                " <dark_gray>- <$c>/athen highlight add [named | typed] <color> <maxHp - optional> <name | type>".lie()
-                " <dark_gray>- <$c>/athen highlight remove [named | typed] <name | type>".lie()
-                " <dark_gray>- <$c>/athen highlight list [named | typed]".lie()
-                " <dark_gray>- <$c>/athen highlight [gui - optional]".lie()
+                MinecraftMessages.display(" <dark_gray>- <$c>/athen highlight add [named | typed] <color> <maxHp - optional> <name | type>")
+                MinecraftMessages.display(" <dark_gray>- <$c>/athen highlight remove [named | typed] <name | type>")
+                MinecraftMessages.display(" <dark_gray>- <$c>/athen highlight list [named | typed]")
+                MinecraftMessages.display(" <dark_gray>- <$c>/athen highlight [gui - optional]")
 
-                a.lie()
+                MinecraftMessages.display(a)
             }
 
             "highlight" / "gui" {
@@ -202,7 +201,7 @@ object MobHighlight : Module(
                     id = a0
                 }
 
-                val d = a.customName?.name
+                val d = a.customName?.let { EntityAPI.name(it) }
                 if (d != null) {
                     e0.find { d == it.name && (it.max == -1 || it.max == b) }?.let {
                         int += id
@@ -230,7 +229,7 @@ object MobHighlight : Module(
         on<WorldRenderEvent.Entity> {
             val e = entity ?: return@on
             val color = map.get(e.id).takeIf { it != Int.MIN_VALUE }?.or(0xFF000000.toInt()) ?: return@on
-            fn1(e.renderBoundingBox, color)
+            fn1(e.renderAABB(), color)
         }
 
         on<InputEvent.Keyboard.Press> {
@@ -255,7 +254,7 @@ object MobHighlight : Module(
 
     private fun fn() {
         val a = client.crosshairPickEntity as? LivingEntity ?: return
-        val name = (client.level?.getEntity(a.id + 1) as? ArmorStand)?.customName?.name
+        val name = (client.level?.getEntity(a.id + 1) as? ArmorStand)?.customName?.let { EntityAPI.name(it) }
         val max = a.serverMaxHealth
         val type = a.type
 

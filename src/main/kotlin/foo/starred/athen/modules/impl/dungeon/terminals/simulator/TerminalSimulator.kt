@@ -1,6 +1,6 @@
 package foo.starred.athen.modules.impl.dungeon.terminals.simulator
 
-import foo.starred.athen.annotations.Load
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
@@ -11,10 +11,10 @@ import foo.starred.athen.modules.impl.dungeon.terminals.simulator.base.Simulator
 import foo.starred.athen.modules.impl.dungeon.terminals.simulator.impl.*
 import foo.starred.athen.utils.command
 import foo.starred.kbus.extensions.override
-import foo.starred.snowbird.api.client
-import foo.starred.snowbird.api.data.Observable
+import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.data.Observable
 
-@Load
+@LoadableAthenModule
 object TerminalSimulator : Module(
     "Terminal simulator",
     "Simulator terminal, terminal simulators?",

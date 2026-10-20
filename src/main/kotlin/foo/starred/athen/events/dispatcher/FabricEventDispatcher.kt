@@ -1,12 +1,12 @@
 package foo.starred.athen.events.dispatcher
 
-import foo.starred.athen.annotations.Priority
+import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.events.*
-import foo.starred.parallax.api.events.ParallaxEvents
-import foo.starred.snowbird.api.client
+import foo.starred.kontext.abstraction.client.extension.client
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
@@ -16,7 +16,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents
 import net.fabricmc.fabric.api.event.player.*
 import net.minecraft.world.InteractionResult
 
-@Priority
+@LoadableAthenModule
 object FabricEventDispatcher {
     init {
         ClientLifecycleEvents.CLIENT_STARTED.register { _ ->
@@ -53,8 +53,8 @@ object FabricEventDispatcher {
             if (client.isSingleplayer) TickEvent.Server.post()
         }
 
-        ParallaxEvents.EXTRACT.register {
-            WorldRenderEvent.Extract.post()
+        ItemTooltipCallback.EVENT.register { stack, _, _, lines ->
+            GuiEvent.Tooltip.Render(stack, lines).post()
         }
 
         LevelRenderEvents.COLLECT_SUBMITS.register { context ->
