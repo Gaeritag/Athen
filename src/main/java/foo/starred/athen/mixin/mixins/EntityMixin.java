@@ -149,7 +149,7 @@ public abstract class EntityMixin implements EntityDuck {
         if (!stand.hasCustomName()) return;
         if (athen$attachedTo != null) return;
 
-        EntityAPI.attach(entity);
+        EntityAPI.INSTANCE.attach(entity);
     }
 
     @Inject(method = "onRemoval", at = @At("RETURN"))

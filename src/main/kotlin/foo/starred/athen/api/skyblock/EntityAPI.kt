@@ -32,7 +32,7 @@
  *
  * The original MIT license applies to the portions derived from SkyblockAPI.
  */
-@file:Suppress("ConstPropertyName")
+@file:Suppress("ConstPropertyName", "LocalVariableName")
 
 package foo.starred.athen.api.skyblock
 
@@ -71,90 +71,82 @@ object EntityAPI {
     }
 
     fun name(component: Component): String? {
-        val a = component.stripped().takeIf { '❤' in it } ?: return null
-        val b = nameRegex.find(a) ?: return null
+        val name = component.stripped().takeIf { '❤' in it } ?: return null
+        val match = nameRegex.find(name) ?: return null
 
-        return b.groups["name"]?.value
-            ?.let { if (b.groups["bool"] != null) it.dropLast(1) else it }
+        return match.groups["name"]?.value
+            ?.let { if (match.groups["bool"] != null) it.dropLast(1) else it }
             ?.trim()
             ?.takeIf { it.isNotBlank() }
     }
 
-    @JvmStatic
-    fun attach(ent: Entity) {
-        val lit = ent.customName ?: return
+    fun attach(entity: Entity) {
+        val literal = entity.customName ?: return
         val level = client.level ?: return
-        if (lit.stripped().damage()) return
+        if (literal.stripped().damage()) return
 
-        var a: Entity? = null
-        var a2: Entity? = null
-        var d = Double.MAX_VALUE
-        var d2 = Double.MAX_VALUE
-        var t = Int.MAX_VALUE
+        val duck = entity as? EntityDuck ?: return
+        if (duck.`athen$attach`() != null) return
 
-        val es = level.getEntities(ent, ent.boundingBox.inflate(0.0, 1.0, 0.0))
-        for (e0 in es) {
-            var e = e0
+        var candidate: Entity? = null
+        var distance = Double.MAX_VALUE
+        var ticks = Int.MAX_VALUE
 
-            if (e is ArmorStand) continue
-            if (!e.isAlive) continue
-            if (e.isInvisible && e !is Creeper && !e.armor()) continue
+        val all = level.getEntities(entity, entity.boundingBox.inflate(0.0, 1.0, 0.0))
+        for (_entity in all) {
+            var living = _entity
 
-            if (e is CaveSpider) level.getEntities(e, e.boundingBox.inflate(0.0, 0.5, 0.0)).firstOrNull { it is Spider && !it.isInvisible && it.isAlive }?.let { e = it }
+            if (living is ArmorStand) continue
+            if (!living.isAlive) continue
+            if (living.isInvisible && living !is Creeper && !living.armor()) continue
 
-            val d0 = e.distanceToSqr(ent)
-            if (a != null && d0 > d) continue
+            if (living is CaveSpider) {
+                level.getEntities(living, living.boundingBox.inflate(0.0, 0.5, 0.0)).firstOrNull { it is Spider && !it.isInvisible && it.isAlive }?.let { living = it }
+            }
 
-            val t0 = abs(e.tickCount - ent.tickCount)
-            if (d0 == 0.0 && t0 == 0) {
-                a = e
+            val _distance = living.distanceToSqr(entity)
+            if (candidate != null && _distance > distance) continue
+
+            val _ticks = abs(living.tickCount - entity.tickCount)
+            if (_distance == 0.0 && _ticks == 0) {
+                candidate = living
                 break
             }
 
-            if (a == null || d0 < d || (d0 == d && t0 < t)) {
-                a2 = a
-                d2 = d
-
-                a = e
-                d = d0
-                t = t0
-            } else if (a2 == null || d0 < d2) {
-                a2 = e
-                d2 = d0
+            if (candidate == null || _distance < distance || (_distance == distance && _ticks < ticks)) {
+                candidate = living
+                distance = _distance
+                ticks = _ticks
             }
         }
 
-        val b = a?.rootVehicle?.takeIf { it.isAlive } ?: return
-
-        val acc = (ent as? EntityDuck) ?: return
-        val c = acc.`athen$attach`()
-        if (c != null && (c == a || c == a2 || c == b)) return
-
-        val list = (b as? EntityDuck)?.`athen$attachments`() ?: return
+        val best = candidate?.rootVehicle?.takeIf { it !is ArmorStand && it.isAlive } ?: return
+        val list = (best as? EntityDuck)?.`athen$attachments`() ?: return
 
         list.removeIf { it.get()?.isAlive != true }
-        if (!list.any { it.get() == ent }) list.add(WeakReference(ent))
-        acc.`athen$attach`(b)
+        if (!list.any { it.get() == entity }) list.add(WeakReference(entity))
 
-        EntityEvent.Update.Attach(lit, ent).post()
+        duck.`athen$attach`(best)
+        EntityEvent.Update.Attach(literal, entity).post()
     }
 
-    private fun String.damage(): Boolean =
-        all { it.isDigit() || it == ',' || it in "✧✯❤⚔✷ﬗ♞☄" }
+    private fun String.damage(): Boolean {
+        return all { it.isDigit() || it == ',' || it in "✧✯❤⚔✷ﬗ♞☄" }
+    }
 
     private fun Entity.armor(): Boolean {
-        val l = this as? LivingEntity ?: return false
-        return !l.getItemBySlot(EquipmentSlot.HEAD).isEmpty || !l.getItemBySlot(EquipmentSlot.CHEST).isEmpty || !l.getItemBySlot(EquipmentSlot.LEGS).isEmpty || !l.getItemBySlot(EquipmentSlot.FEET).isEmpty
+        val living = this as? LivingEntity ?: return false
+        return !living.getItemBySlot(EquipmentSlot.HEAD).isEmpty || !living.getItemBySlot(EquipmentSlot.CHEST).isEmpty || !living.getItemBySlot(EquipmentSlot.LEGS).isEmpty || !living.getItemBySlot(EquipmentSlot.FEET).isEmpty
     }
 
-    private fun load(ent: ArmorStand) {
+    private fun load(entity: ArmorStand) {
         var tries = 0
 
         fun tick() {
-            if (ent.customName != null) return attach(ent)
-            if (tries++ < 3) Scheduler.schedule(1.clientTicks) { tick() }
+            if (entity.customName != null) return attach(entity)
+            if (tries++ < 3) Scheduler.schedule(1.clientTicks, ::tick)
         }
 
-        Scheduler.schedule(2.clientTicks) { tick() }
+        Scheduler.schedule(2.clientTicks, ::tick)
     }
 }
