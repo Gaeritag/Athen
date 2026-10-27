@@ -34,8 +34,12 @@ enum class PresetSkyBlockIsland(val id: String, override val string: String): IS
     JERRYS_WORKSHOP("winter", "Jerry's Workshop"),
     ;
 
-    val state: Observable<Boolean>
-        get() = LocationAPI.island.map { it == this }
+    val state: Observable<Boolean> by lazy {
+        LocationAPI.island.map { it == this }
+    }
+
+    val active: Boolean
+        get() = LocationAPI.island.value == this
 
     override fun toString(): String {
         return string

@@ -307,8 +307,12 @@ enum class PresetSkyBlockArea(val key: String, override val string: String) : IS
     SAFARI_ZONE("safari_zone", "Safari Zone")
     ;
 
-    val state: Observable<Boolean>
-        get() = LocationAPI.area.map { it == this }
+    val state: Observable<Boolean> by lazy {
+        LocationAPI.area.map { it == this }
+    }
+
+    val active: Boolean
+        get() = LocationAPI.area.value == this
 
     override fun toString(): String {
         return string
