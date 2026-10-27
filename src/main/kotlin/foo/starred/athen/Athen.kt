@@ -64,9 +64,9 @@ object Athen : ClientModInitializer {
         val divider = ("<dark_gray><strikethrough>" + MinecraftChat.repeat("-")).parse()
 
         MinecraftMessages.display(divider)
-        MinecraftMessages.display("<${MochaColorScheme.Lavender.argb}>" + MinecraftChat.repeat("Athen"))
+        MinecraftMessages.display("<${MochaColorScheme.Lavender.argb}>" + MinecraftChat.center("Athen"))
         MinecraftMessages.display(divider)
-        MinecraftMessages.display("<gray>Thank you for installing Athen <dark_gray>(v${Data.version})<gray>.")
+        MinecraftMessages.display("<gray>You are now on Athen <dark_gray>(v${Data.version})<gray>!")
         MinecraftMessages.display(EMPTY_COMPONENT)
         MinecraftMessages.display("<gray>Quick Start:")
         MinecraftMessages.display("  <aqua>/athen config <gray>- Open configuration menu")
@@ -78,6 +78,8 @@ object Athen : ClientModInitializer {
 
         MinecraftMessages.display(divider)
         MinecraftMessages.display("<gray><hover:<green>Click to open page!><click:url:https://patreon.com/starredskies>Want to help support the development for mods like Athen? Click here to open the Patreon :3")
+        MinecraftMessages.display(divider)
+        MinecraftMessages.display("<click:command:/athen toggle feature irc><dark_red><bold>Do you want to enable/disable the Athen IRC? Click here!")
         MinecraftMessages.display(divider)
     }
 

@@ -30,8 +30,7 @@ import net.minecraft.network.protocol.game.ServerboundChatPacket
 object IRC : Module(
     "IRC",
     "Enables the IRC by default on launch if the module is enabled.",
-    ConfigCategory.GENERAL,
-    true
+    ConfigCategory.GENERAL
 ), IWebSocket, IKommand<FabricClientCommandSource> {
     override val loader: KommandCommandScope<FabricClientCommandSource> = KommandCommandScope()
 
