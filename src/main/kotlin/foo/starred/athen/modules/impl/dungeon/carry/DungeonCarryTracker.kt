@@ -71,7 +71,7 @@ object DungeonCarryTracker : Module(
 
     private val display = Ticking {
         if (tracked.isEmpty()) return@Ticking null
-        if (`hud$dungeon` && !PresetSkyBlockIsland.THE_CATACOMBS.state.value) return@Ticking null
+        if (`hud$dungeon` && !PresetSkyBlockIsland.THE_CATACOMBS.active) return@Ticking null
 
         buildString {
             append("§f§lDungeon Carries:")
