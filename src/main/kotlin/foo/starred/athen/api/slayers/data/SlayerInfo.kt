@@ -20,28 +20,13 @@ data class SlayerInfo(val entity: Entity) {
         get() = owner == client.user.name
 
     var owner: String? = null
-        get() {
-            if (field != null) return field
-
-            field = _owner
-            return field
-        }
+        get() = field ?: _owner
 
     var type: ISlayerType? = null
-        get() {
-            if (field != null) return field
-
-            field = _type
-            return field
-        }
+        get() = field ?: _type
 
     var tier: SlayerTier? = null
-        get() {
-            if (field != null) return field
-
-            field = _tier
-            return field
-        }
+        get() = field ?: _tier
 
     var phase: Int = 1
 
