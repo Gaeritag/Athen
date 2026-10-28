@@ -36,7 +36,7 @@ data class SlayerInfo(val entity: Entity) {
 
     private fun fn0(): String? {
         val stand = stand(3) ?: stand(4) ?: return null
-        return stand.customName?.stripped()?.takeIf { it.contains("'s SLAYER BOSS") }?.substringBefore("'")?.trim()
+        return stand.customName?.stripped()?.takeIf { spawnerRegex in it }?.substringBefore("'")?.trim()
     }
 
     private fun fn1(): ISlayerType? {
@@ -51,5 +51,9 @@ data class SlayerInfo(val entity: Entity) {
 
     private fun stand(offset: Int): ArmorStand? {
         return client.level?.getEntity(entity.id + offset) as? ArmorStand
+    }
+
+    companion object {
+        private val spawnerRegex = Regex("'(?:s )?SLAYER BOSS")
     }
 }
