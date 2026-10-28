@@ -1,7 +1,7 @@
 package foo.starred.athen.api.messaging.impl
 
+import foo.starred.athen.Athen
 import foo.starred.athen.api.messaging.enums.MessagePrefixType
-import foo.starred.athen.modules.impl.Dev
 import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
 import foo.starred.kontext.api.format.extension.component.literal
 import foo.starred.kontext.api.text.parser.impl.parse
@@ -23,11 +23,11 @@ object MessagingAPI {
 
     @JvmStatic
     fun String.dev() {
-        if (Dev.debug) mod(MessagePrefixType.DEV)
+        if (Athen.Data.debug) mod(MessagePrefixType.DEV)
     }
 
     @JvmStatic
     fun Component.dev() {
-        if (Dev.debug) mod(MessagePrefixType.DEV)
+        if (Athen.Data.debug) mod(MessagePrefixType.DEV)
     }
 }

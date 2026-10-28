@@ -1,13 +1,13 @@
 package foo.starred.athen.config.hud.ui
 
 import com.mojang.blaze3d.platform.InputConstants
+import foo.starred.athen.Athen
 import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.hud.data.editor.HudEditorRuntimeCoordinateData
 import foo.starred.athen.config.hud.data.editor.HudEditorRuntimeRenderData
 import foo.starred.athen.config.hud.data.element.HudElement
 import foo.starred.athen.config.hud.impl.HudRenderer
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
-import foo.starred.athen.modules.impl.Dev
 import foo.starred.kontext.abstraction.input.impl.MouseInputState
 import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
 import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
@@ -95,7 +95,7 @@ object HudElementEditorUI : Screen("HUD Editor [Athen]".literal()) {
         }
 
         active?.let { e ->
-            val text = e.config.name + if (Dev.debug) " | ${e.coordinate.x} | ${e.coordinate.y}" else ""
+            val text = e.config.name + if (Athen.Data.debug) " | ${e.coordinate.x} | ${e.coordinate.y}" else ""
             val width = MinecraftFontMeasurer.width(text)
             val height = MinecraftFontMeasurer.height
 

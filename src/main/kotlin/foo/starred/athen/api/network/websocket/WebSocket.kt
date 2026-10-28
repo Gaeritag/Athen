@@ -13,7 +13,6 @@ import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.events.GameEvent
 import foo.starred.athen.events.InternalEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.modules.impl.Dev
 import foo.starred.athen.utils.command
 import foo.starred.kontext.abstraction.client.extension.client
 import foo.starred.kontext.api.scheduling.scheduler.data.tasks.base.SchedulerTask
@@ -160,7 +159,7 @@ object WebSocket {
                 auth = true
                 InternalEvent.WebSocket.Auth.post()
                 Athen.LOGGER.info("Websocket authenticated as $n")
-                if (Dev.debug) "<green>Connected to Websocket as <white>$n".mod()
+                if (Athen.Data.debug) "<green>Connected to Websocket as <white>$n".mod()
             }
 
             SocketPacket.WebSocket.ClientBound.AuthError.id -> {

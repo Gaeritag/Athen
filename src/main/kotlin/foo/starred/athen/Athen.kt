@@ -9,14 +9,16 @@ import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
 import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.scheduling.Scheduler
+import foo.starred.athen.api.storage.JsonStore
+import foo.starred.athen.config.module.irc.ConfigIrcUI
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.InternalEvent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.core.on
-import foo.starred.athen.modules.impl.Dev
 import foo.starred.kbus.impl.KBus
 import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
 import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
+import foo.starred.kontext.abstraction.gui.MinecraftGui
 import foo.starred.kontext.api.EMPTY_COMPONENT
 import foo.starred.kontext.api.scheduling.scheduler.extensions.clientTicks
 import foo.starred.kontext.api.text.parser.impl.parse
@@ -34,6 +36,9 @@ object Athen : ClientModInitializer {
     val LOGGER: Logger = LoggerFactory.getLogger(Data.name)
 
     @JvmField
+    val JSON: JsonStore = JsonStore("main/config")
+
+    @JvmField
     val GSON: Gson = Gson()
 
     @JvmField
@@ -46,7 +51,7 @@ object Athen : ClientModInitializer {
         InternalEvent.Mod.Loading.Start.post()
         AthenAnnotationLoader.load()
 
-        ModrinthUpdateSource("athen").init(Data.version)
+        ModrinthUpdateSource("athen").init(Data.Version.current)
 
         on<LocationEvent.Server.Connect> {
             Scheduler.schedule(20.clientTicks, ::install)
@@ -58,15 +63,19 @@ object Athen : ClientModInitializer {
     }
 
     private fun install() {
-        if (Dev.lastVersion == Data.version) return
-        Dev.lastVersion = Data.version
+        if (Data.Version.last.isEmpty() || Data.Version.last == "0.3.7") {
+            MinecraftGui.screen(ConfigIrcUI)
+        }
+
+        if (Data.Version.last == Data.Version.current) return
+        Data.Version.last = Data.Version.current
 
         val divider = ("<dark_gray><strikethrough>" + MinecraftChat.repeat("-")).parse()
 
         MinecraftMessages.display(divider)
         MinecraftMessages.display("<${MochaColorScheme.Lavender.argb}>" + MinecraftChat.center("Athen"))
         MinecraftMessages.display(divider)
-        MinecraftMessages.display("<gray>You are now on Athen <dark_gray>(v${Data.version})<gray>!")
+        MinecraftMessages.display("<gray>You are now on Athen <dark_gray>(v${Data.Version.current})<gray>!")
         MinecraftMessages.display(EMPTY_COMPONENT)
         MinecraftMessages.display("<gray>Quick Start:")
         MinecraftMessages.display("  <aqua>/athen config <gray>- Open configuration menu")
@@ -85,11 +94,11 @@ object Athen : ClientModInitializer {
 
     private fun broadcast() {
         AthenAPI.data("broadcast.txt").request {
-            success<String> {
-                val str = it.trim().takeIf { s -> s.isNotBlank() && s != Dev.lastBroadcast } ?: return@success
+            success<String> { string ->
+                val parsed = string.trim().takeIf { it.isNotBlank() && it != Data.broadcast } ?: return@success
 
-                "<hover:<${MochaColorScheme.Lavender.argb}>Broadcasted message!>$str".mod()
-                Dev.lastBroadcast = str
+                "<hover:<${MochaColorScheme.Lavender.argb}>Broadcasted message!>$parsed".mod()
+                Data.broadcast = parsed
             }
 
             error {
@@ -100,8 +109,16 @@ object Athen : ClientModInitializer {
 
     object Data {
         const val discord: String = "https://discord.gg/DB5S3DjQVa"
-        const val version: String = /*$ mod_version*/"0.3.7"
         const val name: String = /*$ mod_name*/"Athen"
         const val id: String = /*$ mod_id*/"athen"
+
+        var broadcast: String by JSON.string("broadcast")
+        var debug: Boolean by JSON.boolean("debug")
+
+        object Version {
+            val current: String = /*$ mod_version*/"0.3.7"
+
+            var last: String by JSON.string($$"version$last")
+        }
     }
 }

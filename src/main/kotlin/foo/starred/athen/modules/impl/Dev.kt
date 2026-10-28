@@ -1,8 +1,8 @@
 package foo.starred.athen.modules.impl
 
+import foo.starred.athen.Athen
 import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.messaging.impl.MessagingAPI.mod
-import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.ConfigManager
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
 import foo.starred.athen.events.MessageEvent
@@ -12,25 +12,13 @@ import foo.starred.kontext.api.text.parser.impl.parse
 
 @LoadableAthenModule
 object Dev {
-    private val r = Regex("(?<!^)([A-Z])")
-
-    @JvmStatic
-    val file = JsonStore("main/Dev")
-
-    @JvmStatic
-    var lastVersion: String by file.string("lastVersion")
-
-    @JvmStatic
-    var lastBroadcast: String by file.string("lastBroadcast")
-
-    @JvmStatic
-    var debug: Boolean by file.boolean("enabled")
+    private val keyRegex = Regex("(?<!^)([A-Z])")
 
     init {
         command {
             "toggle" / "dev" {
-                debug = !debug
-                val a = if (debug) "<green>Enabled" else "<red>Disabled"
+                Athen.Data.debug = !Athen.Data.debug
+                val a = if (Athen.Data.debug) "<green>Enabled" else "<red>Disabled"
 
                 "Debug mode is now: $a<r>.".mod()
             }
@@ -41,7 +29,7 @@ object Dev {
                 val b = ConfigManager.get(key) as? Boolean ?: return@string "Not a valid feature!".mod()
                 ConfigManager.update(key, !b)
 
-                val s = key.replace(r, " $1").lowercase().replaceFirstChar { it.uppercase() }
+                val s = key.replace(keyRegex, " $1").lowercase().replaceFirstChar { it.uppercase() }
                 "<${MochaColorScheme.Lavender.argb}>$s <gray>➤ ${if (b) "<red>Disabled" else "<green>Enabled"}".mod()
             }
 
