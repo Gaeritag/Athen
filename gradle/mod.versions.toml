@@ -1,6 +1,6 @@
 [versions]
 id = "athen"
 name = "Athen"
-version = "0.3.7"
+version = "0.4.0"
 group = "foo.starred"
 tweaker = "athen.accesswidener"

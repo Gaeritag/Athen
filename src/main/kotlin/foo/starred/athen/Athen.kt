@@ -116,7 +116,7 @@ object Athen : ClientModInitializer {
         var debug: Boolean by JSON.boolean("debug")
 
         object Version {
-            val current: String = /*$ mod_version*/"0.3.7"
+            val current: String = /*$ mod_version*/"0.4.0"
 
             var last: String by JSON.string($$"version$last")
         }
