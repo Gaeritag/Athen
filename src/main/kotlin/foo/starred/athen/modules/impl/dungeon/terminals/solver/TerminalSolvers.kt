@@ -11,10 +11,10 @@ import foo.starred.athen.events.DungeonEvent
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.PacketEvent
 import foo.starred.athen.events.TickEvent
-import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.athen.modules.impl.dungeon.terminals.solver.impl.MelodySolver
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.client.extension.boundKey
 import foo.starred.kontext.abstraction.client.extension.client
 import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
 import foo.starred.kontext.abstraction.input.impl.MouseInputState
@@ -145,7 +145,7 @@ object TerminalSolvers : Module(
                     cancel()
                 }
 
-                (client.options.keyDrop as? KeyMappingAccessor)?.boundKey if (dropKey) -> {
+                client.options.keyDrop.boundKey() if (dropKey) -> {
                     c(mouse = if (!KeyboardInputState.States.control()) 0 else 1)
                     cancel()
                 }

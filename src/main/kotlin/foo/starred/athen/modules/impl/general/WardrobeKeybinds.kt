@@ -11,6 +11,7 @@ import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.kbus.data.event.traits.KBusCancellableTrait
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.client.extension.boundKey
 import foo.starred.kontext.abstraction.client.extension.client
 import foo.starred.kontext.abstraction.gui.MinecraftGui
 import foo.starred.kontext.abstraction.input.impl.GenericInputState
@@ -54,15 +55,15 @@ object WardrobeKeybinds : Module(
     private val key8 by slots0.keybind("Slot 9", InputConstants.KEY_9)
 
     private val slots = listOf(
-        WardrobeSlot(36, { acc(0) }, { key0 }),
-        WardrobeSlot(37, { acc(1) }, { key1 }),
-        WardrobeSlot(38, { acc(2) }, { key2 }),
-        WardrobeSlot(39, { acc(3) }, { key3 }),
-        WardrobeSlot(40, { acc(4) }, { key4 }),
-        WardrobeSlot(41, { acc(5) }, { key5 }),
-        WardrobeSlot(42, { acc(6) }, { key6 }),
-        WardrobeSlot(43, { acc(7) }, { key7 }),
-        WardrobeSlot(44, { acc(8) }, { key8 })
+        WardrobeSlot(36) { key0 },
+        WardrobeSlot(37) { key1 },
+        WardrobeSlot(38) { key2 },
+        WardrobeSlot(39) { key3 },
+        WardrobeSlot(40) { key4 },
+        WardrobeSlot(41) { key5 },
+        WardrobeSlot(42) { key6 },
+        WardrobeSlot(43) { key7 },
+        WardrobeSlot(44) { key8 }
     )
 
     private var menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Armor Sets$")
@@ -101,7 +102,7 @@ object WardrobeKeybinds : Module(
 
     private fun KBusCancellableTrait.fn(key: InputConstants.Key) {
         val bool0 = GenericInputState.pressed(override)
-        val bool1 = key == (client.options.keyInventory as KeyMappingAccessor).boundKey
+        val bool1 = key == client.options.keyInventory.boundKey()
         val bool2 = key.value == InputConstants.KEY_ESCAPE
         if (cancelAll && !bool0 && !bool1 && !bool2) cancel()
 
@@ -120,9 +121,9 @@ object WardrobeKeybinds : Module(
 
         if (swapKey && key == swapKeybind) {
             if (swapKey1 == swapKey2) return
-            val slot1 = slots.find { it.idx == swapKey1 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
-            val slot2 = slots.find { it.idx == swapKey2 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
-            val s = if (slot1.equipped) slot2.idx else slot1.idx
+            val slot1 = slots.find { it.index == swapKey1 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
+            val slot2 = slots.find { it.index == swapKey2 + 36 }?.takeIf { it.slot?.item?.isEmpty == false } ?: return
+            val s = if (slot1.equipped) slot2.index else slot1.index
 
             MinecraftGui.click(player.containerMenu.containerId, s)
             last = System.currentTimeMillis()
@@ -133,7 +134,7 @@ object WardrobeKeybinds : Module(
         val slot = slots.find { it.value == key }?.takeIf { it.slot?.item?.isEmpty == false } ?: return // slot can be empty on high ping, yay!
         if (slot.equipped && preventUnequip) return
 
-        MinecraftGui.click(player.containerMenu.containerId, slot.idx)
+        MinecraftGui.click(player.containerMenu.containerId, slot.index)
         last = System.currentTimeMillis()
         cancel()
     }
@@ -149,17 +150,19 @@ object WardrobeKeybinds : Module(
     }
 
     private data class WardrobeSlot(
-        val idx: Int,
-        val acc: () -> KeyMappingAccessor,
+        val index: Int,
         val keybind: () -> InputConstants.Key
     ) {
-        val hotbar by lazy(acc)
+        val hotbar by lazy {
+            val index = index - 36
+            client.options.keyHotbarSlots[index]
+        }
 
         val value: InputConstants.Key
-            get() = if (useHotbar) hotbar.boundKey else keybind()
+            get() = if (useHotbar) hotbar.boundKey() else keybind()
 
         val slot: Slot?
-            get() = client.player?.containerMenu?.slots?.getOrNull(idx)
+            get() = client.player?.containerMenu?.slots?.getOrNull(index)
 
         val equipped: Boolean
             //~ if >= 26.2 'Items.LIME_DYE' -> 'Items.DYE.lime()'

@@ -5,10 +5,10 @@ import foo.starred.athen.annotations.impl.AthenModuleScope
 import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
-import foo.starred.athen.mixin.accessors.KeyMappingAccessor
 import foo.starred.athen.modules.Module
 import foo.starred.kbus.data.event.traits.KBusCancellableTrait
 import foo.starred.kbus.extensions.runWhen
+import foo.starred.kontext.abstraction.client.extension.boundKey
 import foo.starred.kontext.abstraction.client.extension.client
 import foo.starred.kontext.abstraction.gui.MinecraftGui
 import foo.starred.kontext.abstraction.input.impl.GenericInputState
@@ -58,18 +58,18 @@ object LoadoutKeybinds : Module(
     private val key11 by slots0.keybind("Slot 12", InputConstants.UNKNOWN.value)
 
     private val slots = listOf(
-        LoadoutSlot(0, 14, { acc(0) }, { key0 }),
-        LoadoutSlot(1, 15, { acc(1) }, { key1 }),
-        LoadoutSlot(2, 16, { acc(2) }, { key2 }),
-        LoadoutSlot(3, 23, { acc(3) }, { key3 }),
-        LoadoutSlot(4, 24, { acc(4) }, { key4 }),
-        LoadoutSlot(5, 25, { acc(5) }, { key5 }),
-        LoadoutSlot(6, 32, { acc(6) }, { key6 }),
-        LoadoutSlot(7, 33, { acc(7) }, { key7 }),
-        LoadoutSlot(8, 34, { acc(8) }, { key8 }),
-        LoadoutSlot(9, 41, { acc(8) }, { key9 }),
-        LoadoutSlot(10, 42, { acc(8) }, { key10 }),
-        LoadoutSlot(11, 43, { acc(8) }, { key11 })
+        LoadoutSlot(0, 14) { key0 },
+        LoadoutSlot(1, 15) { key1 },
+        LoadoutSlot(2, 16) { key2 },
+        LoadoutSlot(3, 23) { key3 },
+        LoadoutSlot(4, 24) { key4 },
+        LoadoutSlot(5, 25) { key5 },
+        LoadoutSlot(6, 32) { key6 },
+        LoadoutSlot(7, 33) { key7 },
+        LoadoutSlot(8, 34) { key8 },
+        LoadoutSlot(9, 41) { key9 },
+        LoadoutSlot(10, 42) { key10 },
+        LoadoutSlot(11, 43) { key11 }
     )
 
     private val menuRegex: Regex = Regex("^\\((?<cur>\\d)/(?<max>\\d)\\) Loadouts$")
@@ -109,7 +109,7 @@ object LoadoutKeybinds : Module(
 
     private fun KBusCancellableTrait.fn(key: InputConstants.Key) {
         val bool0 = GenericInputState.pressed(override)
-        val bool1 = key == (client.options.keyInventory as KeyMappingAccessor).boundKey
+        val bool1 = key == client.options.keyInventory.boundKey()
         val bool2 = key.value == InputConstants.KEY_ESCAPE
         if (cancelAll && !bool0 && !bool1 && !bool2) cancel()
 
@@ -146,9 +146,6 @@ object LoadoutKeybinds : Module(
         cancel()
     }
 
-    private fun acc(idx: Int): KeyMappingAccessor =
-        client.options.keyHotbarSlots[idx] as KeyMappingAccessor
-
     private fun reset() {
         open = false
         current = 0
@@ -159,15 +156,16 @@ object LoadoutKeybinds : Module(
     private data class LoadoutSlot(
         val index: Int,
         val idx: Int,
-        val acc: () -> KeyMappingAccessor,
         val keybind: () -> InputConstants.Key
     ) {
-        val hotbar by lazy(acc)
+        val hotbar by lazy {
+            client.options.keyHotbarSlots[index.coerceAtMost(8)]
+        }
 
         val value: InputConstants.Key
             get() {
                 if (useHotbar && idx >= 41) return InputConstants.UNKNOWN
-                return if (useHotbar) hotbar.boundKey else keybind()
+                return if (useHotbar) hotbar.boundKey() else keybind()
             }
 
         val slot: Slot?

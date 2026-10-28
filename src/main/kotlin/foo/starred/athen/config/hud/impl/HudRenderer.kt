@@ -28,8 +28,7 @@ object HudRenderer {
     init {
         on<GuiEvent.Render.Any.Main> {
             if (MinecraftGui.screen is HudElementEditorUI) return@on
-            //~ if >= 26.2 'client.options.hideGui' -> 'client.gui.hud.isHidden'
-            if (client.options.hideGui && ModSettings.hideGuis) return@on
+            if (MinecraftGui.hidden && ModSettings.hideGuis) return@on
 
             graphics.pose().pushMatrix()
             graphics.pose().scale(scale)
