@@ -120,7 +120,7 @@ object EntityAPI {
             }
         }
 
-        val best = candidate?.rootVehicle?.takeIf { it !is ArmorStand && it.isAlive } ?: return
+        val best = candidate?.takeIf { it !is ArmorStand && it.isAlive } ?: return
         val list = (best as? EntityDuck)?.`athen$attachments`() ?: return
 
         list.removeIf { it.get()?.isAlive != true }

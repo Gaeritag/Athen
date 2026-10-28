@@ -50,21 +50,21 @@ data class SlayerInfo(val entity: Entity) {
     }
 
     private fun fn0(): String? {
-        val stand = client.level?.getEntity(entity.id + 3) as? ArmorStand ?: return null
+        val stand = stand(3) ?: stand(4) ?: return null
         return stand.customName?.stripped()?.takeIf { it.contains("'s SLAYER BOSS") }?.substringBefore("'")?.trim()
     }
 
     private fun fn1(): ISlayerType? {
-        val name = name() ?: return null
+        val name = stand(1)?.customName?.stripped() ?: return null
         return ISlayerType.Companion.Names.map.entries.find { (a, _) -> name.contains(a) }?.value
     }
 
     private fun fn2(): SlayerTier? {
-        val name = name() ?: return null
+        val name = stand(1)?.customName?.stripped() ?: return null
         return SlayerTier.find(name)
     }
 
-    private fun name(): String? {
-        return (client.level?.getEntity(entity.id + 1) as? ArmorStand)?.customName?.stripped()
+    private fun stand(offset: Int): ArmorStand? {
+        return client.level?.getEntity(entity.id + offset) as? ArmorStand
     }
 }
