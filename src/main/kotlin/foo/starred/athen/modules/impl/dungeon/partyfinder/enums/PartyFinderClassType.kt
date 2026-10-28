@@ -1,7 +1,7 @@
 package foo.starred.athen.modules.impl.dungeon.partyfinder.enums
 
 enum class PartyFinderClassType(short: String, val full: String, color: String) {
-    ARCHER("A", "Archer", "<orange>"),
+    ARCHER("A", "Archer", "<gold>"),
     BERSERK("B", "Berserk", "<red>"),
     HEALER("H", "Healer", "<pink>"),
     MAGE("M", "Mage", "<aqua>"),
