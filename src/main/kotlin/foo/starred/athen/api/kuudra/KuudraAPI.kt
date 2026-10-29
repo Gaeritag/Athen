@@ -12,7 +12,7 @@ import foo.starred.kontext.api.data.Observable
 import foo.starred.kontext.api.entity.extension.serverMaxHealth
 import foo.starred.kontext.api.format.extension.string.stripped
 import foo.starred.kontext.api.item.extension.get
-import foo.starred.kontext.api.item.resolver.impl.TextureKontextItemDataResolver
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import foo.starred.kontext.api.lazy.RefreshableLazy
 import net.minecraft.world.entity.monster.Giant
 
@@ -122,7 +122,7 @@ object KuudraAPI {
             val e = entity as? Giant ?: return@on
 
             if (supplies.any { it.entity == e } || fuels.any { it.entity == e }) return@on
-            if (e.mainHandItem.get<TextureKontextItemDataResolver, String>() !in set0) return@on
+            if (e.mainHandItem.get<GenericKontextItemDataResolver.TEXTURE, String>() !in set0) return@on
 
             val s = AbstractSupply(e)
             if (phase == KuudraPhase.Supply) supplies += s

@@ -7,8 +7,8 @@ import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.quality
-import foo.starred.athen.utils.tier
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.network.chat.Component
 
@@ -24,17 +24,16 @@ object ItemQuality : Module(
 
     init {
         on<GuiEvent.Tooltip.Update> {
-            val cur = item.quality() ?: return@on
-            val f = item.tier() ?: return@on
+            val quality = item.get<GenericKontextItemDataResolver.QUALITY, Int>() ?: return@on
+            val tier = item.get<GenericKontextItemDataResolver.TIER, Int>() ?: return@on
 
-            tooltip.add(1, str(cur.toString(), f))
+            tooltip.add(1, str(quality.toString(), tier))
         }
     }
 
-    private fun str(cur: String, f: Int): Component = textStyle
-        .replace("&", "§")
-        .replace("#cur", cur)
+    private fun str(quality: String, tier: Int): Component = textStyle
+        .replace("#cur", quality)
         .replace("#max", "50")
-        .replace("#floor", "Floor $f")
+        .replace("#floor", "Floor $tier")
         .parse()
 }

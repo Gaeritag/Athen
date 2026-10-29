@@ -10,13 +10,14 @@ import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.id
 import foo.starred.kbus.extensions.runWhen
 import foo.starred.kontext.abstraction.client.extension.client
 import foo.starred.kontext.abstraction.text.measurer.MinecraftFontMeasurer
 import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
 import foo.starred.kontext.api.data.Observable
 import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 
 @LoadableAthenModule
 @AthenModuleScope(islands = [PresetSkyBlockIsland.CRIMSON_ISLE])
@@ -64,7 +65,7 @@ object VengeanceTimer : Module(
 
             if (!slayerInfo.owned) return@on
             if (!stripped.contains("ASHEN ♨7")) return@on
-            if (client.player?.mainHandItem?.id() !in abilityIds) return@on
+            if (client.player?.mainHandItem?.get<GenericKontextItemDataResolver.ID, String>() !in abilityIds) return@on
 
             count.value = true
         }

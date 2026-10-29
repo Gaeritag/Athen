@@ -7,8 +7,9 @@ import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.SoundPlayEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.id
 import foo.starred.kontext.abstraction.client.extension.client
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.item.BowItem
 
@@ -30,7 +31,7 @@ object TerminatorSounds : Module(
 
             val i = client.player?.mainHandItem ?: return@on
             if (i.item !is BowItem) return@on
-            if (i.id() != "TERMINATOR") return@on
+            if (i.get<GenericKontextItemDataResolver.ID, String>() != "TERMINATOR") return@on
 
             cancel()
             sound0.play()

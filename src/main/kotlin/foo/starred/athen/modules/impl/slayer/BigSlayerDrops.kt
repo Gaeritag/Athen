@@ -8,11 +8,10 @@ import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.id
 import foo.starred.kontext.api.item.data.enchant.SkyBlockItemEnchant
 import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import foo.starred.kontext.api.item.resolver.impl.SkyBlockEnchantKontextItemDataResolver
-import foo.starred.kontext.api.item.resolver.impl.TextureKontextItemDataResolver
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Item
 import net.minecraft.world.phys.Vec3
@@ -63,9 +62,9 @@ object BigSlayerDrops : Module(
         val c = position().z()
 
         val d = item
-        val e = d.id() ?: return false
+        val e = d.get<GenericKontextItemDataResolver.ID, String>() ?: return false
         val f = d.item
-        val g = if (e == "RUNE") d.get<TextureKontextItemDataResolver, String>() else null
+        val g = if (e == "RUNE") d.get<GenericKontextItemDataResolver.TEXTURE, String>() else null
         val h = if (e == "ENCHANTED_BOOK") d.get<SkyBlockEnchantKontextItemDataResolver, List<SkyBlockItemEnchant>>()?.firstOrNull()?.id else null
 
         val i = fn0(e, f, g, h) || fn1(e, f, g, h) || fn2(e, f, g, h) || fn3(e, f, g, h) || fn4(e, f, g, h) || fn5(e, f, g, h)

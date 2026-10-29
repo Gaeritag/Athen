@@ -14,8 +14,6 @@ import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.PlayerEvent
 import foo.starred.athen.modules.Module
 import foo.starred.athen.utils.command
-import foo.starred.athen.utils.id
-import foo.starred.athen.utils.uuid
 import foo.starred.kbus.extensions.runWhen
 import foo.starred.kontext.abstraction.chat.generic.MinecraftChat
 import foo.starred.kontext.abstraction.chat.message.MinecraftMessages
@@ -24,6 +22,7 @@ import foo.starred.kontext.abstraction.input.impl.GenericInputState
 import foo.starred.kontext.abstraction.text.renderer.MinecraftFontRenderer
 import foo.starred.kontext.api.format.extension.string.stripped
 import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import foo.starred.kontext.api.item.resolver.impl.LoreKontextItemDataResolver
 import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -81,7 +80,7 @@ object ProtectItems : Module(
         command {
             "protect" / "add" {
                 val item = client.player?.mainHandItem?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".mod()
-                val uuid = item.uuid()
+                val uuid = item.get<GenericKontextItemDataResolver.UUID, String>()
                 if (!enabled) "Please turn on the feature \"ProtectItems\"".mod()
 
                 if (uuid != null) {
@@ -92,7 +91,7 @@ object ProtectItems : Module(
                     return@invoke
                 }
 
-                val sid = item.id()
+                val sid = item.get<GenericKontextItemDataResolver.ID, String>()
                 if (sid != null) {
                     if (sid in types0.value) return@invoke "Item skyblock id already exists in list!".mod()
                     types0.update { add(sid) }
@@ -111,7 +110,7 @@ object ProtectItems : Module(
 
             "protect" / "remove" {
                 val item = client.player?.mainHandItem?.takeIf { !it.isEmpty } ?: return@invoke "Not holding anything!".mod()
-                val uuid = item.uuid()
+                val uuid = item.get<GenericKontextItemDataResolver.UUID, String>()
                 if (!enabled) "Please turn on the feature \"ProtectItems\"".mod()
 
                 if (uuid != null) {
@@ -122,7 +121,7 @@ object ProtectItems : Module(
                     return@invoke
                 }
 
-                val sid = item.id()
+                val sid = item.get<GenericKontextItemDataResolver.ID, String>()
                 if (sid != null) {
                     if (sid !in types0.value) return@invoke "Item skyblock id does not exist in list!".mod()
                     types0.update { remove(sid) }
@@ -163,10 +162,10 @@ object ProtectItems : Module(
     }
 
     private fun ItemStack.fn(): Boolean {
-        val uuid = uuid()
+        val uuid = get<GenericKontextItemDataResolver.UUID, String>()
         if (uuid != null) return uuid in uuids.value
 
-        val sid = id()
+        val sid = get<GenericKontextItemDataResolver.ID, String>()
         if (sid != null) return sid in types0.value
 
         val id = BuiltInRegistries.ITEM.getKey(item).toString()

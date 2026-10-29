@@ -8,8 +8,6 @@ import foo.starred.athen.api.items.ItemAPI.`watch$tooltip`
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.modules.Module
-import foo.starred.athen.utils.stars
-import foo.starred.athen.utils.timestamp
 import foo.starred.kbus.extensions.runWhen
 import foo.starred.kontext.abstraction.chat.color.MinecraftColors
 import foo.starred.kontext.abstraction.input.impl.GenericInputState
@@ -19,6 +17,8 @@ import foo.starred.kontext.api.format.extension.component.colored
 import foo.starred.kontext.api.format.extension.component.literal
 import foo.starred.kontext.api.format.extension.string.stripped
 import foo.starred.kontext.api.format.extension.time.parseDuration
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import foo.starred.kontext.api.text.parser.impl.parse
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
@@ -86,7 +86,7 @@ object ItemTweaks : Module(
 
         on<GuiEvent.Tooltip.Update> {
             if (!showItemAge) return@on
-            val time = item.timestamp() ?: return@on
+            val time = item.get<GenericKontextItemDataResolver.TIMESTAMP, Long>() ?: return@on
             val instant = Instant.ofEpochMilli(time)
             val timestamp = dateFormatter.format(instant)
             val age = ((Instant.now().toEpochMilli() - time) / 1000).parseDuration(true)
@@ -103,7 +103,7 @@ object ItemTweaks : Module(
 
         on<GuiEvent.Items.Render.Post> {
             if (item.isEmpty) return@on
-            val stars = item.stars() ?: return@on
+            val stars = item.get<GenericKontextItemDataResolver.STARS, Int>() ?: return@on
             if (stars <= 0) return@on
 
             val str = stars.toString()

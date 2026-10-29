@@ -8,7 +8,8 @@ import foo.starred.athen.api.network.http.AthenAPI
 import foo.starred.athen.api.network.http.WebAPI.request
 import foo.starred.athen.api.scheduling.Scheduler
 import foo.starred.athen.modules.impl.ModSettings
-import foo.starred.athen.utils.id
+import foo.starred.kontext.api.item.extension.get
+import foo.starred.kontext.api.item.resolver.impl.GenericKontextItemDataResolver
 import foo.starred.kontext.api.scheduling.scheduler.data.tasks.base.SchedulerTask
 import foo.starred.kontext.util.asJsonObjectOrNull
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
@@ -32,8 +33,9 @@ object PriceAPI {
         }
     }
 
-    fun ItemStack.price(): Price? =
-        id()?.price()
+    fun ItemStack.price(): Price? {
+        return get<GenericKontextItemDataResolver.ID, String>()?.price()
+    }
 
     fun String.price(): Price? {
         val hash = hashCode()
