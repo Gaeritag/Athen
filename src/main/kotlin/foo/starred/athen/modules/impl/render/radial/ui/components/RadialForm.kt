@@ -27,6 +27,7 @@ import foo.starred.cascade.primitives.impl.RoundedRectanglePrimitive.Companion.r
 import foo.starred.cascade.primitives.impl.TextPrimitive
 import foo.starred.cascade.primitives.impl.TextPrimitive.Companion.text
 import foo.starred.cascade.wrappers.text.impl.CascadeTextWrapper
+import foo.starred.kontext.abstraction.input.impl.KeyboardInputState
 import foo.starred.kontext.api.format.extension.color.brighten
 import foo.starred.kontext.api.format.extension.component.literal
 
@@ -290,6 +291,11 @@ class RadialForm(mid: ContainerPrimitive) {
                     RadialEditor.unfocus()
                     cancel()
                     return@on
+                }
+
+                if (key == InputConstants.KEY_V && KeyboardInputState.States.control()) {
+                    item.value = "player_head"
+                    RadialEditor.sync()
                 }
 
                 if (key == InputConstants.KEY_BACKSPACE) {
