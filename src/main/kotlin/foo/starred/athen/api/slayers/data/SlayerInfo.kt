@@ -7,6 +7,7 @@ import foo.starred.kontext.api.format.extension.string.stripped
 import foo.starred.kontext.api.lazy.RefreshableLazy
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.decoration.ArmorStand
+import kotlin.math.abs
 
 data class SlayerInfo(val entity: Entity) {
     private val _owner by RefreshableLazy(::fn0, true)
@@ -35,7 +36,7 @@ data class SlayerInfo(val entity: Entity) {
     }
 
     private fun fn0(): String? {
-        val stand = stand(3) ?: stand(4) ?: return null
+        val stand = stand(3) ?: stand(4) ?: return fallback()
         return stand.customName?.stripped()?.takeIf { spawnerRegex in it }?.substringBefore("'")?.trim()
     }
 
@@ -51,6 +52,24 @@ data class SlayerInfo(val entity: Entity) {
 
     private fun stand(offset: Int): ArmorStand? {
         return client.level?.getEntity(entity.id + offset) as? ArmorStand
+    }
+
+    private fun fallback(): String? {
+        val entities = client.level?.getEntities(entity, entity.boundingBox.inflate(0.0, 1.0, 0.0)) ?: return null
+        var best: ArmorStand? = null
+        var name: String? = null
+
+        for (stand in entities) {
+            if (stand !is ArmorStand) continue
+
+            val current = stand.customName?.stripped()?.takeIf { spawnerRegex in it } ?: continue
+            if (best != null && compareValuesBy(stand, best, { entity.distanceToSqr(it) }, { abs(entity.tickCount - it.tickCount) }) >= 0) continue
+
+            best = stand
+            name = current
+        }
+
+        return name?.substringBefore("'")?.trim()
     }
 
     companion object {

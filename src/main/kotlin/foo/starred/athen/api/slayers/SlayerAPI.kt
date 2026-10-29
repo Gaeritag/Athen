@@ -95,7 +95,10 @@ object SlayerAPI {
 
             when (slayerInfo.type) {
                 is SlayerBoss -> {
-                    if (slayerInfo.owned) slayer = null
+                    if (slayerInfo.owned) {
+                        slayer = null
+                    }
+
                     SlayerEvent.Boss.Death(entity, slayerInfo).post()
                     "SlayerAPI: Slayer killed (owner=${slayerInfo.owner}, phase=${slayerInfo.phase}, tier=${slayerInfo.tier}, tickAge=${entity.tickCount / 20.0}s)".dev()
                 }
