@@ -1,0 +1,45 @@
+package foo.starred.athen.mixin.mixins.duck.entity.guardian;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import foo.starred.athen.ducks.entity.guardian.GuardianDuck;
+import foo.starred.athen.modules.impl.slayer.EndermanLaserHider;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.entity.monster.Guardian;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(Guardian.class)
+public class GuardianDuckImpl implements GuardianDuck {
+    @Unique
+    private int athen$hide = -1;
+
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V", ordinal = 1))
+    private void athen$aiStep(Level instance, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd, Operation<Void> original) {
+        if (!EndermanLaserHider.INSTANCE.getEnabled()) {
+            original.call(instance, particle, x, y, z, xd, yd, zd);
+            return;
+        }
+
+        if (athen$hide == -1) {
+            athen$hide = EndermanLaserHider.fn(self()) ? 1 : 0;
+        }
+
+        if (athen$hide != 1) {
+            original.call(instance, particle, x, y, z, xd, yd, zd);
+        }
+    }
+
+    @Override
+    public int athen$hide() {
+        if (athen$hide == -1) athen$hide = EndermanLaserHider.fn(self()) ? 1 : 0;
+        return athen$hide;
+    }
+
+    @Unique
+    private Guardian self() {
+        return (Guardian) (Object) this;
+    }
+}

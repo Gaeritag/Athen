@@ -11,7 +11,7 @@ import foo.starred.athen.api.skyblock.EntityAPI
 import foo.starred.athen.api.storage.JsonStore
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
 import foo.starred.athen.config.theme.impl.catppuccin.MochaColorScheme
-import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
+import foo.starred.athen.ducks.entity.generic.EntityDuck.Companion.parent
 import foo.starred.athen.events.InputEvent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.TickEvent

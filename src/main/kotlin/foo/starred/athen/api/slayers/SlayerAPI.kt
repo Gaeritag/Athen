@@ -8,7 +8,7 @@ import foo.starred.athen.api.slayers.enums.type.base.ISlayerType
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerDemon
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerMini
-import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
+import foo.starred.athen.ducks.entity.generic.EntityDuck.Companion.parent
 import foo.starred.athen.events.*
 import foo.starred.athen.events.core.on
 import net.minecraft.world.entity.Entity

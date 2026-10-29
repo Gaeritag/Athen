@@ -4,7 +4,7 @@ import foo.starred.athen.annotations.impl.AthenModuleScope
 import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.location.island.impl.PresetSkyBlockIsland
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
-import foo.starred.athen.ducks.entity.EntityDuck.Companion.carry
+import foo.starred.athen.ducks.entity.generic.EntityDuck.Companion.carry
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent

@@ -7,8 +7,8 @@ import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.slayers.data.SlayerInfo
 import foo.starred.athen.api.slayers.enums.type.impl.SlayerBoss
 import foo.starred.athen.config.dsl.impl.category.ConfigCategory
-import foo.starred.athen.ducks.entity.EntityDuck.Companion.attachedStripped
-import foo.starred.athen.ducks.entity.EntityDuck.Companion.parent
+import foo.starred.athen.ducks.entity.generic.EntityDuck.Companion.attachedStripped
+import foo.starred.athen.ducks.entity.generic.EntityDuck.Companion.parent
 import foo.starred.athen.events.LocationEvent
 import foo.starred.athen.events.SlayerEvent
 import foo.starred.athen.events.TickEvent

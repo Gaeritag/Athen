@@ -38,7 +38,7 @@ package foo.starred.athen.api.skyblock
 
 import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.api.scheduling.Scheduler
-import foo.starred.athen.ducks.entity.EntityDuck
+import foo.starred.athen.ducks.entity.generic.EntityDuck
 import foo.starred.athen.events.EntityEvent
 import foo.starred.athen.events.core.on
 import foo.starred.kontext.abstraction.client.extension.client

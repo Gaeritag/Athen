@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants
 import foo.starred.athen.accessors.hovered
 import foo.starred.athen.annotations.impl.LoadableAthenModule
 import foo.starred.athen.config.dsl.impl.builders.option.ConfigOptionBuilder
-import foo.starred.athen.ducks.item.ItemStackDuck.Companion.`athen$cached$tooltip`
+import foo.starred.athen.ducks.item.stack.ItemStackDuck.Companion.`athen$cached$tooltip`
 import foo.starred.athen.events.GuiEvent
 import foo.starred.athen.events.core.on
 import foo.starred.kontext.abstraction.gui.MinecraftGui
