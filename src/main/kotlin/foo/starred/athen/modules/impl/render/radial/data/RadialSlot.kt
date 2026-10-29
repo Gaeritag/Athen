@@ -49,9 +49,9 @@ class RadialSlot(
     val item: ItemStack
         get() {
             _item?.let { return it }
-            val r = runCatching { BuiltInRegistries.ITEM.getOptional(Identifier.withDefaultNamespace(itemId)).orElse(Items.BARRIER) }.getOrDefault(Items.BARRIER)
-            val t = text
-            return (if (r == Items.PLAYER_HEAD && t != null) r.defaultInstance.texture(t) else r.defaultInstance).also { _item = it }
+
+            val item = runCatching { BuiltInRegistries.ITEM.getOptional(Identifier.withDefaultNamespace(itemId)).orElse(Items.BARRIER) }.getOrDefault(Items.BARRIER)
+            return (if (item == Items.PLAYER_HEAD && text != null) ItemStack(item).texture(text!!) else item.defaultInstance).also { _item = it }
         }
 
     fun clone(): RadialSlot {
