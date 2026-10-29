@@ -251,7 +251,7 @@ class RadialForm(mid: ContainerPrimitive) {
 
             adopt(text {
                 wrapper = CascadeTextWrapper
-                text = "- Run /sbapi inventory".literal()
+                text = "- Run /athen toggle textureCopy".literal()
                 textSize = 8f
                 color = CascadeGeometricColor(MochaColorScheme.Overlay0.argb)
                 position = FixedPositionConstraint(0, 38)
